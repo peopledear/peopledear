@@ -9,11 +9,8 @@ use Inertia\Response;
 
 final class LoginController
 {
-
     public function index(): Response
     {
         return Inertia::render('Auth/Login');
     }
-
-
 }

@@ -23,3 +23,5 @@ yarn-error.log
 /.vscode
 /.zed
 /tmp
+auto-imports.d.ts
+components.d.ts

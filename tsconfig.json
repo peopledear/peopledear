@@ -2,7 +2,10 @@
     "extends": "@vue/tsconfig/tsconfig.json",
     "compilerOptions": {
         "paths": {
-            "@/*": ["resources/js/*"]
+            "@/*": ["./resources/js/*"],
+            "#build/ui": [
+                "./node_modules/@nuxt/ui/.nuxt/ui"
+            ]
         },
         "types": ["vite/client"]
     },
@@ -12,6 +15,8 @@
         "resources/js/**/*.tsx",
         "resources/js/**/*.vue",
         "resources/types/**/*.ts",
-        "resources/types/**/*.d.ts"
+        "resources/types/**/*.d.ts",
+        "auto-imports.d.ts",
+        "components.d.ts"
     ]
 }

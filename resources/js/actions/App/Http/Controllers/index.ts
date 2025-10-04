@@ -1,5 +1,5 @@
-import DashboardController from "./DashboardController";
 import Auth from "./Auth";
+import DashboardController from "./DashboardController";
 
 const Controllers = {
     DashboardController: Object.assign(

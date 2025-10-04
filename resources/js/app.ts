@@ -1,8 +1,8 @@
-import "../css/app.css";
 import { createInertiaApp } from "@inertiajs/vue3";
-import { createApp, h } from "vue";
-import type { DefineComponent } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
+import type { DefineComponent } from "vue";
+import { createApp, h } from "vue";
+import "../css/app.css";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel Nuxt UI";
 

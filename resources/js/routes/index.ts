@@ -1,7 +1,7 @@
 import {
     queryParams,
-    type RouteQueryOptions,
     type RouteDefinition,
+    type RouteQueryOptions,
 } from "./../wayfinder";
 /**
  * @see routes/web.php:10

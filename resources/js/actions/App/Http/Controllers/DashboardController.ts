@@ -1,7 +1,7 @@
 import {
     queryParams,
-    type RouteQueryOptions,
     type RouteDefinition,
+    type RouteQueryOptions,
 } from "./../../../../wayfinder";
 /**
  * @see \App\Http\Controllers\DashboardController::index

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useForm } from "@inertiajs/vue3";
 import { store } from "@/actions/App/Http/Controllers/Auth/LoginController";
 import AuthLayout from "@/Layouts/AuthLayout.vue";
+import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 const showPassword = ref(false);
 

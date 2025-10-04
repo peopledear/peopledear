@@ -1,8 +1,8 @@
 import {
-    queryParams,
-    type RouteQueryOptions,
-    type RouteDefinition,
     applyUrlDefaults,
+    queryParams,
+    type RouteDefinition,
+    type RouteQueryOptions,
 } from "./../../wayfinder";
 /**
  * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98

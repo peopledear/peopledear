@@ -36,7 +36,7 @@ it('does not allow the user to login', function (): void {
 
     expect($response->getStatusCode())
         ->toBe(302)
-        ->and($response->assertRedirectBack());
+        ->and($response->assertRedirectToRoute('dashboard'));
 
 });
 

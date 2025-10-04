@@ -38,7 +38,7 @@ final class LoginController
             auth()->login($user);
         }
 
-        return redirect('welcome');
+        return redirect('dashboard');
 
     }
 }

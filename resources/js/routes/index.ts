@@ -4,7 +4,7 @@ import {
     type RouteDefinition,
 } from "./../wayfinder";
 /**
- * @see routes/web.php:9
+ * @see routes/web.php:10
  * @route '/'
  */
 export const welcome = (
@@ -20,7 +20,7 @@ welcome.definition = {
 } satisfies RouteDefinition<["get", "head"]>;
 
 /**
- * @see routes/web.php:9
+ * @see routes/web.php:10
  * @route '/'
  */
 welcome.url = (options?: RouteQueryOptions) => {
@@ -28,7 +28,7 @@ welcome.url = (options?: RouteQueryOptions) => {
 };
 
 /**
- * @see routes/web.php:9
+ * @see routes/web.php:10
  * @route '/'
  */
 welcome.get = (options?: RouteQueryOptions): RouteDefinition<"get"> => ({
@@ -37,10 +37,56 @@ welcome.get = (options?: RouteQueryOptions): RouteDefinition<"get"> => ({
 });
 
 /**
- * @see routes/web.php:9
+ * @see routes/web.php:10
  * @route '/'
  */
 welcome.head = (options?: RouteQueryOptions): RouteDefinition<"head"> => ({
     url: welcome.url(options),
+    method: "head",
+});
+
+/**
+ * @see \App\Http\Controllers\DashboardController::dashboard
+ * @see app/Http/Controllers/DashboardController.php:12
+ * @route '/dashboard'
+ */
+export const dashboard = (
+    options?: RouteQueryOptions,
+): RouteDefinition<"get"> => ({
+    url: dashboard.url(options),
+    method: "get",
+});
+
+dashboard.definition = {
+    methods: ["get", "head"],
+    url: "/dashboard",
+} satisfies RouteDefinition<["get", "head"]>;
+
+/**
+ * @see \App\Http\Controllers\DashboardController::dashboard
+ * @see app/Http/Controllers/DashboardController.php:12
+ * @route '/dashboard'
+ */
+dashboard.url = (options?: RouteQueryOptions) => {
+    return dashboard.definition.url + queryParams(options);
+};
+
+/**
+ * @see \App\Http\Controllers\DashboardController::dashboard
+ * @see app/Http/Controllers/DashboardController.php:12
+ * @route '/dashboard'
+ */
+dashboard.get = (options?: RouteQueryOptions): RouteDefinition<"get"> => ({
+    url: dashboard.url(options),
+    method: "get",
+});
+
+/**
+ * @see \App\Http\Controllers\DashboardController::dashboard
+ * @see app/Http/Controllers/DashboardController.php:12
+ * @route '/dashboard'
+ */
+dashboard.head = (options?: RouteQueryOptions): RouteDefinition<"head"> => ({
+    url: dashboard.url(options),
     method: "head",
 });

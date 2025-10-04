@@ -3,7 +3,6 @@ import AuthLayout from "@/Layouts/AuthLayout.vue";
 import { ref } from "vue";
 
 const showPassword = ref(false);
-
 </script>
 
 <template>
@@ -15,7 +14,12 @@ const showPassword = ref(false);
             </template>
             <div class="flex flex-col gap-y-6">
                 <UFormField label="Email" required>
-                    <UInput name="email" placeholder="Enter your email" width="full" class="w-full" />
+                    <UInput
+                        name="email"
+                        placeholder="Enter your email"
+                        width="full"
+                        class="w-full"
+                    />
                 </UFormField>
                 <UFormField label="Password" required>
                     <UInput
@@ -24,15 +28,23 @@ const showPassword = ref(false);
                         width="full"
                         class="w-full"
                         :type="showPassword ? 'text' : 'password'"
-                        :ui="{trailing: 'pe-1'}"
+                        :ui="{ trailing: 'pe-1' }"
                     >
                         <template #trailing>
                             <UButton
                                 color="neutral"
                                 variant="link"
                                 size="sm"
-                                :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                                :icon="
+                                    showPassword
+                                        ? 'i-lucide-eye-off'
+                                        : 'i-lucide-eye'
+                                "
+                                :aria-label="
+                                    showPassword
+                                        ? 'Hide password'
+                                        : 'Show password'
+                                "
                                 :aria-pressed="showPassword"
                                 aria-controls="password"
                                 @click="showPassword = !showPassword"
@@ -41,7 +53,7 @@ const showPassword = ref(false);
                     </UInput>
                 </UFormField>
                 <UFormField>
-                    <UCheckbox label="Remember me"/>
+                    <UCheckbox label="Remember me" />
                 </UFormField>
                 <UButton label="Continue" block />
             </div>

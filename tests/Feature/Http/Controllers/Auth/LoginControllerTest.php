@@ -4,6 +4,20 @@ declare(strict_types=1);
 
 use App\Models\User;
 
+it('returns validation exception if wrong credentials are given', function (): void {
+
+    $response = $this->post(route('auth.login.store'), [
+        'email' => 'nonexistinguser@example.com',
+        'password' => 'password',
+        'remember' => false,
+    ]);
+
+    expect($response->getStatusCode())
+        ->toBe(302)
+        ->and($response->assertRedirectBackWithErrors());
+
+});
+
 it('does not allow the user to login', function (): void {
 
     // Arrange

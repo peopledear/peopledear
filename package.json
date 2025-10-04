@@ -8,6 +8,7 @@
         "test:lint": "prettier --check resources/"
     },
     "devDependencies": {
+        "@laravel/vite-plugin-wayfinder": "^0.1.7",
         "@tailwindcss/vite": "^4.1.14",
         "@vue/tsconfig": "^0.8.1",
         "concurrently": "^9.2.1",

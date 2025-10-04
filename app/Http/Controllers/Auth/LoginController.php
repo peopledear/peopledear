@@ -23,14 +23,12 @@ final class LoginController
     public function store(LoginRequest $request): RedirectResponse
     {
 
-        if (! auth()->attempt([
+        throw_unless(auth()->attempt([
             'email' => $request->string('email')->toString(),
             'password' => $request->string('password')->toString(),
-        ], $request->boolean('remember'))) {
-            throw ValidationException::withMessages([
-                'email' => 'Invalid Credentials',
-            ]);
-        }
+        ], $request->boolean('remember')), ValidationException::withMessages([
+            'email' => 'Invalid Credentials',
+        ]));
 
         $user = User::query()
             ->where('email', $request->string('email')

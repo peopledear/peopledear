@@ -1,10 +1,20 @@
 <script setup lang="ts">
 
+import AuthLayout from "@/Layouts/AuthLayout.vue";
 </script>
 
 <template>
 <div>
-    Hello from Login
+    <AuthLayout>
+        <template #header>
+            <div>
+                Welcome to PeopleDear
+            </div>
+            <div>
+                Don't have an account? <a href="">Register</a>
+            </div>
+        </template>
+    </AuthLayout>
 </div>
 </template>
 

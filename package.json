@@ -9,6 +9,7 @@
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.1.14",
+        "@vue/tsconfig": "^0.8.1",
         "concurrently": "^9.2.1",
         "laravel-vite-plugin": "^2.0.1",
         "npm-check-updates": "^19.0.0",
@@ -17,6 +18,10 @@
         "prettier-plugin-organize-imports": "^4.3.0",
         "prettier-plugin-tailwindcss": "^0.6.14",
         "tailwindcss": "^4.1.14",
+        "typescript": "^5.9.3",
         "vite": "^7.1.9"
+    },
+    "dependencies": {
+        "@inertiajs/vue3": "^2.2.6"
     }
 }

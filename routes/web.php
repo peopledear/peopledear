@@ -61,5 +61,7 @@ Route::as('auth.')->group(function (): void {
 
 });
 
-// Test route for AdminMiddleware
-Route::get('/admin/test', fn () => response()->json(['message' => 'Admin access granted']))->middleware(['auth', 'admin']);
+if (app()->environment('testing')) {
+    // Test route for AdminMiddleware
+    Route::get('/admin/test', fn () => response()->json(['message' => 'Admin access granted']))->middleware(['auth', 'admin']);
+}

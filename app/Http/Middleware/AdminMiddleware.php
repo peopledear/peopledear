@@ -17,7 +17,8 @@ final class AdminMiddleware
     {
         abort_if(! $request->user() || ! $request->user()->isAdmin() || ! $request->user()->is_active, 403, 'Admin access required.');
 
-        /** @var Response */
-        return $next($request);
+        /** @var Response $response */
+        $response = $next($request);
+        return $response;
     }
 }

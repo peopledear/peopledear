@@ -11,6 +11,6 @@ final class DashboardController
 {
     public function index(): Response
     {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard', []);
     }
 }

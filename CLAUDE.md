@@ -126,6 +126,11 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Generate code that prevents N+1 query problems by using eager loading.
 - Use Laravel's query builder for very complex database operations.
 
+### Migrations
+- **Always remove the `down()` method from migrations** - we don't roll back migrations in this application
+- Timestamps must always come after the id column
+- Use `$table->foreignIdFor(Model::class)` for foreign keys
+
 ### Model Creation
 - When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `list-artisan-commands` to check the available options to `php artisan make:model`.
 
@@ -352,4 +357,70 @@ $pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
 
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test` with a specific filename or filter.
+
+
+=== peopledear architecture ===
+
+## PeopleDear Architecture Patterns
+
+This application follows specific architecture patterns to maintain clean, testable, and maintainable code.
+
+### Controller Structure
+- **Flat Hierarchy**: Controllers live directly in `app/Http/Controllers/` - no nested `Admin/` folders
+- **Clear Naming**: Controller names are descriptive enough without namespace nesting
+- **Single Action Controllers**: Use `__invoke()` for controllers that handle one specific action
+  - Examples: `ActivateUserController`, `DeactivateUserController`, `ResendInvitationController`
+- **Multi-Action Controllers**: Use named methods for related actions
+  - Examples: `UserController` with `index()`, `InvitationController` with `store()` and `destroy()`
+
+### Request Validation
+- **Type-Safe Methods**: Use Laravel's type-safe request methods instead of `validated()`
+  - Use `$request->string('email')->toString()` instead of `$request->validated('email')`
+  - Use `$request->integer('role_id')` instead of `$request->validated('role_id')`
+  - Use `$request->boolean('is_active')` instead of `$request->validated('is_active')`
+- **Form Requests**: Always create dedicated Form Request classes for validation rules
+
+### Actions vs Queries
+- **Actions** (`app/Actions/`): Handle create and update operations
+  - Examples: `CreateInvitation`, `UpdateUserRole`, `ActivateUser`
+  - Actions return the modified/created model
+  - Actions can trigger side effects (sending emails, logging, etc.)
+- **Queries** (`app/Queries/`): Handle read operations
+  - Examples: `UsersQuery`, `PendingInvitationsQuery`, `AllRolesQuery`
+  - Queries must implement a `builder()` method that returns an Eloquent or Query Builder instance
+  - Controllers call `$query->builder()->paginate()` or `$query->builder()->get()`
+
+### Query Naming Convention
+- Use descriptive names without "Get" prefix
+- Examples: `UsersQuery` not `GetUsersQuery`, `PendingInvitationsQuery` not `GetPendingInvitationsQuery`
+
+### Frontend Structure
+- **Flat Page Structure**: Pages live directly in `resources/js/Pages/` with descriptive folder names
+  - Use `resources/js/Pages/Users/Index.vue` not `resources/js/Pages/Admin/Users/Index.vue`
+  - Use `resources/js/Pages/AcceptInvitation.vue` not `resources/js/Pages/Auth/AcceptInvitation.vue`
+- **Nuxt UI 4**: Use Nuxt UI 4 components for all UI elements
+  - `UButton`, `UModal`, `UTable`, `UInput`, `USelect`, `UDropdown`, `UBadge`, `UCard`, `UAlert`
+- **Component Organization**: Create reusable components in `resources/js/Components/`
+
+### Dependency Injection
+- Controllers receive Actions and Queries via dependency injection
+- Example:
+```php
+public function index(
+    UsersQuery $usersQuery,
+    PendingInvitationsQuery $pendingInvitationsQuery,
+    AllRolesQuery $allRolesQuery
+): Response {
+    $users = $usersQuery->builder()->paginate(15);
+    $pendingInvitations = $pendingInvitationsQuery->builder()->get();
+    $roles = $allRolesQuery->builder()->get();
+
+    return Inertia::render('Users/Index', [
+        'users' => $users,
+        'pendingInvitations' => $pendingInvitations,
+        'roles' => $roles,
+    ]);
+}
+```
+
 </laravel-boost-guidelines>

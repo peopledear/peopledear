@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 it('returns validation exception if wrong credentials are given', function (): void {
 
@@ -26,7 +27,7 @@ it('does not allow the user to login', function (): void {
         'password' => 'password',
     ]);
 
-    auth()->login($user);
+    Auth::login($user);
 
     $response = $this->post(route('auth.login.store'), [
         'email' => $user->email,

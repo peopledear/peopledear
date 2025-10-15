@@ -10,12 +10,12 @@ createInertiaApp({
     title: (title: string) => (title ? `${title} - ${appName}` : appName),
     resolve: async (name: string) => {
         const pages = import.meta.glob<{ default: DefineComponent }>(
-            ["./Pages/**/*.vue"],
+            ["./pages/**/*.vue"],
             { eager: true },
         );
 
         const page: { default: DefineComponent } | undefined =
-            pages[`./Pages/${name}.vue`];
+            pages[`./pages/${name}.vue`];
 
         if (!page) {
             throw new Error(`Page "${name}" not found`);

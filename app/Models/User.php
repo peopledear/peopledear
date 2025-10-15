@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\AsAvatar;
+use App\Data\AvatarData;
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -18,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
  * @property-read CarbonInterface|null $email_verified_at
  * @property-read string $password
  * @property-read string|null $remember_token
+ * @property-read AvatarData $avatar
  * @property-read CarbonInterface $created_at
  * @property-read CarbonInterface $updated_at
  */
@@ -46,6 +49,7 @@ final class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'avatar' => AsAvatar::class,
         ];
     }
 }

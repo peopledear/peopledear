@@ -7,6 +7,8 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
+use function config;
+
 final class HandleInertiaRequests extends Middleware
 {
     /**
@@ -37,9 +39,20 @@ final class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return [
-            ...parent::share($request),
-            //
+
+        $parentSharedData = parent::share($request);
+
+        $sharedData = [
+            'appName' => config()->string('app.name'),
+            'auth.user' => fn () => $request->user()
+                ? $request->user()->only('id', 'name', 'email', 'avatar')
+                : null,
         ];
+
+        return [
+            ...$parentSharedData,
+            ...$sharedData,
+        ];
+
     }
 }

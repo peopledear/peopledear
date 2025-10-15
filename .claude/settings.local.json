@@ -4,7 +4,8 @@
       "Bash(vendor/bin/pint:*)",
       "Bash(vendor/bin/rector:*)",
       "Bash(composer test)",
-      "Bash(php artisan make:test:*)"
+      "Bash(php artisan make:test:*)",
+      "Bash(php artisan make:class:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

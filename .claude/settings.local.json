@@ -1,6 +1,14 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(vendor/bin/pint:*)",
+      "Bash(vendor/bin/rector:*)",
+      "Bash(composer test)",
+      "Bash(php artisan make:test:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "laravel-boost"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }

@@ -83,9 +83,4 @@ final class Invitation extends Model
     {
         return ! is_null($this->accepted_at);
     }
-
-    public function accept(): void
-    {
-        $this->update(['accepted_at' => now()]);
-    }
 }

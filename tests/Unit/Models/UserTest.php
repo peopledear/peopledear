@@ -141,22 +141,6 @@ test('hasRole returns false when user has no role', function () {
     expect($user->hasRole('any-role'))->toBeFalse();
 });
 
-test('activate sets is_active to true', function () {
-    $user = User::factory()->create(['is_active' => false]);
-
-    $user->activate();
-
-    expect($user->fresh()->is_active)->toBeTrue();
-});
-
-test('deactivate sets is_active to false', function () {
-    $user = User::factory()->create(['is_active' => true]);
-
-    $user->deactivate();
-
-    expect($user->fresh()->is_active)->toBeFalse();
-});
-
 test('admin factory state creates admin user', function () {
     $user = User::factory()->admin()->create();
 

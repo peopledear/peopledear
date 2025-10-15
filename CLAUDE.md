@@ -415,20 +415,37 @@ This application follows specific architecture patterns to maintain clean, testa
   - Examples: `CreateInvitation`, `UpdateUserRole`, `ActivateUser`
   - Actions return the modified/created model
   - Actions can trigger side effects (sending emails, logging, etc.)
+  - **Actions perform ALL business logic and updates** - keep models lean
+  - **Actions must implement a `handle()` method** - NOT `__invoke()`
+    - Correct: `public function handle(User $user): User`
+    - Incorrect: `public function __invoke(User $user): User`
+  - Controllers call Actions using the `handle()` method: `$action->handle($user)`
 - **Queries** (`app/Queries/`): Handle read operations
   - Examples: `UsersQuery`, `PendingInvitationsQuery`, `AllRolesQuery`
   - Queries must implement a `builder()` method that returns an Eloquent or Query Builder instance
   - Controllers call `$query->builder()->paginate()` or `$query->builder()->get()`
 
-### Default Values and Role Assignment Pattern
-- **Enforce defaults with Actions, not Models**: Default values should be enforced in Action classes, not in the Model's `booted()` method
-  - Actions are where business logic lives - they should set required defaults
-  - Example: `CreateUser` Action should explicitly assign the employee role as default
+### Lean Models Philosophy
+- **Keep Models as lean as possible** - Models should contain ONLY:
+  - Relationships (e.g., `hasMany()`, `belongsTo()`)
+  - Simple attribute accessors/mutators
+  - Casts
+  - Simple query scopes
+  - Simple boolean helper methods (e.g., `isAdmin()`, `isPending()`)
+- **Do NOT add update methods to Models** (e.g., NO `activate()`, `deactivate()`, `accept()` methods)
+  - All updates must be performed in Action classes
+  - Actions own all business logic and state changes
+  - Example: `ActivateUser` Action does `$user->update(['is_active' => true])`, not `$user->activate()`
+- **Default Values**:
+  - Use Model's `$attributes` property ONLY for simple defaults (e.g., `'is_active' => true`)
+  - Enforce complex or context-dependent defaults in Action classes
+  - Example: `CreateUser` Action explicitly assigns role based on business rules
 - **Tests use Factories with explicit data**: In tests, always pass data explicitly through factories
   - Do NOT rely on Model `booted()` hooks or defaults for test data
   - Factories should explicitly create the data needed for each test scenario
-  - Example: `User::factory()->create(['role_id' => $employeeRole->id])` instead of relying on automatic role assignment
+  - Example: `User::factory()->create(['role_id' => $employeeRole->id])`
 - This separation ensures:
+  - Models stay simple and focused on data structure
   - Business logic is explicit and testable in Actions
   - Tests are clear about what data they're creating
   - No hidden magic in Model lifecycle hooks that makes code hard to understand

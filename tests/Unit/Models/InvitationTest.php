@@ -118,18 +118,6 @@ test('isAccepted returns false for pending invitations', function () {
     expect($invitation->isAccepted())->toBeFalse();
 });
 
-test('accept sets accepted_at timestamp', function () {
-    $invitation = Invitation::factory()
-        ->pending()
-        ->create();
-
-    expect($invitation->accepted_at)->toBeNull();
-
-    $invitation->accept();
-
-    expect($invitation->fresh()->accepted_at)->toBeInstanceOf(CarbonInterface::class);
-});
-
 test('pending factory state creates pending invitation', function () {
     $invitation = Invitation::factory()
         ->pending()

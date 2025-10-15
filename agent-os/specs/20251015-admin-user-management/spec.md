@@ -4,6 +4,25 @@
 **Priority**: Critical (Phase 1.1)
 **Status**: Specification
 **Created**: October 15, 2025
+**Visual Reference**: `planning/visuals/img.png`
+
+---
+
+## Visual Design Reference
+
+This feature follows the existing **Profile page pattern** (`resources/js/Pages/Profile/`):
+- Settings page with sidebar navigation (like Profile/Layout.vue)
+- Clean card-based layout (like Profile/General.vue)
+- Inline invitation form (NOT a modal)
+- Member cards instead of tables
+
+**Key Components Reused**:
+- `UDashboardPanel` - Main container
+- `UNavigationMenu` - Sidebar navigation
+- `UPageCard` - Content sections
+- `UFormField` - Form inputs
+
+See `planning/visuals/img.png` for the target design.
 
 ---
 
@@ -1067,38 +1086,66 @@ Thanks,<br>
 
 ## Frontend Pages
 
-### Users Index Page
+### Settings Layout (Reuse Existing Pattern)
 
-**Location**: `resources/js/Pages/Users/Index.vue`
+**Location**: `resources/js/Pages/Settings/Layout.vue`
+
+**Pattern**: Follow the existing `Profile/Layout.vue` pattern exactly
+- Uses `UDashboardPanel` with sidebar navigation
+- Left sidebar with `UNavigationMenu` (vertical orientation, 64 width)
+- Content area on right via `<slot />`
+
+**Navigation Items**:
+```typescript
+const items = ref([
+    {
+        label: "General",
+        to: "/settings",
+    },
+    {
+        label: "Members",
+        to: "/settings/members",
+    },
+    {
+        label: "Roles",
+        to: "/settings/roles",
+    },
+    // ... other settings
+]);
+```
+
+---
+
+### Members Page
+
+**Location**: `resources/js/Pages/Settings/Members.vue`
+
+**Pattern**: Follow `Profile/General.vue` structure using `UPageCard`
 
 **Features**:
-- Display table of all users (name, email, role, status, created date)
-- Display table of pending invitations (email, role, invited by, sent date, actions)
-- Search bar to filter users by name or email
-- "Invite User" button that opens a modal
-- Dropdown menu for each user:
-  - Change Role
-  - Activate/Deactivate
-- Actions for each invitation:
-  - Resend
-  - Revoke
+- **Inline invitation form** at top (NOT a modal)
+  - Email input field
+  - Role dropdown
+  - "Send invite" button
+  - All in single `UPageCard` with horizontal orientation
+- **Members list** below invitation form
+  - Card-based layout (NOT table)
+  - Each member shows: avatar, name, email, teams, role badge, action menu
+  - List all organization members
 
 **Nuxt UI 4 Components to Use**:
-- `UButton` - Primary action buttons (Invite User)
-- `UModal` - Invitation modal
-- `UTable` - Users and invitations tables
-- `UInput` - Search and form inputs
+- `UPageCard` - Main container sections (invitation, members list)
+- `UFormField` - Form fields with labels
+- `UInput` - Email input
 - `USelect` - Role dropdown
-- `UDropdown` - User actions menu
-- `UBadge` - Status and role badges
-- `UCard` - Container for tables and content
-- `UAlert` - Success/error messages
+- `UButton` - Send invite button
+- `UAvatar` - Member avatars
+- `UBadge` - Role badges
+- `UDropdown` - Action menus (...)
+- `USeparator` - Between members
 
 **Components to create**:
-- `InviteUserModal.vue` - Modal form to send invitations (uses UModal, UInput, USelect, UButton)
-- `UserTable.vue` - Table displaying users with actions (uses UTable, UDropdown, UBadge)
-- `InvitationsTable.vue` - Table displaying pending invitations (uses UTable, UButton)
-- `UserStatusBadge.vue` - Badge showing active/inactive status (uses UBadge)
+- `MemberCard.vue` - Individual member display (avatar, name, email, role, teams, actions)
 - `RoleBadge.vue` - Badge showing user role (uses UBadge)
 
 ---

@@ -24,6 +24,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, naming.
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
+- **Always chain methods on new lines** - each chained method call should be on its own line for better readability
 
 ## Verification Scripts
 - Do not create verification scripts or tinker when tests cover that functionality and prove it works. Unit and feature tests are more important.
@@ -31,6 +32,13 @@ This application is a Laravel application and its main Laravel ecosystems packag
 ## Application Structure & Architecture
 - Stick to existing directory structure - don't create new base folders without approval.
 - Do not change the application's dependencies without approval.
+
+## Git Workflow
+- **Always create a new feature branch** when starting a new task or feature
+- Before creating a new branch, fetch and pull the latest changes from main: `git fetch && git pull origin main`
+- Create feature branches with descriptive names: `git checkout -b feature/descriptive-name`
+- Commit and push changes to the feature branch
+- Only merge to main after all tests pass and code is reviewed
 
 ## Frontend Bundling
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
@@ -122,13 +130,27 @@ protected function isAccessible(User $user, ?string $path = null): bool
 ### Database
 - Always use proper Eloquent relationship methods with return type hints. Prefer relationship methods over raw queries or manual joins.
 - Use Eloquent models and relationships before suggesting raw database queries
+- **ALWAYS use `Model::query()` for querying models** - NEVER use `Model::all()`, `Model::find()`, `Model::where()` directly
+  - Correct: `User::query()->where('email', $email)->first()`
+  - Incorrect: `User::where('email', $email)->first()`
+  - Correct: `User::query()->get()`
+  - Incorrect: `User::all()`
 - Avoid `DB::`; prefer `Model::query()`. Generate code that leverages Laravel's ORM capabilities rather than bypassing them.
 - Generate code that prevents N+1 query problems by using eager loading.
 - Use Laravel's query builder for very complex database operations.
 
 ### Migrations
 - **Always remove the `down()` method from migrations** - we don't roll back migrations in this application
-- Timestamps must always come after the id column
+- **No default values in migrations** - default values are business logic, NOT database constraints. Implement them in:
+  - Model's `$attributes` property for simple defaults (e.g., `'is_active' => true`)
+  - Model's `booted()` method for complex defaults or logic
+  - Action classes for context-dependent defaults
+  - Required method arguments or Data Objects for enforcing required values
+- **Use `php artisan migrate:fresh --seed`** - since we don't have down methods, always use migrate:fresh to reset the database
+- **Column order in migrations**:
+  - For CREATE TABLE migrations: `id` column first, then `timestamps()`, then all other columns
+  - For ALTER TABLE migrations: Do NOT use `after()` method - it's MySQL-only and breaks PostgreSQL compatibility
+  - Simply add new columns without position specification - they will be appended to the table
 - Use `$table->foreignIdFor(Model::class)` for foreign keys
 
 ### Model Creation
@@ -204,6 +226,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files - these are core to the application.
 - Tests should test all of the happy paths, failure paths, and weird paths.
 - Tests live in the `tests/Feature` and `tests/Unit` directories.
+- **New tests should always come first in test files** - place newly written tests at the top of the file, before existing tests
 - Pest tests look and behave like this:
 <code-snippet name="Basic Pest Test Example" lang="php">
 it('is true', function () {
@@ -212,11 +235,11 @@ it('is true', function () {
 </code-snippet>
 
 ### Running Tests
-- Run the minimal number of tests using an appropriate filter before finalizing code edits.
+- **Full Test Coverage Required**: Write comprehensive tests for all features, covering happy paths, failure paths, edge cases, and error conditions.
 - To run all tests: `php artisan test`.
 - To run all tests in a file: `php artisan test tests/Feature/ExampleTest.php`.
 - To filter on a particular test name: `php artisan test --filter=testName` (recommended after making a change to a related file).
-- When the tests relating to your changes are passing, ask the user if they would like to run the entire test suite to ensure everything is still passing.
+- After implementing changes, run the full test suite to ensure everything is still passing.
 
 ### Pest Assertions
 - When asserting status codes on a response, use the specific method like `assertForbidden` and `assertNotFound` instead of using `assertStatus(403)` or similar, e.g.:
@@ -355,8 +378,15 @@ $pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
 
 ## Test Enforcement
 
-- Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
-- Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test` with a specific filename or filter.
+- **Full Test Coverage Required**: Every change must be programmatically tested with comprehensive coverage.
+- Write tests for all scenarios:
+  - **Happy paths**: Normal, expected user flows
+  - **Failure paths**: Invalid inputs, authorization failures, not found scenarios
+  - **Edge cases**: Boundary conditions, null values, empty states
+  - **Error conditions**: Database errors, external service failures
+- Test both feature/integration tests AND unit tests where appropriate.
+- All tests must pass before considering the implementation complete.
+- Use `php artisan test` to run the full test suite regularly.
 
 
 === peopledear architecture ===
@@ -389,6 +419,19 @@ This application follows specific architecture patterns to maintain clean, testa
   - Examples: `UsersQuery`, `PendingInvitationsQuery`, `AllRolesQuery`
   - Queries must implement a `builder()` method that returns an Eloquent or Query Builder instance
   - Controllers call `$query->builder()->paginate()` or `$query->builder()->get()`
+
+### Default Values and Role Assignment Pattern
+- **Enforce defaults with Actions, not Models**: Default values should be enforced in Action classes, not in the Model's `booted()` method
+  - Actions are where business logic lives - they should set required defaults
+  - Example: `CreateUser` Action should explicitly assign the employee role as default
+- **Tests use Factories with explicit data**: In tests, always pass data explicitly through factories
+  - Do NOT rely on Model `booted()` hooks or defaults for test data
+  - Factories should explicitly create the data needed for each test scenario
+  - Example: `User::factory()->create(['role_id' => $employeeRole->id])` instead of relying on automatic role assignment
+- This separation ensures:
+  - Business logic is explicit and testable in Actions
+  - Tests are clear about what data they're creating
+  - No hidden magic in Model lifecycle hooks that makes code hard to understand
 
 ### Query Naming Convention
 - Use descriptive names without "Get" prefix

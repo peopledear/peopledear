@@ -7,7 +7,8 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\QueryException;
 
 test('role can be created', function () {
-    $role = Role::factory()->create();
+    $role = Role::factory()
+        ->create();
 
     expect($role)->toBeInstanceOf(Role::class)
         ->and($role->id)->toBeInt()
@@ -18,48 +19,65 @@ test('role can be created', function () {
 });
 
 test('role name must be unique', function () {
-    Role::factory()->create(['name' => 'unique-role']);
+    Role::factory()
+        ->create(['name' => 'unique-role']);
 
-    expect(fn () => Role::factory()->create(['name' => 'unique-role']))
+    expect(fn () => Role::factory()
+        ->create(['name' => 'unique-role']))
         ->toThrow(QueryException::class);
 });
 
 test('role has users relationship', function () {
-    $role = Role::factory()->create();
+    $role = Role::factory()
+        ->create();
 
     expect($role->users())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\HasMany::class);
 });
 
 test('to array', function () {
-    $role = Role::factory()->create()->refresh();
+    $role = Role::factory()
+        ->create()
+        ->refresh();
 
     expect(array_keys($role->toArray()))
         ->toBe([
             'id',
+            'created_at',
+            'updated_at',
             'name',
             'display_name',
             'description',
-            'created_at',
-            'updated_at',
         ]);
 });
 
 test('base roles exist in database', function () {
-    expect(Role::where('name', 'admin')->exists())->toBeTrue()
-        ->and(Role::where('name', 'manager')->exists())->toBeTrue()
-        ->and(Role::where('name', 'employee')->exists())->toBeTrue();
+    expect(Role::query()
+        ->where('name', 'admin')
+        ->exists())->toBeTrue()
+        ->and(Role::query()
+            ->where('name', 'manager')
+            ->exists())->toBeTrue()
+        ->and(Role::query()
+            ->where('name', 'employee')
+            ->exists())->toBeTrue();
 });
 
 test('base roles have correct attributes', function () {
-    $admin = Role::where('name', 'admin')->first();
+    $admin = Role::query()
+        ->where('name', 'admin')
+        ->first();
     expect($admin->display_name)->toBe('Administrator')
         ->and($admin->description)->toBe('Full system access with all permissions');
 
-    $manager = Role::where('name', 'manager')->first();
+    $manager = Role::query()
+        ->where('name', 'manager')
+        ->first();
     expect($manager->display_name)->toBe('Manager')
         ->and($manager->description)->toBe('Can manage team members and approve requests');
 
-    $employee = Role::where('name', 'employee')->first();
+    $employee = Role::query()
+        ->where('name', 'employee')
+        ->first();
     expect($employee->display_name)->toBe('Employee')
         ->and($employee->description)->toBe('Standard employee access');
 });

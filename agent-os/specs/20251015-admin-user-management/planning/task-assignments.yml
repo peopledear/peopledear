@@ -1,0 +1,129 @@
+task_assignments:
+  - task_group: "Phase 1: Role Model (Foundation - No Dependencies)"
+    assigned_subagent: "database-engineer"
+    tasks:
+      - "Task 1.1: Create Role Model with Migration, Factory, Seeder"
+      - "Task 1.2: Create Role Model Tests"
+
+  - task_group: "Phase 2: Update User Model (Depends on Role)"
+    assigned_subagent: "database-engineer"
+    tasks:
+      - "Task 2.1: Add Role Relationship to User Model"
+      - "Task 2.2: Update User Model Tests"
+
+  - task_group: "Phase 3: Invitation Model (Depends on Role and User)"
+    assigned_subagent: "database-engineer"
+    tasks:
+      - "Task 3.1: Create Invitation Model with Migration, Factory, Seeder"
+      - "Task 3.2: Create Invitation Model Tests"
+      - "Task 3.3: Add Sent Invitations to User Model"
+
+  - task_group: "Phase 3: Middleware"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 3.1: Create AdminMiddleware"
+      - "Task 3.2: Register AdminMiddleware"
+
+  - task_group: "Phase 4: Actions"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 4.1: Create CreateInvitation Action"
+      - "Task 4.2: Create AcceptInvitation Action"
+      - "Task 4.3: Create ResendInvitation Action"
+      - "Task 4.4: Create ActivateUser Action"
+      - "Task 4.5: Create DeactivateUser Action"
+      - "Task 4.6: Create UpdateUserRole Action"
+
+  - task_group: "Phase 5: Queries"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 5.1: Create UsersQuery"
+      - "Task 5.2: Create PendingInvitationsQuery"
+      - "Task 5.3: Create AllRolesQuery"
+
+  - task_group: "Phase 6: Form Requests"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 6.1: Create InviteUserRequest"
+      - "Task 6.2: Create UpdateUserRoleRequest"
+      - "Task 6.3: Create AcceptInvitationRequest"
+
+  - task_group: "Phase 7: Controllers"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 7.1: Create UserController"
+      - "Task 7.2: Create InvitationController"
+      - "Task 7.3: Create ResendInvitationController"
+      - "Task 7.4: Create ActivateUserController"
+      - "Task 7.5: Create DeactivateUserController"
+      - "Task 7.6: Create UpdateUserRoleController"
+      - "Task 7.7: Create AcceptInvitationController"
+
+  - task_group: "Phase 8: Routes"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 8.1: Add Admin Routes"
+      - "Task 8.2: Add Public Invitation Routes"
+
+  - task_group: "Phase 9: Email"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 9.1: Create UserInvitationMail"
+      - "Task 9.2: Create Invitation Email Template"
+
+  - task_group: "Phase 10: Frontend - Settings Layout & Members Page"
+    assigned_subagent: "ui-designer"
+    tasks:
+      - "Task 10.1: Create Settings Layout"
+      - "Task 10.2: Create Members Page"
+      - "Task 10.3: Create MemberCard Component"
+      - "Task 10.4: Create RoleBadge Component"
+
+  - task_group: "Phase 11: Frontend - Accept Invitation Page"
+    assigned_subagent: "ui-designer"
+    tasks:
+      - "Task 11.1: Create AcceptInvitation Page"
+
+  - task_group: "Phase 12: Navigation"
+    assigned_subagent: "ui-designer"
+    tasks:
+      - "Task 12.1: Add Users Link to Admin Navigation"
+
+  - task_group: "Phase 13: Testing - Feature Tests"
+    assigned_subagent: "testing-engineer"
+    tasks:
+      - "Task 13.1: Create UserControllerTest"
+      - "Task 13.2: Create InvitationControllerTest"
+      - "Task 13.3: Create AcceptInvitationControllerTest"
+      - "Task 13.4: Create ResendInvitationControllerTest"
+      - "Task 13.5: Create User Activation/Deactivation Tests"
+      - "Task 13.6: Create UpdateUserRoleControllerTest"
+
+  - task_group: "Phase 14: Testing - Browser Tests"
+    assigned_subagent: "testing-engineer"
+    tasks:
+      - "Task 14.1: Create AdminUsersTest"
+      - "Task 14.2: Create AcceptInvitationTest"
+
+  - task_group: "Phase 15: Code Quality"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 15.1: Run Laravel Pint"
+      - "Task 15.2: Run Larastan"
+      - "Task 15.3: Run All Tests"
+
+  - task_group: "Phase 16: Documentation"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 16.1: Create Developer Documentation"
+      - "Task 16.2: Create Admin User Guide"
+      - "Task 16.3: Create User Invitation Guide"
+      - "Task 16.4: Update README.md"
+      - "Task 16.5: Update Product Roadmap"
+
+  - task_group: "Phase 17: Deployment Preparation"
+    assigned_subagent: "api-engineer"
+    tasks:
+      - "Task 17.1: Create First Admin User"
+      - "Task 17.2: Configure Mailgun"
+      - "Task 17.3: Final Testing in Development"

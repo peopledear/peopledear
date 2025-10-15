@@ -620,119 +620,87 @@ This document provides a granular, step-by-step implementation plan for the Admi
 
 ---
 
-## Phase 10: Frontend - Users Index Page
+## Phase 10: Frontend - Settings Layout & Members Page
 
-### Task 10.1: Create Users Index Page
-**File**: `resources/js/Pages/Users/Index.vue`
-**Estimated Time**: 45 minutes
+### Task 10.1: Create Settings Layout
+**File**: `resources/js/Pages/Settings/Layout.vue`
+**Estimated Time**: 20 minutes
+**Pattern**: Copy from `resources/js/Pages/Profile/Layout.vue`
 
 **Steps**:
-1. Create directory: `resources/js/Pages/Users/`
-2. Create `Index.vue` with script setup
-3. Define props: `users`, `pendingInvitations`, `roles`
-4. Use `AppLayout` component
-5. Add page heading "User Management"
-6. Add "Invite User" button (opens modal)
-7. Add search input for filtering users
-8. Include `UserTable` component with users data
-9. Include `InvitationsTable` component with invitations data
-10. Include `InviteUserModal` component (ref for opening)
+1. Create directory: `resources/js/Pages/Settings/`
+2. Copy `Profile/Layout.vue` structure to `Settings/Layout.vue`
+3. Update title to "Settings" in `UDashboardNavbar`
+4. Update navigation items ref:
+   - General: `/settings`
+   - Members: `/settings/members`
+   - Roles: `/settings/roles`
+5. Keep `UDashboardPanel`, `UNavigationMenu` (vertical, w-64), and slot structure
 
-**Verification**: Page renders, shows users and invitations tables
+**Verification**: Layout renders with sidebar navigation
 
 ---
 
-### Task 10.2: Create InviteUserModal Component
-**File**: `resources/js/Components/InviteUserModal.vue`
-**Estimated Time**: 30 minutes
+### Task 10.2: Create Members Page
+**File**: `resources/js/Pages/Settings/Members.vue`
+**Estimated Time**: 60 minutes
+**Pattern**: Follow `Profile/General.vue` structure using `UPageCard`
 
 **Steps**:
-1. Create `InviteUserModal.vue` with script setup
-2. Use `UModal` component
-3. Add form with:
-   - `UInput` for email
-   - `USelect` for role selection
-   - `UButton` for submit
-4. Handle form submission using Inertia `router.post`
-5. Add validation error display using `UAlert`
-6. Add loading state during submission
-7. Close modal on success
+1. Create `Members.vue` with script setup
+2. Define props: `users`, `pendingInvitations`, `roles`
+3. Wrap in `SettingsLayout` component
+4. Create form with `useForm` from Inertia
+5. **Invitation Section** (inline, NOT modal):
+   - Create `UPageCard` with title "Invite by email"
+   - Add horizontal layout with `UFormField` for email
+   - Add `USelect` for role dropdown
+   - Add `UButton` "Send invite" - submit form via Inertia
+6. **Members List Section**:
+   - Create `UPageCard` with title "Organization members"
+   - Map through users array
+   - For each user: include `MemberCard` component
+   - Add `USeparator` between members
+7. Handle form submission using Inertia
+8. Display success/error notifications using `useToast()`
 
-**Verification**: Can open modal, fill form, submit invitation
+**Verification**: Page renders with inline invitation form and members list
 
 ---
 
-### Task 10.3: Create UserTable Component
-**File**: `resources/js/Components/UserTable.vue`
+### Task 10.3: Create MemberCard Component
+**File**: `resources/js/Components/MemberCard.vue`
 **Estimated Time**: 45 minutes
 
 **Steps**:
-1. Create `UserTable.vue` with script setup
-2. Accept `users` prop (paginated data)
-3. Use `UTable` component with columns:
-   - Name
-   - Email
-   - Role (using `RoleBadge`)
-   - Status (using `UserStatusBadge`)
-   - Created Date
-   - Actions (dropdown)
-4. Add `UDropdown` for each row with actions:
+1. Create `MemberCard.vue` with script setup
+2. Accept `user` prop (with avatar, name, email, role, teams)
+3. Layout structure:
+   - Left: `UAvatar` with user initial or image
+   - Middle: Name (with "(You)" if current user), email, teams info
+   - Right: `RoleBadge`, `UDropdown` action menu (...)
+4. `UDropdown` actions:
    - Change Role
    - Activate/Deactivate
 5. Handle actions using Inertia router
-6. Add pagination controls
+6. Style to match visual mockup (flex layout, padding, hover state)
 
-**Verification**: Table displays users, actions work correctly
-
----
-
-### Task 10.4: Create InvitationsTable Component
-**File**: `resources/js/Components/InvitationsTable.vue`
-**Estimated Time**: 30 minutes
-
-**Steps**:
-1. Create `InvitationsTable.vue` with script setup
-2. Accept `invitations` prop
-3. Use `UTable` component with columns:
-   - Email
-   - Role (using `RoleBadge`)
-   - Invited By
-   - Sent Date
-   - Actions (Resend, Revoke)
-4. Add `UButton` components for actions
-5. Handle actions using Inertia router
-6. Add confirmation modal for revoke action
-
-**Verification**: Table displays invitations, actions work
+**Verification**: Member card displays correctly with avatar, info, and actions
 
 ---
 
-### Task 10.5: Create UserStatusBadge Component
-**File**: `resources/js/Components/UserStatusBadge.vue`
-**Estimated Time**: 15 minutes
-
-**Steps**:
-1. Create `UserStatusBadge.vue` with script setup
-2. Accept `isActive` prop (boolean)
-3. Use `UBadge` component
-4. Show "Active" (green) if true, "Inactive" (red) if false
-
-**Verification**: Badge displays correct status and color
-
----
-
-### Task 10.6: Create RoleBadge Component
+### Task 10.4: Create RoleBadge Component
 **File**: `resources/js/Components/RoleBadge.vue`
 **Estimated Time**: 15 minutes
 
 **Steps**:
 1. Create `RoleBadge.vue` with script setup
-2. Accept `role` prop (role name string)
+2. Accept `role` prop (role name string or object)
 3. Use `UBadge` component
-4. Set color based on role:
-   - Admin: blue
-   - Manager: purple
-   - Employee: gray
+4. Set color based on role name:
+   - Admin/Owner: blue
+   - Manager: teal/green
+   - Employee/Developer: gray
 5. Display role display_name
 
 **Verification**: Badge displays correct role with appropriate color

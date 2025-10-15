@@ -19,6 +19,7 @@ final class AdminMiddleware
 
         /** @var Response $response */
         $response = $next($request);
+
         return $response;
     }
 }

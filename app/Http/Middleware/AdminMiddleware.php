@@ -15,7 +15,7 @@ final class AdminMiddleware
      */
     public function __invoke(Request $request, Closure $next): Response
     {
-        abort_if(! $request->user() || ! $request->user()->isAdmin() || ! $request->user()->is_active, 403, 'Unauthorized. Admin access required.');
+        abort_if(! $request->user() || ! $request->user()->isAdmin() || ! $request->user()->is_active, 403, 'Admin access required.');
 
         /** @var Response */
         return $next($request);

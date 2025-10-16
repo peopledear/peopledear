@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -41,7 +42,7 @@ final class UserProfileController
             'email' => $data->email,
         ];
 
-        if ($data->avatar !== null) {
+        if ($data->avatar instanceof UploadedFile) {
             if ($user->avatar->path) {
                 Storage::disk('public')
                     ->delete($user->avatar->path);

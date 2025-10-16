@@ -5,7 +5,10 @@
       "Bash(vendor/bin/rector:*)",
       "Bash(composer test)",
       "Bash(php artisan make:test:*)",
-      "Bash(php artisan make:class:*)"
+      "Bash(php artisan make:class:*)",
+      "Bash(php artisan test:*)",
+      "mcp__laravel-boost__tinker",
+      "Bash(git add:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

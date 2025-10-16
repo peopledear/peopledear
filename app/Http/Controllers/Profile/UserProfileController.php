@@ -8,7 +8,6 @@ use App\Data\UpdateUserProfileData;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -18,17 +17,15 @@ use function to_route;
 
 final class UserProfileController
 {
-    public function index(Request $request): Response
+    public function index(#[CurrentUser] User $user): Response
     {
         return Inertia::render('profile/General', [
-            'user' => $request
-                ->user()
-                ?->only([
-                    'id',
-                    'name',
-                    'email',
-                    'avatar',
-                ]),
+            'user' => $user->only([
+                'id',
+                'name',
+                'email',
+                'avatar',
+            ]),
         ]);
     }
 

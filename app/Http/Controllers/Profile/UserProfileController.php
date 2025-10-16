@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Profile;
 
 use App\Data\UpdateUserProfileData;
 use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -30,10 +31,10 @@ final class UserProfileController
         ]);
     }
 
-    public function update(UpdateUserProfileData $data, Request $request): RedirectResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
+    public function update(
+        UpdateUserProfileData $data,
+        #[CurrentUser] User $user
+    ): RedirectResponse {
 
         $updateData = [
             'name' => $data->name,

@@ -18,6 +18,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - rector/rector (RECTOR) - v2
 - prettier (PRETTIER) - v3
 - tailwindcss (TAILWINDCSS) - v4
+- spatie/laravel-data (LARAVEL-DATA) - v4
 
 
 ## Conventions
@@ -206,6 +207,125 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Casts can and likely should be set in a `casts()` method on a model rather than the `$casts` property. Follow existing conventions from other models.
 
 
+=== laravel-data/core rules ===
+
+## Spatie Laravel Data
+
+This application uses Spatie Laravel Data for type-safe request validation and data transfer objects.
+
+### Data Objects
+- **ALWAYS use Data objects for validation and data transfer** - DO NOT use FormRequest classes (except for auth-specific cases like LoginRequest)
+- **All Data objects MUST be suffixed with `Data`**
+  - Correct: `CreateInvitationData`, `UpdateUserProfileData`, `UpdateUserRoleData`
+  - Incorrect: `CreateInvitationRequest`, `UpdateUserProfile`, `UpdateUserRoleDto`
+- **Store Data objects in `app/Data/`** namespace
+- **Create Data objects using**: `php artisan make:data NameData --namespace=Data`
+
+### Data Object Structure
+- Use readonly properties with type hints
+- **Validation Strategy**:
+  - **Default: Use validation attributes** from `Spatie\LaravelData\Attributes\Validation`
+    - Better IDE support with autocomplete
+    - Co-located with property definitions
+    - Type-safe and checked by static analysis
+  - **Use `rules()` method only for**:
+    - Dynamic validation (e.g., `unique:users,email,{auth()->id()}`)
+    - Complex Laravel Rule objects (e.g., `File::image()`, `Rule::dimensions()`)
+    - Conditional validation based on runtime context
+- Data objects automatically validate and cast data
+
+### Example Data Object
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Data;
+
+use Spatie\LaravelData\Attributes\Validation\Email;
+use Spatie\LaravelData\Attributes\Validation\Max;
+use Spatie\LaravelData\Attributes\Validation\Required;
+use Spatie\LaravelData\Data;
+
+final class CreateInvitationData extends Data
+{
+    public function __construct(
+        #[Required, Email, Max(255)]
+        public readonly string $email,
+        #[Required]
+        public readonly int $role_id,
+    ) {
+    }
+}
+```
+
+### Using Data Objects in Controllers
+- Type-hint Data objects in controller methods
+- Laravel automatically validates and injects the Data object
+- Access properties directly: `$data->email`, `$data->role_id`
+
+```php
+public function store(CreateInvitationData $data, CreateInvitation $action): RedirectResponse
+{
+    $invitation = $action->handle($data->email, $data->role_id, auth()->id());
+    return redirect()->route('users.index');
+}
+```
+
+### Creating Data Objects - Two Methods
+
+Laravel Data provides two methods for creating Data objects with different validation behavior:
+
+#### 1. `::validateAndCreate()` - WITH Validation (HTTP Requests, API calls)
+- **ALWAYS use in HTTP controllers** - Laravel auto-injects with validation
+- Runs all validation rules (attributes or rules() method)
+- Throws `ValidationException` on validation failure
+- Use when you need to ensure data integrity before processing
+
+```php
+// In controllers - Laravel auto-validates when type-hinted
+public function store(CreateInvitationData $data): RedirectResponse
+{
+    // $data is already validated
+    $invitation = $action->handle($data->email, $data->role_id);
+}
+
+// Manual validation when needed
+$data = CreateInvitationData::validateAndCreate([
+    'email' => $request->input('email'),
+    'role_id' => $request->input('role_id'),
+]);
+```
+
+#### 2. `::from()` - WITHOUT Validation (Console Commands, Jobs, Trusted Sources)
+- **SKIPS all validation** - creates object directly from array
+- Use in console commands, queued jobs, seeders, or trusted internal data
+- Faster performance when validation is not needed
+- Throws `CannotCreateData` only if required parameters are missing (not validation failure)
+
+```php
+// In console commands - skip validation for admin operations
+$data = CreateInvitationData::from([
+    'email' => $email,      // Can be invalid - no validation!
+    'role_id' => $roleId,   // Can be non-existent - no validation!
+]);
+
+$invitation = $action->handle($data->email, $data->role_id);
+```
+
+**Key Difference**:
+- `::validateAndCreate()` = Type casting + Validation rules
+- `::from()` = Type casting only (no validation)
+
+### Benefits
+- Type-safe data handling with IDE autocompletion
+- Automatic validation using attributes
+- Automatic casting of data types
+- Seamless Inertia.js integration
+- Reduces boilerplate code
+- Combines validation + DTOs in one class
+
+
 === pint/core rules ===
 
 ## Laravel Pint Code Formatter
@@ -227,6 +347,9 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Tests should test all of the happy paths, failure paths, and weird paths.
 - Tests live in the `tests/Feature` and `tests/Unit` directories.
 - **New tests should always come first in test files** - place newly written tests at the top of the file, before existing tests
+- **ALWAYS import all classes used in tests** - never use fully qualified class names inline
+  - Correct: `use Illuminate\Validation\ValidationException;` then use `ValidationException::class`
+  - Incorrect: `\Illuminate\Validation\ValidationException::class` without import
 - Pest tests look and behave like this:
 <code-snippet name="Basic Pest Test Example" lang="php">
 it('is true', function () {
@@ -249,6 +372,31 @@ it('returns all', function () {
 
     $response->assertSuccessful();
 });
+</code-snippet>
+
+### Testing Exceptions
+- **ALWAYS use Pest's `->throws()` method for exception assertions** - DO NOT wrap in `expect()->toThrow()`
+- Call the method directly and chain `->throws()` to assert the exception
+- This is the clean, idiomatic Pest pattern
+
+<code-snippet name="Correct Exception Testing Pattern" lang="php">
+use Illuminate\Validation\ValidationException;
+
+test('it validates required email', function () {
+    $data = [];
+
+    CreateInvitationData::validateAndCreate($data);
+})->throws(ValidationException::class, 'email');
+</code-snippet>
+
+<code-snippet name="WRONG Exception Testing Pattern - DO NOT USE" lang="php">
+// ❌ WRONG - Do not use expect()->toThrow()
+test('it validates required email', function () {
+    $data = [];
+
+    expect(fn () => CreateInvitationData::validateAndCreate($data))
+        ->toThrow(ValidationException::class);
+})->throws(ValidationException::class, 'email');
 </code-snippet>
 
 ### Mocking

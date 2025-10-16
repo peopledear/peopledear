@@ -38,6 +38,8 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - **Always create a new feature branch** when starting a new task or feature
 - Before creating a new branch, fetch and pull the latest changes from main: `git fetch && git pull origin main`
 - Create feature branches with descriptive names: `git checkout -b feature/descriptive-name`
+- **ALWAYS run `php artisan test` before every commit** - all tests must pass
+- **ALWAYS run `vendor/bin/pint --dirty` before every commit** - code must be formatted
 - Commit and push changes to the feature branch
 - Only merge to main after all tests pass and code is reviewed
 
@@ -205,6 +207,53 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 ### Models
 - Casts can and likely should be set in a `casts()` method on a model rather than the `$casts` property. Follow existing conventions from other models.
+
+### Contextual Attributes for Dependency Injection
+- **ALWAYS use Laravel 12's contextual attributes for common dependencies** - cleaner and more expressive than manual injection
+- **Available Attributes**:
+  - `#[CurrentUser]` - Inject the currently authenticated user
+  - `#[Auth('guard')]` - Inject a specific authentication guard
+  - `#[Cache('store')]` - Inject a specific cache store
+  - `#[Config('key')]` - Inject a config value
+  - `#[DB('connection')]` - Inject a specific database connection
+  - `#[RouteParameter('name')]` - Inject a route parameter
+  - `#[Storage('disk')]` - Inject a specific storage disk
+
+**Use `#[CurrentUser]` instead of `Request::user()`**:
+
+```php
+// ✅ CORRECT - Use CurrentUser attribute
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
+
+public function store(
+    CreateInvitationData $data,
+    CreateInvitation $action,
+    #[CurrentUser] User $user
+): RedirectResponse {
+    $invitation = $action->handle($data->email, $data->role_id, $user->id);
+    return to_route('users.index');
+}
+
+// ❌ WRONG - Don't inject Request just to get user
+use Illuminate\Http\Request;
+
+public function store(
+    CreateInvitationData $data,
+    CreateInvitation $action,
+    Request $request
+): RedirectResponse {
+    $user = $request->user();
+    $invitation = $action->handle($data->email, $data->role_id, $user->id);
+    return to_route('users.index');
+}
+```
+
+**Benefits**:
+- More explicit and readable
+- Works everywhere dependency injection is supported (controllers, commands, jobs, middleware)
+- Type-safe - no casting needed
+- Cleaner method signatures
 
 
 === laravel-data/core rules ===

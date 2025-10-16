@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Profile;
 
-use App\Http\Requests\UpdateUserProfileRequest;
+use App\Data\UpdateUserProfileData;
 use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,42 +17,41 @@ use function to_route;
 
 final class UserProfileController
 {
-    public function index(Request $request): Response
+    public function index(#[CurrentUser] User $user): Response
     {
         return Inertia::render('profile/General', [
-            'user' => $request->user()?->only([
+            'user' => $user->only([
                 'id',
                 'name',
                 'email',
                 'avatar',
-            ])]);
+            ]),
+        ]);
     }
 
-    public function update(UpdateUserProfileRequest $request): RedirectResponse
-    {
+    public function update(
+        UpdateUserProfileData $data,
+        #[CurrentUser] User $user
+    ): RedirectResponse {
 
-        $validated = $request->validated();
+        $updateData = [
+            'name' => $data->name,
+            'email' => $data->email,
+        ];
 
-        /** @var User $user */
-        $user = $request->user();
-
-        if ($request->hasFile('avatar')) {
-
+        if ($data->avatar instanceof UploadedFile) {
             if ($user->avatar->path) {
-                Storage::disk('public')->delete($user->avatar->path);
+                Storage::disk('public')
+                    ->delete($user->avatar->path);
             }
 
-            // store new avatar
-            $path = $request->file('avatar')->store('avatars', 'public');
-
-            $validated['avatar'] = $path;
-
+            $path = $data->avatar->store('avatars', 'public');
+            $updateData['avatar'] = $path;
         }
 
-        $user->update($validated);
+        $user->update($updateData);
 
         return to_route('profile.index')
             ->with('success', __('Profile updated successfully'));
-
     }
 }

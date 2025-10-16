@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\Profile\UserAvatarController;
 use App\Http\Controllers\Profile\UserProfileController;
 use Illuminate\Contracts\View\View;
@@ -35,6 +36,16 @@ Route::middleware(['auth'])->group(function (): void {
 
         Route::get('/users', [UserController::class, 'index'])
             ->name('index');
+
+    });
+
+    Route::as('invitations.')->group(function (): void {
+
+        Route::post('/invitations', [InvitationController::class, 'store'])
+            ->name('store');
+
+        Route::delete('/invitations/{invitation}', [InvitationController::class, 'destroy'])
+            ->name('destroy');
 
     });
 

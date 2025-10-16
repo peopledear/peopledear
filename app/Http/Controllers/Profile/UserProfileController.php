@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Profile;
 
-use App\Http\Requests\UpdateUserProfileRequest;
+use App\Data\UpdateUserProfileData;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,39 +19,40 @@ final class UserProfileController
     public function index(Request $request): Response
     {
         return Inertia::render('profile/General', [
-            'user' => $request->user()?->only([
-                'id',
-                'name',
-                'email',
-                'avatar',
-            ])]);
+            'user' => $request
+                ->user()
+                ?->only([
+                    'id',
+                    'name',
+                    'email',
+                    'avatar',
+                ]),
+        ]);
     }
 
-    public function update(UpdateUserProfileRequest $request): RedirectResponse
+    public function update(UpdateUserProfileData $data, Request $request): RedirectResponse
     {
-
-        $validated = $request->validated();
-
         /** @var User $user */
         $user = $request->user();
 
-        if ($request->hasFile('avatar')) {
+        $updateData = [
+            'name' => $data->name,
+            'email' => $data->email,
+        ];
 
+        if ($data->avatar !== null) {
             if ($user->avatar->path) {
-                Storage::disk('public')->delete($user->avatar->path);
+                Storage::disk('public')
+                    ->delete($user->avatar->path);
             }
 
-            // store new avatar
-            $path = $request->file('avatar')->store('avatars', 'public');
-
-            $validated['avatar'] = $path;
-
+            $path = $data->avatar->store('avatars', 'public');
+            $updateData['avatar'] = $path;
         }
 
-        $user->update($validated);
+        $user->update($updateData);
 
         return to_route('profile.index')
             ->with('success', __('Profile updated successfully'));
-
     }
 }

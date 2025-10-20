@@ -2,22 +2,25 @@
 
 declare(strict_types=1);
 
+use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 beforeEach(function (): void {
+    $adminRole = Role::query()->firstOrCreate(
+        ['name' => 'admin'],
+        ['display_name' => 'Administrator', 'description' => 'Full system access']
+    );
 
-    $this->user = User::factory()
-        ->createQuietly();
-
-    Auth::login($this->user);
-
+    $this->admin = User::factory()->create([
+        'role_id' => $adminRole->id,
+        'is_active' => true,
+    ]);
 });
 
 test('may show the users page', function (): void {
+    $this->actingAs($this->admin);
 
-    $page = visit(route('users.index'));
+    $page = visit(route('admin.users.index'));
 
-    expect($page->assertSee('Users'));
-
+    $page->assertSee('Members');
 });

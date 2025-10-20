@@ -11,8 +11,6 @@ defineProps<{
 
 const page = usePage<SharedProps>();
 
-console.log(page.props.auth.user);
-
 const logout = () => {
     router.visit(store().url, {
         method: "post",

@@ -20,7 +20,7 @@ test('it creates invitation with correct attributes', function () {
         ->and($invitation->role_id)->toBe($role->id)
         ->and($invitation->invited_by)->toBe($inviter->id)
         ->and($invitation->token)->toBeString()
-        ->and($invitation->token)->toHaveLength(32)
+        ->and($invitation->token)->toHaveLength(36)
         ->and($invitation->accepted_at)->toBeNull();
 });
 

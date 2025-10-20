@@ -27,6 +27,6 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) });
 
-        app.use(plugin).use(ui).mount(el);
+        app.use(ui).use(plugin).mount(el);
     },
 });

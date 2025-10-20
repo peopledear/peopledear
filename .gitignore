@@ -23,5 +23,6 @@ yarn-error.log
 /.vscode
 /.zed
 /tmp
+/resources/js/wayfinder
 auto-imports.d.ts
 components.d.ts

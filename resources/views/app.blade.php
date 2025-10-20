@@ -22,8 +22,6 @@
     @csrf
 </head>
 <body>
-<div class="isolate">
-    @inertia
-</div>
+@inertia
 </body>
 </html>

@@ -13,6 +13,6 @@ final class LogoutController
     {
         Auth::logout();
 
-        return redirect()->route('auth.login.index');
+        return to_route('auth.login.index');
     }
 }

@@ -20,25 +20,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read CarbonInterface|null $accepted_at
  * @property-read CarbonInterface $created_at
  * @property-read CarbonInterface $updated_at
+ * @property-read Role $role
+ * @property-read User $inviter
  */
 final class Invitation extends Model
 {
     /** @use HasFactory<InvitationFactory> */
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'email',
-        'role_id',
-        'invited_by',
-        'token',
-        'expires_at',
-        'accepted_at',
-    ];
 
     /**
      * Get the attributes that should be cast.

@@ -26,7 +26,7 @@ final class InvitationController
             invitedBy: $user->id
         );
 
-        return to_route('users.index')
+        return to_route('admin.users.index')
             ->with('success', __('Invitation sent successfully'));
     }
 
@@ -34,7 +34,7 @@ final class InvitationController
     {
         $invitation->delete();
 
-        return to_route('users.index')
+        return to_route('admin.users.index')
             ->with('success', __('Invitation deleted successfully'));
     }
 }

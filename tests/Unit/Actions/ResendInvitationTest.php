@@ -15,7 +15,7 @@ test('it generates new token', function () {
 
     expect($result->token)->not->toBe($originalToken)
         ->and($result->token)->toBeString()
-        ->and($result->token)->toHaveLength(32);
+        ->and($result->token)->toHaveLength(36);
 });
 
 test('it resets accepted_at to null', function () {

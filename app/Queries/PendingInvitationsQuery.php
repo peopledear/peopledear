@@ -17,7 +17,6 @@ final class PendingInvitationsQuery
         return Invitation::query()
             ->with(['role', 'inviter'])
             ->whereNull('accepted_at')
-            ->where('expires_at', '>', now())
-            ->orderBy('created_at', 'desc');
+            ->where('expires_at', '>', now())->latest();
     }
 }

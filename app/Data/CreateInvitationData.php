@@ -4,18 +4,43 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use Spatie\LaravelData\Attributes\Validation\Email;
-use Spatie\LaravelData\Attributes\Validation\Exists;
-use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Required;
+use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 
 final class CreateInvitationData extends Data
 {
     public function __construct(
-        #[Required, Email, Max(255)]
         public readonly string $email,
-        #[Required, Exists('roles', 'id')]
         public readonly int $role_id,
     ) {}
+
+    /**
+     * @return array<string, array<int, mixed>>
+     */
+    public static function rules(): array
+    {
+        return [
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email'),
+                Rule::unique('invitations', 'email')->whereNull('accepted_at'),
+            ],
+            'role_id' => [
+                'required',
+                'exists:roles,id',
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function messages(): array
+    {
+        return [
+            'email.unique' => 'This email is already registered or has a pending invitation.',
+        ];
+    }
 }

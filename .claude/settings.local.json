@@ -8,7 +8,12 @@
       "Bash(php artisan make:class:*)",
       "Bash(php artisan test:*)",
       "mcp__laravel-boost__tinker",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(php artisan route:list:*)",
+      "Bash(sed:*)",
+      "Bash(vendor/bin/phpstan analyse:*)",
+      "mcp__laravel-boost__search-docs",
+      "Bash(npm run build:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

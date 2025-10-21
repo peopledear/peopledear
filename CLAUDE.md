@@ -510,6 +510,41 @@ $pages = visit(['/', '/about', '/contact']);
 $pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
 </code-snippet>
 
+### Pest Configuration & Best Practices
+
+- **Global Configuration in `tests/Pest.php`**:
+  - `RefreshDatabase` trait is applied globally to all tests - DO NOT add `uses(RefreshDatabase::class)` in individual test files
+  - Global `beforeEach` hook configures test environment (fake strings, prevent stray HTTP requests, freeze time)
+  - Configuration applies to all test directories: Browser, Feature, and Unit
+
+- **Test Methods**:
+  - Use `$this->actingAs($user)` for authentication in tests - NOT `actingAs($user)` or `Auth::login($user)`
+  - Use `visit()` function (no `$this->`) for Pest browser tests - it's globally available
+  - Follow existing test patterns - check sibling test files for conventions
+
+<code-snippet name="Correct Test Authentication Pattern" lang="php">
+it('admin can access users page', function (): void {
+    $admin = User::factory()->create(['role_id' => $adminRole->id]);
+
+    $this->actingAs($admin);  // ✅ CORRECT
+
+    $page = visit('/admin/users');  // ✅ CORRECT - no $this->
+
+    $page->assertSee('Users');
+});
+</code-snippet>
+
+<code-snippet name="WRONG Test Patterns - DO NOT USE" lang="php">
+it('admin can access users page', function (): void {
+    $admin = User::factory()->create(['role_id' => $adminRole->id]);
+
+    actingAs($admin);  // ❌ WRONG - missing $this->
+    Auth::login($admin);  // ❌ WRONG - use $this->actingAs() instead
+
+    $page = $this->visit('/admin/users');  // ❌ WRONG - visit() not $this->visit()
+});
+</code-snippet>
+
 
 === tailwindcss/core rules ===
 

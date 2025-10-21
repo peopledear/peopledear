@@ -15,7 +15,6 @@ final class UsersQuery
     public function builder(): Builder
     {
         return User::query()
-            ->with('role')
-            ->orderBy('created_at', 'desc');
+            ->with('role')->latest();
     }
 }

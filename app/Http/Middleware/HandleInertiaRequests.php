@@ -44,8 +44,15 @@ final class HandleInertiaRequests extends Middleware
 
         $sharedData = [
             'appName' => config()->string('app.name'),
-            'auth.user' => fn () => $request->user()
-                ? $request->user()->only('id', 'name', 'email', 'avatar')
+            'auth.user' => fn (): ?array => $request->user()
+                ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'avatar' => $request->user()->avatar,
+                    'is_active' => $request->user()->is_active,
+                    'role' => null, // TODO: Fix role loading issue
+                ]
                 : null,
         ];
 

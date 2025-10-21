@@ -1,22 +1,21 @@
 {
-    "extends": "@vue/tsconfig/tsconfig.json",
     "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "allowJs": true,
+        "noEmit": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
         "paths": {
-            "@/*": ["./resources/js/*"],
-            "#build/ui": [
-                "./node_modules/@nuxt/ui/.nuxt/ui"
-            ]
+            "@/*": ["./resources/js/*"]
         },
-        "types": ["vite/client"]
+        "jsx": "react-jsx"
     },
-    "include": [
-        "resources/js/**/*.ts",
-        "resources/js/**/*.d.ts",
-        "resources/js/**/*.tsx",
-        "resources/js/**/*.vue",
-        "resources/types/**/*.ts",
-        "resources/types/**/*.d.ts",
-        "auto-imports.d.ts",
-        "components.d.ts"
-    ]
+    "include": ["resources/js/**/*.ts", "resources/js/**/*.d.ts", "resources/js/**/*.tsx"]
 }

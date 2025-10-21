@@ -19,6 +19,6 @@ return [
         'page_paths' => [
             resource_path('js/pages'),
         ],
-        'page_extensions' => ['vue'],
+        'page_extensions' => ['tsx'],
     ],
 ];

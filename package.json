@@ -50,7 +50,7 @@
         "globals": "^16.4.0",
         "input-otp": "^1.4.2",
         "laravel-vite-plugin": "^2.0",
-        "lucide-react": "^0.547.0",
+        "lucide-react": "^0.548.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "tailwind-merge": "^3.3.1",

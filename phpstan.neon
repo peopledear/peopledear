@@ -13,18 +13,6 @@ parameters:
         - public
         - routes
 
-    excludePaths:
-        - tests
-        - tests/*
-        - tests/**/*
-        - vendor/*
-        - storage/*
-        - bootstrap/cache/*
-        - public/*
-        - node_modules/*
-        - database/migrations/*
-        - resources/views/*
-
 
     level: max
 

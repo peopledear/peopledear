@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-
-use function config;
+use Override;
 
 final class HandleInertiaRequests extends Middleware
 {
     /**
-     * The root template that's loaded on the first page visit.
-     *
      * @see https://inertiajs.com/server-side-setup#root-template
      *
      * @var string
@@ -21,45 +19,35 @@ final class HandleInertiaRequests extends Middleware
     protected $rootView = 'app';
 
     /**
-     * Determines the current asset version.
-     *
      * @see https://inertiajs.com/asset-versioning
      */
+    #[Override]
     public function version(Request $request): ?string
     {
         return parent::version($request);
     }
 
     /**
-     * Define the props that are shared by default.
-     *
      * @see https://inertiajs.com/shared-data
      *
      * @return array<string, mixed>
      */
+    #[Override]
     public function share(Request $request): array
     {
+        $quote = Inspiring::quotes()->random();
+        assert(is_string($quote));
 
-        $parentSharedData = parent::share($request);
-
-        $sharedData = [
-            'appName' => config()->string('app.name'),
-            'auth.user' => fn (): ?array => $request->user()
-                ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'avatar' => $request->user()->avatar,
-                    'is_active' => $request->user()->is_active,
-                    'role' => null, // TODO: Fix role loading issue
-                ]
-                : null,
-        ];
+        [$message, $author] = str($quote)->explode('-');
 
         return [
-            ...$parentSharedData,
-            ...$sharedData,
+            ...parent::share($request),
+            'name' => config('app.name'),
+            'quote' => ['message' => mb_trim((string) $message), 'author' => mb_trim((string) $author)],
+            'auth' => [
+                'user' => $request->user(),
+            ],
+            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
-
     }
 }

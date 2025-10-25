@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SessionController::create
 * @see app/Http/Controllers/SessionController.php:17
@@ -44,6 +44,43 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
+
+/**
 * @see \App\Http\Controllers\SessionController::store
 * @see app/Http/Controllers/SessionController.php:25
 * @route '/login'
@@ -78,6 +115,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\SessionController::store
+* @see app/Http/Controllers/SessionController.php:25
+* @route '/login'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SessionController::store
+* @see app/Http/Controllers/SessionController.php:25
+* @route '/login'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
+
+/**
 * @see \App\Http\Controllers\SessionController::destroy
 * @see app/Http/Controllers/SessionController.php:45
 * @route '/logout'
@@ -110,6 +169,28 @@ destroy.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: destroy.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\SessionController::destroy
+* @see app/Http/Controllers/SessionController.php:45
+* @route '/logout'
+*/
+const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SessionController::destroy
+* @see app/Http/Controllers/SessionController.php:45
+* @route '/logout'
+*/
+destroyForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(options),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const SessionController = { create, store, destroy }
 

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\UserEmailVerification::update
 * @see app/Http/Controllers/UserEmailVerification.php:14
@@ -59,6 +59,43 @@ update.head = (args: { id: string | number, hash: string | number } | [id: strin
     url: update.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\UserEmailVerification::update
+* @see app/Http/Controllers/UserEmailVerification.php:14
+* @route '/verify-email/{id}/{hash}'
+*/
+const updateForm = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: update.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UserEmailVerification::update
+* @see app/Http/Controllers/UserEmailVerification.php:14
+* @route '/verify-email/{id}/{hash}'
+*/
+updateForm.get = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: update.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UserEmailVerification::update
+* @see app/Http/Controllers/UserEmailVerification.php:14
+* @route '/verify-email/{id}/{hash}'
+*/
+updateForm.head = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+update.form = updateForm
 
 const UserEmailVerification = { update }
 

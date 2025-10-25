@@ -1,4 +1,4 @@
-import AdminHeaderLayout from "@/layouts/admin/admin-header-layout";
+import OrgHeaderLayout from "@/layouts/org/org-header-layout";
 import { type BreadcrumbItem } from "@/types";
 import { type ReactNode } from "react";
 
@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 }
 
 export default ({ children, breadcrumbs, ...props }: AdminLayoutProps) => (
-    <AdminHeaderLayout breadcrumbs={breadcrumbs} {...props}>
+    <OrgHeaderLayout breadcrumbs={breadcrumbs} {...props}>
         {children}
-    </AdminHeaderLayout>
+    </OrgHeaderLayout>
 );

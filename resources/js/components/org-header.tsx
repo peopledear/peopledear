@@ -24,6 +24,7 @@ import { UserMenuContent } from "@/components/user-menu-content";
 import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
 import { overview } from "@/routes/org";
+import { edit } from "@/routes/org/settings/organization";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
 import { Link, usePage } from "@inertiajs/react";
 import { LayoutGrid, Menu, Search, Settings } from "lucide-react";
@@ -38,7 +39,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: "Settings",
-        href: "/people-manager/settings",
+        href: edit(),
         icon: Settings,
     },
 ];
@@ -50,7 +51,7 @@ interface AdminHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
 }
 
-export function AdminHeader({ breadcrumbs = [] }: AdminHeaderProps) {
+export function OrgHeader({ breadcrumbs = [] }: AdminHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();

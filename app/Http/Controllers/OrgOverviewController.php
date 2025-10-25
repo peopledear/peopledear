@@ -7,10 +7,10 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class OrganizationOverviewController
+final class OrgOverviewController
 {
     public function __invoke(): Response
     {
-        return Inertia::render('people-manager-overview/index', []);
+        return Inertia::render('org-overview/index', []);
     }
 }

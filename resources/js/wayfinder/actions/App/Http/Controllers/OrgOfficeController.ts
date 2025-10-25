@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\OfficeController::store
-* @see app/Http/Controllers/OfficeController.php:20
+* @see \App\Http\Controllers\OrgOfficeController::store
+* @see app/Http/Controllers/OrgOfficeController.php:20
 * @route '/org/offices'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -15,8 +15,8 @@ store.definition = {
 } satisfies RouteDefinition<["post"]>
 
 /**
-* @see \App\Http\Controllers\OfficeController::store
-* @see app/Http/Controllers/OfficeController.php:20
+* @see \App\Http\Controllers\OrgOfficeController::store
+* @see app/Http/Controllers/OrgOfficeController.php:20
 * @route '/org/offices'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -24,8 +24,8 @@ store.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\OfficeController::store
-* @see app/Http/Controllers/OfficeController.php:20
+* @see \App\Http\Controllers\OrgOfficeController::store
+* @see app/Http/Controllers/OrgOfficeController.php:20
 * @route '/org/offices'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -34,8 +34,8 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\OfficeController::update
-* @see app/Http/Controllers/OfficeController.php:35
+* @see \App\Http\Controllers\OrgOfficeController::update
+* @see app/Http/Controllers/OrgOfficeController.php:35
 * @route '/org/offices/{office}'
 */
 export const update = (args: { office: number | { id: number } } | [office: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -49,8 +49,8 @@ update.definition = {
 } satisfies RouteDefinition<["put"]>
 
 /**
-* @see \App\Http\Controllers\OfficeController::update
-* @see app/Http/Controllers/OfficeController.php:35
+* @see \App\Http\Controllers\OrgOfficeController::update
+* @see app/Http/Controllers/OrgOfficeController.php:35
 * @route '/org/offices/{office}'
 */
 update.url = (args: { office: number | { id: number } } | [office: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -82,8 +82,8 @@ update.url = (args: { office: number | { id: number } } | [office: number | { id
 }
 
 /**
-* @see \App\Http\Controllers\OfficeController::update
-* @see app/Http/Controllers/OfficeController.php:35
+* @see \App\Http\Controllers\OrgOfficeController::update
+* @see app/Http/Controllers/OrgOfficeController.php:35
 * @route '/org/offices/{office}'
 */
 update.put = (args: { office: number | { id: number } } | [office: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -92,8 +92,8 @@ update.put = (args: { office: number | { id: number } } | [office: number | { id
 })
 
 /**
-* @see \App\Http\Controllers\OfficeController::destroy
-* @see app/Http/Controllers/OfficeController.php:48
+* @see \App\Http\Controllers\OrgOfficeController::destroy
+* @see app/Http/Controllers/OrgOfficeController.php:48
 * @route '/org/offices/{office}'
 */
 export const destroy = (args: { office: number | { id: number } } | [office: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -107,8 +107,8 @@ destroy.definition = {
 } satisfies RouteDefinition<["delete"]>
 
 /**
-* @see \App\Http\Controllers\OfficeController::destroy
-* @see app/Http/Controllers/OfficeController.php:48
+* @see \App\Http\Controllers\OrgOfficeController::destroy
+* @see app/Http/Controllers/OrgOfficeController.php:48
 * @route '/org/offices/{office}'
 */
 destroy.url = (args: { office: number | { id: number } } | [office: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -140,8 +140,8 @@ destroy.url = (args: { office: number | { id: number } } | [office: number | { i
 }
 
 /**
-* @see \App\Http\Controllers\OfficeController::destroy
-* @see app/Http/Controllers/OfficeController.php:48
+* @see \App\Http\Controllers\OrgOfficeController::destroy
+* @see app/Http/Controllers/OrgOfficeController.php:48
 * @route '/org/offices/{office}'
 */
 destroy.delete = (args: { office: number | { id: number } } | [office: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -149,6 +149,6 @@ destroy.delete = (args: { office: number | { id: number } } | [office: number | 
     method: 'delete',
 })
 
-const OfficeController = { store, update, destroy }
+const OrgOfficeController = { store, update, destroy }
 
-export default OfficeController
+export default OrgOfficeController

@@ -1,8 +1,8 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\OrganizationController::edit
-* @see app/Http/Controllers/OrganizationController.php:17
-* @route '/org/settings/organization'
+* @see \App\Http\Controllers\OrgController::edit
+* @see app/Http/Controllers/OrgController.php:17
+* @route '/org/settings'
 */
 export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
@@ -11,22 +11,22 @@ export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 edit.definition = {
     methods: ["get","head"],
-    url: '/org/settings/organization',
+    url: '/org/settings',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\OrganizationController::edit
-* @see app/Http/Controllers/OrganizationController.php:17
-* @route '/org/settings/organization'
+* @see \App\Http\Controllers\OrgController::edit
+* @see app/Http/Controllers/OrgController.php:17
+* @route '/org/settings'
 */
 edit.url = (options?: RouteQueryOptions) => {
     return edit.definition.url + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\OrganizationController::edit
-* @see app/Http/Controllers/OrganizationController.php:17
-* @route '/org/settings/organization'
+* @see \App\Http\Controllers\OrgController::edit
+* @see app/Http/Controllers/OrgController.php:17
+* @route '/org/settings'
 */
 edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
@@ -34,9 +34,9 @@ edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\OrganizationController::edit
-* @see app/Http/Controllers/OrganizationController.php:17
-* @route '/org/settings/organization'
+* @see \App\Http\Controllers\OrgController::edit
+* @see app/Http/Controllers/OrgController.php:17
+* @route '/org/settings'
 */
 edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(options),
@@ -44,8 +44,8 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\OrganizationController::update
-* @see app/Http/Controllers/OrganizationController.php:29
+* @see \App\Http\Controllers\OrgController::update
+* @see app/Http/Controllers/OrgController.php:29
 * @route '/org/settings/organization'
 */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -59,8 +59,8 @@ update.definition = {
 } satisfies RouteDefinition<["put"]>
 
 /**
-* @see \App\Http\Controllers\OrganizationController::update
-* @see app/Http/Controllers/OrganizationController.php:29
+* @see \App\Http\Controllers\OrgController::update
+* @see app/Http/Controllers/OrgController.php:29
 * @route '/org/settings/organization'
 */
 update.url = (options?: RouteQueryOptions) => {
@@ -68,8 +68,8 @@ update.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\OrganizationController::update
-* @see app/Http/Controllers/OrganizationController.php:29
+* @see \App\Http\Controllers\OrgController::update
+* @see app/Http/Controllers/OrgController.php:29
 * @route '/org/settings/organization'
 */
 update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -77,9 +77,6 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     method: 'put',
 })
 
-const organization = {
-    edit: Object.assign(edit, edit),
-    update: Object.assign(update, update),
-}
+const OrgController = { edit, update }
 
-export default organization
+export default OrgController

@@ -12,7 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class OrganizationController
+final class OrgController
 {
     public function edit(): Response
     {
@@ -21,7 +21,7 @@ final class OrganizationController
             ->with('offices.address')
             ->firstOrFail();
 
-        return Inertia::render('admin/settings/organization', [
+        return Inertia::render('org-settings-general/edit', [
             'organization' => $organization,
         ]);
     }

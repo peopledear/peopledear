@@ -11,7 +11,7 @@ interface OrganizationProps {
     };
 }
 
-export default function Organization({ organization }: OrganizationProps) {
+export default function Edit({ organization }: OrganizationProps) {
     return (
         <AdminLayout>
             <Head title="Organization Settings" />

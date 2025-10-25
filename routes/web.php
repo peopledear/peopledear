@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\PeopleManagerOverviewController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserEmailResetNotification;
@@ -17,6 +18,11 @@ Route::get('/', fn () => Inertia::render('welcome', []))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('dashboard', fn () => Inertia::render('dashboard', []))->name('dashboard');
+
+    // People Manager Overview...
+    Route::get('people-manager', PeopleManagerOverviewController::class)
+        ->middleware('can:employees.view')
+        ->name('people-manager.overview');
 });
 
 Route::middleware('auth')->group(function (): void {

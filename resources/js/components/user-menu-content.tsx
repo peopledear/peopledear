@@ -6,17 +6,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserInfo } from "@/components/user-info";
 import { useMobileNavigation } from "@/hooks/use-mobile-navigation";
-import { logout } from "@/routes";
+import { dashboard, logout } from "@/routes";
 import { edit } from "@/routes/user-profile";
 import { type User } from "@/types";
 import { Link, router } from "@inertiajs/react";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, User as UserIcon } from "lucide-react";
 
 interface UserMenuContentProps {
     user: User;
+    showEmployeeLink?: boolean;
 }
 
-export function UserMenuContent({ user }: UserMenuContentProps) {
+export function UserMenuContent({
+    user,
+    showEmployeeLink = false,
+}: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
 
     const handleLogout = () => {
@@ -33,6 +37,20 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+                {showEmployeeLink && (
+                    <DropdownMenuItem asChild>
+                        <Link
+                            className="block w-full"
+                            href={dashboard()}
+                            as="button"
+                            prefetch
+                            onClick={cleanup}
+                        >
+                            <UserIcon className="mr-2" />
+                            Employee
+                        </Link>
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild>
                     <Link
                         className="block w-full"

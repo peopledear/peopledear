@@ -28,4 +28,5 @@ final readonly class CreateFavorite
         return $this->favorites->add($user, $favorite);
     }
 }
+
 @endboostsnippet

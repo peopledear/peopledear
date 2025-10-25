@@ -40,6 +40,9 @@ jobs:
       - name: Install Node Dependencies
         run: npm install
 
+      - name: Generate Wayfinder Routes
+        run: php artisan wayfinder:generate --with-form
+
       - name: Build Assets
         run: npm run build
 

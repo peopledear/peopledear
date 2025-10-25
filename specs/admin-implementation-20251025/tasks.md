@@ -8,10 +8,10 @@
 
 ## Progress Overview
 
-- [x] Phase 1: Admin Layout & Navigation ✅ **COMPLETED**
-- [ ] Phase 2: Admin Dashboard
-- [ ] Phase 3: Admin Settings Layout
-- [ ] Phase 4: Organization Settings (People Manager & Owner)
+- [x] Phase 1: Admin Layout & Navigation ✅ **COMPLETED** - PR #12 merged
+- [ ] Phase 2: Admin Dashboard (skipped - simplified approach)
+- [ ] Phase 3: Admin Settings Layout (skipped - not needed yet)
+- [~] Phase 4: Organization Settings (People Manager & Owner) 🔄 **IN PROGRESS**
 - [ ] Phase 5: System Settings (Owner Only)
 
 ---
@@ -185,18 +185,27 @@
 ## Phase 4: Organization Settings (People Manager & Owner)
 
 **Branch:** `feature/organization-settings`
-**Status:** Not Started
-**Dependencies:** Phase 3 completed
+**Status:** 🔄 IN PROGRESS
+**Dependencies:** Phase 1 completed (Phase 3 skipped - not needed for simplified org settings)
 
 ### Setup
-- [ ] Checkout main: `git checkout main`
-- [ ] Pull latest: `git pull origin main`
-- [ ] Create branch: `git checkout -b feature/organization-settings`
+- [x] Checkout main: `git checkout main`
+- [x] Pull latest: `git pull origin main`
+- [x] Create branch: `git checkout -b feature/organization-settings`
+
+### Database
+- [x] Create model: `php artisan make:model Organization -mfs`
+- [x] Update migration: Add name, vat_number, ssn, phone columns
+- [x] Remove down() method from migration
+- [x] Update Organization model with casts() method
+- [x] Update OrganizationFactory with realistic fake data
+- [x] Run migration: `php artisan migrate:fresh --seed`
 
 ### Unit Tests (TDD - Write First)
-- [ ] Create test: `tests/Unit/Models/OrganizationTest.php`
-- [ ] Test: Organization has offices relationship
-- [ ] Test: Organization model casts work correctly
+- [x] Create test: `tests/Unit/Models/OrganizationTest.php`
+- [x] Test: Organization has correct fillable attributes
+- [x] Test: Organization model casts work correctly
+- [x] Test: Organization can be created with only required fields
 - [ ] Create test: `tests/Unit/Models/OfficeTest.php`
 - [ ] Test: Office belongs to organization relationship
 - [ ] Test: Office model has correct attributes

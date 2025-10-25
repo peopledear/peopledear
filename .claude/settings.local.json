@@ -13,7 +13,8 @@
       "Bash(sed:*)",
       "Bash(vendor/bin/phpstan analyse:*)",
       "mcp__laravel-boost__search-docs",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git checkout:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

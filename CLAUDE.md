@@ -225,7 +225,12 @@ Route::get('/users', function () {
 - Use `$table->foreignIdFor(Model::class)` for foreign keys
 
 ### Model Creation
-- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `list-artisan-commands` to check the available options to `php artisan make:model`.
+- **ALWAYS use `php artisan make:model {Name} -mfs`** to create model with migration, factory, and seeder
+  - `-m` creates migration
+  - `-f` creates factory
+  - `-s` creates seeder
+  - Example: `php artisan make:model Organization -mfs --no-interaction`
+- This ensures all related files are created together and follow consistent naming
 
 ### APIs & Eloquent Resources
 - For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.

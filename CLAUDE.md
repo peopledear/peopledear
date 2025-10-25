@@ -11,8 +11,10 @@ This project maintains detailed guidelines in the `.ai/guidelines/` directory th
 
 - **`general.blade.php`** - General coding conventions and PHP annotations
 - **`app.actions.blade.php`** - Action pattern and business logic guidelines
+- **`app.controllers.blade.php`** - Controller structure, Form Requests, and data flow
+- **`app.data.blade.php`** - Data objects as DTOs (not validation layers)
 - **`app.models.blade.php`** - Eloquent model structure, type hints, and relationship annotations
-- **`database-migrations.blade.php`** - Comprehensive database migration rules
+- **`database.migrations.blade.php`** - Comprehensive database migration rules
 
 These guideline files use the `@boostsnippet` directive for code examples and are automatically included by Laravel Boost.
 
@@ -334,30 +336,25 @@ public function store(
 
 ## Spatie Laravel Data
 
-This application uses Spatie Laravel Data for type-safe request validation and data transfer objects.
+This application uses Spatie Laravel Data for **type-safe Data Transfer Objects (DTOs)** - NOT for validation.
+
+### Separation of Concerns
+- **Form Requests** - Handle HTTP validation (required fields, formats, rules)
+- **Data Objects** - Provide type-safe data transfer between layers
+- **Actions** - Contain business logic, receive type-safe Data objects
 
 ### Data Objects
-- **ALWAYS use Data objects for validation and data transfer** - DO NOT use FormRequest classes (except for auth-specific cases like LoginRequest)
-- **All Data objects MUST be suffixed with `Data`**
-  - Correct: `CreateInvitationData`, `UpdateUserProfileData`, `UpdateUserRoleData`
-  - Incorrect: `CreateInvitationRequest`, `UpdateUserProfile`, `UpdateUserRoleDto`
 - **Store Data objects in `app/Data/`** namespace
-- **Create Data objects using**: `php artisan make:data NameData --namespace=Data`
+- **All Data objects MUST be suffixed with `Data`**
+  - Correct: `UpdateOfficeData`, `CreateOfficeData`, `AddressData`
+  - Incorrect: `UpdateOfficeRequest`, `UpdateOffice`, `OfficeDto`
+- **Use `Optional` type for update operations** - Supports partial updates
+- **Use required types for create operations** - Ensures all fields provided
+- **Use readonly properties** - Data objects are immutable
+- **NO validation attributes** - Validation belongs in Form Requests
 
 ### Data Object Structure
-- Use readonly properties with type hints
-- **Validation Strategy**:
-  - **Default: Use validation attributes** from `Spatie\LaravelData\Attributes\Validation`
-    - Better IDE support with autocomplete
-    - Co-located with property definitions
-    - Type-safe and checked by static analysis
-  - **Use `rules()` method only for**:
-    - Dynamic validation (e.g., `unique:users,email,{auth()->id()}`)
-    - Complex Laravel Rule objects (e.g., `File::image()`, `Rule::dimensions()`)
-    - Conditional validation based on runtime context
-- Data objects automatically validate and cast data
-
-### Example Data Object
+@boostsnippet('Update Data Object with Optional')
 ```php
 <?php
 
@@ -365,88 +362,47 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use Spatie\LaravelData\Attributes\Validation\Email;
-use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Required;
+use App\Enums\OfficeType;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 
-final class CreateInvitationData extends Data
+final class UpdateOfficeData extends Data
 {
     public function __construct(
-        #[Required, Email, Max(255)]
-        public readonly string $email,
-        #[Required]
-        public readonly int $role_id,
-    ) {
-    }
+        public readonly string|Optional $name,
+        public readonly OfficeType|Optional $type,
+        public readonly string|Optional|null $phone,
+        public readonly AddressData|Optional $address,
+    ) {}
 }
 ```
 
-### Using Data Objects in Controllers
-- Type-hint Data objects in controller methods
-- Laravel automatically validates and injects the Data object
-- Access properties directly: `$data->email`, `$data->role_id`
+### Creating Data Objects
 
+**ALWAYS use `::from()` to create Data objects from validated data:**
+
+@boostsnippet('Create Data from Form Request')
 ```php
-public function store(CreateInvitationData $data, CreateInvitation $action): RedirectResponse
-{
-    $invitation = $action->handle($data->email, $data->role_id, auth()->id());
-    return redirect()->route('users.index');
+public function update(
+    UpdateOfficeRequest $request,
+    Office $office,
+    UpdateOfficeAction $action
+): RedirectResponse {
+    // Request validation already happened in UpdateOfficeRequest
+    $data = UpdateOfficeData::from($request->validated());
+
+    $action->handle($data, $office);
+
+    return redirect()->route('admin.settings.organization.edit');
 }
 ```
-
-### Creating Data Objects - Two Methods
-
-Laravel Data provides two methods for creating Data objects with different validation behavior:
-
-#### 1. `::validateAndCreate()` - WITH Validation (HTTP Requests, API calls)
-- **ALWAYS use in HTTP controllers** - Laravel auto-injects with validation
-- Runs all validation rules (attributes or rules() method)
-- Throws `ValidationException` on validation failure
-- Use when you need to ensure data integrity before processing
-
-```php
-// In controllers - Laravel auto-validates when type-hinted
-public function store(CreateInvitationData $data): RedirectResponse
-{
-    // $data is already validated
-    $invitation = $action->handle($data->email, $data->role_id);
-}
-
-// Manual validation when needed
-$data = CreateInvitationData::validateAndCreate([
-    'email' => $request->input('email'),
-    'role_id' => $request->input('role_id'),
-]);
-```
-
-#### 2. `::from()` - WITHOUT Validation (Console Commands, Jobs, Trusted Sources)
-- **SKIPS all validation** - creates object directly from array
-- Use in console commands, queued jobs, seeders, or trusted internal data
-- Faster performance when validation is not needed
-- Throws `CannotCreateData` only if required parameters are missing (not validation failure)
-
-```php
-// In console commands - skip validation for admin operations
-$data = CreateInvitationData::from([
-    'email' => $email,      // Can be invalid - no validation!
-    'role_id' => $roleId,   // Can be non-existent - no validation!
-]);
-
-$invitation = $action->handle($data->email, $data->role_id);
-```
-
-**Key Difference**:
-- `::validateAndCreate()` = Type casting + Validation rules
-- `::from()` = Type casting only (no validation)
 
 ### Benefits
 - Type-safe data handling with IDE autocompletion
-- Automatic validation using attributes
-- Automatic casting of data types
-- Seamless Inertia.js integration
-- Reduces boilerplate code
-- Combines validation + DTOs in one class
+- Clean separation: Form Requests validate, Data objects transfer
+- Nullable properties support partial updates correctly
+- Data objects can be reused across HTTP, Console, Jobs
+- No duplicate validation logic
 
 
 === pint/core rules ===

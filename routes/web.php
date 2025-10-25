@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\PeopleManagerOverviewController;
+use App\Http\Controllers\OfficeController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationOverviewController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserEmailResetNotification;
@@ -19,10 +21,34 @@ Route::get('/', fn () => Inertia::render('welcome', []))->name('home');
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('dashboard', fn () => Inertia::render('dashboard', []))->name('dashboard');
 
-    // People Manager Overview...
-    Route::get('people-manager', PeopleManagerOverviewController::class)
-        ->middleware('can:employees.view')
-        ->name('people-manager.overview');
+    Route::middleware(['role:people_manager|owner'])
+        ->prefix('org')
+        ->as('org.')->group(function (): void {
+            // People Manager Overview...
+            Route::get('/', OrganizationOverviewController::class)
+                ->middleware('can:employees.view')
+                ->name('overview');
+
+            // Organization Settings...
+            Route::get('settings/organization', [OrganizationController::class, 'edit'])
+                ->middleware('can:organizations.edit')
+                ->name('settings.organization.edit');
+            Route::put('settings/organization', [OrganizationController::class, 'update'])
+                ->middleware('can:organizations.edit')
+                ->name('settings.organization.update');
+
+            // Office Management...
+            Route::post('offices', [OfficeController::class, 'store'])
+                ->middleware('can:organizations.edit')
+                ->name('offices.store');
+            Route::put('offices/{office}', [OfficeController::class, 'update'])
+                ->middleware('can:organizations.edit')
+                ->name('offices.update');
+            Route::delete('offices/{office}', [OfficeController::class, 'destroy'])
+                ->middleware('can:organizations.edit')
+                ->name('offices.destroy');
+        });
+
 });
 
 Route::middleware('auth')->group(function (): void {

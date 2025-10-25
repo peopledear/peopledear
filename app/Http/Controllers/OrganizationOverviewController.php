@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class PeopleManagerOverviewController
+final class OrganizationOverviewController
 {
     public function __invoke(): Response
     {

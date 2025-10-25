@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions;
+
+use App\Models\Office;
+use Illuminate\Support\Facades\DB;
+
+final readonly class DeleteOfficeAction
+{
+    public function __construct(
+        private DeleteAddressAction $deleteAddress,
+    ) {}
+
+    /**
+     * Delete an office and its address.
+     */
+    public function handle(Office $office): void
+    {
+        DB::transaction(function () use ($office): void {
+            $this->deleteAddress->handle($office);
+
+            $office->delete();
+        });
+    }
+}

@@ -1,6 +1,6 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 /**
-* @see routes/web.php:44
+* @see routes/web.php:70
 * @route '/settings/appearance'
 */
 export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ edit.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:70
 * @route '/settings/appearance'
 */
 edit.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ edit.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:70
 * @route '/settings/appearance'
 */
 edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -31,47 +31,13 @@ edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:70
 * @route '/settings/appearance'
 */
 edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(options),
     method: 'head',
 })
-
-/**
-* @see routes/web.php:44
-* @route '/settings/appearance'
-*/
-const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url(options),
-    method: 'get',
-})
-
-/**
-* @see routes/web.php:44
-* @route '/settings/appearance'
-*/
-editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url(options),
-    method: 'get',
-})
-
-/**
-* @see routes/web.php:44
-* @route '/settings/appearance'
-*/
-editForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-edit.form = editForm
 
 const appearance = {
     edit: Object.assign(edit, edit),

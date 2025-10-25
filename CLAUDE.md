@@ -7,13 +7,17 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 
 ## Project-Specific Guidelines
 
-In addition to these Laravel Boost guidelines, this project maintains detailed guidelines in `.ai/guidelines/` directory:
+This project maintains detailed guidelines in the `.ai/guidelines/` directory that complement these Laravel Boost guidelines:
 
-- **`.ai/guidelines/general.blade.php`** - General coding conventions and PHP annotations
-- **`.ai/guidelines/app.actions.blade.php`** - Action pattern and business logic guidelines
-- **`.ai/guidelines/database-migrations.blade.php`** - Comprehensive database migration rules
+- **`general.blade.php`** - General coding conventions and PHP annotations
+- **`app.actions.blade.php`** - Action pattern and business logic guidelines
+- **`app.controllers.blade.php`** - Controller structure, Form Requests, and data flow
+- **`app.data.blade.php`** - Data objects as DTOs (not validation layers)
+- **`app.models.blade.php`** - Eloquent model structure, type hints, and relationship annotations
+- **`database.migrations.blade.php`** - Comprehensive database migration rules
+- **`tests.blade.php`** - Testing conventions, container resolution, Pest patterns
 
-These guideline files use the `@boostsnippet` directive for code examples and are automatically included by Laravel Boost. When a topic has detailed guidelines in `.ai/guidelines/`, this document provides a summary with a reference to the detailed guidelines file.
+These guideline files use the `@boostsnippet` directive for code examples and are automatically included by Laravel Boost.
 
 ## Foundational Context
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
@@ -225,7 +229,12 @@ Route::get('/users', function () {
 - Use `$table->foreignIdFor(Model::class)` for foreign keys
 
 ### Model Creation
-- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `list-artisan-commands` to check the available options to `php artisan make:model`.
+- **ALWAYS use `php artisan make:model {Name} -mfs`** to create model with migration, factory, and seeder
+  - `-m` creates migration
+  - `-f` creates factory
+  - `-s` creates seeder
+  - Example: `php artisan make:model Organization -mfs --no-interaction`
+- This ensures all related files are created together and follow consistent naming
 
 ### APIs & Eloquent Resources
 - For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
@@ -328,30 +337,25 @@ public function store(
 
 ## Spatie Laravel Data
 
-This application uses Spatie Laravel Data for type-safe request validation and data transfer objects.
+This application uses Spatie Laravel Data for **type-safe Data Transfer Objects (DTOs)** - NOT for validation.
+
+### Separation of Concerns
+- **Form Requests** - Handle HTTP validation (required fields, formats, rules)
+- **Data Objects** - Provide type-safe data transfer between layers
+- **Actions** - Contain business logic, receive type-safe Data objects
 
 ### Data Objects
-- **ALWAYS use Data objects for validation and data transfer** - DO NOT use FormRequest classes (except for auth-specific cases like LoginRequest)
-- **All Data objects MUST be suffixed with `Data`**
-  - Correct: `CreateInvitationData`, `UpdateUserProfileData`, `UpdateUserRoleData`
-  - Incorrect: `CreateInvitationRequest`, `UpdateUserProfile`, `UpdateUserRoleDto`
 - **Store Data objects in `app/Data/`** namespace
-- **Create Data objects using**: `php artisan make:data NameData --namespace=Data`
+- **All Data objects MUST be suffixed with `Data`**
+  - Correct: `UpdateOfficeData`, `CreateOfficeData`, `AddressData`
+  - Incorrect: `UpdateOfficeRequest`, `UpdateOffice`, `OfficeDto`
+- **Use `Optional` type for update operations** - Supports partial updates
+- **Use required types for create operations** - Ensures all fields provided
+- **Use readonly properties** - Data objects are immutable
+- **NO validation attributes** - Validation belongs in Form Requests
 
 ### Data Object Structure
-- Use readonly properties with type hints
-- **Validation Strategy**:
-  - **Default: Use validation attributes** from `Spatie\LaravelData\Attributes\Validation`
-    - Better IDE support with autocomplete
-    - Co-located with property definitions
-    - Type-safe and checked by static analysis
-  - **Use `rules()` method only for**:
-    - Dynamic validation (e.g., `unique:users,email,{auth()->id()}`)
-    - Complex Laravel Rule objects (e.g., `File::image()`, `Rule::dimensions()`)
-    - Conditional validation based on runtime context
-- Data objects automatically validate and cast data
-
-### Example Data Object
+@boostsnippet('Update Data Object with Optional')
 ```php
 <?php
 
@@ -359,88 +363,47 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use Spatie\LaravelData\Attributes\Validation\Email;
-use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Required;
+use App\Enums\OfficeType;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 
-final class CreateInvitationData extends Data
+final class UpdateOfficeData extends Data
 {
     public function __construct(
-        #[Required, Email, Max(255)]
-        public readonly string $email,
-        #[Required]
-        public readonly int $role_id,
-    ) {
-    }
+        public readonly string|Optional $name,
+        public readonly OfficeType|Optional $type,
+        public readonly string|Optional|null $phone,
+        public readonly AddressData|Optional $address,
+    ) {}
 }
 ```
 
-### Using Data Objects in Controllers
-- Type-hint Data objects in controller methods
-- Laravel automatically validates and injects the Data object
-- Access properties directly: `$data->email`, `$data->role_id`
+### Creating Data Objects
 
+**ALWAYS use `::from()` to create Data objects from validated data:**
+
+@boostsnippet('Create Data from Form Request')
 ```php
-public function store(CreateInvitationData $data, CreateInvitation $action): RedirectResponse
-{
-    $invitation = $action->handle($data->email, $data->role_id, auth()->id());
-    return redirect()->route('users.index');
+public function update(
+    UpdateOfficeRequest $request,
+    Office $office,
+    UpdateOfficeAction $action
+): RedirectResponse {
+    // Request validation already happened in UpdateOfficeRequest
+    $data = UpdateOfficeData::from($request->validated());
+
+    $action->handle($data, $office);
+
+    return redirect()->route('admin.settings.organization.edit');
 }
 ```
-
-### Creating Data Objects - Two Methods
-
-Laravel Data provides two methods for creating Data objects with different validation behavior:
-
-#### 1. `::validateAndCreate()` - WITH Validation (HTTP Requests, API calls)
-- **ALWAYS use in HTTP controllers** - Laravel auto-injects with validation
-- Runs all validation rules (attributes or rules() method)
-- Throws `ValidationException` on validation failure
-- Use when you need to ensure data integrity before processing
-
-```php
-// In controllers - Laravel auto-validates when type-hinted
-public function store(CreateInvitationData $data): RedirectResponse
-{
-    // $data is already validated
-    $invitation = $action->handle($data->email, $data->role_id);
-}
-
-// Manual validation when needed
-$data = CreateInvitationData::validateAndCreate([
-    'email' => $request->input('email'),
-    'role_id' => $request->input('role_id'),
-]);
-```
-
-#### 2. `::from()` - WITHOUT Validation (Console Commands, Jobs, Trusted Sources)
-- **SKIPS all validation** - creates object directly from array
-- Use in console commands, queued jobs, seeders, or trusted internal data
-- Faster performance when validation is not needed
-- Throws `CannotCreateData` only if required parameters are missing (not validation failure)
-
-```php
-// In console commands - skip validation for admin operations
-$data = CreateInvitationData::from([
-    'email' => $email,      // Can be invalid - no validation!
-    'role_id' => $roleId,   // Can be non-existent - no validation!
-]);
-
-$invitation = $action->handle($data->email, $data->role_id);
-```
-
-**Key Difference**:
-- `::validateAndCreate()` = Type casting + Validation rules
-- `::from()` = Type casting only (no validation)
 
 ### Benefits
 - Type-safe data handling with IDE autocompletion
-- Automatic validation using attributes
-- Automatic casting of data types
-- Seamless Inertia.js integration
-- Reduces boilerplate code
-- Combines validation + DTOs in one class
+- Clean separation: Form Requests validate, Data objects transfer
+- Nullable properties support partial updates correctly
+- Data objects can be reused across HTTP, Console, Jobs
+- No duplicate validation logic
 
 
 === pint/core rules ===
@@ -897,32 +860,12 @@ export default function UserForm() {
 </code-snippet>
 
 
-=== tests rules ===
 
-## Test Enforcement
-- **Full Test Coverage Required**: Every change must be programmatically tested with comprehensive coverage.
-- Write tests for all scenarios:
-    - **Happy paths**: Normal, expected user flows
-    - **Failure paths**: Invalid inputs, authorization failures, not found scenarios
-    - **Edge cases**: Boundary conditions, null values, empty states
-    - **Error conditions**: Database errors, external service failures
-- Test both feature/integration tests AND unit tests where appropriate.
-- All tests must pass before considering the implementation complete.
-- Use `php artisan test` to run the full test suite regularly.
+=== peopledear architecture ===
 
-=== .ai/app.actions rules ===
+## PeopleDear Architecture Patterns
 
-# App/Actions guidelines
-
-- This application uses the Action pattern and prefers for much logic to live in reusable and composable Action classes.
-- Actions live in `app/Actions`, they are named based on what they do, with no suffix.
-- Actions will be called from many different places: jobs, commands, HTTP requests, API requests, MCP requests, and more.
-- Create dedicated Action classes for business logic with a single `handle()` method.
-- Inject dependencies via constructor using private properties.
-- Create new actions with `php artisan make:action "{name}" --no-interaction`
-- Wrap complex operations in `DB::transaction()` within actions when multiple models are involved.
-- Some actions won't require dependencies via `__construct` and they can use just the `handle()` method.
-
+This application follows specific architecture patterns to maintain clean, testable, and maintainable code. See `.ai/guidelines/app.actions.blade.php` for comprehensive Action pattern guidelines.
 
 ### Controller Structure
 - **Flat Hierarchy**: Controllers live directly in `app/Http/Controllers/` - no nested `Admin/` folders
@@ -932,75 +875,38 @@ export default function UserForm() {
 - **Multi-Action Controllers**: Use named methods for related actions
   - Examples: `UserController` with `index()`, `InvitationController` with `store()` and `destroy()`
 
-### Request Validation
-- **Type-Safe Methods**: Use Laravel's type-safe request methods instead of `validated()`
-  - Use `$request->string('email')->toString()` instead of `$request->validated('email')`
-  - Use `$request->integer('role_id')` instead of `$request->validated('role_id')`
-  - Use `$request->boolean('is_active')` instead of `$request->validated('is_active')`
-- **Form Requests**: Always create dedicated Form Request classes for validation rules
-
 ### Actions vs Queries
 - **Actions** (`app/Actions/`): Handle create and update operations
-  - Examples: `CreateInvitation`, `UpdateUserRole`, `ActivateUser`
-  - Actions return the modified/created model
-  - Actions can trigger side effects (sending emails, logging, etc.)
-  - **Actions perform ALL business logic and updates** - keep models lean
-  - **Actions must implement a `handle()` method** - NOT `__invoke()`
-    - Correct: `public function handle(User $user): User`
-    - Incorrect: `public function __invoke(User $user): User`
-  - Controllers call Actions using the `handle()` method: `$action->handle($user)`
+  - Use `php artisan make:action "{name}" --no-interaction` to create
+  - Must implement a `handle()` method - NOT `__invoke()`
+  - Actions perform ALL business logic and updates - keep models lean
+  - Wrap complex operations in `DB::transaction()` when needed
 - **Queries** (`app/Queries/`): Handle read operations
-  - Examples: `UsersQuery`, `PendingInvitationsQuery`, `AllRolesQuery`
-  - Queries must implement a `builder()` method that returns an Eloquent or Query Builder instance
-  - Controllers call `$query->builder()->paginate()` or `$query->builder()->get()`
+  - Must implement a `builder()` method that returns an Eloquent or Query Builder instance
+  - Use descriptive names without "Get" prefix (e.g., `UsersQuery` not `GetUsersQuery`)
 
 ### Lean Models Philosophy
 - **Keep Models as lean as possible** - Models should contain ONLY:
-  - Relationships (e.g., `hasMany()`, `belongsTo()`)
-  - Simple attribute accessors/mutators
-  - Casts
-  - Simple query scopes
+  - Relationships, simple attribute accessors/mutators, casts, simple query scopes
   - Simple boolean helper methods (e.g., `isAdmin()`, `isPending()`)
-- **Do NOT add update methods to Models** (e.g., NO `activate()`, `deactivate()`, `accept()` methods)
-  - All updates must be performed in Action classes
-  - Actions own all business logic and state changes
-  - Example: `ActivateUser` Action does `$user->update(['is_active' => true])`, not `$user->activate()`
-- **Default Values**:
-  - Use Model's `$attributes` property ONLY for simple defaults (e.g., `'is_active' => true`)
-  - Enforce complex or context-dependent defaults in Action classes
-  - Example: `CreateUser` Action explicitly assigns role based on business rules
-- **Tests use Factories with explicit data**: In tests, always pass data explicitly through factories
-  - Do NOT rely on Model `booted()` hooks or defaults for test data
-  - Factories should explicitly create the data needed for each test scenario
-  - Example: `User::factory()->create(['role_id' => $employeeRole->id])`
-- This separation ensures:
-  - Models stay simple and focused on data structure
-  - Business logic is explicit and testable in Actions
-  - Tests are clear about what data they're creating
-  - No hidden magic in Model lifecycle hooks that makes code hard to understand
-
-### Query Naming Convention
-- Use descriptive names without "Get" prefix
-- Examples: `UsersQuery` not `GetUsersQuery`, `PendingInvitationsQuery` not `GetPendingInvitationsQuery`
+- **Do NOT add update methods to Models** - all updates must be in Action classes
+- **Default Values**: Use Model's `$attributes` property ONLY for simple defaults
+- This ensures Models stay simple and business logic is explicit and testable
 
 ### Frontend Structure
 - **Flat Page Structure**: Pages live in `resources/js/pages/` with lowercase folder names
   - Use `resources/js/pages/user/index.tsx` not `resources/js/pages/Admin/Users/Index.tsx`
-  - Use `resources/js/pages/dashboard.tsx` not `resources/js/pages/auth/dashboard.tsx`
   - Nested folders allowed for grouping (e.g., `pages/admin/`, `pages/user/`)
 - **shadcn/ui Components**: Use shadcn/ui components from `@/components/ui/` for all UI elements
-  - Button, Card, Input, Label, Select, Dialog, Sheet, Dropdown, Badge, Avatar, Skeleton, etc.
   - Check existing components before creating new ones
-  - Components are in the codebase, not npm packages
 - **Component Organization**:
   - UI primitives: `resources/js/components/ui/`
   - Reusable components: `resources/js/components/`
   - Layouts: `resources/js/layouts/`
   - Pages: `resources/js/pages/`
 
-=== .ai/general rules ===
+### Dependency Injection
+- Controllers receive Actions and Queries via dependency injection
+- Use Laravel 12's contextual attributes (`#[CurrentUser]`, etc.)
 
-# General Guidelines
-
-- Don't include any superfluous PHP Annotations, except ones that start with `@` for typing variables.
 </laravel-boost-guidelines>

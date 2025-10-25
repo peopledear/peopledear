@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\UserProfileController::edit
 * @see app/Http/Controllers/UserProfileController.php:18
@@ -44,43 +44,6 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\UserProfileController::edit
-* @see app/Http/Controllers/UserProfileController.php:18
-* @route '/settings/profile'
-*/
-const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserProfileController::edit
-* @see app/Http/Controllers/UserProfileController.php:18
-* @route '/settings/profile'
-*/
-editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserProfileController::edit
-* @see app/Http/Controllers/UserProfileController.php:18
-* @route '/settings/profile'
-*/
-editForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-edit.form = editForm
-
-/**
 * @see \App\Http\Controllers\UserProfileController::update
 * @see app/Http/Controllers/UserProfileController.php:25
 * @route '/settings/profile'
@@ -113,38 +76,6 @@ update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
     method: 'patch',
 })
-
-/**
-* @see \App\Http\Controllers\UserProfileController::update
-* @see app/Http/Controllers/UserProfileController.php:25
-* @route '/settings/profile'
-*/
-const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\UserProfileController::update
-* @see app/Http/Controllers/UserProfileController.php:25
-* @route '/settings/profile'
-*/
-updateForm.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
 
 const userProfile = {
     edit: Object.assign(edit, edit),

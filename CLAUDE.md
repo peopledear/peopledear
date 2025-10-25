@@ -18,18 +18,31 @@ These guideline files use the `@boostsnippet` directive for code examples and ar
 ## Foundational Context
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
+### Backend
 - php - 8.4.13
-- inertiajs/inertia-laravel (INERTIA) - v2
-- laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v12
+- laravel/fortify (FORTIFY) - v1
 - laravel/prompts (PROMPTS) - v0
 - laravel/wayfinder (WAYFINDER) - v0
+- inertiajs/inertia-laravel (INERTIA) - v2
+- spatie/laravel-permission (PERMISSION) - v6
+- spatie/laravel-settings (SETTINGS) - v3
+- spatie/laravel-data (DATA) - v4
 - larastan/larastan (LARASTAN) - v3
-- laravel/mcp (MCP) - v0
 - laravel/pint (PINT) - v1
 - pestphp/pest (PEST) - v4
 - phpunit/phpunit (PHPUNIT) - v12
 - rector/rector (RECTOR) - v2
+- laravel/mcp (MCP) - v0
+
+### Frontend
+- react (REACT) - v18
+- @inertiajs/react (INERTIA-REACT) - v2
+- typescript (TYPESCRIPT) - v5
+- tailwindcss (TAILWIND) - v4
+- shadcn/ui (SHADCN) - components library
+- vite (VITE) - v6
+- prettier (PRETTIER) - v3
 
 
 ## Conventions
@@ -137,18 +150,29 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 ## Inertia Core
 
-- Inertia.js components should be placed in the `resources/js/Pages` directory unless specified differently in the JS bundler (vite.config.js).
-- Use `Inertia::render()` for server-side routing instead of traditional Blade views.
-- Use `search-docs` for accurate guidance on all things Inertia.
+- This application uses **React** with Inertia.js (NOT Vue.js)
+- Inertia.js pages are React components in `resources/js/pages/` directory (lowercase folder names)
+- Page components use `.tsx` extension (TypeScript + JSX)
+- Use `Inertia::render()` for server-side routing instead of traditional Blade views
+- Use `search-docs` for accurate guidance on all things Inertia
 
 <code-snippet lang="php" name="Inertia::render Example">
 // routes/web.php example
 Route::get('/users', function () {
     return Inertia::render('Users/Index', [
-        'users' => User::all()
+        'users' => User::query()->get()
     ]);
 });
 </code-snippet>
+
+### React & Inertia Conventions
+- **Page components** in `resources/js/pages/` (e.g., `dashboard.tsx`, `user/create.tsx`)
+- **Layout components** in `resources/js/layouts/` (e.g., `app-layout.tsx`)
+- **Reusable components** in `resources/js/components/` (e.g., `ui/button.tsx`)
+- **Use TypeScript** - proper typing for all components and props
+- **Props interface** - define props interface for each page component
+- **Head component** - use `<Head>` from `@inertiajs/react` for page titles
+- **useForm hook** - use Inertia's `useForm` for form handling
 
 
 === inertia-laravel/v2 rules ===
@@ -438,7 +462,12 @@ $invitation = $action->handle($data->email, $data->role_id);
 - All tests must be written using Pest. Use `php artisan make:test --pest <name>`.
 - You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files - these are core to the application.
 - Tests should test all of the happy paths, failure paths, and weird paths.
-- Tests live in the `tests/Feature` and `tests/Unit` directories.
+- Tests live in the `tests/Feature`, `tests/Unit`, and `tests/Browser` directories.
+- **ALWAYS use flat test structure** - NO nested subdirectories in test folders
+  - Correct: `tests/Browser/AdminLayoutTest.php`
+  - Incorrect: `tests/Browser/Admin/AdminLayoutTest.php`
+  - Correct: `tests/Feature/Controllers/UserControllerTest.php`
+  - Exception: Organizing by type within test directories IS allowed (e.g., `tests/Unit/Models/`, `tests/Unit/Actions/`, `tests/Feature/Controllers/`)
 - **New tests should always come first in test files** - place newly written tests at the top of the file, before existing tests
 - **ALWAYS import all classes used in tests** - never use fully qualified class names inline
   - Correct: `use Illuminate\Validation\ValidationException;` then use `ValidationException::class`
@@ -681,6 +710,193 @@ it('admin can access users page', function (): void {
 | decoration-clone | box-decoration-clone |
 
 
+=== shadcn/ui rules ===
+
+## shadcn/ui Components
+
+This application uses **shadcn/ui** for UI components - a collection of re-usable components built with Radix UI and Tailwind CSS.
+
+### Component Usage
+- **ALWAYS check existing components** before creating new ones - look in `resources/js/components/ui/`
+- **Reuse existing components** - Button, Card, Input, Select, Dialog, Sheet, Dropdown, etc.
+- **Follow shadcn patterns** - components are copied into your codebase, not installed as dependencies
+- **Customize as needed** - modify components in `resources/js/components/ui/` to fit project needs
+
+### Common Components Available
+Check `resources/js/components/ui/` for available components. Common ones include:
+- `button.tsx` - Buttons with variants (default, destructive, outline, ghost, link)
+- `card.tsx` - Card container with header, content, footer
+- `input.tsx` - Form input fields
+- `label.tsx` - Form labels
+- `select.tsx` - Dropdown selects
+- `dialog.tsx` - Modal dialogs
+- `sheet.tsx` - Slide-out panels
+- `dropdown-menu.tsx` - Dropdown menus
+- `separator.tsx` - Visual separators
+- `badge.tsx` - Status badges
+- `avatar.tsx` - User avatars
+- `skeleton.tsx` - Loading skeletons
+
+### Component Conventions
+- **Import from `@/components/ui/`** - use path alias
+- **Use composition** - combine primitive components to build complex UI
+- **Variant props** - use built-in variants instead of custom styling
+- **Accessibility** - shadcn components have built-in accessibility
+- **Dark mode** - components support dark mode automatically
+
+<code-snippet name="shadcn Button Example" lang="tsx">
+import { Button } from "@/components/ui/button";
+
+export default function MyComponent() {
+    return (
+        <div>
+            <Button variant="default">Click me</Button>
+            <Button variant="destructive">Delete</Button>
+            <Button variant="outline">Cancel</Button>
+        </div>
+    );
+}
+</code-snippet>
+
+<code-snippet name="shadcn Form Example" lang="tsx">
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export default function MyForm() {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>User Information</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-4">
+                    <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input id="email" type="email" />
+                    </div>
+                    <Button type="submit">Save</Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+</code-snippet>
+
+### Adding New shadcn Components
+- Check if component exists in `resources/js/components/ui/` first
+- If not, check sibling projects or shadcn/ui documentation
+- Copy component code to `resources/js/components/ui/`
+- Ensure Tailwind v4 compatibility
+- Test dark mode support
+
+
+===react rules ===
+
+## React & TypeScript
+
+This application uses React 18 with TypeScript for all frontend code.
+
+### Component Structure
+- **Use functional components** - no class components
+- **TypeScript interfaces** - define props interface for every component
+- **Export default** - page components use `export default`
+- **Named exports** - reusable components can use named exports
+- **File naming** - use lowercase with hyphens (e.g., `user-profile.tsx`, not `UserProfile.tsx`)
+
+### TypeScript Conventions
+- **Proper typing** - type all props, state, and function parameters
+- **Interface over type** - prefer `interface` for props
+- **No `any` type** - avoid using `any`, use proper types
+- **Import types** - use `import type` for type-only imports
+
+<code-snippet name="React Component Example" lang="tsx">
+import { type ReactNode } from "react";
+import { Head } from "@inertiajs/react";
+import AppLayout from "@/layouts/app-layout";
+
+interface DashboardProps {
+    user: {
+        name: string;
+        email: string;
+    };
+    stats: {
+        totalUsers: number;
+        activeUsers: number;
+    };
+}
+
+export default function Dashboard({ user, stats }: DashboardProps) {
+    return (
+        <AppLayout>
+            <Head title="Dashboard" />
+            <div className="space-y-4">
+                <h1>Welcome, {user.name}</h1>
+                <p>Total Users: {stats.totalUsers}</p>
+            </div>
+        </AppLayout>
+    );
+}
+</code-snippet>
+
+### State Management
+- **useState** - for local component state
+- **Inertia props** - for server state (passed from Laravel)
+- **useForm** - for form state (from `@inertiajs/react`)
+- **No Redux/Zustand** - unless explicitly needed and approved
+
+### Form Handling with Inertia
+- **Always use `useForm` hook** from `@inertiajs/react`
+- **Type-safe** - define form data interface
+- **Validation** - backend validation via Laravel Data objects
+- **Error display** - use `form.errors` for validation errors
+- **Loading states** - use `form.processing` for submit state
+
+<code-snippet name="Inertia Form Example" lang="tsx">
+import { useForm } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+interface FormData {
+    name: string;
+    email: string;
+}
+
+export default function UserForm() {
+    const form = useForm<FormData>({
+        name: "",
+        email: "",
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        form.post("/users");
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                    id="name"
+                    value={form.data.name}
+                    onChange={(e) => form.setData("name", e.target.value)}
+                />
+                {form.errors.name && (
+                    <p className="text-sm text-destructive">{form.errors.name}</p>
+                )}
+            </div>
+            <Button type="submit" disabled={form.processing}>
+                {form.processing ? "Saving..." : "Save"}
+            </Button>
+        </form>
+    );
+}
+</code-snippet>
+
+
 === tests rules ===
 
 ## Test Enforcement
@@ -768,12 +984,19 @@ it('admin can access users page', function (): void {
 - Examples: `UsersQuery` not `GetUsersQuery`, `PendingInvitationsQuery` not `GetPendingInvitationsQuery`
 
 ### Frontend Structure
-- **Flat Page Structure**: Pages live directly in `resources/js/Pages/` with descriptive folder names
-  - Use `resources/js/Pages/Users/Index.vue` not `resources/js/Pages/Admin/Users/Index.vue`
-  - Use `resources/js/Pages/AcceptInvitation.vue` not `resources/js/Pages/Auth/AcceptInvitation.vue`
-- **Nuxt UI 4**: Use Nuxt UI 4 components for all UI elements
-  - `UButton`, `UModal`, `UTable`, `UInput`, `USelect`, `UDropdown`, `UBadge`, `UCard`, `UAlert`
-- **Component Organization**: Create reusable components in `resources/js/Components/`
+- **Flat Page Structure**: Pages live in `resources/js/pages/` with lowercase folder names
+  - Use `resources/js/pages/user/index.tsx` not `resources/js/pages/Admin/Users/Index.tsx`
+  - Use `resources/js/pages/dashboard.tsx` not `resources/js/pages/auth/dashboard.tsx`
+  - Nested folders allowed for grouping (e.g., `pages/admin/`, `pages/user/`)
+- **shadcn/ui Components**: Use shadcn/ui components from `@/components/ui/` for all UI elements
+  - Button, Card, Input, Label, Select, Dialog, Sheet, Dropdown, Badge, Avatar, Skeleton, etc.
+  - Check existing components before creating new ones
+  - Components are in the codebase, not npm packages
+- **Component Organization**:
+  - UI primitives: `resources/js/components/ui/`
+  - Reusable components: `resources/js/components/`
+  - Layouts: `resources/js/layouts/`
+  - Pages: `resources/js/pages/`
 
 === .ai/general rules ===
 

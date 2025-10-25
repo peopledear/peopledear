@@ -1,198 +1,197 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from "@/wayfinder";
-
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
- * @see \App\Http\Controllers\SessionController::create
- * @see app/Http/Controllers/SessionController.php:17
- * @route '/login'
- */
-export const create = (options?: RouteQueryOptions): RouteDefinition<"get"> => ({
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
-    method: "get",
-});
+    method: 'get',
+})
 
 create.definition = {
-    methods: ["get", "head"],
-    url: "/login",
-} satisfies RouteDefinition<["get", "head"]>;
+    methods: ["get","head"],
+    url: '/login',
+} satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see \App\Http\Controllers\SessionController::create
- * @see app/Http/Controllers/SessionController.php:17
- * @route '/login'
- */
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
 create.url = (options?: RouteQueryOptions) => {
-    return create.definition.url + queryParams(options);
-};
+    return create.definition.url + queryParams(options)
+}
 
 /**
- * @see \App\Http\Controllers\SessionController::create
- * @see app/Http/Controllers/SessionController.php:17
- * @route '/login'
- */
-create.get = (options?: RouteQueryOptions): RouteDefinition<"get"> => ({
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
-    method: "get",
-});
+    method: 'get',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::create
- * @see app/Http/Controllers/SessionController.php:17
- * @route '/login'
- */
-create.head = (options?: RouteQueryOptions): RouteDefinition<"head"> => ({
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
-    method: "head",
-});
+    method: 'head',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::create
- * @see app/Http/Controllers/SessionController.php:17
- * @route '/login'
- */
-const createForm = (options?: RouteQueryOptions): RouteFormDefinition<"get"> => ({
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
-    method: "get",
-});
+    method: 'get',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::create
- * @see app/Http/Controllers/SessionController.php:17
- * @route '/login'
- */
-createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<"get"> => ({
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
-    method: "get",
-});
+    method: 'get',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::create
- * @see app/Http/Controllers/SessionController.php:17
- * @route '/login'
- */
-createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<"get"> => ({
+* @see \App\Http\Controllers\SessionController::create
+* @see app/Http/Controllers/SessionController.php:17
+* @route '/login'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url({
-        [options?.mergeQuery ? "mergeQuery" : "query"]: {
-            _method: "HEAD",
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        },
+        }
     }),
-    method: "get",
-});
+    method: 'get',
+})
 
-create.form = createForm;
+create.form = createForm
 
 /**
- * @see \App\Http\Controllers\SessionController::store
- * @see app/Http/Controllers/SessionController.php:25
- * @route '/login'
- */
-export const store = (options?: RouteQueryOptions): RouteDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::store
+* @see app/Http/Controllers/SessionController.php:25
+* @route '/login'
+*/
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
 store.definition = {
     methods: ["post"],
-    url: "/login",
-} satisfies RouteDefinition<["post"]>;
+    url: '/login',
+} satisfies RouteDefinition<["post"]>
 
 /**
- * @see \App\Http\Controllers\SessionController::store
- * @see app/Http/Controllers/SessionController.php:25
- * @route '/login'
- */
+* @see \App\Http\Controllers\SessionController::store
+* @see app/Http/Controllers/SessionController.php:25
+* @route '/login'
+*/
 store.url = (options?: RouteQueryOptions) => {
-    return store.definition.url + queryParams(options);
-};
+    return store.definition.url + queryParams(options)
+}
 
 /**
- * @see \App\Http\Controllers\SessionController::store
- * @see app/Http/Controllers/SessionController.php:25
- * @route '/login'
- */
-store.post = (options?: RouteQueryOptions): RouteDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::store
+* @see app/Http/Controllers/SessionController.php:25
+* @route '/login'
+*/
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::store
- * @see app/Http/Controllers/SessionController.php:25
- * @route '/login'
- */
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::store
+* @see app/Http/Controllers/SessionController.php:25
+* @route '/login'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::store
- * @see app/Http/Controllers/SessionController.php:25
- * @route '/login'
- */
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::store
+* @see app/Http/Controllers/SessionController.php:25
+* @route '/login'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
-store.form = storeForm;
+store.form = storeForm
 
 /**
- * @see \App\Http\Controllers\SessionController::destroy
- * @see app/Http/Controllers/SessionController.php:45
- * @route '/logout'
- */
-export const destroy = (options?: RouteQueryOptions): RouteDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::destroy
+* @see app/Http/Controllers/SessionController.php:45
+* @route '/logout'
+*/
+export const destroy = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: destroy.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
 destroy.definition = {
     methods: ["post"],
-    url: "/logout",
-} satisfies RouteDefinition<["post"]>;
+    url: '/logout',
+} satisfies RouteDefinition<["post"]>
 
 /**
- * @see \App\Http\Controllers\SessionController::destroy
- * @see app/Http/Controllers/SessionController.php:45
- * @route '/logout'
- */
+* @see \App\Http\Controllers\SessionController::destroy
+* @see app/Http/Controllers/SessionController.php:45
+* @route '/logout'
+*/
 destroy.url = (options?: RouteQueryOptions) => {
-    return destroy.definition.url + queryParams(options);
-};
+    return destroy.definition.url + queryParams(options)
+}
 
 /**
- * @see \App\Http\Controllers\SessionController::destroy
- * @see app/Http/Controllers/SessionController.php:45
- * @route '/logout'
- */
-destroy.post = (options?: RouteQueryOptions): RouteDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::destroy
+* @see app/Http/Controllers/SessionController.php:45
+* @route '/logout'
+*/
+destroy.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: destroy.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::destroy
- * @see app/Http/Controllers/SessionController.php:45
- * @route '/logout'
- */
-const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::destroy
+* @see app/Http/Controllers/SessionController.php:45
+* @route '/logout'
+*/
+const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
 /**
- * @see \App\Http\Controllers\SessionController::destroy
- * @see app/Http/Controllers/SessionController.php:45
- * @route '/logout'
- */
-destroyForm.post = (options?: RouteQueryOptions): RouteFormDefinition<"post"> => ({
+* @see \App\Http\Controllers\SessionController::destroy
+* @see app/Http/Controllers/SessionController.php:45
+* @route '/logout'
+*/
+destroyForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(options),
-    method: "post",
-});
+    method: 'post',
+})
 
-destroy.form = destroyForm;
+destroy.form = destroyForm
 
-const SessionController = { create, store, destroy };
+const SessionController = { create, store, destroy }
 
-export default SessionController;
+export default SessionController

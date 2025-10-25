@@ -1,4 +1,5 @@
 import SessionController from './SessionController'
+import PeopleManagerOverviewController from './PeopleManagerOverviewController'
 import UserController from './UserController'
 import UserProfileController from './UserProfileController'
 import UserPasswordController from './UserPasswordController'
@@ -9,6 +10,7 @@ import UserEmailVerification from './UserEmailVerification'
 
 const Controllers = {
     SessionController: Object.assign(SessionController, SessionController),
+    PeopleManagerOverviewController: Object.assign(PeopleManagerOverviewController, PeopleManagerOverviewController),
     UserController: Object.assign(UserController, UserController),
     UserProfileController: Object.assign(UserProfileController, UserProfileController),
     UserPasswordController: Object.assign(UserPasswordController, UserPasswordController),

@@ -25,7 +25,7 @@ it('people manager can create office with address', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'New York Office',
         'type' => OfficeType::Headquarters->value,
         'phone' => '+1234567890',
@@ -39,7 +39,7 @@ it('people manager can create office with address', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Office $office */
     $office = Office::query()
@@ -93,7 +93,7 @@ it('owner can create office with address', function (): void {
 
     $this->actingAs($owner);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'London Office',
         'type' => OfficeType::Branch->value,
         'phone' => null,
@@ -107,7 +107,7 @@ it('owner can create office with address', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Office $office */
     $office = Office::query()
@@ -133,7 +133,7 @@ it('employee cannot create office', function (): void {
 
     $this->actingAs($employee);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'Unauthorized Office',
         'type' => OfficeType::Branch->value,
         'address' => [
@@ -187,7 +187,7 @@ it('people manager can update office and address', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->put(route('offices.update', $office), [
+    $response = $this->put(route('org.offices.update', $office), [
         'name' => 'Updated Office Name',
         'type' => OfficeType::Headquarters->value,
         'phone' => '+9876543210',
@@ -201,7 +201,7 @@ it('people manager can update office and address', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Office $updatedOffice */
     $updatedOffice = $office->fresh();
@@ -256,7 +256,7 @@ it('owner can update office', function (): void {
 
     $this->actingAs($owner);
 
-    $response = $this->put(route('offices.update', $office), [
+    $response = $this->put(route('org.offices.update', $office), [
         'name' => 'Owner Updated Office',
         'type' => OfficeType::Store->value,
         'phone' => null,
@@ -270,7 +270,7 @@ it('owner can update office', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Office $updatedOffice */
     $updatedOffice = $office->fresh();
@@ -304,7 +304,7 @@ it('employee cannot update office', function (): void {
 
     $this->actingAs($employee);
 
-    $response = $this->put(route('offices.update', $office), [
+    $response = $this->put(route('org.offices.update', $office), [
         'name' => 'Hacked Office',
         'type' => OfficeType::Branch->value,
         'address' => [
@@ -344,9 +344,9 @@ it('people manager can delete office', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->delete(route('offices.destroy', $office));
+    $response = $this->delete(route('org.offices.destroy', $office));
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Office|null $deletedOffice */
     $deletedOffice = Office::query()
@@ -377,9 +377,9 @@ it('owner can delete office', function (): void {
 
     $this->actingAs($owner);
 
-    $response = $this->delete(route('offices.destroy', $office));
+    $response = $this->delete(route('org.offices.destroy', $office));
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Office|null $deletedOffice */
     $deletedOffice = Office::query()
@@ -410,7 +410,7 @@ it('employee cannot delete office', function (): void {
 
     $this->actingAs($employee);
 
-    $response = $this->delete(route('offices.destroy', $office));
+    $response = $this->delete(route('org.offices.destroy', $office));
 
     $response->assertForbidden();
 
@@ -438,7 +438,7 @@ it('requires office name', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => '',
         'type' => OfficeType::Branch->value,
         'address' => [
@@ -468,7 +468,7 @@ it('requires office type', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
         'type' => null,
         'address' => [
@@ -498,7 +498,7 @@ it('requires address line1', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
         'type' => OfficeType::Branch->value,
         'address' => [
@@ -528,7 +528,7 @@ it('requires address city', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
         'type' => OfficeType::Branch->value,
         'address' => [
@@ -558,7 +558,7 @@ it('requires address postal_code', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
         'type' => OfficeType::Branch->value,
         'address' => [
@@ -588,7 +588,7 @@ it('requires address country', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
         'type' => OfficeType::Branch->value,
         'address' => [
@@ -619,7 +619,7 @@ it('allows optional address fields', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->post(route('offices.store'), [
+    $response = $this->post(route('org.offices.store'), [
         'name' => 'Minimal Office',
         'type' => OfficeType::Remote->value,
         'phone' => null,
@@ -633,7 +633,7 @@ it('allows optional address fields', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Office $office */
     $office = Office::query()

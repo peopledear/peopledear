@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\Addressable;
 use App\Enums\OfficeType;
+use App\Models\Concerns\HasAddress;
 use Database\Factories\OfficeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -23,8 +24,10 @@ use Illuminate\Support\Carbon;
  * @property-read Organization $organization
  * @property-read Address $address
  */
-final class Office extends Model
+final class Office extends Model implements Addressable
 {
+    use HasAddress;
+
     /** @use HasFactory<OfficeFactory> */
     use HasFactory;
 
@@ -32,12 +35,6 @@ final class Office extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
-    }
-
-    /** @return MorphOne<Address, $this> */
-    public function address(): MorphOne
-    {
-        return $this->morphOne(Address::class, 'addressable');
     }
 
     public function casts(): array

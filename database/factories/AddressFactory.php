@@ -20,9 +20,9 @@ final class AddressFactory extends Factory
     {
         return [
             'line1' => fake()->streetAddress(),
-            'line2' => fake()->optional()->secondaryAddress(),
+            'line2' => fake()->optional()->streetSuffix(),
             'city' => fake()->city(),
-            'state' => fake()->optional()->state(),
+            'state' => fake()->optional()->word(),
             'postal_code' => fake()->postcode(),
             'country' => fake()->country(),
         ];

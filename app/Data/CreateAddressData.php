@@ -6,6 +6,9 @@ namespace App\Data;
 
 use Spatie\LaravelData\Data;
 
+/**
+ * @method array<string, mixed> toArray()
+ */
 final class CreateAddressData extends Data
 {
     public function __construct(

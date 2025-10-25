@@ -15,6 +15,7 @@ This project maintains detailed guidelines in the `.ai/guidelines/` directory th
 - **`app.data.blade.php`** - Data objects as DTOs (not validation layers)
 - **`app.models.blade.php`** - Eloquent model structure, type hints, and relationship annotations
 - **`database.migrations.blade.php`** - Comprehensive database migration rules
+- **`tests.blade.php`** - Testing conventions, container resolution, Pest patterns
 
 These guideline files use the `@boostsnippet` directive for code examples and are automatically included by Laravel Boost.
 

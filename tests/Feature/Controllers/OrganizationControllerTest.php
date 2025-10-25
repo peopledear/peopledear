@@ -22,7 +22,7 @@ it('people manager can access organization settings', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->get(route('admin.settings.organization.edit'));
+    $response = $this->get(route('org.settings.organization.edit'));
 
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
@@ -46,7 +46,7 @@ it('owner can access organization settings', function (): void {
 
     $this->actingAs($owner);
 
-    $response = $this->get(route('admin.settings.organization.edit'));
+    $response = $this->get(route('org.settings.organization.edit'));
 
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
@@ -67,7 +67,7 @@ it('employee cannot access organization settings', function (): void {
 
     $this->actingAs($employee);
 
-    $response = $this->get(route('admin.settings.organization.edit'));
+    $response = $this->get(route('org.settings.organization.edit'));
 
     $response->assertForbidden();
 });
@@ -93,14 +93,14 @@ it('people manager can update organization', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->put(route('admin.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update'), [
         'name' => 'Updated Company Name',
         'vat_number' => 'NEW456',
         'ssn' => 'NEW-SSN',
         'phone' => '+9876543210',
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Organization $updatedOrganization */
     $updatedOrganization = $organization->fresh();
@@ -133,14 +133,14 @@ it('owner can update organization', function (): void {
 
     $this->actingAs($owner);
 
-    $response = $this->put(route('admin.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update'), [
         'name' => 'Owner Updated Name',
         'vat_number' => null,
         'ssn' => null,
         'phone' => null,
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Organization $updatedOrganization */
     $updatedOrganization = $organization->fresh();
@@ -166,7 +166,7 @@ it('employee cannot update organization', function (): void {
 
     $this->actingAs($employee);
 
-    $response = $this->put(route('admin.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update'), [
         'name' => 'Hacked Name',
     ]);
 
@@ -193,7 +193,7 @@ it('requires organization name', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->put(route('admin.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update'), [
         'name' => '',
         'vat_number' => null,
         'ssn' => null,
@@ -219,7 +219,7 @@ it('validates organization name max length', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->put(route('admin.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update'), [
         'name' => str_repeat('a', 256), // 256 characters - exceeds 255 max
         'vat_number' => null,
         'ssn' => null,
@@ -246,14 +246,14 @@ it('allows optional vat_number, ssn, and phone', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $response = $this->put(route('admin.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update'), [
         'name' => 'Minimal Organization',
         'vat_number' => null,
         'ssn' => null,
         'phone' => null,
     ]);
 
-    $response->assertRedirect(route('admin.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit'));
 
     /** @var Organization $updatedOrganization */
     $updatedOrganization = $organization->fresh();

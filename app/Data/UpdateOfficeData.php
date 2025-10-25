@@ -8,6 +8,9 @@ use App\Enums\OfficeType;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
+/**
+ * @method array<string, mixed> toArray()
+ */
 final class UpdateOfficeData extends Data
 {
     public function __construct(

@@ -6,101 +6,117 @@ use App\Actions\UpdateOrganizationAction;
 use App\Data\UpdateOrganizationData;
 use App\Models\Organization;
 
-test('updates organization with all fields', function (): void {
-    $action = new UpdateOrganizationAction();
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
-        'name' => 'Old Name',
-        'phone' => 'Old Phone',
-    ]);
-
-    $data = UpdateOrganizationData::from([
-        'name' => 'New Name',
-        'vat_number' => 'VAT123',
-        'ssn' => 'SSN123',
-        'phone' => '+1234567890',
-    ]);
-
-    $result = $action->handle($organization, $data);
-
-    expect($result->name)
-        ->toBe('New Name')
-        ->and($result->vat_number)
-        ->toBe('VAT123')
-        ->and($result->ssn)
-        ->toBe('SSN123')
-        ->and($result->phone)
-        ->toBe('+1234567890');
+beforeEach(function (): void {
+    $this->action = app(UpdateOrganizationAction::class);
 });
 
-test('updates organization with partial fields only', function (): void {
-    $action = new UpdateOrganizationAction();
+test('updates organization with all fields',
+    /**
+     * @throws Exception
+     */
+    function (): void {
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
-        'name' => 'Old Name',
-        'phone' => '+9999999999',
-        'vat_number' => 'OLD_VAT',
-    ]);
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly([
+            'name' => 'Old Name',
+            'phone' => 'Old Phone',
+        ]);
 
-    $data = UpdateOrganizationData::from([
-        'name' => 'New Name',
-    ]);
+        $data = UpdateOrganizationData::from([
+            'name' => 'New Name',
+            'vat_number' => 'VAT123',
+            'ssn' => 'SSN123',
+            'phone' => '+1234567890',
+        ]);
 
-    $result = $action->handle($organization, $data);
+        $result = $this->action->handle($organization, $data);
 
-    expect($result->name)
-        ->toBe('New Name')
-        ->and($result->phone)
-        ->toBe('+9999999999')
-        ->and($result->vat_number)
-        ->toBe('OLD_VAT');
-});
+        expect($result->name)
+            ->toBe('New Name')
+            ->and($result->vat_number)
+            ->toBe('VAT123')
+            ->and($result->ssn)
+            ->toBe('SSN123')
+            ->and($result->phone)
+            ->toBe('+1234567890');
+    });
 
-test('can set fields to null explicitly', function (): void {
-    $action = new UpdateOrganizationAction();
+test('updates organization with partial fields only',
+    /**
+     * @throws Exception
+     */
+    function (): void {
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
-        'name' => 'Test Company',
-        'phone' => '+1234567890',
-        'vat_number' => 'VAT123',
-    ]);
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly([
+            'name' => 'Old Name',
+            'phone' => '+9999999999',
+            'vat_number' => 'OLD_VAT',
+        ]);
 
-    $data = UpdateOrganizationData::from([
-        'phone' => null,
-        'vat_number' => null,
-    ]);
+        $data = UpdateOrganizationData::from([
+            'name' => 'New Name',
+        ]);
 
-    $result = $action->handle($organization, $data);
+        $result = $this->action->handle($organization, $data);
 
-    expect($result->name)
-        ->toBe('Test Company')
-        ->and($result->phone)
-        ->toBeNull()
-        ->and($result->vat_number)
-        ->toBeNull();
-});
+        expect($result->name)
+            ->toBe('New Name')
+            ->and($result->phone)
+            ->toBe('+9999999999')
+            ->and($result->vat_number)
+            ->toBe('OLD_VAT');
+    });
 
-test('empty data object does not change anything', function (): void {
-    $action = new UpdateOrganizationAction();
+test('can set fields to null explicitly',
+    /**
+     * @throws Exception
+     */
+    function (): void {
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
-        'name' => 'Test Company',
-        'phone' => '+1234567890',
-        'vat_number' => 'VAT123',
-    ]);
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly([
+            'name' => 'Test Company',
+            'phone' => '+1234567890',
+            'vat_number' => 'VAT123',
+        ]);
 
-    $data = UpdateOrganizationData::from([]);
+        $data = UpdateOrganizationData::from([
+            'phone' => null,
+            'vat_number' => null,
+        ]);
 
-    $result = $action->handle($organization, $data);
+        $result = $this->action->handle($organization, $data);
 
-    expect($result->name)
-        ->toBe('Test Company')
-        ->and($result->phone)
-        ->toBe('+1234567890')
-        ->and($result->vat_number)
-        ->toBe('VAT123');
-});
+        expect($result->name)
+            ->toBe('Test Company')
+            ->and($result->phone)
+            ->toBeNull()
+            ->and($result->vat_number)
+            ->toBeNull();
+    });
+
+test('empty data object does not change anything',
+    /**
+     * @throws Exception
+     */
+    function (): void {
+
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly([
+            'name' => 'Test Company',
+            'phone' => '+1234567890',
+            'vat_number' => 'VAT123',
+        ]);
+
+        $data = UpdateOrganizationData::from([]);
+
+        $result = $this->action->handle($organization, $data);
+
+        expect($result->name)
+            ->toBe('Test Company')
+            ->and($result->phone)
+            ->toBe('+1234567890')
+            ->and($result->vat_number)
+            ->toBe('VAT123');
+    });

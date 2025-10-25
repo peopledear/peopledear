@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions;
+
+use App\Contracts\Addressable;
+use App\Data\UpdateAddressData;
+use App\Models\Address;
+use Illuminate\Database\Eloquent\Model;
+
+final readonly class UpdateAddressAction
+{
+    /**
+     * Update the address of an addressable model.
+     */
+    public function handle(Addressable $addressable, UpdateAddressData $data): Address
+    {
+        /** @var Address $address */
+        $address = $addressable->address;
+
+        $address->update($data->toArray());
+
+        return $address->refresh();
+    }
+}

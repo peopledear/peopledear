@@ -26,7 +26,7 @@ it('people manager can access organization settings', function (): void {
 
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component('admin/settings/organization')
+            ->component('org-settings-general/edit')
             ->has('organization'));
 });
 
@@ -50,7 +50,7 @@ it('owner can access organization settings', function (): void {
 
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component('admin/settings/organization')
+            ->component('org-settings-general/edit')
             ->has('organization'));
 });
 

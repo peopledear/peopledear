@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
-* @see \App\Http\Controllers\PeopleManagerOverviewController::__invoke
-* @see app/Http/Controllers/PeopleManagerOverviewController.php:12
+* @see \App\Http\Controllers\OrganizationOverviewController::__invoke
+* @see app/Http/Controllers/OrganizationOverviewController.php:12
 * @route '/people-manager'
 */
 export const overview = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -15,8 +15,8 @@ overview.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PeopleManagerOverviewController::__invoke
-* @see app/Http/Controllers/PeopleManagerOverviewController.php:12
+* @see \App\Http\Controllers\OrganizationOverviewController::__invoke
+* @see app/Http/Controllers/OrganizationOverviewController.php:12
 * @route '/people-manager'
 */
 overview.url = (options?: RouteQueryOptions) => {
@@ -24,8 +24,8 @@ overview.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\PeopleManagerOverviewController::__invoke
-* @see app/Http/Controllers/PeopleManagerOverviewController.php:12
+* @see \App\Http\Controllers\OrganizationOverviewController::__invoke
+* @see app/Http/Controllers/OrganizationOverviewController.php:12
 * @route '/people-manager'
 */
 overview.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,8 +34,8 @@ overview.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\PeopleManagerOverviewController::__invoke
-* @see app/Http/Controllers/PeopleManagerOverviewController.php:12
+* @see \App\Http\Controllers\OrganizationOverviewController::__invoke
+* @see app/Http/Controllers/OrganizationOverviewController.php:12
 * @route '/people-manager'
 */
 overview.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,8 +44,8 @@ overview.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\PeopleManagerOverviewController::__invoke
-* @see app/Http/Controllers/PeopleManagerOverviewController.php:12
+* @see \App\Http\Controllers\OrganizationOverviewController::__invoke
+* @see app/Http/Controllers/OrganizationOverviewController.php:12
 * @route '/people-manager'
 */
 const overviewForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,8 +54,8 @@ const overviewForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 })
 
 /**
-* @see \App\Http\Controllers\PeopleManagerOverviewController::__invoke
-* @see app/Http/Controllers/PeopleManagerOverviewController.php:12
+* @see \App\Http\Controllers\OrganizationOverviewController::__invoke
+* @see app/Http/Controllers/OrganizationOverviewController.php:12
 * @route '/people-manager'
 */
 overviewForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -64,8 +64,8 @@ overviewForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 })
 
 /**
-* @see \App\Http\Controllers\PeopleManagerOverviewController::__invoke
-* @see app/Http/Controllers/PeopleManagerOverviewController.php:12
+* @see \App\Http\Controllers\OrganizationOverviewController::__invoke
+* @see app/Http/Controllers/OrganizationOverviewController.php:12
 * @route '/people-manager'
 */
 overviewForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

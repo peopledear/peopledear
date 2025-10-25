@@ -1,6 +1,6 @@
 import { PlaceholderPattern } from "@/components/ui/placeholder-pattern";
 import AdminLayout from "@/layouts/admin-layout";
-import { overview } from "@/routes/people-manager";
+import { overview } from "@/routes/org";
 import { type BreadcrumbItem } from "@/types";
 import { Head } from "@inertiajs/react";
 

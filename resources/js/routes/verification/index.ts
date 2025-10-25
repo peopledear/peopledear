@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\UserEmailVerificationNotificationController::notice
 * @see app/Http/Controllers/UserEmailVerificationNotificationController.php:17
@@ -44,43 +44,6 @@ notice.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\UserEmailVerificationNotificationController::notice
-* @see app/Http/Controllers/UserEmailVerificationNotificationController.php:17
-* @route '/verify-email'
-*/
-const noticeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: notice.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserEmailVerificationNotificationController::notice
-* @see app/Http/Controllers/UserEmailVerificationNotificationController.php:17
-* @route '/verify-email'
-*/
-noticeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: notice.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserEmailVerificationNotificationController::notice
-* @see app/Http/Controllers/UserEmailVerificationNotificationController.php:17
-* @route '/verify-email'
-*/
-noticeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: notice.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-notice.form = noticeForm
-
-/**
 * @see \App\Http\Controllers\UserEmailVerificationNotificationController::send
 * @see app/Http/Controllers/UserEmailVerificationNotificationController.php:24
 * @route '/email/verification-notification'
@@ -113,28 +76,6 @@ send.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: send.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\UserEmailVerificationNotificationController::send
-* @see app/Http/Controllers/UserEmailVerificationNotificationController.php:24
-* @route '/email/verification-notification'
-*/
-const sendForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: send.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\UserEmailVerificationNotificationController::send
-* @see app/Http/Controllers/UserEmailVerificationNotificationController.php:24
-* @route '/email/verification-notification'
-*/
-sendForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: send.url(options),
-    method: 'post',
-})
-
-send.form = sendForm
 
 /**
 * @see \App\Http\Controllers\UserEmailVerification::verify
@@ -196,43 +137,6 @@ verify.head = (args: { id: string | number, hash: string | number } | [id: strin
     url: verify.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\UserEmailVerification::verify
-* @see app/Http/Controllers/UserEmailVerification.php:14
-* @route '/verify-email/{id}/{hash}'
-*/
-const verifyForm = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: verify.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserEmailVerification::verify
-* @see app/Http/Controllers/UserEmailVerification.php:14
-* @route '/verify-email/{id}/{hash}'
-*/
-verifyForm.get = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: verify.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserEmailVerification::verify
-* @see app/Http/Controllers/UserEmailVerification.php:14
-* @route '/verify-email/{id}/{hash}'
-*/
-verifyForm.head = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: verify.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-verify.form = verifyForm
 
 const verification = {
     notice: Object.assign(notice, notice),

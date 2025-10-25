@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\UserPasswordController::edit
 * @see app/Http/Controllers/UserPasswordController.php:47
@@ -44,43 +44,6 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\UserPasswordController::edit
-* @see app/Http/Controllers/UserPasswordController.php:47
-* @route '/settings/password'
-*/
-const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::edit
-* @see app/Http/Controllers/UserPasswordController.php:47
-* @route '/settings/password'
-*/
-editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::edit
-* @see app/Http/Controllers/UserPasswordController.php:47
-* @route '/settings/password'
-*/
-editForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-edit.form = editForm
-
-/**
 * @see \App\Http\Controllers\UserPasswordController::update
 * @see app/Http/Controllers/UserPasswordController.php:52
 * @route '/settings/password'
@@ -113,38 +76,6 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(options),
     method: 'put',
 })
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::update
-* @see app/Http/Controllers/UserPasswordController.php:52
-* @route '/settings/password'
-*/
-const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::update
-* @see app/Http/Controllers/UserPasswordController.php:52
-* @route '/settings/password'
-*/
-updateForm.put = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\UserPasswordController::create
@@ -209,43 +140,6 @@ create.head = (args: { token: string | number } | [token: string | number ] | st
 })
 
 /**
-* @see \App\Http\Controllers\UserPasswordController::create
-* @see app/Http/Controllers/UserPasswordController.php:22
-* @route '/reset-password/{token}'
-*/
-const createForm = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::create
-* @see app/Http/Controllers/UserPasswordController.php:22
-* @route '/reset-password/{token}'
-*/
-createForm.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::create
-* @see app/Http/Controllers/UserPasswordController.php:22
-* @route '/reset-password/{token}'
-*/
-createForm.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-create.form = createForm
-
-/**
 * @see \App\Http\Controllers\UserPasswordController::store
 * @see app/Http/Controllers/UserPasswordController.php:30
 * @route '/reset-password'
@@ -278,28 +172,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::store
-* @see app/Http/Controllers/UserPasswordController.php:30
-* @route '/reset-password'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\UserPasswordController::store
-* @see app/Http/Controllers/UserPasswordController.php:30
-* @route '/reset-password'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 const UserPasswordController = { edit, update, create, store }
 

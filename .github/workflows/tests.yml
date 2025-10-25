@@ -42,9 +42,6 @@ jobs:
 
       - name: Build Assets
         run: npm run build
-        
-      - name: Generate Wayfinder Routes
-        run: php artisan wayfinder:generate --with-form
 
       - name: Get Playwright version
         id: playwright-version

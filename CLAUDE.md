@@ -449,10 +449,34 @@ $invitation = $action->handle($data->email, $data->role_id);
 - **ALWAYS type hint variables in tests** - use explicit type declarations for all test function parameters and variables where applicable
   - Correct: `test('example', function (): void { ... });`
   - Incorrect: `test('example', function () { ... });`
+- **ALWAYS type hint ALL variables in tests** - add PHPDoc type hints for all variables
+  - Models created with factories: `/** @var User $user */ $user = User::factory()->createQuietly();`
+  - Models retrieved from database: `/** @var Role $role */ $role = Role::query()->where('name', 'employee')->first()?->fresh();`
+  - Collections: `/** @var Collection<int, Permission> $permissions */ $permissions = Permission::query()->get();`
+  - Simple types: Type hints help IDE autocomplete and catch errors early
+- **ALWAYS use `createQuietly()` instead of `create()`** - prevents model events from firing during tests
+  - Correct: `User::factory()->createQuietly();`
+  - Incorrect: `User::factory()->create();`
+- **ALWAYS use `fresh()` when retrieving seeded/migration records from database** - ensures you get the latest data from the database after creation
+  - For records created by migrations or seeders: `$role = Role::query()->where('name', 'employee')->first()?->fresh();`
+  - For records created in tests with `createQuietly()`: use directly without `fresh()` since they're already fresh
+  - `fresh()` reloads the model from the database, ensuring all attributes are up-to-date
 - Pest tests look and behave like this:
 <code-snippet name="Basic Pest Test Example" lang="php">
 test('example', function (): void {
-    expect(true)->toBeTrue();
+    /** @var User $user */
+    $user = User::factory()->createQuietly();
+
+    /** @var Role $role */
+    $role = Role::query()
+        ->where('name', 'employee')
+        ->first()
+        ?->fresh();
+
+    expect($user->id)
+        ->toBeInt()
+        ->and($role)
+        ->not->toBeNull();
 });
 </code-snippet>
 

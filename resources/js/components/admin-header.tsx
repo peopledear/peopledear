@@ -23,7 +23,7 @@ import {
 import { UserMenuContent } from "@/components/user-menu-content";
 import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
-import { overview } from "@/routes/people-manager";
+import { overview } from "@/routes/org";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
 import { Link, usePage } from "@inertiajs/react";
 import { LayoutGrid, Menu, Search, Settings } from "lucide-react";

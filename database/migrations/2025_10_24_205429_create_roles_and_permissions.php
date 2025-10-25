@@ -77,6 +77,8 @@ return new class extends Migration
             'employees.create',
             'employees.edit',
             'employees.delete',
+            'organizations.view',
+            'organizations.edit',
             'teams.manage',
             'reports.view',
         ]);

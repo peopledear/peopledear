@@ -33,15 +33,14 @@ final class GetPublicHolidaysRequest extends Request implements Cacheable
 
     public function resolveCacheDriver(): Driver
     {
-        $driver = config('openholidays.cache.driver');
-        $store = $driver ? cache()->store($driver) : cache()->store();
+        $driver = config()->string('openholidays.cache.driver', 'database');
 
-        return new LaravelCacheDriver($store);
+        return new LaravelCacheDriver(cache()->store($driver));
     }
 
     public function cacheExpiryInSeconds(): int
     {
-        return config('openholidays.cache.ttl', 2592000);
+        return config()->integer('openholidays.cache.ttl', 2592000);
     }
 
     public function defaultQuery(): array

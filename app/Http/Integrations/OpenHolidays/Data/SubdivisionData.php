@@ -22,8 +22,10 @@ final class SubdivisionData extends Data
 
     public function getLocalizedName(?string $languageCode = null): string
     {
-        $languageCode = $languageCode ?? config('openholidays.default_language', 'en');
+        $languageCode ??= config()->string('openholidays.default_language', 'en');
 
-        return $this->name[$languageCode] ?? $this->name['en'] ?? array_values($this->name)[0] ?? $this->shortName;
+        $values = array_values($this->name);
+
+        return $this->name[$languageCode] ?? $this->name['en'] ?? $values[0] ?? $this->shortName;
     }
 }

@@ -15,7 +15,7 @@ final class OpenHolidaysConnector extends Connector
 
     public function resolveBaseUrl(): string
     {
-        return config('openholidays.api_url');
+        return config()->string('openholidays.api_url');
     }
 
     public function defaultHeaders(): array
@@ -28,8 +28,8 @@ final class OpenHolidaysConnector extends Connector
     public function defaultConfig(): array
     {
         return [
-            'timeout' => config('openholidays.timeout.request', 10),
-            'connect_timeout' => config('openholidays.timeout.connect', 5),
+            'timeout' => config()->integer('openholidays.timeout.request', 10),
+            'connect_timeout' => config()->integer('openholidays.timeout.connect', 5),
         ];
     }
 }

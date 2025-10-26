@@ -8,7 +8,7 @@ return [
     'cache' => [
         'enabled' => env('OPENHOLIDAYS_CACHE_ENABLED', true),
         'ttl' => env('OPENHOLIDAYS_CACHE_TTL', 2592000), // 30 days
-        'driver' => env('OPENHOLIDAYS_CACHE_DRIVER', null),
+        'driver' => env('OPENHOLIDAYS_CACHE_DRIVER', 'database'),
     ],
 
     'included_types' => [

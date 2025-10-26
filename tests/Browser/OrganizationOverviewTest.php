@@ -2,12 +2,18 @@
 
 declare(strict_types=1);
 
+use App\Models\Organization;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
 use function Pest\Laravel\actingAs;
 
 beforeEach(function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly([
+        'name' => 'Test Organization',
+    ]);
+
     /** @var Role $peopleManagerRole */
     $peopleManagerRole = Role::query()
         ->where('name', 'people_manager')

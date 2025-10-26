@@ -112,6 +112,20 @@ public function handle(UpdateOrganizationData $data, Organization $organization)
 
 @endboostsnippet
 
+## Action Naming Convention
+
+**Action classes are named WITHOUT the "Action" suffix:**
+
+- ✅ CORRECT: `CreateOrganization`, `UpdateOrganization`, `DeleteOffice`
+- ❌ WRONG: `CreateOrganizationAction`, `UpdateOrganizationAction`, `DeleteOfficeAction`
+
+**Action test files follow the same naming:**
+
+- Action class: `app/Actions/CreateOrganization.php`
+- Test file: `tests/Unit/Actions/CreateOrganizationTest.php`
+
+This keeps action names clean and concise while maintaining clarity about their purpose.
+
 ## Testing Actions
 
 **ALWAYS create unit tests for Actions** to verify business logic:

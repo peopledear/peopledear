@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Actions\UpdateOrganizationAction;
+use App\Actions\UpdateOrganization;
 use App\Data\UpdateOrganizationData;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(UpdateOrganizationAction::class);
+    $this->action = app(UpdateOrganization::class);
 });
 
 test('updates organization with all fields',

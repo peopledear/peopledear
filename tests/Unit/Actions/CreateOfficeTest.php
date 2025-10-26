@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\CreateOfficeAction;
+use App\Actions\CreateOffice;
 use App\Data\CreateAddressData;
 use App\Data\CreateOfficeData;
 use App\Enums\OfficeType;
@@ -11,7 +11,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(CreateOfficeAction::class);
+    $this->action = app(CreateOffice::class);
 });
 
 test('creates office with address',

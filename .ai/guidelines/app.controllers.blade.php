@@ -23,11 +23,11 @@ Controllers should **NOT** contain business logic - that belongs in Actions.
 ```php
 final readonly class ActivateUserController
 {
-    public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
-    {
-        $action->handle($user);
-        return redirect()->back();
-    }
+public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
+{
+$action->handle($user);
+return redirect()->back();
+}
 }
 ```
 
@@ -35,9 +35,9 @@ final readonly class ActivateUserController
 ```php
 final readonly class OfficeController
 {
-    public function store(CreateOfficeRequest $request): RedirectResponse { }
-    public function update(UpdateOfficeRequest $request, Office $office): RedirectResponse { }
-    public function destroy(Office $office): RedirectResponse { }
+public function store(CreateOfficeRequest $request): RedirectResponse { }
+public function update(UpdateOfficeRequest $request, Office $office): RedirectResponse { }
+public function destroy(Office $office): RedirectResponse { }
 }
 ```
 
@@ -79,11 +79,12 @@ final class UpdateOfficeRequest extends FormRequest
         ];
     }
 }
+
 ```
 
 ### Create Form Requests
 ```bash
-php artisan make:request UpdateOfficeRequest --no-interaction
+php artisan make:request UpdateOfficeRequest--no - interaction
 ```
 
 ## Controller Flow Pattern
@@ -96,9 +97,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateOfficeAction;
-use App\Actions\DeleteOfficeAction;
-use App\Actions\UpdateOfficeAction;
+use App\Actions\CreateOffice;
+use App\Actions\DeleteOffice;
+use App\Actions\UpdateOffice;
 use App\Data\CreateOfficeData;
 use App\Data\UpdateOfficeData;
 use App\Http\Requests\CreateOfficeRequest;
@@ -112,9 +113,10 @@ final class OfficeController
 {
     public function store(
         CreateOfficeRequest $request,
-        CreateOfficeAction $action,
+        CreateOffice        $action,
         #[CurrentUser] User $user
-    ): RedirectResponse {
+    ): RedirectResponse
+    {
         $data = CreateOfficeData::from($request->validated());
 
         $action->handle($data, $user);
@@ -126,9 +128,10 @@ final class OfficeController
 
     public function update(
         UpdateOfficeRequest $request,
-        Office $office,
-        UpdateOfficeAction $action
-    ): RedirectResponse {
+        Office              $office,
+        UpdateOffice        $action
+    ): RedirectResponse
+    {
         $data = UpdateOfficeData::from($request->validated());
 
         $action->handle($data, $office);
@@ -139,9 +142,10 @@ final class OfficeController
     }
 
     public function destroy(
-        Office $office,
-        DeleteOfficeAction $action
-    ): RedirectResponse {
+        Office       $office,
+        DeleteOffice $action
+    ): RedirectResponse
+    {
         $action->handle($office);
 
         return redirect()
@@ -149,6 +153,7 @@ final class OfficeController
             ->with('success', 'Office deleted successfully');
     }
 }
+
 ```
 
 ## Dependency Injection
@@ -160,9 +165,10 @@ final class OfficeController
 ```php
 public function store(
     CreateOfficeRequest $request,
-    CreateOfficeAction $action,  // ✅ Injected here
+    CreateOffice        $action,  // ✅ Injected here
     #[CurrentUser] User $user
-): RedirectResponse {
+): RedirectResponse
+{
     $data = CreateOfficeData::from($request->validated());
     $action->handle($data, $user);
     return redirect()->route('admin.settings.organization.edit');
@@ -172,8 +178,9 @@ public function store(
 ❌ **WRONG - Constructor injection:**
 ```php
 public function __construct(
-    private CreateOfficeAction $createOffice,  // ❌ Don't do this
-) {
+    private CreateOffice $createOffice,  // ❌ Don't do this
+)
+{
 }
 
 public function store(CreateOfficeRequest $request): RedirectResponse
@@ -193,7 +200,8 @@ use Illuminate\Container\Attributes\CurrentUser;
 public function store(
     CreateOfficeRequest $request,
     #[CurrentUser] User $user  // ✅ Clean and explicit
-): RedirectResponse {
+): RedirectResponse
+{
     $data = CreateOfficeData::from($request->validated());
     $this->createOffice->handle($data, $user);
     return redirect()->route('admin.settings.organization.edit');
@@ -204,8 +212,9 @@ public function store(
 ```php
 public function store(
     CreateOfficeRequest $request,
-    Request $httpRequest  // ❌ Unnecessary
-): RedirectResponse {
+    Request             $httpRequest  // ❌ Unnecessary
+): RedirectResponse
+{
     $user = $httpRequest->user();  // ❌ Verbose
     // ...
 }
@@ -256,9 +265,10 @@ public function update(UpdateOfficeRequest $request, Office $office): RedirectRe
 ```php
 public function update(
     UpdateOfficeRequest $request,
-    Office $office,
-    UpdateOfficeAction $action
-): RedirectResponse {
+    Office              $office,
+    UpdateOffice        $action
+): RedirectResponse
+{
     // ✅ Create Data object from validated data
     $data = UpdateOfficeData::from($request->validated());
 

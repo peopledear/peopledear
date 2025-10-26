@@ -9,10 +9,10 @@ use App\Models\Office;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\Optional;
 
-final readonly class UpdateOfficeAction
+final readonly class UpdateOffice
 {
     public function __construct(
-        private UpdateAddressAction $updateAddress,
+        private UpdateAddress $updateAddress,
     ) {}
 
     /**

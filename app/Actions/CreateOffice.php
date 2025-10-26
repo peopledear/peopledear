@@ -9,10 +9,10 @@ use App\Models\Office;
 use App\Models\Organization;
 use Illuminate\Support\Facades\DB;
 
-final readonly class CreateOfficeAction
+final readonly class CreateOffice
 {
     public function __construct(
-        private CreateAddressAction $createAddress,
+        private CreateAddress $createAddress,
     ) {}
 
     /**

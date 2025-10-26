@@ -9,7 +9,7 @@ use App\Data\CreateAddressData;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Model;
 
-final readonly class CreateAddressAction
+final readonly class CreateAddress
 {
     /**
      * Create an address for an addressable model.

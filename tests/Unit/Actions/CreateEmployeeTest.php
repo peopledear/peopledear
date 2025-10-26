@@ -9,7 +9,7 @@ use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;
 use App\Models\User;
-use Illuminate\Support\Facades\Date;
+use Carbon\CarbonImmutable;
 
 beforeEach(function (): void {
     $this->action = app(CreateEmployee::class);
@@ -39,7 +39,7 @@ test('creates employee with all fields',
             email: 'john@example.com',
             phone: '+1-555-0100',
             job_title: 'Software Engineer',
-            hire_date: Date::now(),
+            hire_date: CarbonImmutable::now(),
             office_id: $office->id,
             user_id: $user->id,
         );

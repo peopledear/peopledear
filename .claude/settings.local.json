@@ -15,7 +15,11 @@
       "mcp__laravel-boost__search-docs",
       "Bash(npm run build:*)",
       "Bash(git checkout:*)",
-      "Bash(php artisan make:model:*)"
+      "Bash(php artisan make:model:*)",
+      "mcp__laravel-boost__database-schema",
+      "WebFetch(domain:docs.saloon.dev)",
+      "Bash(composer require:*)",
+      "Bash(php artisan make:migration:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

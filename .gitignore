@@ -25,5 +25,6 @@ yarn-error.log
 /tmp
 /resources/js/actions
 /resources/js/routes
+/resources/js/wayfinder
 auto-imports.d.ts
 components.d.ts

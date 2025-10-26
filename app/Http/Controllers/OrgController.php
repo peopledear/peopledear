@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateOrganization;
+use App\Actions\SetCurrentOrganization;
 use App\Actions\UpdateOrganizationAction;
+use App\Data\CreateOrganizationData;
 use App\Data\UpdateOrganizationData;
+use App\Http\Requests\CreateOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organization;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +18,26 @@ use Inertia\Response;
 
 final class OrgController
 {
+    public function create(): Response
+    {
+        return Inertia::render('org/create', []);
+    }
+
+    public function store(
+        CreateOrganizationRequest $request,
+        CreateOrganization $action,
+        SetCurrentOrganization $setCurrentOrganization,
+    ): RedirectResponse {
+        $data = CreateOrganizationData::from($request->validated());
+
+        $organization = $action->handle($data);
+
+        $setCurrentOrganization->handle($organization);
+
+        return to_route('org.overview')
+            ->with('success', 'Organization created successfully');
+    }
+
     public function edit(): Response
     {
         /** @var Organization $organization */

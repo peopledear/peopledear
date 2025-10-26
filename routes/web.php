@@ -21,9 +21,17 @@ Route::get('/', fn () => Inertia::render('welcome', []))->name('home');
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('dashboard', fn () => Inertia::render('dashboard', []))->name('dashboard');
 
+    // Organization Required Informational Page...
+    Route::get('organization-required', fn () => Inertia::render('organization-required', []))
+        ->name('organization-required');
+
     Route::middleware(['role:people_manager|owner'])
         ->prefix('org')
         ->as('org.')->group(function (): void {
+            // Organization Creation...
+            Route::get('create', [OrgController::class, 'create'])->name('create');
+            Route::post('create', [OrgController::class, 'store'])->name('store');
+
             // People Manager Overview...
             Route::get('/', OrgOverviewController::class)
                 ->middleware('can:employees.view')

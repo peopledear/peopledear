@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
@@ -177,6 +178,8 @@ it('requires correct password to delete account', function (): void {
 });
 
 it('redirects authenticated users away from registration', function (): void {
+    Organization::factory()->createQuietly();
+
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)

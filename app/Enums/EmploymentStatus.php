@@ -29,10 +29,10 @@ enum EmploymentStatus: int
     public function label(): string
     {
         return match ($this) {
-            self::Active => __('Active'),
-            self::Inactive => __('Inactive'),
-            self::OnLeave => __('On Leave'),
-            self::Terminated => __('Terminated'),
+            self::Active => __('employment_status.active'),
+            self::Inactive => __('employment_status.inactive'),
+            self::OnLeave => __('employment_status.on_leave'),
+            self::Terminated => __('employment_status.terminated'),
         };
     }
 }

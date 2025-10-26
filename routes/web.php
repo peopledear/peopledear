@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\OrgController;
-use App\Http\Controllers\OrgOfficeController;
-use App\Http\Controllers\OrgOverviewController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationOfficeController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserEmailResetNotification;
@@ -29,30 +28,30 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         ->prefix('org')
         ->as('org.')->group(function (): void {
             // Organization Creation...
-            Route::get('create', [OrgController::class, 'create'])->name('create');
-            Route::post('create', [OrgController::class, 'store'])->name('store');
 
-            // People Manager Overview...
-            Route::get('/', OrgOverviewController::class)
+            Route::get('/', [OrganizationController::class, 'index'])
                 ->middleware('can:employees.view')
                 ->name('overview');
 
+            Route::get('create', [OrganizationController::class, 'create'])->name('create');
+            Route::post('create', [OrganizationController::class, 'store'])->name('store');
+
             // Organization Settings...
-            Route::get('settings', [OrgController::class, 'edit'])
+            Route::get('settings', [OrganizationController::class, 'edit'])
                 ->middleware('can:organizations.edit')
                 ->name('settings.organization.edit');
-            Route::put('settings/organization', [OrgController::class, 'update'])
+            Route::put('settings/organization', [OrganizationController::class, 'update'])
                 ->middleware('can:organizations.edit')
                 ->name('settings.organization.update');
 
             // Office Management...
-            Route::post('offices', [OrgOfficeController::class, 'store'])
+            Route::post('offices', [OrganizationOfficeController::class, 'store'])
                 ->middleware('can:organizations.edit')
                 ->name('offices.store');
-            Route::put('offices/{office}', [OrgOfficeController::class, 'update'])
+            Route::put('offices/{office}', [OrganizationOfficeController::class, 'update'])
                 ->middleware('can:organizations.edit')
                 ->name('offices.update');
-            Route::delete('offices/{office}', [OrgOfficeController::class, 'destroy'])
+            Route::delete('offices/{office}', [OrganizationOfficeController::class, 'destroy'])
                 ->middleware('can:organizations.edit')
                 ->name('offices.destroy');
         });

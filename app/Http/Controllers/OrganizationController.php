@@ -16,8 +16,13 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class OrgController
+final class OrganizationController
 {
+    public function index(): Response
+    {
+        return Inertia::render('org/index', []);
+    }
+
     public function create(): Response
     {
         return Inertia::render('org/create', []);

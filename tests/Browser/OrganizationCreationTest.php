@@ -26,7 +26,7 @@ test('owner can create organization via modal', function (): void {
     $page->assertSee('New organization')
         ->fill('name', 'Test Organization')
         ->click('Create organization')
-        ->assertPathIs('/org')
+        ->assertPathIs('/org/create')
         ->assertNoJavascriptErrors();
 
     /** @var Organization|null $organization */
@@ -57,7 +57,7 @@ test('people manager can create organization', function (): void {
     $page->assertSee('New organization')
         ->fill('name', 'PM Test Organization')
         ->click('Create organization')
-        ->assertPathIs('/org')
+        ->assertPathIs('/org/create')
         ->assertNoJavascriptErrors();
 
     /** @var Organization|null $organization */

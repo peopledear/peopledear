@@ -9,7 +9,7 @@ use App\Data\UpdateAddressData;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Model;
 
-final readonly class UpdateAddressAction
+final readonly class UpdateAddress
 {
     /**
      * Update the address of an addressable model.

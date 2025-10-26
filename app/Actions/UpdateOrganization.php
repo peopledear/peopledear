@@ -7,7 +7,7 @@ namespace App\Actions;
 use App\Data\UpdateOrganizationData;
 use App\Models\Organization;
 
-final readonly class UpdateOrganizationAction
+final readonly class UpdateOrganization
 {
     /**
      * Update the organization with the provided data.

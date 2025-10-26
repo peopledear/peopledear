@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Actions\DeleteAddressAction;
+use App\Actions\DeleteAddress;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(DeleteAddressAction::class);
+    $this->action = app(DeleteAddress::class);
 });
 
 test('deletes address of addressable model',

@@ -7,10 +7,10 @@ namespace App\Actions;
 use App\Models\Office;
 use Illuminate\Support\Facades\DB;
 
-final readonly class DeleteOfficeAction
+final readonly class DeleteOffice
 {
     public function __construct(
-        private DeleteAddressAction $deleteAddress,
+        private DeleteAddress $deleteAddress,
     ) {}
 
     /**

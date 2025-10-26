@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Actions\CreateAddressAction;
+use App\Actions\CreateAddress;
 use App\Data\CreateAddressData;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(CreateAddressAction::class);
+    $this->action = app(CreateAddress::class);
 });
 
 test('creates address for addressable model',

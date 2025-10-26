@@ -30,12 +30,12 @@
 ```php
 <?php
 
-use App\Actions\UpdateOrganizationAction;
+use App\Actions\UpdateOrganization;
 use App\Data\UpdateOrganizationData;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(UpdateOrganizationAction::class);
+    $this->action = app(UpdateOrganization::class);
 });
 
 test('updates organization with all fields', function (): void {
@@ -55,7 +55,7 @@ test('updates organization with all fields', function (): void {
 ❌ **WRONG - Don't use new:**
 ```php
 test('updates organization', function (): void {
-    $action = new UpdateOrganizationAction(); // ❌ Missing dependencies!
+    $action = new UpdateOrganization(); // ❌ Missing dependencies!
     // ...
 });
 ```
@@ -63,7 +63,7 @@ test('updates organization', function (): void {
 ✅ **CORRECT - Use app() in beforeEach:**
 ```php
 beforeEach(function (): void {
-    $this->action = app(UpdateOrganizationAction::class); // ✅ Container resolves dependencies
+    $this->action = app(UpdateOrganization::class); // ✅ Container resolves dependencies
 });
 ```
 
@@ -139,7 +139,7 @@ test('validates required field', function () {
 
 ❌ **WRONG - Don't wrap in expect():**
 ```php
-expect(fn () => CreateUserData::validateAndCreate([]))
+expect(fn() => CreateUserData::validateAndCreate([]))
     ->toThrow(ValidationException::class); // ❌
 ```
 
@@ -180,7 +180,7 @@ test('page renders correctly', function (): void {
 ```
 
 ### Global Configuration
-- `RefreshDatabase` applied globally in `tests/Pest.php`
+- `RefreshDatabase` applied globally in `tests / Pest . php`
 - Don't add `uses(RefreshDatabase::class)` in individual tests
 
 ## Test Organization
@@ -207,13 +207,13 @@ test('existing feature works', function (): void {
 php artisan test
 
 # Run specific file
-php artisan test tests/Unit/Actions/CreateOfficeActionTest.php
+php artisan test tests / Unit / Actions / CreateOfficeActionTest . php
 
 # Run with filter
-php artisan test --filter="CreateOfficeActionTest"
+php artisan test--filter = "CreateOfficeActionTest"
 
 # Stop on first failure
-php artisan test --stop-on-failure
+php artisan test--stop - on - failure
 ```
 
 ## Before Every Commit
@@ -222,5 +222,5 @@ php artisan test --stop-on-failure
 
 ```bash
 php artisan test              # All tests must pass
-vendor/bin/pint --dirty       # Format code
+vendor / bin / pint--dirty       # Format code
 ```

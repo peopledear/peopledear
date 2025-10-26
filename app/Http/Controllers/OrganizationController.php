@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\CreateOrganization;
 use App\Actions\SetCurrentOrganization;
-use App\Actions\UpdateOrganizationAction;
+use App\Actions\UpdateOrganization;
 use App\Data\CreateOrganizationData;
 use App\Data\UpdateOrganizationData;
 use App\Http\Requests\CreateOrganizationRequest;
@@ -57,7 +57,7 @@ final class OrganizationController
 
     public function update(
         UpdateOrganizationRequest $request,
-        UpdateOrganizationAction $action
+        UpdateOrganization $action
     ): RedirectResponse {
         /** @var Organization $organization */
         $organization = Organization::query()->firstOrFail();

@@ -8,7 +8,7 @@ use App\Contracts\Addressable;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Model;
 
-final readonly class DeleteAddressAction
+final readonly class DeleteAddress
 {
     /**
      * Delete the address of an addressable model.

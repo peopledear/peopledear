@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\UpdateOfficeAction;
+use App\Actions\UpdateOffice;
 use App\Data\UpdateAddressData;
 use App\Data\UpdateOfficeData;
 use App\Enums\OfficeType;
@@ -11,7 +11,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(UpdateOfficeAction::class);
+    $this->action = app(UpdateOffice::class);
 });
 
 test('updates office with all fields',

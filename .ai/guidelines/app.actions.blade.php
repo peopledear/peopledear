@@ -34,7 +34,7 @@ final readonly class CreateFavorite
 ## Action Method Signatures
 
 ### Update Actions
-**ALWAYS accept the model being updated** as a parameter:
+** ALWAYS accept the model being updated ** as a parameter:
 
 @boostsnippet('Update Action Signature', 'php')
 <?php
@@ -57,7 +57,7 @@ public function handle(UpdateOrganizationData $data): Organization
 @endboostsnippet
 
 ### Delete Actions
-**ALWAYS accept the model being deleted** as a parameter:
+** ALWAYS accept the model being deleted ** as a parameter:
 
 @boostsnippet('Delete Action Signature', 'php')
 <?php
@@ -78,7 +78,7 @@ public function handle(int $officeId): void
 @endboostsnippet
 
 ### Create Actions
-**Accept Data object and any required context** (user, parent models, etc.):
+** Accept Data object and any required context ** (user, parent models, etc .):
 
 @boostsnippet('Create Action Signature', 'php')
 <?php
@@ -96,10 +96,10 @@ public function handle(CreateOfficeData $data, Organization $organization): Offi
 
 ## Using toArray() with Optional
 
-**Data objects automatically handle Optional** - use `toArray()` for clean updates:
+** Data objects automatically handle Optional ** - use `toArray()` for clean updates:
 
-@boostsnippet('toArray with Optional', 'php')
-<?php
+    @boostsnippet('toArray with Optional', 'php')
+    <?php
 
 public function handle(UpdateOrganizationData $data, Organization $organization): Organization
 {
@@ -114,32 +114,32 @@ public function handle(UpdateOrganizationData $data, Organization $organization)
 
 ## Action Naming Convention
 
-**Action classes are named WITHOUT the "Action" suffix:**
+    ** Action classes are named WITHOUT the "Action" suffix:**
 
-- ✅ CORRECT: `CreateOrganization`, `UpdateOrganization`, `DeleteOffice`
+-✅ CORRECT: `CreateOrganization`, `UpdateOrganization`, `DeleteOffice`
 - ❌ WRONG: `CreateOrganizationAction`, `UpdateOrganizationAction`, `DeleteOfficeAction`
 
-**Action test files follow the same naming:**
+** Action test files follow the same naming:**
 
-- Action class: `app/Actions/CreateOrganization.php`
+-Action class: `app/Actions/CreateOrganization.php`
 - Test file: `tests/Unit/Actions/CreateOrganizationTest.php`
 
-This keeps action names clean and concise while maintaining clarity about their purpose.
+This keeps action names clean and concise while maintaining clarity about their purpose .
 
 ## Testing Actions
 
-**ALWAYS create unit tests for Actions** to verify business logic:
+**ALWAYS create unit tests for Actions ** to verify business logic:
 
 @boostsnippet('Action Tests', 'php')
 <?php
 
-use App\Actions\UpdateOrganizationAction;
+use App\Actions\UpdateOrganization;
 use App\Data\UpdateOrganizationData;
 use App\Models\Organization;
 use Spatie\LaravelData\Optional;
 
 test('it updates organization with all fields', function (): void {
-    $action = new UpdateOrganizationAction();
+    $action = new UpdateOrganization();
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -163,7 +163,7 @@ test('it updates organization with all fields', function (): void {
 });
 
 test('it updates organization with partial fields only', function (): void {
-    $action = new UpdateOrganizationAction();
+    $action = new UpdateOrganization();
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -185,7 +185,7 @@ test('it updates organization with partial fields only', function (): void {
 });
 
 test('it can set fields to null explicitly', function (): void {
-    $action = new UpdateOrganizationAction();
+    $action = new UpdateOrganization();
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -201,7 +201,7 @@ test('it can set fields to null explicitly', function (): void {
     $result = $action->handle($data, $organization);
 
     expect($result->name)->toBe('Test Company') // ✅ Unchanged
-        ->and($result->phone)->toBeNull(); // ✅ Set to null
+    ->and($result->phone)->toBeNull(); // ✅ Set to null
 });
 
 @endboostsnippet

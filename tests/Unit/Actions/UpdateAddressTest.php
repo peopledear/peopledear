@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Actions\UpdateAddressAction;
+use App\Actions\UpdateAddress;
 use App\Data\UpdateAddressData;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(UpdateAddressAction::class);
+    $this->action = app(UpdateAddress::class);
 });
 
 test('updates address with all fields',

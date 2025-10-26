@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Actions\DeleteOfficeAction;
+use App\Actions\DeleteOffice;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(DeleteOfficeAction::class);
+    $this->action = app(DeleteOffice::class);
 });
 
 test('deletes office and its address',

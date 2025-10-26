@@ -15,7 +15,7 @@ use App\Models\Office;
 use App\Models\Organization;
 use Illuminate\Http\RedirectResponse;
 
-final class OrgOfficeController
+final class OrganizationOfficeController
 {
     public function store(
         CreateOfficeRequest $request,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\OrganizationExcludedRoute;
 
-it('returns string values for route checks', function () {
+it('returns string values for route checks', function (): void {
     $values = OrganizationExcludedRoute::values();
 
     // Basic shape

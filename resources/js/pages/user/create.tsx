@@ -8,6 +8,7 @@ import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
 
 export default function Register() {
@@ -60,9 +61,8 @@ export default function Register() {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Password</Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
-                                    type="password"
                                     required
                                     tabIndex={3}
                                     autoComplete="new-password"
@@ -76,9 +76,8 @@ export default function Register() {
                                 <Label htmlFor="password_confirmation">
                                     Confirm password
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password_confirmation"
-                                    type="password"
                                     required
                                     tabIndex={4}
                                     autoComplete="new-password"

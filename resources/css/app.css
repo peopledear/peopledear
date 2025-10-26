@@ -140,4 +140,9 @@
     body {
         @apply bg-background text-foreground;
     }
+
+}
+
+.bg-background {
+    @apply bg-gray-50/30;
 }

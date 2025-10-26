@@ -1,11 +1,17 @@
 import { Head } from "@inertiajs/react";
 
 import AppearanceTabs from "@/components/appearance-tabs";
-import HeadingSmall from "@/components/heading-small";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { type BreadcrumbItem } from "@/types";
 
 import AppLayout from "@/layouts/app-layout";
-import SettingsLayout from "@/layouts/settings/layout";
+import UserSettingsLayout from "@/layouts/settings/app-layout";
 import { edit as editAppearance } from "@/routes/appearance";
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -20,15 +26,20 @@ export default function Update() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Appearance settings" />
 
-            <SettingsLayout>
-                <div className="space-y-6">
-                    <HeadingSmall
-                        title="Appearance settings"
-                        description="Update your account's appearance settings"
-                    />
-                    <AppearanceTabs />
-                </div>
-            </SettingsLayout>
+            <UserSettingsLayout>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Appearance</CardTitle>
+                        <CardDescription>
+                            Customize the appearance of the application to match
+                            your preferences.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <AppearanceTabs />
+                    </CardContent>
+                </Card>
+            </UserSettingsLayout>
         </AppLayout>
     );
 }

@@ -16,6 +16,9 @@
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.12",
         "nunomaduro/essentials": "^1.0.1",
+        "saloonphp/cache-plugin": "^3.0",
+        "saloonphp/laravel-plugin": "^3.6",
+        "saloonphp/saloon": "^3.14",
         "spatie/laravel-data": "^4.18",
         "spatie/laravel-permission": "^6.21"
     },

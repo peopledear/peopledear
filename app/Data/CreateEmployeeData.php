@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Enums\EmploymentStatus;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Data;
 
 /**
@@ -20,7 +20,7 @@ final class CreateEmployeeData extends Data
         public readonly ?string $email,
         public readonly ?string $phone,
         public readonly ?string $job_title,
-        public readonly ?Carbon $hire_date,
+        public readonly ?CarbonImmutable $hire_date,
         public readonly ?int $office_id,
         public readonly ?int $user_id,
     ) {}

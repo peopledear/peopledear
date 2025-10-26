@@ -14,7 +14,8 @@
       "Bash(vendor/bin/phpstan analyse:*)",
       "mcp__laravel-boost__search-docs",
       "Bash(npm run build:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(php artisan make:model:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

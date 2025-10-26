@@ -9,7 +9,7 @@ use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;
 use App\Models\User;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 beforeEach(function (): void {
     $this->action = app(UpdateEmployee::class);
@@ -60,7 +60,7 @@ test('updates employee with all fields',
             email: 'new@example.com',
             phone: '+1-555-9999',
             job_title: 'New Title',
-            hire_date: Carbon::now(),
+            hire_date: Date::now(),
             office_id: $newOffice->id,
             user_id: $newUser->id,
         );

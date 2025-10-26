@@ -8,6 +8,7 @@ use App\Enums\EmploymentStatus;
 use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,6 +26,7 @@ final class EmployeeFactory extends Factory
         return [
             'organization_id' => Organization::factory(),
             'office_id' => fake()->optional()->randomElement([null, Office::factory()]),
+            'user_id' => fake()->optional()->randomElement([null, User::factory()]),
             'name' => fake()->name(),
             'email' => fake()->boolean(80) ? fake()->unique()->safeEmail() : null,
             'phone' => fake()->optional()->phoneNumber(),

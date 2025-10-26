@@ -6,6 +6,7 @@ use App\Enums\EmploymentStatus;
 use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 test('employee has organization relationship', function (): void {
@@ -71,6 +72,41 @@ test('employee office can be null', function (): void {
     $employee->load('office');
 
     expect($employee->office)->toBeNull();
+});
+
+test('employee has user relationship', function (): void {
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly();
+
+    expect($employee->user())->toBeInstanceOf(BelongsTo::class);
+});
+
+test('employee user relationship is properly loaded', function (): void {
+    /** @var User $user */
+    $user = User::factory()->createQuietly();
+
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly([
+        'user_id' => $user->id,
+    ]);
+
+    $employee->load('user');
+
+    expect($employee->user)
+        ->toBeInstanceOf(User::class)
+        ->and($employee->user->id)
+        ->toBe($user->id);
+});
+
+test('employee user can be null', function (): void {
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly([
+        'user_id' => null,
+    ]);
+
+    $employee->load('user');
+
+    expect($employee->user)->toBeNull();
 });
 
 test('employee employment_status is cast to EmploymentStatus enum', function (): void {
@@ -153,6 +189,7 @@ test('to array', function (): void {
             'updated_at',
             'organization_id',
             'office_id',
+            'user_id',
             'name',
             'email',
             'phone',

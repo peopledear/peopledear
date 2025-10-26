@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property-read int $id
  * @property int $organization_id
  * @property int|null $office_id
+ * @property int|null $user_id
  * @property string $name
  * @property string|null $email
  * @property string|null $phone
@@ -26,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $updated_at
  * @property-read Organization $organization
  * @property-read Office|null $office
+ * @property-read User|null $user
  */
 final class Employee extends Model
 {
@@ -44,12 +46,19 @@ final class Employee extends Model
         return $this->belongsTo(Office::class);
     }
 
+    /** @return BelongsTo<User, $this> */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function casts(): array
     {
         return [
             'id' => 'integer',
             'organization_id' => 'integer',
             'office_id' => 'integer',
+            'user_id' => 'integer',
             'name' => 'string',
             'email' => 'string',
             'phone' => 'string',

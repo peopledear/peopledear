@@ -19,9 +19,8 @@ final class OrganizationOfficeController
 {
     public function store(
         CreateOfficeRequest $request,
-        CreateOffice        $action
-    ): RedirectResponse
-    {
+        CreateOffice $action
+    ): RedirectResponse {
         /** @var Organization $organization */
         $organization = Organization::query()->firstOrFail();
 
@@ -35,10 +34,9 @@ final class OrganizationOfficeController
 
     public function update(
         UpdateOfficeRequest $request,
-        Office              $office,
-        UpdateOffice        $action
-    ): RedirectResponse
-    {
+        Office $office,
+        UpdateOffice $action
+    ): RedirectResponse {
         $data = UpdateOfficeData::from($request->validated());
 
         $action->handle($office, $data);
@@ -48,10 +46,9 @@ final class OrganizationOfficeController
     }
 
     public function destroy(
-        Office       $office,
+        Office $office,
         DeleteOffice $action
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $action->handle($office);
 
         return to_route('org.settings.organization.edit')

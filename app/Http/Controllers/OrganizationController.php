@@ -30,10 +30,9 @@ final class OrganizationController
 
     public function store(
         CreateOrganizationRequest $request,
-        CreateOrganization        $action,
-        SetCurrentOrganization    $setCurrentOrganization,
-    ): RedirectResponse
-    {
+        CreateOrganization $action,
+        SetCurrentOrganization $setCurrentOrganization,
+    ): RedirectResponse {
         $data = CreateOrganizationData::from($request->validated());
 
         $organization = $action->handle($data);
@@ -58,9 +57,8 @@ final class OrganizationController
 
     public function update(
         UpdateOrganizationRequest $request,
-        UpdateOrganization        $action
-    ): RedirectResponse
-    {
+        UpdateOrganization $action
+    ): RedirectResponse {
         /** @var Organization $organization */
         $organization = Organization::query()->firstOrFail();
 

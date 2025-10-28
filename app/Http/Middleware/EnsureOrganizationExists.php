@@ -16,20 +16,18 @@ use Symfony\Component\HttpFoundation\Response;
 final readonly class EnsureOrganizationExists
 {
     public function __construct(
-        private OrganizationQuery      $organizationQuery,
+        private OrganizationQuery $organizationQuery,
         private SetCurrentOrganization $setCurrentOrganization,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Handle an incoming request.
      *
-     * @param Closure(Request): Response $next
+     * @param  Closure(Request): Response  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()) {
+        if (! $request->user()) {
             return $next($request);
         }
 

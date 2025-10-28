@@ -12,9 +12,7 @@ final readonly class DeleteOffice
 {
     public function __construct(
         private DeleteAddress $deleteAddress,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Delete an office and its address.

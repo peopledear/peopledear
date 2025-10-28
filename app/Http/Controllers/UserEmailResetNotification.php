@@ -22,9 +22,8 @@ final readonly class UserEmailResetNotification
 
     public function store(
         CreateUserEmailResetNotificationRequest $request,
-        CreateUserEmailResetNotification        $action
-    ): RedirectResponse
-    {
+        CreateUserEmailResetNotification $action
+    ): RedirectResponse {
         $action->handle(['email' => $request->string('email')->value()]);
 
         return back()->with('status', __('A reset link will be sent if the account exists.'));

@@ -10,9 +10,7 @@ use Illuminate\Contracts\Session\Session;
 
 final readonly class SetCurrentOrganization
 {
-    public function __construct(private Session $session)
-    {
-    }
+    public function __construct(private Session $session) {}
 
     /**
      * Execute the action.

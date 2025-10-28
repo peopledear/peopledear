@@ -14,9 +14,7 @@ final readonly class CreateOffice
 {
     public function __construct(
         private CreateAddress $createAddress,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Create an office with address for the given organization.

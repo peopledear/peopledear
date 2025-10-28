@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\Organization;
 
 use App\Enums\Support\SessionKey;
 use App\Models\Organization;
@@ -10,7 +10,9 @@ use Illuminate\Contracts\Session\Session;
 
 final readonly class SetCurrentOrganization
 {
-    public function __construct(private Session $session) {}
+    public function __construct(private Session $session)
+    {
+    }
 
     /**
      * Execute the action.

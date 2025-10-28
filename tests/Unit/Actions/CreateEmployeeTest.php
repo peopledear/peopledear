@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\CreateEmployee;
+use App\Actions\Employee\CreateEmployee;
 use App\Data\PeopleDear\Employee\CreateEmployeeData;
 use App\Enums\PeopleDear\EmploymentStatus;
 use App\Models\Employee;

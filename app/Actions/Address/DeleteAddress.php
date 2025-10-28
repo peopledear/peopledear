@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\Address;
 
 use App\Contracts\Addressable;
-use App\Models\Address;
-use Illuminate\Database\Eloquent\Model;
 
 final readonly class DeleteAddress
 {

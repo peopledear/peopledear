@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\Address;
 
 use App\Contracts\Addressable;
 use App\Data\PeopleDear\Address\CreateAddressData;

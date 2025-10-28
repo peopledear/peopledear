@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\DeleteAddress;
+use App\Actions\Address\DeleteAddress;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\Organization;

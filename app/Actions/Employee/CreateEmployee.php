@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\Employee;
 
 use App\Data\PeopleDear\Employee\CreateEmployeeData;
 use App\Models\Employee;

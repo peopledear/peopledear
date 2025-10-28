@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\CreateUserEmailResetNotification;
+use App\Actions\User\CreateUserEmailResetNotification;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;

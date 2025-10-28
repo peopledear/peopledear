@@ -30,7 +30,7 @@
 ```php
 <?php
 
-use App\Actions\UpdateOrganization;
+use App\Actions\Organization\UpdateOrganization;
 use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
 use Illuminate\Validation\ValidationException;

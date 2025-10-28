@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Actions\SetCurrentOrganization;
+use App\Actions\Organization\SetCurrentOrganization;
 use App\Enums\Support\OrganizationExcludedRoute;
 use App\Enums\Support\SessionKey;
 use App\Models\Organization;
@@ -16,18 +16,20 @@ use Symfony\Component\HttpFoundation\Response;
 final readonly class EnsureOrganizationExists
 {
     public function __construct(
-        private OrganizationQuery $organizationQuery,
+        private OrganizationQuery      $organizationQuery,
         private SetCurrentOrganization $setCurrentOrganization,
-    ) {}
+    )
+    {
+    }
 
     /**
      * Handle an incoming request.
      *
-     * @param  Closure(Request): Response  $next
+     * @param Closure(Request): Response $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user()) {
+        if (!$request->user()) {
             return $next($request);
         }
 

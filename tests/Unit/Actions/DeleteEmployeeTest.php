@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\DeleteEmployee;
+use App\Actions\Employee\DeleteEmployee;
 use App\Models\Employee;
 use App\Models\Organization;
 

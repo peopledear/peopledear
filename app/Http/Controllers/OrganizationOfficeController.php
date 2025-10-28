@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateOffice;
-use App\Actions\DeleteOffice;
-use App\Actions\UpdateOffice;
+use App\Actions\Office\CreateOffice;
+use App\Actions\Office\DeleteOffice;
+use App\Actions\Office\UpdateOffice;
 use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Data\PeopleDear\Office\UpdateOfficeData;
 use App\Http\Requests\CreateOfficeRequest;
@@ -19,8 +19,9 @@ final class OrganizationOfficeController
 {
     public function store(
         CreateOfficeRequest $request,
-        CreateOffice $action
-    ): RedirectResponse {
+        CreateOffice        $action
+    ): RedirectResponse
+    {
         /** @var Organization $organization */
         $organization = Organization::query()->firstOrFail();
 
@@ -34,9 +35,10 @@ final class OrganizationOfficeController
 
     public function update(
         UpdateOfficeRequest $request,
-        Office $office,
-        UpdateOffice $action
-    ): RedirectResponse {
+        Office              $office,
+        UpdateOffice        $action
+    ): RedirectResponse
+    {
         $data = UpdateOfficeData::from($request->validated());
 
         $action->handle($office, $data);
@@ -46,9 +48,10 @@ final class OrganizationOfficeController
     }
 
     public function destroy(
-        Office $office,
+        Office       $office,
         DeleteOffice $action
-    ): RedirectResponse {
+    ): RedirectResponse
+    {
         $action->handle($office);
 
         return to_route('org.settings.organization.edit')

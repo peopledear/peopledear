@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\CreateOrganization;
+use App\Actions\Organization\CreateOrganization;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Models\Organization;
 

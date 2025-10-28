@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\UpdateOffice;
+use App\Actions\Office\UpdateOffice;
 use App\Data\PeopleDear\Address\UpdateAddressData;
 use App\Data\PeopleDear\Office\UpdateOfficeData;
 use App\Enums\PeopleDear\OfficeType;

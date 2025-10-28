@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\UpdateAddress;
+use App\Actions\Address\UpdateAddress;
 use App\Data\PeopleDear\Address\UpdateAddressData;
 use App\Models\Address;
 use App\Models\Office;

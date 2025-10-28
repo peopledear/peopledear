@@ -97,9 +97,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateOffice;
-use App\Actions\DeleteOffice;
-use App\Actions\UpdateOffice;
+use App\Actions\Office\CreateOffice;
+use App\Actions\Office\DeleteOffice;
+use App\Actions\Office\UpdateOffice;
 use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Data\PeopleDear\Office\UpdateOfficeData;
 use App\Http\Requests\CreateOfficeRequest;

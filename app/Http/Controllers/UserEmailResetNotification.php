@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateUserEmailResetNotification;
+use App\Actions\User\CreateUserEmailResetNotification;
 use App\Http\Requests\CreateUserEmailResetNotificationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,8 +22,9 @@ final readonly class UserEmailResetNotification
 
     public function store(
         CreateUserEmailResetNotificationRequest $request,
-        CreateUserEmailResetNotification $action
-    ): RedirectResponse {
+        CreateUserEmailResetNotification        $action
+    ): RedirectResponse
+    {
         $action->handle(['email' => $request->string('email')->value()]);
 
         return back()->with('status', __('A reset link will be sent if the account exists.'));

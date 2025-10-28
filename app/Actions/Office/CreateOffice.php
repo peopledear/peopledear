@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\Office;
 
+use App\Actions\Address\CreateAddress;
 use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Models\Office;
 use App\Models\Organization;
@@ -13,7 +14,9 @@ final readonly class CreateOffice
 {
     public function __construct(
         private CreateAddress $createAddress,
-    ) {}
+    )
+    {
+    }
 
     /**
      * Create an office with address for the given organization.

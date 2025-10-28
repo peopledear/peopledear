@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\Organization;
 
 use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;

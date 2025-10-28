@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateOrganization;
-use App\Actions\SetCurrentOrganization;
-use App\Actions\UpdateOrganization;
+use App\Actions\Organization\CreateOrganization;
+use App\Actions\Organization\SetCurrentOrganization;
+use App\Actions\Organization\UpdateOrganization;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Http\Requests\CreateOrganizationRequest;
@@ -30,9 +30,10 @@ final class OrganizationController
 
     public function store(
         CreateOrganizationRequest $request,
-        CreateOrganization $action,
-        SetCurrentOrganization $setCurrentOrganization,
-    ): RedirectResponse {
+        CreateOrganization        $action,
+        SetCurrentOrganization    $setCurrentOrganization,
+    ): RedirectResponse
+    {
         $data = CreateOrganizationData::from($request->validated());
 
         $organization = $action->handle($data);
@@ -57,8 +58,9 @@ final class OrganizationController
 
     public function update(
         UpdateOrganizationRequest $request,
-        UpdateOrganization $action
-    ): RedirectResponse {
+        UpdateOrganization        $action
+    ): RedirectResponse
+    {
         /** @var Organization $organization */
         $organization = Organization::query()->firstOrFail();
 

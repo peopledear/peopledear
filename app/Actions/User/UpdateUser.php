@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\User;
 
 use App\Models\User;
 
 final readonly class UpdateUser
 {
     /**
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function handle(User $user, array $attributes): void
     {

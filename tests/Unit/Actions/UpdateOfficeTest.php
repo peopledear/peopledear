@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Actions\UpdateOffice;
-use App\Data\UpdateAddressData;
-use App\Data\UpdateOfficeData;
-use App\Enums\OfficeType;
+use App\Data\PeopleDear\Address\UpdateAddressData;
+use App\Data\PeopleDear\Office\UpdateOfficeData;
+use App\Enums\PeopleDear\OfficeType;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\Organization;

@@ -15,6 +15,7 @@ return [
         'Public',
         'Regional',
         'Local',
+        'Optional',
     ],
 
     'default_language' => env('OPENHOLIDAYS_DEFAULT_LANGUAGE', 'en'),

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\Addressable;
-use App\Enums\OfficeType;
+use App\Enums\PeopleDear\OfficeType;
 use App\Models\Concerns\HasAddress;
 use Database\Factories\OfficeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

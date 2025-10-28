@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Data\CreateOrganizationData;
+use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Models\Organization;
 
 final readonly class CreateOrganization

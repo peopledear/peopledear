@@ -10,15 +10,15 @@ Use `@property` for writable database fields and `@property-read` for read-only 
 
 ```php
 /**
- * @property-read int $id
- * @property string $name
- * @property string|null $vat_number
- * @property string|null $ssn
- * @property string|null $phone
- * @property OfficeType $type
- * @property-read Carbon $created_at
- * @property-read Carbon $updated_at
- */
+* @property-read int $id
+* @property string $name
+* @property string|null $vat_number
+* @property string|null $ssn
+* @property string|null $phone
+* @property OfficeType $type
+* @property-read Carbon $created_at
+* @property-read Carbon $updated_at
+*/
 ```
 
 #### Relationships
@@ -26,10 +26,11 @@ Use `@property-read` for ALL relationships (relationships are always read-only):
 
 ```php
 /**
- * @property-read Organization $organization
- * @property-read Address $address
- * @property-read Collection<int, Office> $offices
- */
+* @property-read Organization $organization
+* @property-read Address $address
+* @property-read Collection
+<int, Office> $offices
+*/
 ```
 
 ### Relationship Method Return Types
@@ -37,46 +38,51 @@ Use `@property-read` for ALL relationships (relationships are always read-only):
 
 @boostsnippet('BelongsTo Relationship')
 ```php
-/** @return BelongsTo<Organization, $this> */
+/** @return BelongsTo
+<Organization, $this> */
 public function organization(): BelongsTo
 {
-    return $this->belongsTo(Organization::class);
+return $this->belongsTo(Organization::class);
 }
 ```
 
 @boostsnippet('HasMany Relationship')
 ```php
-/** @return HasMany<Office, $this> */
+/** @return HasMany
+<Office, $this> */
 public function offices(): HasMany
 {
-    return $this->hasMany(Office::class);
+return $this->hasMany(Office::class);
 }
 ```
 
 @boostsnippet('MorphTo Relationship')
 ```php
-/** @return MorphTo<Model, $this> */
+/** @return MorphTo
+<Model, $this> */
 public function addressable(): MorphTo
 {
-    return $this->morphTo();
+return $this->morphTo();
 }
 ```
 
 @boostsnippet('MorphOne Relationship')
 ```php
-/** @return MorphOne<Address, $this> */
+/** @return MorphOne
+<Address, $this> */
 public function address(): MorphOne
 {
-    return $this->morphOne(Address::class, 'addressable');
+return $this->morphOne(Address::class, 'addressable');
 }
 ```
 
 @boostsnippet('BelongsToMany Relationship')
 ```php
-/** @return BelongsToMany<Role, $this> */
+/** @return BelongsToMany
+<Role, $this> */
 public function roles(): BelongsToMany
 {
-    return $this->belongsToMany(Role::class);
+return $this->belongsToMany(Role::class);
 }
 ```
 
@@ -90,9 +96,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\OfficeType;
+use App\Enums\PeopleDear\OfficeType;
 use Database\Factories\OfficeFactory;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -140,12 +145,13 @@ final class Office extends Model
         ];
     }
 }
+
 ```
 
 ## Model Structure
 
 ### Order of Elements
-1. PHPDoc block with `@property-read` annotations
+1. PHPDoc block with `@property - read` annotations
 2. Class declaration
 3. Traits (e.g., `HasFactory`, `SoftDeletes`)
 4. Relationship methods
@@ -154,9 +160,9 @@ final class Office extends Model
 
 ### Relationships
 - **ALWAYS use explicit return type hints** - Both native PHP return type AND PHPDoc with generics
-- **ALWAYS use `@property-read`** for all relationships in the class PHPDoc
+- **ALWAYS use `@property - read`** for all relationships in the class PHPDoc
 - Keep relationship methods simple - just return the relationship, no business logic
-- Use proper PHPStan generic syntax: `@return RelationType<RelatedModel, $this>`
+- Use proper PHPStan generic syntax: `@return RelationType < RelatedModel, $this > `
 
 ### Casts
 - **ALWAYS use public `casts()` method** (not `$casts` property or protected method) for Laravel 11+

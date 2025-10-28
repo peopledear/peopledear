@@ -356,6 +356,7 @@ This application uses Spatie Laravel Data for **type-safe Data Transfer Objects 
 
 ### Data Object Structure
 @boostsnippet('Update Data Object with Optional')
+
 ```php
 <?php
 
@@ -363,9 +364,7 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use App\Enums\OfficeType;
-use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Optional;
+use App\Enums\PeopleDear\OfficeType;use Spatie\LaravelData\Data;use Spatie\LaravelData\Optional;
 
 final class UpdateOfficeData extends Data
 {

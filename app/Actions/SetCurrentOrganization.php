@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Enums\SessionKey;
+use App\Enums\Support\SessionKey;
 use App\Models\Organization;
 use Illuminate\Contracts\Session\Session;
 

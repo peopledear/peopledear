@@ -14,8 +14,6 @@
 @boostsnippet('Using SessionKey Enum', 'php')
 <?php
 
-use App\Enums\SessionKey;
-
 // ✅ CORRECT - Use SessionKey enum
 session([SessionKey::CurrentOrganization->value => $organization->id]);
 $organizationId = session(SessionKey::CurrentOrganization->value);

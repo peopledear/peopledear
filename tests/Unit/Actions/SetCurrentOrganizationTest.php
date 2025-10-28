@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\SetCurrentOrganization;
-use App\Enums\SessionKey;
+use App\Enums\Support\SessionKey;
 use App\Models\Organization;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

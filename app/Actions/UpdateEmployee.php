@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Data\UpdateEmployeeData;
+use App\Data\PeopleDear\Employee\UpdateEmployeeData;
 use App\Models\Employee;
 
 final readonly class UpdateEmployee

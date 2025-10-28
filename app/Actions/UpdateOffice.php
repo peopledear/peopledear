@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Data\UpdateOfficeData;
+use App\Data\PeopleDear\Office\UpdateOfficeData;
 use App\Models\Office;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\Optional;

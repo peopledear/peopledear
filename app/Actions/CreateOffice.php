@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Data\CreateOfficeData;
+use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Models\Office;
 use App\Models\Organization;
 use Illuminate\Support\Facades\DB;

@@ -19,7 +19,8 @@
       "mcp__laravel-boost__database-schema",
       "WebFetch(domain:docs.saloon.dev)",
       "Bash(composer require:*)",
-      "Bash(php artisan make:migration:*)"
+      "Bash(php artisan make:migration:*)",
+      "Bash(composer test:unit:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

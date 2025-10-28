@@ -96,7 +96,7 @@ public function handle(CreateOfficeData $data, Organization $organization): Offi
 
 ## Using toArray() with Optional
 
-** Data objects automatically handle Optional ** - use `toArray()` for clean updates:
+** Data objects automatically handle Optional ** - use;`toArray()` for clean updates:
 
     @boostsnippet('toArray with Optional', 'php')
     <?php
@@ -134,7 +134,7 @@ This keeps action names clean and concise while maintaining clarity about their 
 <?php
 
 use App\Actions\UpdateOrganization;
-use App\Data\UpdateOrganizationData;
+use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
 use Spatie\LaravelData\Optional;
 

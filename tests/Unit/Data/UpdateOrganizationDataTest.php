@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Data\UpdateOrganizationData;
+use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use Spatie\LaravelData\Optional;
 
 test('creates data with all fields', function (): void {

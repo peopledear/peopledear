@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Data\UpdateOrganizationData;
+use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
 
 final readonly class UpdateOrganization

@@ -18,12 +18,12 @@
 ```php
 public function update(UpdateOfficeRequest $request): RedirectResponse
 {
-    // Request is already validated by UpdateOfficeRequest
-    $data = UpdateOfficeData::from($request->validated());
+// Request is already validated by UpdateOfficeRequest
+$data = UpdateOfficeData::from($request->validated());
 
-    $office = $this->updateOffice->handle($data, $office);
+$office = $this->updateOffice->handle($data, $office);
 
-    return redirect()->route('admin.settings.organization.edit');
+return redirect()->route('admin.settings.organization.edit');
 }
 ```
 
@@ -36,19 +36,26 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use App\Enums\OfficeType;
+use App\Data\PeopleDear\Organization\UpdateOrganizationData;
+use App\Enums\PeopleDear\OfficeType;
+use App\Enums\PeopleDear\OfficeType;
+use App\Enums\PeopleDear\OfficeType;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
+use Spatie\LaravelData\Optional;
 
 final class UpdateOfficeData extends Data
 {
     public function __construct(
-        public readonly ?string $name,
-        public readonly ?OfficeType $type,
-        public readonly ?string $phone,
+        public readonly ?string      $name,
+        public readonly ?OfficeType  $type,
+        public readonly ?string      $phone,
         public readonly ?AddressData $address,
-    ) {
+    )
+    {
     }
 }
+
 ```
 
 ## Why No Validation in Data Objects?
@@ -73,11 +80,12 @@ When you have related entities (like Office with Address), use nested Data objec
 final class UpdateOfficeData extends Data
 {
     public function __construct(
-        public readonly ?string $name,
-        public readonly ?OfficeType $type,
-        public readonly ?string $phone,
+        public readonly ?string      $name,
+        public readonly ?OfficeType  $type,
+        public readonly ?string      $phone,
         public readonly ?AddressData $address, // Nested Data object
-    ) {
+    )
+    {
     }
 }
 
@@ -90,7 +98,8 @@ final class AddressData extends Data
         public readonly ?string $state,
         public readonly ?string $postal_code,
         public readonly ?string $country,
-    ) {
+    )
+    {
     }
 }
 ```
@@ -102,16 +111,17 @@ final class AddressData extends Data
 
 @boostsnippet('Create Data Object')
 ```php
-use App\Enums\OfficeType;
 
 final class CreateOfficeData extends Data
 {
     public function __construct(
-        public readonly string $name,          // ✅ Required
-        public readonly OfficeType $type,      // ✅ Required
-        public readonly ?string $phone,        // ✅ Nullable (can be null)
+        public readonly string      $name,          // ✅ Required
+        public readonly OfficeType  $type,      // ✅ Required
+        public readonly ?string     $phone,        // ✅ Nullable (can be null)
         public readonly AddressData $address,  // ✅ Required nested
-    ) {}
+    )
+    {
+    }
 }
 ```
 
@@ -120,17 +130,17 @@ final class CreateOfficeData extends Data
 
 @boostsnippet('Update Data Object with Optional')
 ```php
-use App\Enums\OfficeType;
-use Spatie\LaravelData\Optional;
 
 final class UpdateOfficeData extends Data
 {
     public function __construct(
-        public readonly string|Optional $name,           // Can be absent
-        public readonly OfficeType|Optional $type,       // Can be absent
+        public readonly string|Optional      $name,           // Can be absent
+        public readonly OfficeType|Optional  $type,       // Can be absent
         public readonly string|Optional|null $phone,     // Can be absent OR null
         public readonly AddressData|Optional $address,   // Can be absent
-    ) {}
+    )
+    {
+    }
 }
 ```
 
@@ -138,11 +148,11 @@ final class UpdateOfficeData extends Data
 
 **`Optional`** - Field was not provided in the request (don't update it)
 **`null`** - Field was provided but set to null (update to null)
-**`string|Optional|null`** - Field can be absent, or can be explicitly set to null
+**`string | Optional | null`** - Field can be absent, or can be explicitly set to null
 
 @boostsnippet('Handling Optional in Actions - Use toArray()')
 ```php
-public function handle(UpdateOfficeData $data, Office $office): Office
+public function handle(PeopleDear\Office\UpdateOfficeData $data, Office $office): Office
 {
     // toArray() automatically excludes Optional fields!
     $office->update($data->toArray());
@@ -182,7 +192,8 @@ final class UpdateOfficeData extends Data
     public function __construct(
         #[Required, StringType, Max(255)]  // ❌ Don't validate here
         public readonly string $name,
-    ) {
+    )
+    {
     }
 }
 ```
@@ -206,9 +217,9 @@ final class UpdateOfficeRequest extends FormRequest
 
 ```
 HTTP Request
-    → Form Request (validates)
-    → Controller (creates Data object from validated data)
-    → Action (receives type-safe Data object)
+    → Form Request(validates)
+    → Controller(creates Data object from validated data)
+    → Action(receives type - safe Data object)
     → Returns result
 ```
 
@@ -218,8 +229,6 @@ HTTP Request
 
 @boostsnippet('Data Object Tests')
 ```php
-use App\Data\UpdateOrganizationData;
-use Spatie\LaravelData\Optional;
 
 test('update organization data with all fields', function (): void {
     $data = UpdateOrganizationData::from([
@@ -288,27 +297,29 @@ final class UpdateOfficeRequest extends FormRequest
 final class UpdateOfficeData extends Data
 {
     public function __construct(
-        public readonly ?string $name,
-        public readonly ?OfficeType $type,
-        public readonly ?string $phone,
+        public readonly ?string      $name,
+        public readonly ?OfficeType  $type,
+        public readonly ?string      $phone,
         public readonly ?AddressData $address,
-    ) {
+    )
+    {
     }
 }
 
 // 3. Controller - Bridge
 public function update(
     UpdateOfficeRequest $request,
-    Office $office,
-    UpdateOfficeAction $action
-): RedirectResponse {
-    $data = UpdateOfficeData::from($request->validated());
+    Office              $office,
+    UpdateOfficeAction  $action
+): RedirectResponse
+{
+    $data = PeopleDear\Office\UpdateOfficeData::from($request->validated());
     $action->handle($data, $office);
     return redirect()->route('admin.settings.organization.edit');
 }
 
 // 4. Action - Business logic
-public function handle(UpdateOfficeData $data, Office $office): Office
+public function handle(PeopleDear\Office\UpdateOfficeData $data, Office $office): Office
 {
     // toArray() automatically excludes Optional fields!
     $office->update($data->toArray());

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Actions\CreateEmployee;
-use App\Data\CreateEmployeeData;
-use App\Enums\EmploymentStatus;
+use App\Data\PeopleDear\Employee\CreateEmployeeData;
+use App\Enums\PeopleDear\EmploymentStatus;
 use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\UpdateOrganization;
-use App\Data\UpdateOrganizationData;
+use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
 
 beforeEach(function (): void {

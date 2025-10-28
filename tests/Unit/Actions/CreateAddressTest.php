@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\CreateAddress;
-use App\Data\CreateAddressData;
+use App\Data\PeopleDear\Address\CreateAddressData;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\Organization;

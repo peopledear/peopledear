@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Data\CreateEmployeeData;
+use App\Data\PeopleDear\Employee\CreateEmployeeData;
 use App\Models\Employee;
 use App\Models\Organization;
 

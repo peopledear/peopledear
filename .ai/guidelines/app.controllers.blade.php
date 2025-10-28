@@ -100,14 +100,15 @@ namespace App\Http\Controllers;
 use App\Actions\CreateOffice;
 use App\Actions\DeleteOffice;
 use App\Actions\UpdateOffice;
-use App\Data\CreateOfficeData;
-use App\Data\UpdateOfficeData;
+use App\Data\PeopleDear\Office\CreateOfficeData;
+use App\Data\PeopleDear\Office\UpdateOfficeData;
 use App\Http\Requests\CreateOfficeRequest;
 use App\Http\Requests\UpdateOfficeRequest;
 use App\Models\Office;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
-use App\Models\User;
 
 final class OfficeController
 {
@@ -195,7 +196,6 @@ public function store(CreateOfficeRequest $request): RedirectResponse
 
 @boostsnippet('CurrentUser Attribute')
 ```php
-use Illuminate\Container\Attributes\CurrentUser;
 
 public function store(
     CreateOfficeRequest $request,

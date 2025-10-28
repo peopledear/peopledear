@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Actions\UpdateEmployee;
-use App\Data\UpdateEmployeeData;
-use App\Enums\EmploymentStatus;
+use App\Data\PeopleDear\Employee\UpdateEmployeeData;
+use App\Enums\PeopleDear\EmploymentStatus;
 use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;

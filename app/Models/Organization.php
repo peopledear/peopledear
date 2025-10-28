@@ -42,6 +42,11 @@ final class Organization extends Model
         return $this->hasMany(Holiday::class);
     }
 
+    public function hasLocationConfigured(): bool
+    {
+        return $this->country_iso_code !== null;
+    }
+
     public function casts(): array
     {
         return [

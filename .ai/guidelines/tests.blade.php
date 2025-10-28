@@ -31,8 +31,9 @@
 <?php
 
 use App\Actions\UpdateOrganization;
-use App\Data\UpdateOrganizationData;
+use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
+use Illuminate\Validation\ValidationException;
 
 beforeEach(function (): void {
     $this->action = app(UpdateOrganization::class);
@@ -128,7 +129,6 @@ expect($result->name)
 
 @boostsnippet('Exception Testing')
 ```php
-use Illuminate\Validation\ValidationException;
 
 test('validates required field', function () {
     $data = [];

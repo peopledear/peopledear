@@ -154,6 +154,24 @@ test('organization location fields can be null', function (): void {
         ->toBeNull();
 });
 
+test('has location configured returns true when country is set', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly([
+        'country_iso_code' => 'US',
+    ]);
+
+    expect($organization->hasLocationConfigured())->toBeTrue();
+});
+
+test('has location configured returns false when country is null', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly([
+        'country_iso_code' => null,
+    ]);
+
+    expect($organization->hasLocationConfigured())->toBeFalse();
+});
+
 test('to array', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()

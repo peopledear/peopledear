@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\OfficeType;
+use App\Enums\PeopleDear\OfficeType;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

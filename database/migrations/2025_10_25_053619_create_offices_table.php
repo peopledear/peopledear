@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\OfficeType;
+use App\Enums\PeopleDear\OfficeType;
 use App\Models\Organization;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

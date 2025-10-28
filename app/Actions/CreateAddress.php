@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Contracts\Addressable;
-use App\Data\CreateAddressData;
+use App\Data\PeopleDear\Address\CreateAddressData;
 use App\Models\Address;
-use Illuminate\Database\Eloquent\Model;
 
 final readonly class CreateAddress
 {

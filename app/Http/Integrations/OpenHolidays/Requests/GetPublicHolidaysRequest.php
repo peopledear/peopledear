@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Integrations\OpenHolidays\Requests;
 
+use App\Data\Integrations\OpenHolidays\OpenHolidaysHolidayData;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Collection;
+use JsonException;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Contracts\Driver;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
 use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Http\Response;
 
 final class GetPublicHolidaysRequest extends Request implements Cacheable
 {
@@ -60,5 +64,18 @@ final class GetPublicHolidaysRequest extends Request implements Cacheable
         }
 
         return $query;
+    }
+
+    /**
+     * @return Collection<int, OpenHolidaysHolidayData>
+     *
+     * @throws JsonException
+     */
+    public function createDtoFromResponse(Response $response): Collection
+    {
+
+        $data = $response->json();
+
+        return OpenHolidaysHolidayData::collect($data, Collection::class);
     }
 }

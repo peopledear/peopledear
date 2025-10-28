@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\PeopleDear\OfficeType;
 use App\Models\Office;
 use App\Models\Organization;
 use Illuminate\Database\Seeder;
@@ -28,7 +29,7 @@ final class OrganizationSeeder extends Seeder
             ->for($organization)
             ->create([
                 'name' => 'Headquarters',
-                'type' => \App\Enums\OfficeType::Headquarters,
+                'type' => OfficeType::Headquarters,
                 'phone' => '+1-555-0101',
             ]);
 

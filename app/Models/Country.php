@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read array<string, string> $name
  * @property-read array<int, string> $official_languages
  * @property-read Collection<int, Organization> $organizations
+ * @property-read Collection<int, CountrySubdivision> $subdivisions
  */
 final class Country extends Model
 {
@@ -28,6 +29,12 @@ final class Country extends Model
     public function organizations(): HasMany
     {
         return $this->hasMany(Organization::class);
+    }
+
+    /** @return HasMany<CountrySubdivision, $this> */
+    public function subdivisions(): HasMany
+    {
+        return $this->hasMany(CountrySubdivision::class);
     }
 
     /**

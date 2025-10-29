@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Country;
+use App\Models\CountrySubdivision;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -205,6 +206,42 @@ test('country organizations relationship is properly loaded', function (): void 
         ->toHaveCount(2)
         ->and($country->organizations->pluck('name')->toArray())
         ->toBe(['Company A', 'Company B']);
+});
+
+test('country has subdivisions relationship', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
+
+    expect($country->subdivisions())->toBeInstanceOf(HasMany::class);
+});
+
+test('country subdivisions relationship is properly loaded', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly([
+        'iso_code' => 'US',
+        'name' => ['EN' => 'United States'],
+        'official_languages' => ['EN'],
+    ]);
+
+    /** @var CountrySubdivision $subdivision1 */
+    $subdivision1 = CountrySubdivision::factory()->createQuietly([
+        'country_id' => $country->id,
+        'name' => ['EN' => 'California'],
+    ]);
+
+    /** @var CountrySubdivision $subdivision2 */
+    $subdivision2 = CountrySubdivision::factory()->createQuietly([
+        'country_id' => $country->id,
+        'name' => ['EN' => 'Texas'],
+    ]);
+
+    $country->load('subdivisions');
+
+    expect($country->subdivisions)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(2)
+        ->and($country->subdivisions->pluck('name')->map(fn ($name): mixed => $name['EN'])->toArray())
+        ->toBe(['California', 'Texas']);
 });
 
 test('to array', function (): void {

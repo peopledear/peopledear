@@ -3,18 +3,6 @@
 <p align="center">
   <strong>People Management Made Simple</strong><br>
   Streamline overtime, time-off, and expenses with automated workflows that just work
-
-
-
-
-
-
-
-
-
-
-
-
 </p>
 
 <p align="center">

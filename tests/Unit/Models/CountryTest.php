@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use App\Models\Country;
+use App\Models\Organization;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\QueryException;
 
 test('country can be created with factory', function (): void {
@@ -154,6 +157,42 @@ test('seeded country belgium has multiple name translations', function (): void 
         ->toBe('Belgien')
         ->and($country->official_languages)
         ->toBe(['NL', 'FR', 'DE']);
+});
+
+test('country has organizations relationship', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
+
+    expect($country->organizations())->toBeInstanceOf(HasMany::class);
+});
+
+test('country organizations relationship is properly loaded', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly([
+        'iso_code' => 'US',
+        'name' => ['en' => 'United States'],
+        'official_languages' => ['en'],
+    ]);
+
+    /** @var Organization $org1 */
+    $org1 = Organization::factory()->createQuietly([
+        'country_id' => $country->id,
+        'name' => 'Company A',
+    ]);
+
+    /** @var Organization $org2 */
+    $org2 = Organization::factory()->createQuietly([
+        'country_id' => $country->id,
+        'name' => 'Company B',
+    ]);
+
+    $country->load('organizations');
+
+    expect($country->organizations)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(2)
+        ->and($country->organizations->pluck('name')->toArray())
+        ->toBe(['Company A', 'Company B']);
 });
 
 test('to array', function (): void {

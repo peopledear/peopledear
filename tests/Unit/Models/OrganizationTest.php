@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Models\Country;
 use App\Models\Holiday;
 use App\Models\Office;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 test('organization has correct fillable attributes', function (): void {
@@ -122,42 +124,53 @@ test('organization holidays relationship is properly loaded', function (): void 
         ->toHaveCount(2);
 });
 
-test('organization location fields can be set', function (): void {
+test('organization has country relationship', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
-        'country_iso_code' => 'US',
-        'subdivision_code' => 'CA',
-        'language_iso_code' => 'en',
-    ]);
+    $organization = Organization::factory()->createQuietly();
 
-    expect($organization->country_iso_code)
-        ->toBe('US')
-        ->and($organization->subdivision_code)
-        ->toBe('CA')
-        ->and($organization->language_iso_code)
-        ->toBe('en');
+    expect($organization->country())->toBeInstanceOf(BelongsTo::class);
 });
 
-test('organization location fields can be null', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
-        'country_iso_code' => null,
-        'subdivision_code' => null,
-        'language_iso_code' => null,
+test('organization country relationship is properly loaded', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly([
+        'iso_code' => 'US',
+        'name' => ['en' => 'United States'],
+        'official_languages' => ['en'],
     ]);
 
-    expect($organization->country_iso_code)
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly([
+        'country_id' => $country->id,
+    ]);
+
+    $organization->load('country');
+
+    expect($organization->country)
+        ->toBeInstanceOf(Country::class)
+        ->and($organization->country->iso_code)
+        ->toBe('US');
+});
+
+test('organization can exist without country', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly([
+        'country_id' => null,
+    ]);
+
+    expect($organization->country_id)
         ->toBeNull()
-        ->and($organization->subdivision_code)
-        ->toBeNull()
-        ->and($organization->language_iso_code)
+        ->and($organization->country)
         ->toBeNull();
 });
 
 test('has location configured returns true when country is set', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
+
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
-        'country_iso_code' => 'US',
+        'country_id' => $country->id,
     ]);
 
     expect($organization->hasLocationConfigured())->toBeTrue();
@@ -166,7 +179,7 @@ test('has location configured returns true when country is set', function (): vo
 test('has location configured returns false when country is null', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
-        'country_iso_code' => null,
+        'country_id' => null,
     ]);
 
     expect($organization->hasLocationConfigured())->toBeFalse();
@@ -187,8 +200,6 @@ test('to array', function (): void {
             'vat_number',
             'ssn',
             'phone',
-            'country_iso_code',
-            'subdivision_code',
-            'language_iso_code',
+            'country_id',
         ]);
 });

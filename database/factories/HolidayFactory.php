@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\PeopleDear\HolidayType;
+use App\Models\Country;
 use App\Models\Holiday;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,6 +24,7 @@ final class HolidayFactory extends Factory
     {
         return [
             'organization_id' => Organization::factory(),
+            'country_id' => Country::factory(),
             'date' => fake()->dateTimeBetween('now', '+1 year'),
             'name' => [
                 'en' => fake()->words(3, true),
@@ -30,7 +32,6 @@ final class HolidayFactory extends Factory
             ],
             'type' => fake()->randomElement(HolidayType::cases()),
             'nationwide' => fake()->boolean(70),
-            'country_iso_code' => fake()->countryCode(),
             'subdivision_code' => fake()->optional()->regexify('[A-Z]{2}'),
             'api_holiday_id' => null,
             'is_custom' => false,

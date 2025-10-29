@@ -8,6 +8,7 @@ use Database\Factories\OrganizationFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -17,11 +18,10 @@ use Illuminate\Support\Carbon;
  * @property-read string|null $vat_number
  * @property-read string|null $ssn
  * @property-read string|null $phone
- * @property-read string|null $country_iso_code
- * @property-read string|null $subdivision_code
- * @property-read string|null $language_iso_code
+ * @property-read int|null $country_id
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
+ * @property-read Country|null $country
  * @property-read Collection<int, Office> $offices
  * @property-read Collection<int, Holiday> $holidays
  */
@@ -29,6 +29,12 @@ final class Organization extends Model
 {
     /** @use HasFactory<OrganizationFactory> */
     use HasFactory;
+
+    /** @return BelongsTo<Country, $this> */
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
 
     /** @return HasMany<Office, $this> */
     public function offices(): HasMany
@@ -44,7 +50,7 @@ final class Organization extends Model
 
     public function hasLocationConfigured(): bool
     {
-        return $this->country_iso_code !== null;
+        return $this->country_id !== null;
     }
 
     public function casts(): array
@@ -55,9 +61,7 @@ final class Organization extends Model
             'vat_number' => 'string',
             'ssn' => 'string',
             'phone' => 'string',
-            'country_iso_code' => 'string',
-            'subdivision_code' => 'string',
-            'language_iso_code' => 'string',
+            'country_id' => 'integer',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

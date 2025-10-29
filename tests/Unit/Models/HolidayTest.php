@@ -156,6 +156,34 @@ test('holiday api_holiday_id can be null for custom holidays', function (): void
     expect($holiday->api_holiday_id)->toBeNull();
 });
 
+test('holiday has country relationship', function (): void {
+    /** @var Holiday $holiday */
+    $holiday = Holiday::factory()->createQuietly();
+
+    expect($holiday->country())->toBeInstanceOf(BelongsTo::class);
+});
+
+test('holiday country relationship is properly loaded', function (): void {
+    /** @var App\Models\Country $country */
+    $country = App\Models\Country::factory()->createQuietly([
+        'iso_code' => 'XX',
+        'name' => ['en' => 'Test Country'],
+        'official_languages' => ['en'],
+    ]);
+
+    /** @var Holiday $holiday */
+    $holiday = Holiday::factory()->createQuietly([
+        'country_id' => $country->id,
+    ]);
+
+    $holiday->load('country');
+
+    expect($holiday->country)
+        ->toBeInstanceOf(App\Models\Country::class)
+        ->and($holiday->country->iso_code)
+        ->toBe('XX');
+});
+
 test('to array', function (): void {
     /** @var Holiday $holiday */
     $holiday = Holiday::factory()
@@ -168,11 +196,11 @@ test('to array', function (): void {
             'created_at',
             'updated_at',
             'organization_id',
+            'country_id',
             'date',
             'name',
             'type',
             'nationwide',
-            'country_iso_code',
             'subdivision_code',
             'api_holiday_id',
             'is_custom',

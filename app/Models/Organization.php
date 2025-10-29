@@ -13,13 +13,13 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property-read int $id
- * @property string $name
- * @property string|null $vat_number
- * @property string|null $ssn
- * @property string|null $phone
- * @property string|null $country_iso_code
- * @property string|null $subdivision_code
- * @property string|null $language_iso_code
+ * @property-read string $name
+ * @property-read string|null $vat_number
+ * @property-read string|null $ssn
+ * @property-read string|null $phone
+ * @property-read string|null $country_iso_code
+ * @property-read string|null $subdivision_code
+ * @property-read string|null $language_iso_code
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Collection<int, Office> $offices

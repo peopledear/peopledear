@@ -12,14 +12,14 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property-read int $id
- * @property int $addressable_id
- * @property string $addressable_type
- * @property string $line1
- * @property string|null $line2
- * @property string $city
- * @property string|null $state
- * @property string $postal_code
- * @property string $country
+ * @property-read int $addressable_id
+ * @property-read string $addressable_type
+ * @property-read string $line1
+ * @property-read string|null $line2
+ * @property-read string $city
+ * @property-read string|null $state
+ * @property-read string $postal_code
+ * @property-read string $country
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Model $addressable

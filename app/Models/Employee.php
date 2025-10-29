@@ -13,16 +13,16 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property-read int $id
- * @property int $organization_id
- * @property int|null $office_id
- * @property int|null $user_id
- * @property string $name
- * @property string|null $email
- * @property string|null $phone
- * @property string $employee_number
- * @property string|null $job_title
- * @property Carbon|null $hire_date
- * @property EmploymentStatus $employment_status
+ * @property-read int $organization_id
+ * @property-read int|null $office_id
+ * @property-read int|null $user_id
+ * @property-read string $name
+ * @property-read string|null $email
+ * @property-read string|null $phone
+ * @property-read string $employee_number
+ * @property-read string|null $job_title
+ * @property-read Carbon|null $hire_date
+ * @property-read EmploymentStatus $employment_status
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Organization $organization

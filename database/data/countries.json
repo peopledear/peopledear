@@ -1,0 +1,330 @@
+[
+  {
+    "isoCode": "AD",
+    "name": {
+      "EN": "Andorra",
+      "CA": "Andorra",
+      "DE": "Andorra"
+    },
+    "officialLanguages": ["CA"]
+  },
+  {
+    "isoCode": "AL",
+    "name": {
+      "EN": "Albania",
+      "SQ": "Shqipëria",
+      "DE": "Albanien"
+    },
+    "officialLanguages": ["SQ"]
+  },
+  {
+    "isoCode": "AT",
+    "name": {
+      "EN": "Austria",
+      "DE": "Österreich"
+    },
+    "officialLanguages": ["DE"]
+  },
+  {
+    "isoCode": "BE",
+    "name": {
+      "EN": "Belgium",
+      "NL": "België",
+      "FR": "Belgique (la)",
+      "DE": "Belgien"
+    },
+    "officialLanguages": ["NL", "FR", "DE"]
+  },
+  {
+    "isoCode": "BG",
+    "name": {
+      "EN": "Bulgaria",
+      "BG": "България",
+      "DE": "Bulgarien"
+    },
+    "officialLanguages": ["BG"]
+  },
+  {
+    "isoCode": "BR",
+    "name": {
+      "EN": "Brazil",
+      "PT": "Brasil",
+      "DE": "Brasilien"
+    },
+    "officialLanguages": ["PT"]
+  },
+  {
+    "isoCode": "BY",
+    "name": {
+      "EN": "Belarus",
+      "BE": "Беларусь",
+      "RU": "Беларусь",
+      "DE": "Belarus"
+    },
+    "officialLanguages": ["BE", "RU"]
+  },
+  {
+    "isoCode": "CH",
+    "name": {
+      "EN": "Switzerland",
+      "DE": "Schweiz",
+      "FR": "Suisse (la)",
+      "IT": "Svizzera (la)",
+      "RM": "Svizra (la)"
+    },
+    "officialLanguages": ["DE", "FR", "IT", "RM"]
+  },
+  {
+    "isoCode": "CZ",
+    "name": {
+      "EN": "Czechia",
+      "CS": "Česko",
+      "DE": "Tschechien"
+    },
+    "officialLanguages": ["CS"]
+  },
+  {
+    "isoCode": "DE",
+    "name": {
+      "EN": "Germany",
+      "DE": "Deutschland"
+    },
+    "officialLanguages": ["DE"]
+  },
+  {
+    "isoCode": "EE",
+    "name": {
+      "EN": "Estonia",
+      "ET": "Eesti",
+      "DE": "Estland"
+    },
+    "officialLanguages": ["ET"]
+  },
+  {
+    "isoCode": "ES",
+    "name": {
+      "EN": "Spain",
+      "ES": "España",
+      "CA": "Espanya",
+      "EU": "Espainia",
+      "GL": "España",
+      "DE": "Spanien"
+    },
+    "officialLanguages": ["ES", "CA", "EU", "GL"]
+  },
+  {
+    "isoCode": "FR",
+    "name": {
+      "EN": "France",
+      "FR": "France (la)",
+      "DE": "Frankreich"
+    },
+    "officialLanguages": ["FR"]
+  },
+  {
+    "isoCode": "HR",
+    "name": {
+      "EN": "Croatia",
+      "HR": "Hrvatska",
+      "DE": "Kroatien"
+    },
+    "officialLanguages": ["HR"]
+  },
+  {
+    "isoCode": "HU",
+    "name": {
+      "EN": "Hungary",
+      "HU": "Magyarország",
+      "DE": "Ungarn"
+    },
+    "officialLanguages": ["HU"]
+  },
+  {
+    "isoCode": "IE",
+    "name": {
+      "EN": "Ireland",
+      "GA": "Éire",
+      "DE": "Irland"
+    },
+    "officialLanguages": ["EN", "GA"]
+  },
+  {
+    "isoCode": "IT",
+    "name": {
+      "EN": "Italy",
+      "IT": "Italia",
+      "DE": "Italien"
+    },
+    "officialLanguages": ["IT"]
+  },
+  {
+    "isoCode": "LI",
+    "name": {
+      "EN": "Liechtenstein",
+      "DE": "Liechtenstein"
+    },
+    "officialLanguages": ["DE"]
+  },
+  {
+    "isoCode": "LT",
+    "name": {
+      "EN": "Lithuania",
+      "LT": "Lietuva",
+      "DE": "Litauen"
+    },
+    "officialLanguages": ["LT"]
+  },
+  {
+    "isoCode": "LU",
+    "name": {
+      "EN": "Luxembourg",
+      "LB": "Lëtzebuerg",
+      "FR": "Luxembourg (le)",
+      "DE": "Luxemburg"
+    },
+    "officialLanguages": ["LB", "FR", "DE"]
+  },
+  {
+    "isoCode": "LV",
+    "name": {
+      "EN": "Latvia",
+      "LV": "Latvija",
+      "DE": "Lettland"
+    },
+    "officialLanguages": ["LV"]
+  },
+  {
+    "isoCode": "MC",
+    "name": {
+      "EN": "Monaco",
+      "FR": "Monaco",
+      "DE": "Monaco"
+    },
+    "officialLanguages": ["FR"]
+  },
+  {
+    "isoCode": "MD",
+    "name": {
+      "EN": "Moldova",
+      "RO": "Moldova",
+      "DE": "Moldau"
+    },
+    "officialLanguages": ["RO"]
+  },
+  {
+    "isoCode": "MT",
+    "name": {
+      "EN": "Malta",
+      "MT": "Malta",
+      "DE": "Malta"
+    },
+    "officialLanguages": ["MT", "EN"]
+  },
+  {
+    "isoCode": "MX",
+    "name": {
+      "EN": "Mexico",
+      "ES": "México",
+      "DE": "Mexiko"
+    },
+    "officialLanguages": ["ES"]
+  },
+  {
+    "isoCode": "NL",
+    "name": {
+      "EN": "Netherlands (the)",
+      "NL": "Nederland",
+      "DE": "Niederlande"
+    },
+    "officialLanguages": ["NL"]
+  },
+  {
+    "isoCode": "PL",
+    "name": {
+      "EN": "Poland",
+      "PL": "Polska",
+      "DE": "Polen"
+    },
+    "officialLanguages": ["PL"]
+  },
+  {
+    "isoCode": "PT",
+    "name": {
+      "EN": "Portugal",
+      "PT": "Portugal",
+      "DE": "Portugal"
+    },
+    "officialLanguages": ["PT"]
+  },
+  {
+    "isoCode": "RO",
+    "name": {
+      "EN": "Romania",
+      "RO": "România",
+      "DE": "Rumänien"
+    },
+    "officialLanguages": ["RO"]
+  },
+  {
+    "isoCode": "RS",
+    "name": {
+      "EN": "Serbia",
+      "SR": "Србија",
+      "DE": "Serbien"
+    },
+    "officialLanguages": ["SR"]
+  },
+  {
+    "isoCode": "SE",
+    "name": {
+      "EN": "Sweden",
+      "SV": "Sverige",
+      "DE": "Schweden"
+    },
+    "officialLanguages": ["SV"]
+  },
+  {
+    "isoCode": "SI",
+    "name": {
+      "EN": "Slovenia",
+      "SL": "Slovenija",
+      "DE": "Slowenien"
+    },
+    "officialLanguages": ["SL"]
+  },
+  {
+    "isoCode": "SK",
+    "name": {
+      "EN": "Slovakia",
+      "SK": "Slovensko",
+      "DE": "Slowakei"
+    },
+    "officialLanguages": ["SK"]
+  },
+  {
+    "isoCode": "SM",
+    "name": {
+      "EN": "San Marino",
+      "IT": "San Marino",
+      "DE": "San Marino"
+    },
+    "officialLanguages": ["IT"]
+  },
+  {
+    "isoCode": "VA",
+    "name": {
+      "EN": "Vatican City",
+      "IT": "Città del Vaticano",
+      "DE": "Vatikanstadt"
+    },
+    "officialLanguages": ["IT"]
+  },
+  {
+    "isoCode": "ZA",
+    "name": {
+      "EN": "South Africa",
+      "DE": "Südafrika"
+    },
+    "officialLanguages": ["EN"]
+  }
+]

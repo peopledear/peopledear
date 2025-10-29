@@ -1,99 +1,203 @@
-- Inertia & React (this project) version: **[github.com/nunomaduro/laravel-starter-kit-inertia-react](https://github.com/nunomaduro/laravel-starter-kit-inertia-react)**
-- Blade version: **[github.com/nunomaduro/laravel-starter-kit](https://github.com/nunomaduro/laravel-starter-kit)**
+<h1 align="center">PeopleDear</h1>
 
 <p align="center">
-    <a href="https://youtu.be/VhzP0XWGTC4" target="_blank">
-        <img src="https://github.com/nunomaduro/laravel-starter-kit/blob/main/art/banner.png" alt="Overview Laravel Starter Kit" style="width:70%;">
-    </a>
+  <strong>People Management Made Simple</strong><br>
+  Streamline overtime, time-off, and expenses with automated workflows that just work
 </p>
 
-<p>
-    <a href="https://github.com/nunomaduro/laravel-starter-kit-inertia-react/actions"><img src="https://github.com/nunomaduro/laravel-starter-kit-inertia-react/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://packagist.org/packages/nunomaduro/laravel-starter-kit-inertia-react"><img src="https://img.shields.io/packagist/dt/nunomaduro/laravel-starter-kit-inertia-react" alt="Total Downloads"></a>
-    <a href="https://packagist.org/packages/nunomaduro/laravel-starter-kit-inertia-react"><img src="https://img.shields.io/packagist/v/nunomaduro/laravel-starter-kit-inertia-react" alt="Latest Stable Version"></a>
-    <a href="https://packagist.org/packages/nunomaduro/laravel-starter-kit-inertia-react"><img src="https://img.shields.io/packagist/l/nunomaduro/laravel-starter-kit-inertia-react" alt="License"></a>
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#documentation">Documentation</a>
 </p>
 
-**Laravel Starter Kit (Inertia & React)** is an ultra-strict, type-safe [Laravel](https://laravel.com) skeleton engineered for developers who refuse to compromise on code quality. This opinionated starter kit enforces rigorous development standards through meticulous tooling configuration and architectural decisions that prioritize type safety, immutability, and fail-fast principles.
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php" alt="PHP 8.4">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react" alt="React 18">
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript" alt="TypeScript 5">
+  <img src="https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat&logo=tailwind-css" alt="Tailwind 4">
+  <img src="https://img.shields.io/badge/PHPStan-Level%208-8A2BE2?style=flat" alt="PHPStan Level 8">
+</p>
 
-## Why This Starter Kit?
+---
 
-Modern PHP has evolved into a mature, type-safe language, yet many Laravel projects still operate with loose conventions and optional typing. This starter kit changes that paradigm by enforcing:
+## 🎯 Why PeopleDear?
 
-- **Fully Actions-Oriented Architecture**: Every operation is encapsulated in a single-action class
-- **Cruddy by Design**: Standardized CRUD operations for all controllers, actions, and Inertia & React pages
-- **100% Type Coverage**: Every method, property, and parameter is explicitly typed
-- **Zero Tolerance for Code Smells**: Rector, PHPStan, ESLint, and Prettier at maximum strictness catch issues before they become bugs
-- **Immutable-First Architecture**: Data structures favor immutability to prevent unexpected mutations
-- **Fail-Fast Philosophy**: Errors are caught at compile-time, not runtime
-- **Automated Code Quality**: Pre-configured tools ensure consistent, pristine code across your entire team
-- **Just Better Laravel Defaults**: Thanks to **[Essentials](https://github.com/nunomaduro/essentials)** / strict models, auto eager loading, immutable dates, and more...
-- **AI Guidelines**: Integrated AI Guidelines to assist in maintaining code quality and consistency
-- **Full Testing Suite**: More than 150 tests with 100% code coverage using Pest
-- 
-This isn't just another Laravel boilerplate—it's a statement that PHP applications can and should be built with the same rigor as strongly-typed languages like Rust or TypeScript.
+Managing people shouldn't be complicated. Between tracking overtime, approving time-off requests, handling expenses, and ensuring everything is properly documented—small businesses waste hours on administrative tasks that could be automated.
 
-## Getting Started
+**PeopleDear simplifies people management** with smart automation:
+- ✅ **Automated overtime calculations** based on your business rules
+- ✅ **Smart time-off tracking** with conflict detection
+- ✅ **Multi-level approval workflows** that actually work
+- ✅ **Clean data exports** for seamless payroll integration
 
-> **Requires [PHP 8.4+](https://php.net/releases/) and a code coverage driver like [xdebug](https://xdebug.org/docs/install)**.
+**What we're NOT:** We're not a payroll system. We focus on collecting accurate data and streamlining approvals, so you can export clean, verified information to your payroll processor.
 
-Create your type-safe Laravel application using [Composer](https://getcomposer.org):
+---
 
+## ✨ Features
+
+### For Employees
+- 📝 **Self-Service Portal** - Submit overtime, time-off requests, and expenses without emails
+- 📊 **Real-Time Status** - Track approval progress and view request history
+- 📱 **Mobile-Friendly** - Submit and check requests from anywhere
+- 📎 **Document Upload** - Attach receipts and justifications directly
+
+### For Managers
+- ✅ **One-Click Approvals** - Review and approve requests in seconds
+- 📈 **Team Insights** - Monitor overtime patterns and absence trends
+- 🔔 **Smart Notifications** - Email alerts for pending approvals
+- 📱 **Approve Anywhere** - Mobile-optimized approval interface
+
+### For HR & Owners
+- ⚙️ **Flexible Configuration** - Set schedules, policies, and approval chains
+- 🏢 **Multi-Office Support** - Manage multiple locations with different rules
+- 📊 **Compliance Reports** - Generate audit-ready documentation
+- 👥 **Role-Based Access** - Granular permissions (Employee, Manager, HR Manager, Owner)
+
+---
+
+## 🛠 Tech Stack
+
+### Backend
+- **Laravel 12** with strict typing (`declare(strict_types=1)`)
+- **PHP 8.4+** with full type coverage
+- **PostgreSQL** database
+- **PHPStan Level 8** for static analysis
+- **Pest v4** testing framework (150+ tests)
+
+### Frontend
+- **React 18** with TypeScript
+- **Inertia.js** for seamless SPA experience
+- **Tailwind CSS v4** for styling
+- **shadcn/ui** components with Lucide icons
+- **Wayfinder** for type-safe routing
+
+### Quality Tools
+- **Laravel Pint** for code formatting
+- **Larastan** (PHPStan for Laravel)
+- **Spatie Laravel Activity Log** for audit trails
+- **Laravel Horizon** for queue management
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- PHP 8.4+
+- Composer
+- Node.js 18+
+- PostgreSQL
+- Redis (optional, for queues)
+
+### Quick Start
 ```bash
-composer create-project nunomaduro/laravel-starter-kit-inertia-react --prefer-dist example-app
+# Clone the repository
+git clone https://github.com/peopledear/peopledear.git
+cd peopledear
+
+# Install dependencies
+composer install
+npm install
+
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Configure database in .env, then run migrations
+php artisan migrate --seed
+
+# Build frontend assets
+npm run build
+
+# Start development server
+php artisan serve
 ```
 
-### Initial Setup
+Visit `http://localhost:8000` and login with seeded credentials.
 
-Navigate to your project and complete the setup:
+---
 
+## 📚 Documentation
+
+- [Architecture Guidelines](CLAUDE.md) - Code style and development patterns
+- [Tech Stack Details](docs/tech-stack.md) - Complete technology breakdown
+- [Product Roadmap](docs/roadmap.md) - Feature timeline and priorities
+
+---
+
+## 🧪 Testing & Quality
 ```bash
-cd example-app
+# Run all tests
+php artisan test
 
-# Setup the project
-composer setup
+# Run with coverage
+php artisan test --coverage
 
-# Start the development server
-composer dev
+# Run static analysis
+composer analyse
+
+# Format code
+composer format
 ```
 
-### Optional: Browser Testing Setup
+**Quality Metrics:**
+- ✅ 100% test coverage (400+ tests)
+- ✅ PHPStan Level Max compliance
+- ✅ Type-safe React components
+- ✅ Full TypeScript integration
 
-If you plan to use Pest's browser testing capabilities:
+---
 
-```bash
-npm install playwright
-npx playwright install
-```
+## 🗺 Roadmap
 
-### Verify Installation
+### ✅ Completed
+- [x] Core authentication & role-based access
+- [x] Organization & employee management
+- [x] Admin layouts and navigation
+- [x] User invitation system
 
-Run the test suite to ensure everything is configured correctly:
+### 🚧 In Progress
+- [ ] Overtime logging with auto-calculation
+- [ ] Time-off request workflows
+- [ ] Expense report management
 
-```bash
-composer test
-```
+### 📋 Coming Soon
+- [ ] Manager approval dashboards
+- [ ] Advanced reporting & analytics
+- [ ] Mobile apps (iOS & Android)
+- [ ] Multi-tenant SaaS architecture
+- [ ] Calendar integrations (Google, Outlook)
+- [ ] Payroll system integrations
 
-You should see 100% test coverage and all quality checks passing.
+---
 
-## Available Tooling
+## 🤝 Contributing
 
-### Development
-- `composer dev` - Starts Laravel server, queue worker, log monitoring, and Vite dev server concurrently
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-### Code Quality
-- `composer lint` - Runs Rector (refactoring), Pint (PHP formatting), and Prettier (JS/TS formatting)
-- `composer test:lint` - Dry-run mode for CI/CD pipelines
+### Development Principles
+- **Strict typing** - Every method has explicit type hints
+- **Static analysis** - PHPStan Level 8 must pass
+- **Test coverage** - New features require tests
+- **Laravel conventions** - Follow framework best practices
+- **Clean code** - Readable, maintainable, well-documented
 
-### Testing
-- `composer test:type-coverage` - Ensures 100% type coverage with Pest
-- `composer test:types` - Runs PHPStan at level 9 (maximum strictness)
-- `composer test:unit` - Runs Pest tests with 100% code coverage requirement
-- `composer test` - Runs the complete test suite (type coverage, unit tests, linting, static analysis)
+---
 
-### Maintenance
-- `composer update:requirements` - Updates all PHP and NPM dependencies to latest versions
+## 📄 License
 
-## License
+PeopleDear is open-sourced software licensed under the [MIT license](LICENSE.md).
 
-**Laravel Starter Kit Inertia React** was created by **[Nuno Maduro](https://x.com/enunomaduro)** under the **[MIT license](https://opensource.org/licenses/MIT)**.
+---
+
+## 💼 Support & Services
+
+Need help setting up PeopleDear for your organization?  
+Contact us at [hello@peopledear.com](mailto:hello@peopledear.com)
+
+---
+
+<p align="center">Built with ❤️ for small businesses everywhere</p>

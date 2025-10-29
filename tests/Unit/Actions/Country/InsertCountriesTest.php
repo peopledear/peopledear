@@ -6,6 +6,9 @@ use App\Actions\Country\InsertCountries;
 use App\Data\PeopleDear\Country\InsertCountryData;
 use App\Models\Country;
 
+/**
+ * @throws Throwable
+ */
 beforeEach(function (): void {
     $contents = file_get_contents(database_path('data/countries.json'));
     $this->countries = collect(json_decode($contents, true));
@@ -19,8 +22,6 @@ test('seeds all countries from json file',
      * @throws Throwable
      */
     function (): void {
-        Country::query()->delete();
-
         expect(Country::query()->count())->toBe(0);
 
         $this->action->handle($this->collectionOfInsertCountry);
@@ -29,53 +30,58 @@ test('seeds all countries from json file',
             ->toBe($this->countries->count());
     });
 
-test('upserts countries idempotently', function (): void {
-    Country::query()->delete();
+test('upserts countries idempotently',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        $this->action->handle($this->collectionOfInsertCountry);
 
-    $this->action->handle($this->collectionOfInsertCountry);
+        $initialCount = Country::query()->count();
 
-    $initialCount = Country::query()->count();
+        expect($initialCount)->toBe($this->countries->count());
 
-    expect($initialCount)->toBe($this->countries->count());
+        $this->action->handle($this->collectionOfInsertCountry);
 
-    $this->action->handle($this->collectionOfInsertCountry);
+        expect(Country::query()->count())->toBe($initialCount);
+    });
 
-    expect(Country::query()->count())->toBe($initialCount);
-});
+test('updates existing country data',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        $this->action->handle($this->collectionOfInsertCountry);
 
-test('updates existing country data', function (): void {
-    Country::query()->delete();
+        Country::query()
+            ->where('iso_code', 'PT')
+            ->update(['name' => json_encode(['en' => 'Modified'])]);
 
-    $this->action->handle($this->collectionOfInsertCountry);
+        /** @var Country $modified */
+        $modified = Country::query()
+            ->where('iso_code', 'PT')
+            ->first();
 
-    Country::query()
-        ->where('iso_code', 'PT')
-        ->update(['name' => json_encode(['en' => 'Modified'])]);
+        expect($modified->name)->toBe(['en' => 'Modified']);
 
-    /** @var Country $modified */
-    $modified = Country::query()
-        ->where('iso_code', 'PT')
-        ->first();
+        $this->action->handle($this->collectionOfInsertCountry);
 
-    expect($modified->name)->toBe(['en' => 'Modified']);
+        /** @var Country $updated */
+        $updated = Country::query()
+            ->where('iso_code', 'PT')
+            ->first()
+            ?->fresh();
 
-    $this->action->handle($this->collectionOfInsertCountry);
+        expect($updated->name)
+            ->not->toBe(['en' => 'Modified'])
+            ->and($updated->name['EN'])
+            ->toBe('Portugal');
+    });
 
-    /** @var Country $updated */
-    $updated = Country::query()
-        ->where('iso_code', 'PT')
-        ->first()
-        ?->fresh();
-
-    expect($updated->name)
-        ->not->toBe(['en' => 'Modified'])
-        ->and($updated->name['EN'])
-        ->toBe('Portugal');
-});
-
+/**
+ * @throws Throwable
+ */
 test('preserves country id when upserting', function (): void {
-    Country::query()->delete();
-
     $this->action->handle($this->collectionOfInsertCountry);
 
     /** @var Country $portugal */
@@ -95,9 +101,10 @@ test('preserves country id when upserting', function (): void {
     expect($after->id)->toBe($originalId);
 });
 
+/**
+ * @throws Throwable
+ */
 test('seeds countries with correct structure', function (): void {
-    Country::query()->delete();
-
     $this->action->handle($this->collectionOfInsertCountry);
 
     /** @var Country $portugal */
@@ -117,9 +124,10 @@ test('seeds countries with correct structure', function (): void {
         ->toBe(['PT']);
 });
 
+/**
+ * @throws Throwable
+ */
 test('seeds multilingual countries correctly', function (): void {
-    Country::query()->delete();
-
     $this->action->handle($this->collectionOfInsertCountry);
 
     /** @var Country $belgium */
@@ -139,9 +147,10 @@ test('seeds multilingual countries correctly', function (): void {
         ->toHaveCount(3);
 });
 
+/**
+ * @throws Throwable
+ */
 test('handles empty countries gracefully', function (): void {
-    Country::query()->delete();
-
     expect(Country::query()->count())->toBe(0);
 
     $this->action->handle($this->collectionOfInsertCountry);
@@ -149,6 +158,9 @@ test('handles empty countries gracefully', function (): void {
     expect(Country::query()->count())->toBeGreaterThan(0);
 });
 
+/**
+ * @throws Throwable
+ */
 test('skips non-array entries in json', function (): void {
     $originalPath = database_path('data/countries.json');
     $backupPath = database_path('data/countries_backup.json');
@@ -166,8 +178,6 @@ test('skips non-array entries in json', function (): void {
     file_put_contents($originalPath, json_encode($testData));
 
     try {
-        Country::query()->delete();
-
         $validCountries = collect($testData)
             ->filter(fn ($item): bool => is_array($item))
             ->map(fn (array $country): InsertCountryData => InsertCountryData::from($country));

@@ -99,6 +99,10 @@ test('country can have multiple official languages', function (): void {
 });
 
 test('seeded country portugal exists', function (): void {
+    Country::query()->delete();
+
+    $this->artisan('app:install')->assertSuccessful();
+
     /** @var Country|null $country */
     $country = Country::query()
         ->where('iso_code', 'PT')
@@ -118,6 +122,10 @@ test('seeded country portugal exists', function (): void {
 });
 
 test('seeded country switzerland has multiple languages', function (): void {
+    Country::query()->delete();
+
+    $this->artisan('app:install')->assertSuccessful();
+
     /** @var Country|null $country */
     $country = Country::query()
         ->where('iso_code', 'CH')
@@ -139,6 +147,10 @@ test('seeded country switzerland has multiple languages', function (): void {
 });
 
 test('seeded country belgium has multiple name translations', function (): void {
+    Country::query()->delete();
+
+    $this->artisan('app:install')->assertSuccessful();
+
     /** @var Country|null $country */
     $country = Country::query()
         ->where('iso_code', 'BE')

@@ -10,8 +10,6 @@ test('command has correct signature', function (): void {
 });
 
 test('command seeds countries when none exist', function (): void {
-    expect(Country::query()->count())->toBe(36);
-
     Country::query()->delete();
 
     expect(Country::query()->count())->toBe(0);
@@ -23,6 +21,11 @@ test('command seeds countries when none exist', function (): void {
 });
 
 test('command is idempotent using upsert', function (): void {
+    Country::query()->delete();
+
+    $this->artisan('app:install')
+        ->assertSuccessful();
+
     $initialCount = Country::query()->count();
 
     expect($initialCount)->toBe(36);
@@ -34,6 +37,11 @@ test('command is idempotent using upsert', function (): void {
 });
 
 test('command updates existing countries', function (): void {
+    Country::query()->delete();
+
+    $this->artisan('app:install')
+        ->assertSuccessful();
+
     /** @var Country $portugal */
     $portugal = Country::query()
         ->where('iso_code', 'PT')

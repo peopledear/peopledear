@@ -71,6 +71,36 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - Commit and push changes to the feature branch
 - Only merge to main after all tests pass and code is reviewed
 
+## Composer Scripts
+This project has several composer scripts for development workflows:
+
+### Testing Scripts
+- **`composer test`** - Run complete test suite (type coverage, unit tests, linting, type checking)
+  - Runs: type-coverage, unit tests, lint checks, PHPStan + npm type checks
+- **`composer test:unit`** - Run unit tests with coverage (requires exactly 100.0%)
+  - Command: `pest --parallel --coverage --compact --exactly=100.0`
+- **`composer test:type-coverage`** - Run Pest type coverage (requires min 100%)
+  - Command: `pest --type-coverage --compact --min=100`
+- **`composer test:types`** - Run static analysis (PHPStan + npm types)
+  - Runs: `phpstan` and `npm run test:types`
+- **`composer test:lint`** - Test code formatting without fixing
+  - Runs: `pint --parallel --test`, `rector --dry-run`, `npm run test:lint`
+
+### Development Scripts
+- **`composer dev`** - Start all development servers concurrently
+  - Runs: artisan serve, queue:listen, pail (logs), npm dev
+  - Uses concurrently with color-coded output
+- **`composer lint`** - Fix code style and formatting
+  - Runs: `rector`, `pint --parallel`, `npm run lint`
+- **`composer setup`** - Initial project setup
+  - Runs: install, copy .env, generate key, migrate, npm install, npm build
+
+### Before Committing
+- **ALWAYS run `composer test:unit`** to ensure 100% unit test coverage
+- **ALWAYS run `vendor/bin/pint --dirty`** to format code
+- **Run `composer test:types`** to check static analysis
+- **Optionally run full `composer test`** for complete validation
+
 ## Frontend Bundling
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
 

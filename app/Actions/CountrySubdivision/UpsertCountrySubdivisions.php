@@ -8,7 +8,7 @@ use App\Data\PeopleDear\CountrySubdivision\InsertCountrySubdivisionData;
 use App\Models\CountrySubdivision;
 use Illuminate\Support\Collection;
 
-final readonly class InsertCountrySubdivisions
+final readonly class UpsertCountrySubdivisions
 {
     /**
      * @param  Collection<int, InsertCountrySubdivisionData>  $subdivisions

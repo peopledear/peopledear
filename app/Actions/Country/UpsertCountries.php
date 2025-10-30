@@ -8,7 +8,7 @@ use App\Data\PeopleDear\Country\InsertCountryData;
 use App\Models\Country;
 use Illuminate\Support\Collection;
 
-final readonly class InsertCountries
+final readonly class UpsertCountries
 {
     /**
      * @param  Collection<int, InsertCountryData>  $countries

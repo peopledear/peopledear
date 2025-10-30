@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Actions\Country\InsertCountries;
+use App\Actions\Country\UpsertCountries;
 use App\Data\PeopleDear\Country\InsertCountryData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -31,7 +31,7 @@ final class InstallCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(InsertCountries $seedCountriesAction): int
+    public function handle(UpsertCountries $seedCountriesAction): int
     {
         info('Installing PeopleDear...');
 
@@ -44,7 +44,7 @@ final class InstallCommand extends Command
                 /** @var Collection<int, array<string, mixed>> $countries */
                 $countries = collect($data);
                 /** @var Collection<int, InsertCountryData> $collectionOfInsertCountry */
-                $collectionOfInsertCountry = $countries->map(fn (mixed $country): InsertCountryData => InsertCountryData::from($country));
+                $collectionOfInsertCountry = $countries->map(fn(mixed $country): InsertCountryData => InsertCountryData::from($country));
 
                 $seedCountriesAction->handle($collectionOfInsertCountry);
             },

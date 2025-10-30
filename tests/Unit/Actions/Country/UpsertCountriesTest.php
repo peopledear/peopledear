@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\Country\InsertCountries;
+use App\Actions\Country\UpsertCountries;
 use App\Data\PeopleDear\Country\InsertCountryData;
 use App\Models\Country;
 
@@ -12,9 +12,9 @@ use App\Models\Country;
 beforeEach(function (): void {
     $contents = file_get_contents(database_path('data/countries.json'));
     $this->countries = collect(json_decode($contents, true));
-    /** @var InsertCountries $this action */
-    $this->action = app(InsertCountries::class);
-    $this->collectionOfInsertCountry = $this->countries->map(fn (array $country): InsertCountryData => InsertCountryData::from($country));
+    /** @var UpsertCountries $this action */
+    $this->action = app(UpsertCountries::class);
+    $this->collectionOfInsertCountry = $this->countries->map(fn(array $country): InsertCountryData => InsertCountryData::from($country));
 });
 
 test('seeds all countries from json file',
@@ -179,8 +179,8 @@ test('skips non-array entries in json', function (): void {
 
     try {
         $validCountries = collect($testData)
-            ->filter(fn ($item): bool => is_array($item))
-            ->map(fn (array $country): InsertCountryData => InsertCountryData::from($country));
+            ->filter(fn($item): bool => is_array($item))
+            ->map(fn(array $country): InsertCountryData => InsertCountryData::from($country));
 
         $this->action->handle($validCountries);
 

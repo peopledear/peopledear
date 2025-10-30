@@ -208,7 +208,7 @@ test('returns root subdivision',
             ->toBeNull();
     });
 
-test('rolls back transaction on error',
+test('handles duplicate iso codes with upsert behavior',
     /**
      * @throws Throwable
      */
@@ -228,7 +228,7 @@ test('rolls back transaction on error',
             new CreateCountrySubdivisionData(
                 countryId: $this->country->id,
                 countrySubdivisionId: null,
-                name: ['EN' => 'Duplicate'],
+                name: ['EN' => 'Los Angeles Updated'],
                 code: 'LA',
                 isoCode: 'US-CA-LA',
                 shortName: 'LA',
@@ -249,9 +249,20 @@ test('rolls back transaction on error',
             children: $children
         );
 
-        expect(fn () => $this->action->handle($data))
-            ->toThrow(Exception::class)
-            ->and(CountrySubdivision::query()->count())->toBe(0);
+        $root = $this->action->handle($data);
+
+        expect(CountrySubdivision::query()->count())
+            ->toBe(2)
+            ->and($root->iso_code)
+            ->toBe('US-CA');
+
+        /** @var CountrySubdivision $child */
+        $child = CountrySubdivision::query()
+            ->where('iso_code', 'US-CA-LA')
+            ->first();
+
+        expect($child->name)
+            ->toBe(['EN' => 'Los Angeles Updated']);
 
     });
 

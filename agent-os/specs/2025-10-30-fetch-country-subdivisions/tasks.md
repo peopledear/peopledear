@@ -13,29 +13,35 @@ This feature integrates OpenHolidays API subdivision fetching into the InstallCo
 #### Task Group 1: Type Mapping Configuration & Upsert Investigation
 **Dependencies:** None
 
-- [ ] 1.0 Complete subdivision type mapping configuration and upsert investigation
-  - [ ] 1.1 Investigate CreateCountrySubdivision for upsert support
+- [x] 1.0 Complete subdivision type mapping configuration and upsert investigation
+  - [x] 1.1 Investigate CreateCountrySubdivision for upsert support
     - Check if `iso_code` has unique constraint in `country_subdivisions` table
     - Review if `CreateCountrySubdivision` needs updating from `create()` to `updateOrCreate()`
     - If upsert needed, match on `iso_code` field
     - Write 1-2 tests for upsert behavior (create new, update existing)
     - Update action if necessary to support re-running installation
-  - [ ] 1.2 Write 2-4 focused tests for OpenHolidaysSubdivisionType enum
+  - [x] 1.2 Write 2-4 focused tests for OpenHolidaysSubdivisionType enum
     - Test transform() method maps to correct CountrySubdivisionType
     - Test fallback/default type handling
     - Test all expected subdivision types from fixtures
-  - [ ] 1.3 Create OpenHolidaysSubdivisionType enum
+  - [x] 1.3 Create OpenHolidaysSubdivisionType enum
     - File: `app/Enums/Integrations/OpenHolidays/OpenHolidaysSubdivisionType.php`
     - Follow pattern from OpenHolidaysHolidayType.php
-    - Add cases: District, Region, Municipality, Parish, Community, Province
+    - Add cases for ALL 7 API categories from fixtures:
+      - `Distrito` → `CountrySubdivisionType::District` (Portugal)
+      - `Municipio` → `CountrySubdivisionType::Municipality` (Portugal)
+      - `RegiaoAutonoma` → `CountrySubdivisionType::AutonomousRegion` (Portugal)
+      - `ComunidadAutonoma` → `CountrySubdivisionType::AutonomousRegion` (Spain)
+      - `Provincia` → `CountrySubdivisionType::Province` (Spain)
+      - `CiudadAutonoma` → `CountrySubdivisionType::City` (Spain - Ceuta & Melilla)
+      - `ComunidadDeMadrid` → `CountrySubdivisionType::Community` (Spain - special case)
     - Implement transform() method returning CountrySubdivisionType
     - Add sensible fallback for unmapped types (default to District)
-    - Note: Additional types will be discovered during fixture analysis
-  - [ ] 1.4 Add rate limiting configuration to config/openholidays.php
+  - [x] 1.4 Add rate limiting configuration to config/openholidays.php
     - Add 'rate_limit' array with 'delay_ms' key (default: 500)
     - Document purpose: prevent API rate limiting between country requests
     - Place in configuration alongside existing cache settings
-  - [ ] 1.5 Ensure type mapping tests pass
+  - [x] 1.5 Ensure type mapping tests pass
     - Run ONLY the 2-4 tests written in 1.1
     - Verify enum cases map correctly to CountrySubdivisionType
     - Do NOT run entire test suite at this stage

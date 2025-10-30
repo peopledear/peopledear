@@ -1,10 +1,15 @@
-## Coding style best practices
+## Coding style standards
 
-- **Consistent Naming Conventions**: Establish and follow naming conventions for variables, functions, classes, and files across the codebase
-- **Automated Formatting**: Maintain consistent code style (indenting, line breaks, etc.)
-- **Meaningful Names**: Choose descriptive names that reveal intent; avoid abbreviations and single-letter variables except in narrow contexts
-- **Small, Focused Functions**: Keep functions small and focused on a single task for better readability and testability
-- **Consistent Indentation**: Use consistent indentation (spaces or tabs) and configure your editor/linter to enforce it
-- **Remove Dead Code**: Delete unused code, commented-out blocks, and imports rather than leaving them as clutter
-- **Backward compatibility only when required:** Unless specifically instructed otherwise, assume you do not need to write additional code logic to handle backward compatibility.
-- **DRY Principle**: Avoid duplication by extracting common logic into reusable functions or modules
+- **Strict Types in PHP**: Always use `declare(strict_types=1);` at the top of all PHP files
+- **Explicit Return Types**: Always use explicit return type declarations for methods and functions in PHP
+- **Type Hints for Parameters**: Use appropriate type hints for all method and function parameters
+- **Curly Braces Required**: Always use curly braces for control structures, even single-line blocks
+- **Method Chaining on New Lines**: Chain methods on new lines for better readability
+- **PHP 8 Constructor Promotion**: Use PHP 8 constructor property promotion in `__construct()`
+- **No Empty Constructors**: Do not allow empty `__construct()` methods with zero parameters
+- **Run Laravel Pint**: ALWAYS run `vendor/bin/pint --dirty` before committing to format code
+- **Descriptive Names**: Use descriptive names for variables and methods (e.g., `isRegisteredForDiscounts`, not `discount()`)
+- **Check Existing Conventions**: When creating or editing files, check sibling files for correct structure, approach, and naming
+- **Small Focused Functions**: Keep functions small and focused on a single task
+- **Remove Dead Code**: Delete unused code, commented-out blocks, and imports
+- **DRY Principle**: Avoid duplication by extracting common logic into reusable classes or methods

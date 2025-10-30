@@ -1,11 +1,15 @@
 ## General development conventions
 
-- **Consistent Project Structure**: Organize files and directories in a predictable, logical structure that team members can navigate easily
-- **Clear Documentation**: Maintain up-to-date README files with setup instructions, architecture overview, and contribution guidelines
-- **Version Control Best Practices**: Use clear commit messages, feature branches, and meaningful pull/merge requests with descriptions
-- **Environment Configuration**: Use environment variables for configuration; never commit secrets or API keys to version control
-- **Dependency Management**: Keep dependencies up-to-date and minimal; document why major dependencies are used
-- **Code Review Process**: Establish a consistent code review process with clear expectations for reviewers and authors
-- **Testing Requirements**: Define what level of testing is required before merging (unit tests, integration tests, etc.)
-- **Feature Flags**: Use feature flags for incomplete features rather than long-lived feature branches
-- **Changelog Maintenance**: Keep a changelog or release notes to track significant changes and improvements
+- **Follow Existing Conventions**: MUST follow all existing code conventions - check sibling files for structure, approach, naming
+- **Stick to Directory Structure**: Do not create new base folders without approval - stick to existing structure
+- **No Dependency Changes**: Do not change application dependencies without approval
+- **Use Artisan Commands**: Use `php artisan make:` commands to create new files (migrations, controllers, models, etc.)
+- **Pass --no-interaction**: Always pass `--no-interaction` to Artisan commands to ensure they work without user input
+- **Environment Variables in Config**: Use environment variables ONLY in config files - never use `env()` outside of config/ directory
+- **Named Routes**: Prefer named routes and `route()` function when generating links
+- **SessionKey Enum**: ALWAYS use `SessionKey` enum for session key management instead of magic strings
+- **Version Control Best Practices**: Use clear commit messages, feature branches, and meaningful pull/merge requests
+- **Never Commit Secrets**: Never commit secrets, API keys, or .env files to version control
+- **Testing Before Commits**: ALWAYS run `php artisan test` and `vendor/bin/pint --dirty` before every commit
+- **Feature Branches**: Always create new feature branch when starting new task - fetch and pull latest from main first
+- **Branch Naming**: Use descriptive branch names like `feature/descriptive-name`

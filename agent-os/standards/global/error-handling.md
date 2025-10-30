@@ -1,9 +1,12 @@
-## Error handling best practices
+## Error handling standards
 
-- **User-Friendly Messages**: Provide clear, actionable error messages to users without exposing technical details or security information
-- **Fail Fast and Explicitly**: Validate input and check preconditions early; fail with clear error messages rather than allowing invalid state
-- **Specific Exception Types**: Use specific exception/error types rather than generic ones to enable targeted handling
-- **Centralized Error Handling**: Handle errors at appropriate boundaries (controllers, API layers) rather than scattering try-catch blocks everywhere
-- **Graceful Degradation**: Design systems to degrade gracefully when non-critical services fail rather than breaking entirely
-- **Retry Strategies**: Implement exponential backoff for transient failures in external service calls
-- **Clean Up Resources**: Always clean up resources (file handles, connections) in finally blocks or equivalent mechanisms
+- **Laravel Exception Handling**: Use Laravel's built-in exception handling in `bootstrap/app.php` for centralized error management
+- **Form Request Validation Errors**: Validation errors automatically returned by Form Requests - frontend displays using `form.errors`
+- **Action Layer Exceptions**: Throw specific exceptions from Action classes for business logic errors
+- **User-Friendly Messages**: Provide clear, actionable error messages without exposing technical details or security information
+- **Fail Fast**: Validate input and check preconditions early in Actions - fail with clear exceptions before processing
+- **Specific Exception Types**: Use specific exception types (ValidationException, AuthorizationException, etc.) for targeted handling
+- **No try-catch Everywhere**: Handle errors at appropriate boundaries (controllers, Actions) not scattered try-catch blocks
+- **Transactions for Safety**: Use `DB::transaction()` in Actions for multi-model operations to ensure atomicity
+- **Clean Up Resources**: Always clean up resources (file handles, connections) in finally blocks
+- **Log Errors**: Use Laravel's logging for errors - check with `last-error` MCP tool or `read-log-entries`

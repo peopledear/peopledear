@@ -1,7 +1,12 @@
-## CSS best practices
+## Tailwind CSS standards
 
-- **Consistent Methodology**: Apply and stick to the project's consistent CSS methodology (Tailwind, BEM, utility classes, CSS modules, etc.) across the entire project
-- **Avoid Overriding Framework Styles**: Work with your framework's patterns rather than fighting against them with excessive overrides
-- **Maintain Design System**: Establish and document design tokens (colors, spacing, typography) for consistency
-- **Minimize Custom CSS**: Leverage framework utilities and components to reduce custom CSS maintenance burden
-- **Performance Considerations**: Optimize for production with CSS purging/tree-shaking to remove unused styles
+- **Use Tailwind v4**: Always use Tailwind CSS v4 - do not use deprecated utilities from v3
+- **Import Statement**: Use `@import "tailwindcss";` in CSS files, NOT the old `@tailwind` directives
+- **Replaced Utilities**: Use new utilities: `bg-black/*` not `bg-opacity-*`, `shrink-*` not `flex-shrink-*`, `text-ellipsis` not `overflow-ellipsis`
+- **Check Existing Conventions**: Review and use existing Tailwind conventions within the project before writing your own
+- **Gap for Spacing**: Use gap utilities for spacing in flex/grid layouts instead of margins
+- **Dark Mode Support**: If existing pages support dark mode with `dark:` prefix, new pages must also support it consistently
+- **Minimize Custom CSS**: Leverage Tailwind utilities to reduce custom CSS maintenance
+- **Class Organization**: Think through class placement, order, and priority - remove redundant classes, group elements logically
+- **Component Extraction**: Extract repeated Tailwind patterns into reusable React components
+- **No corePlugins**: `corePlugins` configuration is not supported in Tailwind v4

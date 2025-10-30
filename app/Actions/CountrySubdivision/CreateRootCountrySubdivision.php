@@ -6,7 +6,9 @@ namespace App\Actions\CountrySubdivision;
 
 use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
 use App\Models\CountrySubdivision;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 final readonly class CreateRootCountrySubdivision
 {
@@ -14,6 +16,9 @@ final readonly class CreateRootCountrySubdivision
         private CreateCountrySubdivision $createCountrySubdivision
     ) {}
 
+    /**
+     * @throws Throwable
+     */
     public function handle(CreateCountrySubdivisionData $data): CountrySubdivision
     {
         return DB::transaction(function () use ($data): CountrySubdivision {
@@ -33,7 +38,7 @@ final readonly class CreateRootCountrySubdivision
 
             $root = $this->createCountrySubdivision->handle($dataWithoutChildren);
 
-            if ($children instanceof \Illuminate\Support\Collection && $children->isNotEmpty()) {
+            if ($children instanceof Collection && $children->isNotEmpty()) {
                 $this->createChildren($children, $root->id, $data->countryId);
             }
 
@@ -42,9 +47,9 @@ final readonly class CreateRootCountrySubdivision
     }
 
     /**
-     * @param  \Illuminate\Support\Collection<int, CreateCountrySubdivisionData>  $children
+     * @param  Collection<int, CreateCountrySubdivisionData>  $children
      */
-    private function createChildren(\Illuminate\Support\Collection $children, int $parentId, int $countryId): void
+    private function createChildren(Collection $children, int $parentId, int $countryId): void
     {
         foreach ($children as $childData) {
             $grandchildren = $childData->children;

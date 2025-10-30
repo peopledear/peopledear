@@ -1,9 +1,22 @@
-## Test coverage best practices
+## Test writing standards (Pest v4)
 
-- **Write Minimal Tests During Development**: Do NOT write tests for every change or intermediate step. Focus on completing the feature implementation first, then add strategic tests only at logical completion points
-- **Test Only Core User Flows**: Write tests exclusively for critical paths and primary user workflows. Skip writing tests for non-critical utilities and secondary workflows until if/when you're instructed to do so.
-- **Defer Edge Case Testing**: Do NOT test edge cases, error states, or validation logic unless they are business-critical. These can be addressed in dedicated testing phases, not during feature development.
-- **Test Behavior, Not Implementation**: Focus tests on what the code does, not how it does it, to reduce brittleness
-- **Clear Test Names**: Use descriptive names that explain what's being tested and the expected outcome
-- **Mock External Dependencies**: Isolate units by mocking databases, APIs, file systems, and other external services
-- **Fast Execution**: Keep unit tests fast (milliseconds) so developers run them frequently during development
+- **Full Test Coverage Required**: Write comprehensive tests for ALL features covering happy paths, failure paths, edge cases, and error conditions
+- **All Tests Must Pass Before Commits**: ALWAYS run `php artisan test` before every commit - all tests must pass
+- **Use Pest Framework**: All tests written using Pest v4 - use `php artisan make:test --pest <name>` for feature tests, add `--unit` for unit tests
+- **Flat Test Structure**: NO nested subdirectories in test folders - `tests/Unit/Actions/CreateOfficeTest.php` NOT `tests/Unit/Actions/Office/CreateOfficeTest.php`
+- **Imperative Test Names**: Use imperative mood (e.g., `test('creates user with valid data')`) NOT "it" statements (NOT `test('it creates user')`)
+- **New Tests First**: Place newly written tests at the TOP of the file before existing tests
+- **Always Import Classes**: ALWAYS import all classes used - never use fully qualified class names inline
+- **Chain expect() Methods**: Chain multiple assertions on same expect() call for cleaner tests
+- **Type Hint All Variables**: Add PHPDoc type hints for all variables and explicit return types for test functions (`: void`)
+- **Use createQuietly()**: ALWAYS use `createQuietly()` instead of `create()` to prevent model events from firing
+- **Use fresh() for Seeded Data**: For records from migrations/seeders use `->first()?->fresh()` to get latest data
+- **Container Resolution for Actions**: Use `app(ActionClass::class)` in `beforeEach()` hook, NEVER `new ActionClass()`
+- **Reusable Data in beforeEach**: Define reusable models and actions in `beforeEach()` hook when used across multiple tests
+- **throws() for Exceptions**: Use Pest's `->throws()` method for exception testing, NOT `expect()->toThrow()`
+- **Authentication with $this->actingAs()**: Use `$this->actingAs($user)` for authentication, NOT `actingAs()` or `Auth::login()`
+- **Browser Tests Use visit()**: Use `visit()` function (no `$this->`) for Pest v4 browser tests
+- **Global RefreshDatabase**: `RefreshDatabase` applied globally in `tests/Pest.php` - do NOT add in individual test files
+- **@throws Annotation Before Closure**: Add `@throws Throwable` annotation BEFORE the function closure for all tests and beforeEach hooks
+- **Test Behavior Not Implementation**: Focus on what code does, not how it does it
+- **Never Remove Tests**: Do NOT remove tests or test files without approval - they are core to the application

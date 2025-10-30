@@ -1,31 +1,45 @@
 ## Tech stack
 
-Define your technical stack below. This serves as a reference for all team members and helps maintain consistency across the project.
+This application's technical stack with specific versions for consistency across development.
 
-### Framework & Runtime
-- **Application Framework:** [e.g., Rails, Django, Next.js, Express]
-- **Language/Runtime:** [e.g., Ruby, Python, Node.js, Java]
-- **Package Manager:** [e.g., bundler, pip, npm, yarn]
+### Backend Framework & Runtime
+- **Framework:** Laravel 12
+- **Language:** PHP 8.4.13
+- **Authentication:** Laravel Fortify v1
+- **Permissions:** Spatie Laravel Permission v6
+- **Settings:** Spatie Laravel Settings v3
+- **Data Objects:** Spatie Laravel Data v4
+- **Package Manager:** Composer
 
 ### Frontend
-- **JavaScript Framework:** [e.g., React, Vue, Svelte, Alpine, vanilla JS]
-- **CSS Framework:** [e.g., Tailwind CSS, Bootstrap, custom]
-- **UI Components:** [e.g., shadcn/ui, Material UI, custom library]
+- **JavaScript Framework:** React 18
+- **Language:** TypeScript 5
+- **CSS Framework:** Tailwind CSS v4
+- **UI Components:** shadcn/ui
+- **SPA Framework:** Inertia.js v2 (@inertiajs/react)
+- **Build Tool:** Vite 6
+- **Code Formatter:** Prettier 3
 
-### Database & Storage
-- **Database:** [e.g., PostgreSQL, MySQL, MongoDB]
-- **ORM/Query Builder:** [e.g., ActiveRecord, Prisma, Sequelize]
-- **Caching:** [e.g., Redis, Memcached]
+### Database & ORM
+- **ORM:** Laravel Eloquent
+- **Query Builder:** Laravel Query Builder
+- **Migrations:** Laravel Migrations
 
 ### Testing & Quality
-- **Test Framework:** [e.g., Jest, RSpec, pytest]
-- **Linting/Formatting:** [e.g., ESLint, Prettier, RuboCop]
+- **Test Framework:** Pest v4 (PHPUnit v12)
+- **PHP Linter:** Laravel Pint v1
+- **Static Analysis:** Larastan v3 (PHPStan)
+- **Refactoring:** Rector v2
+- **Frontend Testing:** Pest v4 Browser Testing
 
-### Deployment & Infrastructure
-- **Hosting:** [e.g., Heroku, AWS, Vercel, Railway]
-- **CI/CD:** [e.g., GitHub Actions, CircleCI]
+### Development Tools
+- **MCP Server:** Laravel MCP v0
+- **Prompts:** Laravel Prompts v0
+- **Wayfinder:** Laravel Wayfinder v0
 
-### Third-Party Services
-- **Authentication:** [e.g., Auth0, Devise, NextAuth]
-- **Email:** [e.g., SendGrid, Postmark]
-- **Monitoring:** [e.g., Sentry, Datadog]
+### Architecture Patterns
+- **Action Pattern:** Business logic in Action classes
+- **Query Pattern:** Data access in Query classes
+- **Data Transfer:** Spatie Laravel Data for DTOs
+- **Form Validation:** Laravel Form Requests
+- **Lean Models:** Models contain only relationships, casts, and simple helpers

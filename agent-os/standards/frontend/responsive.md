@@ -1,11 +1,13 @@
-## Responsive design best practices
+## Responsive design standards
 
-- **Mobile-First Development**: Start with mobile layout and progressively enhance for larger screens
-- **Standard Breakpoints**: Consistently use standard breakpoints across the application (e.g., mobile, tablet, desktop)
-- **Fluid Layouts**: Use percentage-based widths and flexible containers that adapt to screen size
-- **Relative Units**: Prefer rem/em units over fixed pixels for better scalability and accessibility
-- **Test Across Devices**: Test and verify UI changes across multiple screen sizes from mobile to tablet to desktop screen sizes and ensure a balanced, user-friendly viewing and reading experience on all
-- **Touch-Friendly Design**: Ensure tap targets are appropriately sized (minimum 44x44px) for mobile users
-- **Performance on Mobile**: Optimize images and assets for mobile network conditions and smaller screens
+- **Tailwind Breakpoints**: Use Tailwind's responsive prefixes (sm:, md:, lg:, xl:, 2xl:) consistently across application
+- **Mobile-First Development**: Start with mobile layout and progressively enhance with breakpoint prefixes
+- **Test Across Devices**: Test UI changes across multiple screen sizes (mobile, tablet, desktop) for balanced experience
+- **Fluid Layouts**: Use Tailwind's responsive width utilities and flexible containers that adapt to screen size
+- **Relative Units**: Tailwind uses rem units by default - avoid fixed pixel values when possible
+- **Touch-Friendly Design**: Ensure tap targets appropriately sized (minimum 44x44px) for mobile users
+- **Pest Browser Testing**: Use Pest v4 browser testing with different viewports to test responsive behavior
+- **Performance on Mobile**: Optimize images with proper sizing and lazy loading for mobile networks
 - **Readable Typography**: Maintain readable font sizes across all breakpoints without requiring zoom
-- **Content Priority**: Show the most important content first on smaller screens through thoughtful layout decisions
+- **Content Priority**: Show most important content first on smaller screens through thoughtful layout
+- **Dark Mode Responsive**: Ensure dark mode works across all breakpoints if implemented

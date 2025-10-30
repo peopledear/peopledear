@@ -1,10 +1,13 @@
-## Database model best practices
+## Eloquent model standards
 
-- **Clear Naming**: Use singular names for models and plural for tables following your framework's conventions
-- **Timestamps**: Include created and updated timestamps on all tables for auditing and debugging
-- **Data Integrity**: Use database constraints (NOT NULL, UNIQUE, foreign keys) to enforce data rules at the database level
-- **Appropriate Data Types**: Choose data types that match the data's purpose and size requirements
-- **Indexes on Foreign Keys**: Index foreign key columns and other frequently queried fields for performance
-- **Validation at Multiple Layers**: Implement validation at both model and database levels for defense in depth
-- **Relationship Clarity**: Define relationships clearly with appropriate cascade behaviors and naming conventions
-- **Avoid Over-Normalization**: Balance normalization with practical query performance needs
+- **Type Hints Required**: Add PHPDoc `@property` and `@property-read` annotations for all database fields, casts, and relationships
+- **Relationship Return Types**: Always add PHPDoc return type hints with PHPStan generics (e.g., `@return BelongsTo<Organization, $this>`)
+- **Casts Method**: Use public `casts()` method (not `$casts` property) for Laravel 11+ with explicit type casting for id, foreign keys, enums, and timestamps
+- **Readonly Relationships**: Use `@property-read` for ALL relationships since relationships are always read-only
+- **Lean Models**: Keep models minimal - only relationships, simple accessors/mutators, casts, and simple boolean helpers (e.g., `isAdmin()`)
+- **No Business Logic**: Do NOT add update/create methods to models - all business logic belongs in Action classes
+- **Factory Type Hints**: Use `@use HasFactory<ModelFactory>` annotation for factory support
+- **Final Classes**: Declare models as final to prevent inheritance and ensure immutability
+- **Strict Types**: Always use `declare(strict_types=1);` at the top of model files
+- **Clear Naming**: Use singular names for models and plural for table names
+- **Model Structure Order**: PHPDoc block → class declaration → traits → relationship methods → casts() method → other methods

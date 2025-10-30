@@ -20,7 +20,7 @@ return new class extends Migration
                 ->constrained();
             $table->jsonb('name');
             $table->string('code');
-            $table->string('iso_code');
+            $table->string('iso_code')->unique();
             $table->string('short_name');
             $table->integer('type');
             $table->jsonb('official_languages');

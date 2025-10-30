@@ -18,6 +18,72 @@ beforeEach(
         $this->action = app(CreateCountrySubdivision::class);
     });
 
+test('upserts new subdivision when iso_code does not exist',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        $data = new CreateCountrySubdivisionData(
+            countryId: $this->country->id,
+            countrySubdivisionId: null,
+            name: ['EN' => 'Lisbon'],
+            code: 'PT-11',
+            isoCode: 'PT-11',
+            shortName: 'Lisboa',
+            type: CountrySubdivisionType::District,
+            officialLanguages: ['PT']
+        );
+
+        $subdivision = $this->action->handle($data);
+
+        expect($subdivision)
+            ->toBeInstanceOf(CountrySubdivision::class)
+            ->and($subdivision->iso_code)
+            ->toBe('PT-11')
+            ->and($subdivision->name['EN'])
+            ->toBe('Lisbon')
+            ->and(CountrySubdivision::query()->where('iso_code', 'PT-11')->count())
+            ->toBe(1);
+    });
+
+test('upserts existing subdivision when iso_code already exists',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var CountrySubdivision $existing */
+        $existing = CountrySubdivision::factory()->createQuietly([
+            'country_id' => $this->country->id,
+            'iso_code' => 'PT-11',
+            'name' => ['EN' => 'Old Name'],
+            'short_name' => 'Old',
+        ]);
+
+        $existingId = $existing->id;
+
+        $data = new CreateCountrySubdivisionData(
+            countryId: $this->country->id,
+            countrySubdivisionId: null,
+            name: ['EN' => 'Lisbon', 'PT' => 'Lisboa'],
+            code: 'PT-11',
+            isoCode: 'PT-11',
+            shortName: 'Lisboa',
+            type: CountrySubdivisionType::District,
+            officialLanguages: ['PT']
+        );
+
+        $subdivision = $this->action->handle($data);
+
+        expect($subdivision->id)
+            ->toBe($existingId)
+            ->and($subdivision->name)
+            ->toBe(['EN' => 'Lisbon', 'PT' => 'Lisboa'])
+            ->and($subdivision->short_name)
+            ->toBe('Lisboa')
+            ->and(CountrySubdivision::query()->where('iso_code', 'PT-11')->count())
+            ->toBe(1);
+    });
+
 test('creates a single country subdivision',
     /**
      * @throws Throwable

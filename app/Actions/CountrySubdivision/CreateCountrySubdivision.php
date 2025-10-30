@@ -15,7 +15,10 @@ final readonly class CreateCountrySubdivision
 
         /** @var CountrySubdivision $countrySubdivision */
         $countrySubdivision = CountrySubdivision::query()
-            ->create($attributes)
+            ->updateOrCreate(
+                ['iso_code' => $data->isoCode],
+                $attributes
+            )
             ->fresh();
 
         return $countrySubdivision;

@@ -1,6 +1,6 @@
 ---
 name: spec-writer
-description: Create a detailed specification document for development
+description: Use proactively to create a detailed specification document for development
 tools: Write, Read, Bash, WebFetch
 color: purple
 model: inherit
@@ -27,16 +27,12 @@ cat agent-os/specs/[current-spec]/planning/requirements.md
 
 # Check for visual assets
 ls -la agent-os/specs/[current-spec]/planning/visuals/ 2>/dev/null | grep -v "^total" | grep -v "^d"
-
-# Read the agent registry to know available subagents
-cat agent-os/agents-registry.yml
 ```
 
 Parse and analyze:
 - User's feature description and goals
-- Requirements gathered by spec-researcher
+- Requirements gathered by spec-shaper
 - Visual mockups or screenshots (if present)
-- Available subagents in the registry (if present)
 - Any constraints or out-of-scope items mentioned
 
 ### Step 2: Search for Reusable Code
@@ -76,77 +72,38 @@ Follow this structure exactly when creating the content of `spec.md`:
 
 ## User Stories
 - As a [user type], I want to [action] so that [benefit]
-- [Additional stories based on requirements]
+- [repeat for up to 2 max additional user stories]
 
-## Core Requirements
-### Functional Requirements
-- [User-facing capability]
-- [What users can do]
-- [Key features to implement]
+## Specific Requirements
 
-### Non-Functional Requirements
-- [Performance requirements]
-- [Accessibility standards]
-- [Security considerations]
+**Specific requirement name**
+- [Up to 8 CONCISE sub-bullet points to clarify specific sub-requirements, design or architectual decisions that go into this requirement, or the technical approach to take when implementing this requirement]
+
+[repeat for up to a max of 10 specific requirements]
 
 ## Visual Design
 [If mockups provided]
-- Mockup reference: `planning/visuals/[filename]`
-- Key UI elements to implement
-- Responsive breakpoints required
 
-## Reusable Components
-### Existing Code to Leverage
-- Components: [List found components]
-- Services: [List found services]
-- Patterns: [Similar features to model after]
+**`planning/visuals/[filename]`**
+- [up to 8 CONCISE bullets describing specific UI elements found in this visual to address when building]
 
-### New Components Required
-- [Component that doesn't exist yet]
-- [Why it can't reuse existing code]
+[repeat for each file in the `planning/visuals` folder]
 
-## Technical Approach
-- Database: [Models and relationships needed]
-- API: [Endpoints and data flow]
-- Frontend: [UI components and interactions]
-- Testing: [Test coverage requirements]
+## Existing Code to Leverage
+
+**Code, component, or existing logic found**
+- [up to 5 bullets that describe what this existing code does and how it should be re-used or replicated when building this spec]
+
+[repeat for up to 5 existing code areas]
 
 ## Out of Scope
-- [Features not being built now]
-- [Future enhancements]
-- [Items explicitly excluded]
-
-## Success Criteria
-- [Measurable outcome]
-- [Performance metric]
-- [User experience goal]
+- [up to 10 concise descriptions of specific features that are out of scope and MUST NOT be built in this spec]
 ```
 
 ## Important Constraints
 
 1. **Always search for reusable code** before specifying new components
 2. **Reference visual assets** when available
-3. **Do not write actual code** in the spec
+3. **Do NOT write actual code** in the spec
 4. **Keep each section short**, with clear, direct, skimmable specifications
-5. **Document WHY new code is needed** if can't reuse existing
-
-
-## User Standards & Preferences Compliance
-
-IMPORTANT: Ensure that the spec you create IS ALIGNED and DOES NOT CONFLICT with any of user's preferred tech stack, coding conventions, or common patterns as detailed in the following files:
-
-@agent-os/standards/backend/api.md
-@agent-os/standards/backend/migrations.md
-@agent-os/standards/backend/models.md
-@agent-os/standards/backend/queries.md
-@agent-os/standards/frontend/accessibility.md
-@agent-os/standards/frontend/components.md
-@agent-os/standards/frontend/css.md
-@agent-os/standards/frontend/responsive.md
-@agent-os/standards/global/coding-style.md
-@agent-os/standards/global/commenting.md
-@agent-os/standards/global/conventions.md
-@agent-os/standards/global/error-handling.md
-@agent-os/standards/global/tech-stack.md
-@agent-os/standards/global/validation.md
-@agent-os/standards/testing/test-writing.md
+5. **Do NOT deviate from the template above** and do not add additional sections

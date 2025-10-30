@@ -14,9 +14,11 @@ final readonly class CreateOrganization
      */
     public function handle(CreateOrganizationData $data): Organization
     {
-        $organization = Organization::query()->create([
-            'name' => $data->name,
-        ]);
+        $organization = Organization::query()
+            ->create([
+                'name' => $data->name,
+                'country_id' => $data->countryId,
+            ]);
 
         return $organization->refresh();
     }

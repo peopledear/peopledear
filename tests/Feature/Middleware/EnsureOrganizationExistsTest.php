@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\Support\SessionKey;
+use App\Models\Country;
 use App\Models\Organization;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -178,6 +179,9 @@ test('middleware does not redirect on organization-required route', function ():
 test('creating organization sets session cache', function (): void {
     Organization::query()->delete();
 
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
+
     /** @var Role $ownerRole */
     $ownerRole = Role::query()
         ->where('name', 'owner')
@@ -194,6 +198,7 @@ test('creating organization sets session cache', function (): void {
 
     $response = $this->post('/org/create', [
         'name' => 'New Organization',
+        'country_id' => $country->id,
     ]);
 
     $response->assertRedirect('/org');

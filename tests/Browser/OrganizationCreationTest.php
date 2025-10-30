@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Models\Country;
 use App\Models\Organization;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
 test('owner can create organization via modal', function (): void {
     Organization::query()->delete();
+
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
 
     /** @var Role $ownerRole */
     $ownerRole = Role::query()
@@ -21,12 +25,13 @@ test('owner can create organization via modal', function (): void {
 
     $this->actingAs($owner);
 
-    $page = visit('/org');
+    $page = visit('/org/create');
 
     $page->assertSee('New organization')
         ->fill('name', 'Test Organization')
+        ->click('#country_id')
+        ->click(sprintf("[data-slot='select-item']:has-text('%s')", $country->name['EN']))
         ->click('Create organization')
-        ->assertPathIs('/org/create')
         ->assertNoJavascriptErrors();
 
     /** @var Organization|null $organization */
@@ -34,11 +39,15 @@ test('owner can create organization via modal', function (): void {
 
     expect($organization)
         ->not->toBeNull()
-        ->name->toBe('Test Organization');
+        ->name->toBe('Test Organization')
+        ->country_id->toBe($country->id);
 });
 
 test('people manager can create organization', function (): void {
     Organization::query()->delete();
+
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
 
     /** @var Role $peopleManagerRole */
     $peopleManagerRole = Role::query()
@@ -52,12 +61,13 @@ test('people manager can create organization', function (): void {
 
     $this->actingAs($peopleManager);
 
-    $page = visit('/org');
+    $page = visit('/org/create');
 
     $page->assertSee('New organization')
         ->fill('name', 'PM Test Organization')
+        ->click('#country_id')
+        ->click(sprintf("[data-slot='select-item']:has-text('%s')", $country->name['EN']))
         ->click('Create organization')
-        ->assertPathIs('/org/create')
         ->assertNoJavascriptErrors();
 
     /** @var Organization|null $organization */
@@ -65,7 +75,8 @@ test('people manager can create organization', function (): void {
 
     expect($organization)
         ->not->toBeNull()
-        ->name->toBe('PM Test Organization');
+        ->name->toBe('PM Test Organization')
+        ->country_id->toBe($country->id);
 });
 
 test('employee sees informational page when no organization exists', function (): void {

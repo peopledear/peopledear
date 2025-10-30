@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Country;
 use App\Models\Organization;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -17,8 +18,7 @@ it('people manager can access organization settings', function (): void {
     $peopleManager = User::factory()->createQuietly();
     $peopleManager->assignRole($peopleManagerRole);
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    Organization::factory()->createQuietly();
 
     $this->actingAs($peopleManager);
 
@@ -41,8 +41,7 @@ it('owner can access organization settings', function (): void {
     $owner = User::factory()->createQuietly();
     $owner->assignRole($ownerRole);
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    Organization::factory()->createQuietly();
 
     $this->actingAs($owner);
 
@@ -268,4 +267,123 @@ it('allows optional vat_number, ssn, and phone', function (): void {
         ->toBeNull()
         ->and($updatedOrganization->phone)
         ->toBeNull();
+});
+
+it('requires country_id when creating organization', function (): void {
+    Organization::query()->delete();
+
+    /** @var Role $ownerRole */
+    $ownerRole = Role::query()
+        ->where('name', 'owner')
+        ->first()
+        ?->fresh();
+
+    /** @var User $owner */
+    $owner = User::factory()->createQuietly();
+    $owner->assignRole($ownerRole);
+
+    $this->actingAs($owner);
+
+    $response = $this->post(route('org.create'), [
+        'name' => 'Test Organization',
+    ]);
+
+    $response->assertRedirect()
+        ->assertSessionHasErrors('country_id');
+});
+
+it('validates country_id exists when creating organization', function (): void {
+    Organization::query()->delete();
+
+    /** @var Role $ownerRole */
+    $ownerRole = Role::query()
+        ->where('name', 'owner')
+        ->first()
+        ?->fresh();
+
+    /** @var User $owner */
+    $owner = User::factory()->createQuietly();
+    $owner->assignRole($ownerRole);
+
+    $this->actingAs($owner);
+
+    $response = $this->post(route('org.create'), [
+        'name' => 'Test Organization',
+        'country_id' => 99999, // Non-existent country ID
+    ]);
+
+    $response->assertRedirect()
+        ->assertSessionHasErrors('country_id');
+});
+
+it('people manager can create organization with country', function (): void {
+    Organization::query()->delete();
+
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
+
+    /** @var Role $peopleManagerRole */
+    $peopleManagerRole = Role::query()
+        ->where('name', 'people_manager')
+        ->first()
+        ?->fresh();
+
+    /** @var User $peopleManager */
+    $peopleManager = User::factory()->createQuietly();
+    $peopleManager->assignRole($peopleManagerRole);
+
+    $this->actingAs($peopleManager);
+
+    $response = $this->post(route('org.create'), [
+        'name' => 'New Organization',
+        'country_id' => $country->id,
+    ]);
+
+    $response->assertRedirect(route('org.overview'));
+
+    /** @var Organization $organization */
+    $organization = Organization::query()
+        ->where('name', 'New Organization')
+        ->first();
+
+    expect($organization)
+        ->not->toBeNull()
+        ->name->toBe('New Organization')
+        ->country_id->toBe($country->id);
+});
+
+it('owner can create organization with country', function (): void {
+    Organization::query()->delete();
+
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
+
+    /** @var Role $ownerRole */
+    $ownerRole = Role::query()
+        ->where('name', 'owner')
+        ->first()
+        ?->fresh();
+
+    /** @var User $owner */
+    $owner = User::factory()->createQuietly();
+    $owner->assignRole($ownerRole);
+
+    $this->actingAs($owner);
+
+    $response = $this->post(route('org.create'), [
+        'name' => 'Owner Organization',
+        'country_id' => $country->id,
+    ]);
+
+    $response->assertRedirect(route('org.overview'));
+
+    /** @var Organization $organization */
+    $organization = Organization::query()
+        ->where('name', 'Owner Organization')
+        ->first();
+
+    expect($organization)
+        ->not->toBeNull()
+        ->name->toBe('Owner Organization')
+        ->country_id->toBe($country->id);
 });

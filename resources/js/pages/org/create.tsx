@@ -1,4 +1,5 @@
 import AppLogoIcon from "@/components/app-logo-icon";
+import { CountrySelect } from "@/components/country-select";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -10,15 +11,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { home } from "@/routes";
+import type { Country } from "@/types/country";
 import { Head, Link, useForm } from "@inertiajs/react";
+
+interface CreateOrganizationProps {
+    countries: Country[];
+}
 
 interface FormData {
     name: string;
+    country_id: string;
 }
 
-export default function CreateOrganization() {
+export default function CreateOrganization({
+    countries,
+}: CreateOrganizationProps) {
     const form = useForm<FormData>({
         name: "",
+        country_id: "",
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -73,6 +83,16 @@ export default function CreateOrganization() {
                                     )}
                                 </div>
 
+                                <CountrySelect
+                                    value={form.data.country_id}
+                                    onValueChange={(value) =>
+                                        form.setData("country_id", value)
+                                    }
+                                    countries={countries}
+                                    error={form.errors.country_id}
+                                    required
+                                />
+
                                 <div className="flex justify-end gap-3">
                                     <Button
                                         type="button"
@@ -85,7 +105,9 @@ export default function CreateOrganization() {
                                     <Button
                                         type="submit"
                                         disabled={
-                                            form.processing || !form.data.name
+                                            form.processing ||
+                                            !form.data.name ||
+                                            !form.data.country_id
                                         }
                                     >
                                         {form.processing

@@ -14,7 +14,7 @@ beforeEach(function (): void {
     $this->countries = collect(json_decode($contents, true));
     /** @var UpsertCountries $this action */
     $this->action = app(UpsertCountries::class);
-    $this->collectionOfInsertCountry = $this->countries->map(fn(array $country): InsertCountryData => InsertCountryData::from($country));
+    $this->collectionOfInsertCountry = $this->countries->map(fn (array $country): InsertCountryData => InsertCountryData::from($country));
 });
 
 test('seeds all countries from json file',
@@ -179,8 +179,8 @@ test('skips non-array entries in json', function (): void {
 
     try {
         $validCountries = collect($testData)
-            ->filter(fn($item): bool => is_array($item))
-            ->map(fn(array $country): InsertCountryData => InsertCountryData::from($country));
+            ->filter(fn ($item): bool => is_array($item))
+            ->map(fn (array $country): InsertCountryData => InsertCountryData::from($country));
 
         $this->action->handle($validCountries);
 

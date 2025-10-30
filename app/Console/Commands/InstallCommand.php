@@ -44,7 +44,7 @@ final class InstallCommand extends Command
                 /** @var Collection<int, array<string, mixed>> $countries */
                 $countries = collect($data);
                 /** @var Collection<int, InsertCountryData> $collectionOfInsertCountry */
-                $collectionOfInsertCountry = $countries->map(fn(mixed $country): InsertCountryData => InsertCountryData::from($country));
+                $collectionOfInsertCountry = $countries->map(fn (mixed $country): InsertCountryData => InsertCountryData::from($country));
 
                 $seedCountriesAction->handle($collectionOfInsertCountry);
             },

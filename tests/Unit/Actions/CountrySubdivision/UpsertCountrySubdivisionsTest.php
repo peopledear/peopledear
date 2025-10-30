@@ -9,9 +9,9 @@ use App\Models\Country;
 use App\Models\CountrySubdivision;
 
 beforeEach(
-/**
- * @throws Throwable
- */
+    /**
+     * @throws Throwable
+     */
     function (): void {
         $this->usa = Country::factory()->createQuietly(['iso_code' => 'US']);
         $this->germany = Country::factory()->createQuietly(['iso_code' => 'DE']);
@@ -51,7 +51,7 @@ beforeEach(
 
         /** @var UpsertCountrySubdivisions $this action */
         $this->action = app(UpsertCountrySubdivisions::class);
-        $this->collectionOfInsertSubdivision = $this->subdivisions->map(fn(array $subdivision): InsertCountrySubdivisionData => InsertCountrySubdivisionData::from($subdivision));
+        $this->collectionOfInsertSubdivision = $this->subdivisions->map(fn (array $subdivision): InsertCountrySubdivisionData => InsertCountrySubdivisionData::from($subdivision));
     });
 
 test('seeds all subdivisions from data',
@@ -218,7 +218,7 @@ test('handles hierarchical subdivisions correctly',
             ],
         ]);
 
-        $collectionOfCounties = $countyData->map(fn(array $county): InsertCountrySubdivisionData => InsertCountrySubdivisionData::from($county));
+        $collectionOfCounties = $countyData->map(fn (array $county): InsertCountrySubdivisionData => InsertCountrySubdivisionData::from($county));
 
         $this->action->handle($collectionOfCounties);
 

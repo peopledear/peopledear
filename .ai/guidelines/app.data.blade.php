@@ -13,6 +13,43 @@
 
 ## Creating Data Objects
 
+### Data Object Structure Requirements
+
+**ALWAYS add `@method array<string, mixed> toArray()` annotation to all Data objects:**
+
+@boostsnippet('Data Object with toArray Annotation')
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Data\PeopleDear\Office;
+
+use App\Enums\PeopleDear\OfficeType;
+use Spatie\LaravelData\Attributes\MapOutputName;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
+
+/**
+ * @method array<string, mixed> toArray()
+ */
+#[MapOutputName(SnakeCaseMapper::class)]
+final class UpdateOfficeData extends Data
+{
+    public function __construct(
+        public readonly ?string $name,
+        public readonly ?OfficeType $type,
+        public readonly ?string $phone,
+    ) {}
+}
+```
+
+**Why this annotation?**
+- Provides IDE autocomplete for `toArray()` method
+- Documents the return type explicitly
+- Helps static analysis tools (PHPStan/Larastan)
+- Required for all Data objects in this project
+
 ### From Form Requests (Controllers)
 @boostsnippet('Create Data from Form Request')
 ```php
@@ -27,7 +64,7 @@ return redirect()->route('admin.settings.organization.edit');
 }
 ```
 
-### Data Object Structure
+### Basic Data Object Structure
 @boostsnippet('Data Object Example')
 ```php
 <?php

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Actions\CountrySubdivision;
 
-use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
+use App\Data\PeopleDear\CountrySubdivision\InsertCountrySubdivisionData;
 use App\Models\CountrySubdivision;
 use Illuminate\Support\Collection;
 
 final readonly class InsertCountrySubdivisions
 {
     /**
-     * @param  Collection<int, CreateCountrySubdivisionData>  $subdivisions
+     * @param  Collection<int, InsertCountrySubdivisionData>  $subdivisions
      */
     public function handle(Collection $subdivisions): void
     {

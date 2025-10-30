@@ -3,57 +3,56 @@
 declare(strict_types=1);
 
 use App\Actions\CountrySubdivision\InsertCountrySubdivisions;
-use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
+use App\Data\PeopleDear\CountrySubdivision\InsertCountrySubdivisionData;
 use App\Enums\PeopleDear\CountrySubdivisionType;
 use App\Models\Country;
 use App\Models\CountrySubdivision;
 
-/**
- * @throws Throwable
- */
-beforeEach(function (): void {
-    /** @var Country $usa */
-    $usa = Country::factory()->createQuietly(['iso_code' => 'US']);
-    /** @var Country $germany */
-    $germany = Country::factory()->createQuietly(['iso_code' => 'DE']);
+beforeEach(
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        $this->usa = Country::factory()->createQuietly(['iso_code' => 'US']);
+        $this->germany = Country::factory()->createQuietly(['iso_code' => 'DE']);
 
-    $this->subdivisions = collect([
-        [
-            'countryId' => $usa->id,
-            'countrySubdivisionId' => null,
-            'name' => ['EN' => 'California', 'ES' => 'California'],
-            'code' => 'CA',
-            'isoCode' => 'US-CA',
-            'shortName' => 'CA',
-            'type' => CountrySubdivisionType::State,
-            'officialLanguages' => ['EN'],
-        ],
-        [
-            'countryId' => $usa->id,
-            'countrySubdivisionId' => null,
-            'name' => ['EN' => 'Texas', 'ES' => 'Texas'],
-            'code' => 'TX',
-            'isoCode' => 'US-TX',
-            'shortName' => 'TX',
-            'type' => CountrySubdivisionType::State,
-            'officialLanguages' => ['EN'],
-        ],
-        [
-            'countryId' => $germany->id,
-            'countrySubdivisionId' => null,
-            'name' => ['EN' => 'Bavaria', 'DE' => 'Bayern'],
-            'code' => 'BY',
-            'isoCode' => 'DE-BY',
-            'shortName' => 'BY',
-            'type' => CountrySubdivisionType::Land,
-            'officialLanguages' => ['DE'],
-        ],
-    ]);
+        $this->subdivisions = collect([
+            [
+                'countryId' => $this->usa->id,
+                'countrySubdivisionId' => null,
+                'name' => ['EN' => 'California', 'ES' => 'California'],
+                'code' => 'CA',
+                'isoCode' => 'US-CA',
+                'shortName' => 'CA',
+                'type' => CountrySubdivisionType::State,
+                'officialLanguages' => ['EN'],
+            ],
+            [
+                'countryId' => $this->usa->id,
+                'countrySubdivisionId' => null,
+                'name' => ['EN' => 'Texas', 'ES' => 'Texas'],
+                'code' => 'TX',
+                'isoCode' => 'US-TX',
+                'shortName' => 'TX',
+                'type' => CountrySubdivisionType::State,
+                'officialLanguages' => ['EN'],
+            ],
+            [
+                'countryId' => $this->germany->id,
+                'countrySubdivisionId' => null,
+                'name' => ['EN' => 'Bavaria', 'DE' => 'Bayern'],
+                'code' => 'BY',
+                'isoCode' => 'DE-BY',
+                'shortName' => 'BY',
+                'type' => CountrySubdivisionType::Land,
+                'officialLanguages' => ['DE'],
+            ],
+        ]);
 
-    /** @var InsertCountrySubdivisions $this action */
-    $this->action = app(InsertCountrySubdivisions::class);
-    $this->collectionOfInsertSubdivision = $this->subdivisions->map(fn (array $subdivision): CreateCountrySubdivisionData => CreateCountrySubdivisionData::from($subdivision));
-});
+        /** @var InsertCountrySubdivisions $this action */
+        $this->action = app(InsertCountrySubdivisions::class);
+        $this->collectionOfInsertSubdivision = $this->subdivisions->map(fn (array $subdivision): InsertCountrySubdivisionData => InsertCountrySubdivisionData::from($subdivision));
+    });
 
 test('seeds all subdivisions from data',
     /**
@@ -116,131 +115,134 @@ test('updates existing subdivision data',
             ->toBe('California');
     });
 
-/**
- * @throws Throwable
- */
-test('preserves subdivision id when upserting', function (): void {
-    $this->action->handle($this->collectionOfInsertSubdivision);
+test('preserves subdivision id when upserting',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        $this->action->handle($this->collectionOfInsertSubdivision);
 
-    /** @var CountrySubdivision $california */
-    $california = CountrySubdivision::query()
-        ->where('iso_code', 'US-CA')
-        ->first();
+        /** @var CountrySubdivision $california */
+        $california = CountrySubdivision::query()
+            ->where('iso_code', 'US-CA')
+            ->first();
 
-    $originalId = $california->id;
+        $originalId = $california->id;
 
-    $this->action->handle($this->collectionOfInsertSubdivision);
+        $this->action->handle($this->collectionOfInsertSubdivision);
 
-    /** @var CountrySubdivision $after */
-    $after = CountrySubdivision::query()
-        ->where('iso_code', 'US-CA')
-        ->first();
+        /** @var CountrySubdivision $after */
+        $after = CountrySubdivision::query()
+            ->where('iso_code', 'US-CA')
+            ->first();
 
-    expect($after->id)->toBe($originalId);
-});
+        expect($after->id)->toBe($originalId);
+    });
 
-/**
- * @throws Throwable
- */
-test('seeds subdivisions with correct structure', function (): void {
-    $this->action->handle($this->collectionOfInsertSubdivision);
+test('seeds subdivisions with correct structure',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        $this->action->handle($this->collectionOfInsertSubdivision);
 
-    /** @var CountrySubdivision $california */
-    $california = CountrySubdivision::query()
-        ->where('iso_code', 'US-CA')
-        ->first();
+        /** @var CountrySubdivision $california */
+        $california = CountrySubdivision::query()
+            ->where('iso_code', 'US-CA')
+            ->first();
 
-    expect($california)
-        ->not->toBeNull()
-        ->and($california->iso_code)
-        ->toBe('US-CA')
-        ->and($california->code)
-        ->toBe('CA')
-        ->and($california->short_name)
-        ->toBe('CA')
-        ->and($california->type)
-        ->toBe(CountrySubdivisionType::State)
-        ->and($california->name)
-        ->toBeArray()
-        ->and($california->official_languages)
-        ->toBeArray()
-        ->and($california->official_languages)
-        ->toBe(['EN']);
-});
+        expect($california)
+            ->not->toBeNull()
+            ->and($california->iso_code)
+            ->toBe('US-CA')
+            ->and($california->code)
+            ->toBe('CA')
+            ->and($california->short_name)
+            ->toBe('CA')
+            ->and($california->type)
+            ->toBe(CountrySubdivisionType::State)
+            ->and($california->name)
+            ->toBeArray()
+            ->and($california->official_languages)
+            ->toBeArray()
+            ->and($california->official_languages)
+            ->toBe(['EN']);
+    });
 
-/**
- * @throws Throwable
- */
-test('seeds subdivisions with different types correctly', function (): void {
-    $this->action->handle($this->collectionOfInsertSubdivision);
+test('seeds subdivisions with different types correctly',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        $this->action->handle($this->collectionOfInsertSubdivision);
 
-    /** @var CountrySubdivision $california */
-    $california = CountrySubdivision::query()
-        ->where('iso_code', 'US-CA')
-        ->first();
+        /** @var CountrySubdivision $california */
+        $california = CountrySubdivision::query()
+            ->where('iso_code', 'US-CA')
+            ->first();
 
-    /** @var CountrySubdivision $bavaria */
-    $bavaria = CountrySubdivision::query()
-        ->where('iso_code', 'DE-BY')
-        ->first();
+        /** @var CountrySubdivision $bavaria */
+        $bavaria = CountrySubdivision::query()
+            ->where('iso_code', 'DE-BY')
+            ->first();
 
-    expect($california->type)
-        ->toBe(CountrySubdivisionType::State)
-        ->and($bavaria->type)
-        ->toBe(CountrySubdivisionType::Land);
-});
+        expect($california->type)
+            ->toBe(CountrySubdivisionType::State)
+            ->and($bavaria->type)
+            ->toBe(CountrySubdivisionType::Land);
+    });
 
-/**
- * @throws Throwable
- */
-test('handles hierarchical subdivisions correctly', function (): void {
-    /** @var Country $usa */
-    $usa = Country::query()->where('iso_code', 'US')->first();
+test('handles hierarchical subdivisions correctly',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
 
-    $this->action->handle($this->collectionOfInsertSubdivision);
+        $this->action->handle($this->collectionOfInsertSubdivision);
 
-    /** @var CountrySubdivision $california */
-    $california = CountrySubdivision::query()
-        ->where('iso_code', 'US-CA')
-        ->first();
+        /** @var CountrySubdivision $california */
+        $california = CountrySubdivision::query()
+            ->where('iso_code', 'US-CA')
+            ->first();
 
-    $countyData = collect([
-        [
-            'countryId' => $usa->id,
-            'countrySubdivisionId' => $california->id,
-            'name' => ['EN' => 'Los Angeles County'],
-            'code' => 'LA',
-            'isoCode' => 'US-CA-LA',
-            'shortName' => 'LA',
-            'type' => CountrySubdivisionType::County,
-            'officialLanguages' => ['EN'],
-        ],
-    ]);
+        $countyData = collect([
+            [
+                'countryId' => $this->usa->id,
+                'countrySubdivisionId' => $california->id,
+                'name' => ['EN' => 'Los Angeles County'],
+                'code' => 'LA',
+                'isoCode' => 'US-CA-LA',
+                'shortName' => 'LA',
+                'type' => CountrySubdivisionType::County,
+                'officialLanguages' => ['EN'],
+            ],
+        ]);
 
-    $collectionOfCounties = $countyData->map(fn (array $county): CreateCountrySubdivisionData => CreateCountrySubdivisionData::from($county));
+        $collectionOfCounties = $countyData->map(fn (array $county): InsertCountrySubdivisionData => InsertCountrySubdivisionData::from($county));
 
-    $this->action->handle($collectionOfCounties);
+        $this->action->handle($collectionOfCounties);
 
-    /** @var CountrySubdivision $laCounty */
-    $laCounty = CountrySubdivision::query()
-        ->where('iso_code', 'US-CA-LA')
-        ->first();
+        /** @var CountrySubdivision $laCounty */
+        $laCounty = CountrySubdivision::query()
+            ->where('iso_code', 'US-CA-LA')
+            ->first();
 
-    expect($laCounty)
-        ->not->toBeNull()
-        ->and($laCounty->country_subdivision_id)
-        ->toBe($california->id)
-        ->and($laCounty->type)
-        ->toBe(CountrySubdivisionType::County);
-});
+        expect($laCounty)
+            ->not->toBeNull()
+            ->and($laCounty->country_subdivision_id)
+            ->toBe($california->id)
+            ->and($laCounty->type)
+            ->toBe(CountrySubdivisionType::County);
+    });
 
-/**
- * @throws Throwable
- */
-test('handles empty subdivisions gracefully', function (): void {
-    expect(CountrySubdivision::query()->count())->toBe(0);
+test('handles empty subdivisions gracefully',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        expect(CountrySubdivision::query()->count())->toBe(0);
 
-    $this->action->handle($this->collectionOfInsertSubdivision);
+        $this->action->handle($this->collectionOfInsertSubdivision);
 
-    expect(CountrySubdivision::query()->count())->toBeGreaterThan(0);
-});
+        expect(CountrySubdivision::query()->count())->toBeGreaterThan(0);
+    });

@@ -10,6 +10,9 @@ use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+/**
+ * @method array<string, mixed> toArray()
+ */
 #[MapOutputName(SnakeCaseMapper::class)]
 final class InsertCountryData extends Data
 {

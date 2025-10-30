@@ -20,6 +20,32 @@
 - Match the class being tested: `CreateOfficeAction` → `CreateOfficeActionTest`
 - Place in appropriate directory: Unit/, Feature/, or Browser/
 
+### Test Naming Convention
+
+**ALWAYS use imperative mood for test names** - describe what the code does, not what "it" does:
+
+@boostsnippet('Imperative Mood Test Names')
+```php
+// ✅ CORRECT - Imperative mood (commands)
+test('creates user with valid data', function (): void { ... });
+test('validates required email field', function (): void { ... });
+test('transforms arrays to JSON strings', function (): void { ... });
+test('handles null values correctly', function (): void { ... });
+test('preserves user id when updating', function (): void { ... });
+
+// ❌ WRONG - "It" statements
+test('it creates user with valid data', function (): void { ... });
+test('it validates required email field', function (): void { ... });
+test('it transforms arrays to JSON strings', function (): void { ... });
+test('it handles null values correctly', function (): void { ... });
+```
+
+**Why imperative mood?**
+- More concise and readable
+- Matches Pest/PHPUnit conventions
+- Focuses on behavior, not the subject
+- Cleaner test output
+
 ## Dependency Injection in Tests
 
 ### Actions - Use Container Resolution with beforeEach
@@ -75,19 +101,77 @@ beforeEach(function (): void {
 3. **Testing Real Behavior** - Tests actual dependency wiring
 4. **Refactoring Safety** - Adding dependencies doesn't break tests
 
-## Test Conventions
+### Reusable Test Data in beforeEach
 
-### Type Hints
-**ALWAYS type hint all variables in tests:**
+**If models, actions, or other resources are reused across multiple tests, ALWAYS define them in `beforeEach`:**
 
+@boostsnippet('Reusable Resources in beforeEach')
 ```php
-test('example', function (): void {  // ✅ Void return type
-    /** @var User $user */  // ✅ Type hint
-    $user = User::factory()->createQuietly();
+beforeEach(
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Country $country */
+        $this->country = Country::factory()->createQuietly();
 
-    expect($user->id)->toBeInt();
+        /** @var CreateOffice $action */
+        $this->action = app(CreateOffice::class);
+    });
+
+test('creates office', function (): void {
+    $data = CreateOfficeData::from([
+        'country_id' => $this->country->id,  // ✅ Reusing from beforeEach
+        'name' => 'HQ',
+    ]);
+
+    $office = $this->action->handle($data);  // ✅ Reusing from beforeEach
+
+    expect($office->name)->toBe('HQ');
 });
 ```
+
+**When NOT to use beforeEach:**
+- Data specific to a single test
+- Variations that differ per test
+- One-off test scenarios
+
+## Test Conventions
+
+### Type Hints & Exception Annotations
+**ALWAYS type hint all variables and add @throws annotations before closures:**
+
+```php
+test('example',
+    /**
+     * @throws Throwable
+     */
+    function (): void {  // ✅ @throws annotation BEFORE closure
+        /** @var User $user */  // ✅ Type hint
+        $user = User::factory()->createQuietly();
+
+        expect($user->id)->toBeInt();
+    });
+```
+
+**For `beforeEach` hooks:**
+```php
+beforeEach(
+    /**
+     * @throws Throwable
+     */
+    function (): void {  // ✅ @throws annotation BEFORE closure
+        /** @var CreateOffice $action */
+        $this->action = app(CreateOffice::class);
+    });
+```
+
+**Why add @throws Throwable?**
+- Tests can throw exceptions (database errors, validation failures, etc.)
+- Makes exception handling explicit
+- Helps static analysis tools understand test behavior
+- Required for consistency across all test files
+- **MUST be placed before the closure**, not before the test() or beforeEach() call
 
 ### Factory Methods
 - **ALWAYS use `createQuietly()`** - Prevents events from firing

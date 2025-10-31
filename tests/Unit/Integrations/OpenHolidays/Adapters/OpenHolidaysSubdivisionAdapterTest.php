@@ -144,3 +144,76 @@ test('preserves full ISO code in both code and isoCode fields', function (): voi
         ->and($createData->isoCode)
         ->toBe('PT-AV');
 });
+
+test('throws exception when countryId is null', function (): void {
+    /** @var array<string, mixed> $subdivision */
+    $subdivision = [
+        'code' => 'PT-LI',
+        'isoCode' => 'PT-10',
+        'shortName' => 'LI',
+        'category' => [['language' => 'PT', 'text' => 'distrito']],
+        'name' => [['language' => 'PT', 'text' => 'Lisboa']],
+    ];
+
+    $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivision);
+
+    /** @var OpenHolidaysSubdivisionAdapter $adapter */
+    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+
+    $adapter->toCreateData(
+        $openHolidaysData,
+        countryId: null,
+        countryLanguages: ['pt']
+    );
+})->throws(InvalidArgumentException::class, 'countryId is required');
+
+test('handles empty category array with fallback type', function (): void {
+    /** @var array<string, mixed> $subdivisionWithEmptyCategory */
+    $subdivisionWithEmptyCategory = [
+        'code' => 'PT-LI',
+        'isoCode' => 'PT-10',
+        'shortName' => 'LI',
+        'category' => [],
+        'name' => [['language' => 'PT', 'text' => 'Lisboa']],
+    ];
+
+    $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyCategory);
+
+    /** @var OpenHolidaysSubdivisionAdapter $adapter */
+    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+
+    $createData = $adapter->toCreateData(
+        $openHolidaysData,
+        countryId: 1,
+        countryLanguages: ['pt']
+    );
+
+    expect($createData->type)
+        ->toBe(CountrySubdivisionType::District);
+});
+
+test('inherits country languages when subdivision languages is empty array', function (): void {
+    /** @var array<string, mixed> $subdivisionWithEmptyLanguages */
+    $subdivisionWithEmptyLanguages = [
+        'code' => 'PT-LI',
+        'isoCode' => 'PT-10',
+        'shortName' => 'LI',
+        'category' => [['language' => 'PT', 'text' => 'distrito']],
+        'name' => [['language' => 'PT', 'text' => 'Lisboa']],
+        'officialLanguages' => [],
+    ];
+
+    $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyLanguages);
+
+    /** @var OpenHolidaysSubdivisionAdapter $adapter */
+    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+
+    $createData = $adapter->toCreateData(
+        $openHolidaysData,
+        countryId: 1,
+        countryLanguages: ['pt', 'en']
+    );
+
+    expect($createData->officialLanguages)
+        ->toBe(['pt', 'en']);
+});

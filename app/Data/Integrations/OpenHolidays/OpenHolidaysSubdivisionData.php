@@ -34,7 +34,7 @@ final class OpenHolidaysSubdivisionData extends Data
             $nameMap[$item['language']] = $item['text'];
         }
 
-        if (empty($nameMap)) {
+        if ($nameMap === []) {
             return $this->shortName;
         }
 

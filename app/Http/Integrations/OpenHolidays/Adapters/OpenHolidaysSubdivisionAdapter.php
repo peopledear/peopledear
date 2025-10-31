@@ -8,6 +8,7 @@ use App\Contracts\Adapter;
 use App\Data\Integrations\OpenHolidays\OpenHolidaysSubdivisionData;
 use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
 use App\Enums\Integrations\OpenHolidays\OpenHolidaysSubdivisionType;
+use App\Enums\PeopleDear\CountrySubdivisionType;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Throwable;
@@ -43,11 +44,12 @@ final readonly class OpenHolidaysSubdivisionAdapter implements Adapter
 
         throw_unless($countryId, InvalidArgumentException::class, 'countryId is required');
 
-        $categoryText = ! empty($data->category) && isset($data->category[0]['text'])
+        $categoryText = $data->category !== [] && isset($data->category[0]['text'])
             ? $data->category[0]['text']
             : '';
-        $type = OpenHolidaysSubdivisionType::from($categoryText)
-            ->transform();
+
+        $type = OpenHolidaysSubdivisionType::tryFrom($categoryText)?->transform()
+            ?? CountrySubdivisionType::District;
 
         $name = [];
         foreach ($data->name as $nameItem) {

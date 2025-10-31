@@ -10,6 +10,7 @@ use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
 use App\Enums\Integrations\OpenHolidays\OpenHolidaysSubdivisionType;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use Throwable;
 
 /**
  * Adapter for transforming OpenHolidays subdivision data to internal format.
@@ -18,7 +19,6 @@ use InvalidArgumentException;
  * official language parsing and inheritance, and type mapping.
  *
  * @implements Adapter<OpenHolidaysSubdivisionData,CreateCountrySubdivisionData>
- * >
  */
 final readonly class OpenHolidaysSubdivisionAdapter implements Adapter
 {
@@ -32,6 +32,8 @@ final readonly class OpenHolidaysSubdivisionAdapter implements Adapter
      * @param  int|null  $countryId  Country ID when using named parameters
      * @param  array<int, string>  $countryLanguages  Country languages when using named parameters
      * @return CreateCountrySubdivisionData The transformed internal subdivision data
+     *
+     * @throws Throwable
      */
     public function toCreateData(
         mixed $data,
@@ -41,7 +43,9 @@ final readonly class OpenHolidaysSubdivisionAdapter implements Adapter
 
         throw_unless($countryId, InvalidArgumentException::class, 'countryId is required');
 
-        $categoryText = $data->category[0]['text'] ?? '';
+        $categoryText = ! empty($data->category) && isset($data->category[0]['text'])
+            ? $data->category[0]['text']
+            : '';
         $type = OpenHolidaysSubdivisionType::from($categoryText)
             ->transform();
 

@@ -9,14 +9,18 @@ use Spatie\LaravelData\Data;
 final class OpenHolidaysSubdivisionData extends Data
 {
     /**
-     * @param  array<string, string>  $name
+     * @param  array<int, array<string, string>>  $category
+     * @param  array<int, array<string, string>>  $name
+     * @param  array<int, string>|null  $officialLanguages
      * @param  array<int, array<string, mixed>>|null  $children
      */
     public function __construct(
+        public readonly string $code,
         public readonly string $isoCode,
         public readonly string $shortName,
+        public readonly array $category,
         public readonly array $name,
-        public readonly ?string $officialLanguages = null,
+        public readonly ?array $officialLanguages = null,
         public readonly ?array $children = null,
     ) {}
 
@@ -24,8 +28,12 @@ final class OpenHolidaysSubdivisionData extends Data
     {
         $languageCode ??= config()->string('openholidays.default_language', 'en');
 
-        $values = array_values($this->name);
+        $nameMap = [];
 
-        return $this->name[$languageCode] ?? $this->name['en'] ?? $values[0] ?? $this->shortName;
+        foreach ($this->name as $item) {
+            $nameMap[$item['language']] = $item['text'];
+        }
+
+        return $nameMap[$languageCode] ?? $nameMap['en'] ?? $nameMap[array_key_first($nameMap)] ?? $this->shortName;
     }
 }

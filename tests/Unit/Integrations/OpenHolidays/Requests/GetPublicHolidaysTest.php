@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Integrations\OpenHolidays\Requests\GetPublicHolidaysRequest;
+use App\Http\Integrations\OpenHolidays\Requests\GetPublicHolidays;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Config;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
 use Saloon\Enums\Method;
 
 test('request has correct method', function (): void {
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'US',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),
@@ -19,7 +19,7 @@ test('request has correct method', function (): void {
 });
 
 test('request resolves correct endpoint', function (): void {
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'US',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),
@@ -29,7 +29,7 @@ test('request resolves correct endpoint', function (): void {
 });
 
 test('request has required query parameters', function (): void {
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'US',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),
@@ -51,7 +51,7 @@ test('request has required query parameters', function (): void {
 });
 
 test('request includes optional language parameter when provided', function (): void {
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'PT',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),
@@ -67,7 +67,7 @@ test('request includes optional language parameter when provided', function (): 
 });
 
 test('request includes optional subdivision parameter when provided', function (): void {
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'US',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),
@@ -83,7 +83,7 @@ test('request includes optional subdivision parameter when provided', function (
 });
 
 test('request excludes optional parameters when not provided', function (): void {
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'US',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),
@@ -97,7 +97,7 @@ test('request excludes optional parameters when not provided', function (): void
 });
 
 test('request uses cache driver from config', function (): void {
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'US',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),
@@ -109,7 +109,7 @@ test('request uses cache driver from config', function (): void {
 test('request uses cache ttl from config', function (): void {
     Config::set('openholidays.cache.ttl', 3600);
 
-    $request = new GetPublicHolidaysRequest(
+    $request = new GetPublicHolidays(
         countryIsoCode: 'US',
         validFrom: CarbonImmutable::parse('2025-01-01'),
         validTo: CarbonImmutable::parse('2025-12-31'),

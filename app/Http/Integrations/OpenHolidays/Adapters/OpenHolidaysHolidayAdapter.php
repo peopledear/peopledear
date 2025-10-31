@@ -8,17 +8,24 @@ use App\Contracts\HolidayAdapter;
 use App\Data\Integrations\OpenHolidays\OpenHolidaysHolidayData;
 use App\Data\PeopleDear\Holiday\CreateHolidayData;
 use Carbon\CarbonImmutable;
+use InvalidArgumentException;
+use Throwable;
 
 /**
- * @implements HolidayAdapter<OpenHolidaysHolidayData>
+ * @implements HolidayAdapter<OpenHolidaysHolidayData, CreateHolidayData>
  */
 final class OpenHolidaysHolidayAdapter implements HolidayAdapter
 {
     /**
      * @param  OpenHolidaysHolidayData  $data
+     *
+     * @throws Throwable
      */
-    public function toCreateData(mixed $data, int $organizationId): CreateHolidayData
+    public function toCreateData(mixed $data, ?int $organizationId = null): CreateHolidayData
     {
+
+        throw_unless($organizationId, InvalidArgumentException::class, 'organizationId is required in context');
+
         $localizedName = $data->name->where('language', 'PT')->first();
         $subdivision = $data->subdivisions?->first();
 

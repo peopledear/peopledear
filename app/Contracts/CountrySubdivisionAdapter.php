@@ -12,4 +12,4 @@ use Spatie\LaravelData\Data;
  *
  * @extends Adapter<TData, TCreateData>
  */
-interface HolidayAdapter extends Adapter {}
+interface CountrySubdivisionAdapter extends Adapter {}

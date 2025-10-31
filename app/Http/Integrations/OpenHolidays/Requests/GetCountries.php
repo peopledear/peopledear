@@ -11,7 +11,7 @@ use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-final class GetCountriesRequest extends Request implements Cacheable
+final class GetCountries extends Request implements Cacheable
 {
     use HasCaching;
 

@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-use App\Http\Integrations\OpenHolidays\Requests\GetSubdivisionsRequest;
+use App\Http\Integrations\OpenHolidays\Requests\GetSubdivisions;
 use Illuminate\Support\Facades\Config;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
 use Saloon\Enums\Method;
 
 test('request has correct method', function (): void {
-    $request = new GetSubdivisionsRequest(countryIsoCode: 'US');
+    $request = new GetSubdivisions(countryIsoCode: 'US');
 
     expect($request->getMethod())->toBe(Method::GET);
 });
 
 test('request resolves correct endpoint', function (): void {
-    $request = new GetSubdivisionsRequest(countryIsoCode: 'US');
+    $request = new GetSubdivisions(countryIsoCode: 'US');
 
     expect($request->resolveEndpoint())->toBe('/Subdivisions');
 });
 
 test('request has required country parameter', function (): void {
-    $request = new GetSubdivisionsRequest(countryIsoCode: 'PT');
+    $request = new GetSubdivisions(countryIsoCode: 'PT');
 
     $query = $request->defaultQuery();
 
@@ -32,7 +32,7 @@ test('request has required country parameter', function (): void {
 });
 
 test('request includes language parameter when provided', function (): void {
-    $request = new GetSubdivisionsRequest(
+    $request = new GetSubdivisions(
         countryIsoCode: 'PT',
         languageIsoCode: 'pt',
     );
@@ -46,7 +46,7 @@ test('request includes language parameter when provided', function (): void {
 });
 
 test('request excludes language parameter when not provided', function (): void {
-    $request = new GetSubdivisionsRequest(countryIsoCode: 'US');
+    $request = new GetSubdivisions(countryIsoCode: 'US');
 
     $query = $request->defaultQuery();
 
@@ -54,7 +54,7 @@ test('request excludes language parameter when not provided', function (): void 
 });
 
 test('request uses cache driver from config', function (): void {
-    $request = new GetSubdivisionsRequest(countryIsoCode: 'US');
+    $request = new GetSubdivisions(countryIsoCode: 'US');
 
     expect($request->resolveCacheDriver())->toBeInstanceOf(LaravelCacheDriver::class);
 });
@@ -62,7 +62,7 @@ test('request uses cache driver from config', function (): void {
 test('request uses cache ttl from config', function (): void {
     Config::set('openholidays.cache.ttl', 1800);
 
-    $request = new GetSubdivisionsRequest(countryIsoCode: 'US');
+    $request = new GetSubdivisions(countryIsoCode: 'US');
 
     expect($request->cacheExpiryInSeconds())->toBe(1800);
 });

@@ -23,7 +23,8 @@
       "Bash(composer test:unit:*)",
       "Bash(php artisan app:install:*)",
       "Bash(php artisan tinker:*)",
-      "Bash(php artisan migrate:fresh:*)"
+      "Bash(php artisan migrate:fresh:*)",
+      "Bash(php -r:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

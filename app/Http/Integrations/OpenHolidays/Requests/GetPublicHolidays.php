@@ -16,7 +16,7 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
-final class GetPublicHolidaysRequest extends Request implements Cacheable
+final class GetPublicHolidays extends Request implements Cacheable
 {
     use HasCaching;
 

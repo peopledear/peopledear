@@ -5,9 +5,17 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Actions\Country\UpsertCountries;
+use App\Actions\CountrySubdivision\CreateRootCountrySubdivision;
+use App\Data\Integrations\OpenHolidays\OpenHolidaysSubdivisionData;
 use App\Data\PeopleDear\Country\InsertCountryData;
+use App\Http\Integrations\OpenHolidays\Adapters\OpenHolidaysSubdivisionAdapter;
+use App\Http\Integrations\OpenHolidays\OpenHolidaysConnector;
+use App\Http\Integrations\OpenHolidays\Requests\GetSubdivisions;
+use App\Models\Country;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\spin;
@@ -31,8 +39,12 @@ final class InstallCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(UpsertCountries $seedCountriesAction): int
-    {
+    public function handle(
+        UpsertCountries $seedCountriesAction,
+        CreateRootCountrySubdivision $createRootCountrySubdivision,
+        OpenHolidaysSubdivisionAdapter $subdivisionAdapter,
+        OpenHolidaysConnector $connector
+    ): int {
         info('Installing PeopleDear...');
 
         spin(
@@ -49,6 +61,65 @@ final class InstallCommand extends Command
                 $seedCountriesAction->handle($collectionOfInsertCountry);
             },
             message: 'Seeding countries...',
+        );
+
+        spin(
+            callback: function () use ($createRootCountrySubdivision, $subdivisionAdapter, $connector): void {
+                $countryCodes = ['PT', 'ES'];
+                $rateLimitDelayMs = config('openholidays.rate_limit.delay_ms', 500);
+
+                foreach ($countryCodes as $index => $countryIsoCode) {
+                    try {
+                        /** @var Country|null $country */
+                        $country = Country::query()
+                            ->where('iso_code', $countryIsoCode)
+                            ->first();
+
+                        if ($country === null) {
+                            Log::warning('Country not found for ISO code: '.$countryIsoCode);
+
+                            continue;
+                        }
+
+                        $request = new GetSubdivisions($countryIsoCode);
+                        $response = $connector->send($request);
+
+                        /** @var array<int, array<string, mixed>> $subdivisions */
+                        $subdivisions = $response->json();
+
+                        if ($subdivisions === [] || $subdivisions === null) {
+                            Log::info('No subdivisions found for country: '.$countryIsoCode);
+
+                            continue;
+                        }
+
+                        foreach ($subdivisions as $subdivisionData) {
+                            $subdivisionDto = OpenHolidaysSubdivisionData::from($subdivisionData);
+
+                            $createData = $subdivisionAdapter->toCreateData(
+                                $subdivisionDto,
+                                countryId: $country->id,
+                                countryLanguages: $country->official_languages
+                            );
+
+                            $createRootCountrySubdivision->handle($createData);
+                        }
+
+                        if ($index < count($countryCodes) - 1) {
+                            \Illuminate\Support\Sleep::usleep($rateLimitDelayMs * 1000);
+                        }
+                    } catch (Throwable $e) {
+                        Log::error('Failed to fetch subdivisions for '.$countryIsoCode, [
+                            'country_iso_code' => $countryIsoCode,
+                            'error' => $e->getMessage(),
+                            'exception_class' => $e::class,
+                        ]);
+
+                        continue;
+                    }
+                }
+            },
+            message: 'Fetching country subdivisions...',
         );
 
         info('Installation complete!');

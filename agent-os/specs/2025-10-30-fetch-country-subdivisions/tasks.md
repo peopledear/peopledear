@@ -120,20 +120,20 @@ This feature integrates OpenHolidays API subdivision fetching into the InstallCo
 #### Task Group 3: Command Integration with CreateRootCountrySubdivision
 **Dependencies:** Task Group 2
 
-- [ ] 3.0 Complete InstallCommand integration
-  - [ ] 3.1 Write 2-4 focused tests for InstallCommand subdivision fetching
+- [x] 3.0 Complete InstallCommand integration
+  - [x] 3.1 Write 2-4 focused tests for InstallCommand subdivision fetching
     - Test subdivisions fetched for Portugal and Spain
     - Test progress message displayed: "Fetching country subdivisions..."
     - Test graceful handling when API fails for one country
     - Test rate limiting delay applied between requests
-  - [ ] 3.2 Update InstallCommand handle() method
+  - [x] 3.2 Update InstallCommand handle() method
     - File: `app/Console/Commands/InstallCommand.php`
     - Inject CreateRootCountrySubdivision action via constructor
     - Inject OpenHolidaysSubdivisionAdapter via constructor
     - Inject OpenHolidaysConnector via constructor
     - Add second spin() block after country seeding
     - Spin message: "Fetching country subdivisions..."
-  - [ ] 3.3 Implement subdivision fetching logic
+  - [x] 3.3 Implement subdivision fetching logic
     - Iterate over ['PT', 'ES'] country ISO codes
     - Retrieve Country model from database to get country ID and languages
     - Create GetSubdivisionsRequest with country ISO code
@@ -143,16 +143,16 @@ This feature integrates OpenHolidays API subdivision fetching into the InstallCo
       - Transform using adapter->toCreateData() (returns CreateCountrySubdivisionData with nested children)
       - Call CreateRootCountrySubdivision->handle() passing the transformed data
       - Orchestrator handles ALL recursion, transactions, and persistence automatically
-  - [ ] 3.4 Apply rate limiting between country requests
+  - [x] 3.4 Apply rate limiting between country requests
     - Use config('openholidays.rate_limit.delay_ms', 500)
     - Call usleep(delay * 1000) between country iterations
     - Skip delay on last country to avoid unnecessary wait
-  - [ ] 3.5 Wrap each country fetch in try-catch
+  - [x] 3.5 Wrap each country fetch in try-catch
     - Catch Throwable to handle API errors gracefully
     - Log error with context: country ISO, exception message
     - Continue processing next country on failure
     - Use Log::error() with structured context array
-  - [ ] 3.6 Ensure InstallCommand tests pass
+  - [x] 3.6 Ensure InstallCommand tests pass
     - Run ONLY the 2-4 tests written in 3.1
     - Verify integration works correctly
     - Do NOT run entire test suite at this stage

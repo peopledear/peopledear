@@ -28,3 +28,4 @@ yarn-error.log
 /resources/js/wayfinder
 auto-imports.d.ts
 components.d.ts
+.claude/settings.local.json

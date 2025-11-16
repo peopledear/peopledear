@@ -1,0 +1,81 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Enums\PeopleDear\TimeOffStatus;
+use App\Enums\PeopleDear\TimeOffType;
+use Carbon\Carbon;
+use Database\Factories\TimeOffFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+/**
+ * @property-read int $id
+ * @property-read int $organization_id
+ * @property-read int $employee_id
+ * @property-read TimeOffType $type
+ * @property-read TimeOffStatus $status
+ * @property-read Carbon $start_date
+ * @property-read Carbon|null $end_date
+ * @property-read bool $is_half_day
+ * @property-read Carbon $created_at
+ * @property-read Carbon $updated_at
+ * @property-read Organization $organization
+ * @property-read Employee $employee
+ */
+final class TimeOff extends Model
+{
+    /** @use HasFactory<TimeOffFactory> */
+    use HasFactory;
+
+    /**
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'organization_id',
+        'employee_id',
+        'type',
+        'status',
+        'start_date',
+        'end_date',
+        'is_half_day',
+    ];
+
+    /**
+     * @return BelongsTo<Organization, $this>
+     */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function casts(): array
+    {
+        return [
+            'id' => 'integer',
+            'organization_id' => 'integer',
+            'employee_id' => 'integer',
+            'type' => TimeOffType::class,
+            'status' => TimeOffStatus::class,
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'is_half_day' => 'boolean',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
+}

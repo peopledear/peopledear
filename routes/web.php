@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\EmployeeOverviewController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationOfficeController;
 use App\Http\Controllers\SessionController;
@@ -18,9 +19,17 @@ use Inertia\Inertia;
 Route::get('/', fn () => Inertia::render('welcome', []))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
-    Route::get('dashboard', fn () => Inertia::render('dashboard', []))->name('dashboard');
 
-    // Organization Required Informational Page...
+    Route::get('dashboard', fn () => Inertia::render('dashboard', []))
+        ->name('dashboard');
+
+    Route::as('employee.')->group(function (): void {
+
+        Route::get('/overview', [EmployeeOverviewController::class, 'index'])
+            ->name('overview');
+
+    });
+
     Route::get('organization-required', fn () => Inertia::render('organization-required', []))
         ->name('organization-required');
 

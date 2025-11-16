@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
 
-        $middleware->redirectUsersTo(route('employee.overview'));
+        $middleware->redirectUsersTo('/overview');
 
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 

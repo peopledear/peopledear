@@ -7,7 +7,6 @@ import {
     Calendar,
     CheckSquare,
     Clock,
-    EyeIcon,
     LayoutGrid,
     Settings,
     UsersIcon,
@@ -42,12 +41,6 @@ const mainNavItems: NavItem[] = [
         title: "Employees",
         href: dashboard(),
         icon: UsersIcon,
-        show: true,
-    },
-    {
-        title: "Employee",
-        href: dashboard(),
-        icon: EyeIcon,
         show: true,
     },
     {

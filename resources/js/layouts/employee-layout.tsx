@@ -4,11 +4,21 @@ import { type ReactNode } from "react";
 
 interface AdminLayoutProps {
     children: ReactNode;
+    pageHeader?: ReactNode;
     breadcrumbs?: BreadcrumbItem[];
 }
 
-export default ({ children, breadcrumbs, ...props }: AdminLayoutProps) => (
-    <EmployeeHeaderLayout breadcrumbs={breadcrumbs} {...props}>
+export default ({
+    children,
+    pageHeader,
+    breadcrumbs,
+    ...props
+}: AdminLayoutProps) => (
+    <EmployeeHeaderLayout
+        breadcrumbs={breadcrumbs}
+        {...props}
+        pageHeader={pageHeader}
+    >
         {children}
     </EmployeeHeaderLayout>
 );

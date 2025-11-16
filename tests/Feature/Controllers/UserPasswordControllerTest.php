@@ -201,8 +201,8 @@ it('redirects authenticated users away from reset password', function (): void {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)
-        ->fromRoute('dashboard')
+        ->fromRoute('employee.overview')
         ->get(route('password.reset', ['token' => 'fake-token']));
 
-    $response->assertRedirectToRoute('dashboard');
+    $response->assertRedirectToRoute('employee.overview');
 });

@@ -183,8 +183,8 @@ it('redirects authenticated users away from registration', function (): void {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)
-        ->fromRoute('dashboard')
+        ->fromRoute('employee.overview')
         ->get(route('register'));
 
-    $response->assertRedirectToRoute('dashboard');
+    $response->assertRedirectToRoute('employee.overview');
 });

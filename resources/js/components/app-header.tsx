@@ -31,6 +31,7 @@ import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
 import { dashboard } from "@/wayfinder/routes";
+import { overview as employeeOverview } from "@/wayfinder/routes/employee";
 import { overview } from "@/wayfinder/routes/org";
 import { Link, usePage } from "@inertiajs/react";
 import { BookOpen, EyeIcon, Folder, Menu, Search } from "lucide-react";
@@ -62,7 +63,7 @@ export function AppHeader({
         },
         {
             title: "Employee",
-            href: dashboard(),
+            href: employeeOverview(),
             icon: EyeIcon,
             show: show.employeeLink,
         },
@@ -276,7 +277,7 @@ export function AppHeader({
                                                     className="mr-2 h-4 w-4"
                                                 />
                                             )}
-                                            {item.title}
+                                            {item.title} {item.isActive}
                                         </Link>
                                         {page.url ===
                                             (typeof item.href === "string"

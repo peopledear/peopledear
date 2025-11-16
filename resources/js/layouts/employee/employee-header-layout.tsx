@@ -2,16 +2,20 @@ import { AppContent } from "@/components/app-content";
 import { AppShell } from "@/components/app-shell";
 import { EmployeeHeader } from "@/components/employee-header";
 import { type BreadcrumbItem } from "@/types";
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 
 export default function EmployeeHeaderLayout({
     children,
+    pageHeader,
     breadcrumbs,
-}: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
+}: PropsWithChildren<{
+    pageHeader?: ReactNode;
+    breadcrumbs?: BreadcrumbItem[];
+}>) {
     return (
         <AppShell>
             <EmployeeHeader breadcrumbs={breadcrumbs} />
-            <AppContent>{children}</AppContent>
+            <AppContent pageHeader={pageHeader}>{children}</AppContent>
         </AppShell>
     );
 }

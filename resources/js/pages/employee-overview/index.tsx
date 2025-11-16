@@ -3,6 +3,7 @@ import EmployeeLayout from "@/layouts/employee-layout";
 import { BreadcrumbItem } from "@/types";
 import { overview } from "@/wayfinder/routes/employee";
 import { Head } from "@inertiajs/react";
+import { PlusIcon } from "lucide-react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -34,7 +35,10 @@ export default function EmployeeOverview() {
                                 </div>
                             </div>
                             <div>
-                                <Button>New Time Off</Button>
+                                <Button>
+                                    <PlusIcon />
+                                    New Time Off
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -42,16 +46,26 @@ export default function EmployeeOverview() {
             }
         >
             <Head title="Employee Overview" />
-            <div className="flex w-full max-w-6xl flex-col">
-                {/* Main Content To be extracted later */}
-                <div className="mt-8">
-                    <h2 className="text-lg font-medium">
-                        Welcome back, Francisco!
-                    </h2>
-                    <p className="mt-2 text-sm text-gray-600">
-                        Here is an overview of your recent activities and
-                        upcoming events.
-                    </p>
+            <div className="flex w-full max-w-6xl space-x-0 sm:space-x-8">
+                <div className="flex w-full max-w-6xl flex-col gap-y-8 sm:gap-y-12">
+                    <div>
+                        <div className="mb-2 flex items-center justify-between">
+                            <div>
+                                <h2 className="font-medium">
+                                    Recent Time Off Requests
+                                </h2>
+                            </div>
+                            <div>
+                                <Button size="icon" variant="outline">
+                                    <PlusIcon />
+                                </Button>
+                            </div>
+                        </div>
+                        <div>List goes here</div>
+                    </div>
+                </div>
+                <div className="w-full shrink-0 space-y-8 sm:w-60">
+                    <h2 className="font-medium">Details</h2>
                 </div>
             </div>
         </EmployeeLayout>

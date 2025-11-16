@@ -1,9 +1,7 @@
 import { AppHeader } from "@/components/app-header";
 import { overview } from "@/routes/org";
-import { edit } from "@/routes/org/settings/organization";
 import { type BreadcrumbItem, type NavItem } from "@/types";
-import { dashboard } from "@/wayfinder/routes";
-import { LayoutGrid, Settings, UserIcon } from "lucide-react";
+import { LayoutGrid, UsersIcon } from "lucide-react";
 
 const mainNavItems: NavItem[] = [
     {
@@ -12,14 +10,9 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: "Settings",
-        href: edit(),
-        icon: Settings,
-    },
-    {
-        title: "My Portal",
-        href: dashboard(),
-        icon: UserIcon,
+        title: "Manager Portal",
+        href: overview(),
+        icon: UsersIcon,
     },
 ];
 
@@ -27,7 +20,7 @@ interface AdminHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
 }
 
-export function OrgHeader({ breadcrumbs = [] }: AdminHeaderProps) {
+export function EmployeeHeader({ breadcrumbs = [] }: AdminHeaderProps) {
     return (
         <>
             <AppHeader mainNavItems={mainNavItems} breadcrumbs={breadcrumbs} />

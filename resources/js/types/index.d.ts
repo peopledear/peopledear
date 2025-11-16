@@ -24,9 +24,13 @@ export interface NavItem {
 
 export interface SharedData {
     name: string;
-    quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    show: {
+        employeeLink: boolean;
+        orgLink?: boolean;
+    };
+
     [key: string]: unknown;
 }
 
@@ -39,5 +43,6 @@ export interface User {
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
+
     [key: string]: unknown; // This allows for additional properties...
 }

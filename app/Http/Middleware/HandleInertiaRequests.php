@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Inspiring;
+use App\Enums\PeopleDear\UserRole;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Middleware;
 use Override;
 
@@ -35,19 +37,28 @@ final class HandleInertiaRequests extends Middleware
     #[Override]
     public function share(Request $request): array
     {
-        $quote = Inspiring::quotes()->random();
-        assert(is_string($quote));
 
-        [$message, $author] = str($quote)->explode('-');
+        /** @var User $user */
+        $user = $request->user();
+
+        $isOrgUri = Str::startsWith($request->route()?->uri, 'org');
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'quote' => ['message' => mb_trim((string) $message), 'author' => mb_trim((string) $author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'show' => [
+                'employeeLink' => $isOrgUri,
+                'orgLink' => ($user?->hasRole([
+                    UserRole::PeopleManager,
+                    UserRole::Owner,
+                    UserRole::Manager,
+                ]) ?? false) && ! $isOrgUri,
+            ],
         ];
+
     }
 }

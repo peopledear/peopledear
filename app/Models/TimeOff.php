@@ -32,19 +32,6 @@ final class TimeOff extends Model
     use HasFactory;
 
     /**
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'organization_id',
-        'employee_id',
-        'type',
-        'status',
-        'start_date',
-        'end_date',
-        'is_half_day',
-    ];
-
-    /**
      * @return BelongsTo<Organization, $this>
      */
     public function organization(): BelongsTo

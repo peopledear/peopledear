@@ -38,6 +38,6 @@ final readonly class UpdateTimeOffAction
             $timeOff->update($updates);
         }
 
-        return $timeOff->fresh();
+        return $timeOff->refresh();
     }
 }

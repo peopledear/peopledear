@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Enums\PeopleDear\TimeOffType;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Data;
 
 final class CreateTimeOffData extends Data
@@ -14,8 +14,8 @@ final class CreateTimeOffData extends Data
         public readonly int $organization_id,
         public readonly int $employee_id,
         public readonly TimeOffType $type,
-        public readonly Carbon $start_date,
-        public readonly ?Carbon $end_date,
+        public readonly CarbonImmutable $start_date,
+        public readonly ?CarbonImmutable $end_date,
         public readonly bool $is_half_day,
     ) {}
 }

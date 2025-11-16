@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/input-otp";
 import { OTP_MAX_LENGTH } from "@/hooks/use-two-factor-auth";
 import AuthLayout from "@/layouts/auth-layout";
-import { store } from "@/routes/two-factor/login";
+import { store } from "@/wayfinder/routes/two-factor/login";
 import { Form, Head } from "@inertiajs/react";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useMemo, useState } from "react";
@@ -54,7 +54,7 @@ export default function Show() {
 
             <div className="space-y-6">
                 <Form
-                    {...store.form()}
+                    {...store()}
                     className="space-y-4"
                     resetOnError
                     resetOnSuccess={!showRecoveryInput}

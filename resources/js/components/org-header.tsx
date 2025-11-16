@@ -1,25 +1,60 @@
 import { AppHeader } from "@/components/app-header";
-import { overview } from "@/routes/org";
-import { edit } from "@/routes/org/settings/organization";
 import { type BreadcrumbItem, type NavItem } from "@/types";
 import { dashboard } from "@/wayfinder/routes";
-import { LayoutGrid, Settings, UserIcon } from "lucide-react";
+import { overview } from "@/wayfinder/routes/org";
+import { edit } from "@/wayfinder/routes/org/settings/organization";
+import {
+    Calendar,
+    CheckSquare,
+    Clock,
+    EyeIcon,
+    LayoutGrid,
+    Settings,
+    UsersIcon,
+} from "lucide-react";
 
 const mainNavItems: NavItem[] = [
     {
         title: "Overview",
         href: overview(),
         icon: LayoutGrid,
+        show: true,
+    },
+    {
+        title: "Approvals",
+        href: dashboard(),
+        icon: CheckSquare,
+        show: true,
+    },
+    {
+        title: "Time Off",
+        href: dashboard(),
+        icon: Calendar,
+        show: true,
+    },
+    {
+        title: "Overtime",
+        href: dashboard(),
+        icon: Clock,
+        show: true,
+    },
+    {
+        title: "Employees",
+        href: dashboard(),
+        icon: UsersIcon,
+        show: true,
+    },
+    {
+        title: "Employee",
+        href: dashboard(),
+        icon: EyeIcon,
+        show: true,
     },
     {
         title: "Settings",
         href: edit(),
         icon: Settings,
-    },
-    {
-        title: "My Portal",
-        href: dashboard(),
-        icon: UserIcon,
+        show: true,
     },
 ];
 

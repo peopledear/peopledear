@@ -1,4 +1,3 @@
-import SessionController from "@/actions/App/Http/Controllers/SessionController";
 import InputError from "@/components/input-error";
 import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
@@ -7,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
-import { register } from "@/routes";
-import { request } from "@/routes/password";
+import SessionController from "@/wayfinder/actions/App/Http/Controllers/SessionController";
+import { register } from "@/wayfinder/routes";
+import { request } from "@/wayfinder/routes/password";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
@@ -26,7 +26,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             <Head title="Log in" />
 
             <Form
-                {...SessionController.store.form()}
+                {...SessionController.store()}
                 resetOnSuccess={["password"]}
                 className="flex flex-col gap-6"
             >

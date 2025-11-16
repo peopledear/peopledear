@@ -20,6 +20,7 @@ export interface NavItem {
     href: NonNullable<InertiaLinkProps["href"]>;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    show?: boolean;
 }
 
 export interface SharedData {
@@ -29,6 +30,10 @@ export interface SharedData {
     show: {
         employeeLink: boolean;
         orgLink?: boolean;
+    };
+    quote?: {
+        message: string;
+        author: string;
     };
 
     [key: string]: unknown;

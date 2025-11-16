@@ -1,8 +1,8 @@
 import { NavItem, VerticalMenu } from "@/components/vertical-menu";
-import { edit as editAppearance } from "@/routes/appearance";
-import { edit as editPassword } from "@/routes/password";
-import { show } from "@/routes/two-factor";
-import { edit } from "@/routes/user-profile";
+import { edit as editAppearance } from "@/wayfinder/routes/appearance";
+import { edit as editPassword } from "@/wayfinder/routes/password";
+import { show } from "@/wayfinder/routes/two-factor";
+import { edit } from "@/wayfinder/routes/user-profile";
 import { usePage } from "@inertiajs/react";
 import { PropsWithChildren } from "react";
 

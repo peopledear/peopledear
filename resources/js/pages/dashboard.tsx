@@ -1,7 +1,7 @@
 import { PlaceholderPattern } from "@/components/ui/placeholder-pattern";
 import EmployeeLayout from "@/layouts/employee-layout";
-import { dashboard } from "@/routes";
 import { type BreadcrumbItem } from "@/types";
+import { dashboard } from "@/wayfinder/routes";
 import { Head } from "@inertiajs/react";
 
 const breadcrumbs: BreadcrumbItem[] = [

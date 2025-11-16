@@ -1,5 +1,5 @@
-import UserController from "@/actions/App/Http/Controllers/UserController";
-import { login } from "@/routes";
+import UserController from "@/wayfinder/actions/App/Http/Controllers/UserController";
+import { login } from "@/wayfinder/routes";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
@@ -19,7 +19,7 @@ export default function Register() {
         >
             <Head title="Register" />
             <Form
-                {...UserController.store.form()}
+                {...UserController.store()}
                 resetOnSuccess={["password", "password_confirmation"]}
                 disableWhileProcessing
                 className="flex flex-col gap-6"

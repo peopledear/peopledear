@@ -38,10 +38,12 @@ final class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
 
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $request->user();
 
-        $isOrgUri = Str::startsWith($request->route()?->uri, 'org');
+        $isOrgUri = $request->route()
+            !== null
+            && Str::startsWith($request->route()->uri, 'org');
 
         return [
             ...parent::share($request),

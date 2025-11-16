@@ -1,5 +1,5 @@
 import { NavItem, VerticalMenu } from "@/components/vertical-menu";
-import { edit as generalEdit } from "@/routes/org/settings/organization";
+import { edit as generalEdit } from "@/wayfinder/routes/org/settings/organization";
 import { usePage } from "@inertiajs/react";
 import { type ReactNode } from "react";
 

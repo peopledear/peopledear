@@ -1,4 +1,4 @@
-import UserPasswordController from "@/actions/App/Http/Controllers/UserPasswordController";
+import UserPasswordController from "@/wayfinder/actions/App/Http/Controllers/UserPasswordController";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
@@ -23,7 +23,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
             <Head title="Reset password" />
 
             <Form
-                {...UserPasswordController.store.form()}
+                {...UserPasswordController.store()}
                 transform={(data) => ({ ...data, token, email })}
                 resetOnSuccess={["password", "password_confirmation"]}
             >

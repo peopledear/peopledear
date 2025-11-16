@@ -41,7 +41,7 @@ jobs:
         run: npm install
 
       - name: Generate Wayfinder Routes
-        run: php artisan wayfinder:generate --with-form
+        run: php artisan wayfinder:generate --path=resources/js/wayfinder --with-form
 
       - name: Build Assets
         run: npm run build

@@ -29,8 +29,8 @@ import {
 import { UserMenuContent } from "@/components/user-menu-content";
 import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
-import { dashboard } from "@/routes";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
+import { dashboard } from "@/wayfinder/routes";
 import { Link, usePage } from "@inertiajs/react";
 import { BookOpen, Folder, Menu, Search } from "lucide-react";
 import AppLogo from "./app-logo";
@@ -62,8 +62,10 @@ export function AppHeader({
     mainNavItems = [],
 }: AppHeaderProps) {
     const page = usePage<SharedData>();
-    const { auth, show } = page.props;
+    const { auth } = page.props;
     const getInitials = useInitials();
+
+    mainNavItems = mainNavItems.filter((item) => item.show !== false);
 
     return (
         <>
@@ -106,7 +108,10 @@ export function AppHeader({
                                                             className="h-5 w-5"
                                                         />
                                                     )}
-                                                    <span>{item.title}</span>
+                                                    <span>
+                                                        {item.title}
+                                                        {item.show}
+                                                    </span>
                                                 </Link>
                                             ))}
                                         </div>
@@ -212,11 +217,7 @@ export function AppHeader({
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56" align="end">
-                                <UserMenuContent
-                                    user={auth.user}
-                                    showEmployeeLink={show.employeeLink}
-                                    showOrgLink={show.orgLink}
-                                />
+                                <UserMenuContent user={auth.user} />
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

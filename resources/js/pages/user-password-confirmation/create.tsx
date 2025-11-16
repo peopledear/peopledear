@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
-import { store } from "@/routes/password/confirm";
+import { store } from "@/wayfinder/routes/password/confirm";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
@@ -15,7 +15,7 @@ export default function Create() {
         >
             <Head title="Confirm password" />
 
-            <Form {...store.form()} resetOnSuccess={["password"]}>
+            <Form {...store()} resetOnSuccess={["password"]}>
                 {({ processing, errors }) => (
                     <div className="space-y-6">
                         <div className="grid gap-2">

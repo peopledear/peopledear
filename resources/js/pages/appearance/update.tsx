@@ -12,7 +12,7 @@ import { type BreadcrumbItem } from "@/types";
 
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
-import { edit as editAppearance } from "@/routes/appearance";
+import { edit as editAppearance } from "@/wayfinder/routes/appearance";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

@@ -12,8 +12,8 @@ import {
 import { useTwoFactorAuth } from "@/hooks/use-two-factor-auth";
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
-import { disable, enable, show } from "@/routes/two-factor";
 import { type BreadcrumbItem } from "@/types";
+import { disable, enable, show } from "@/wayfinder/routes/two-factor";
 import { Form, Head } from "@inertiajs/react";
 import { ShieldBan, ShieldCheck } from "lucide-react";
 import { useState } from "react";
@@ -76,7 +76,7 @@ export default function TwoFactor({
                                 />
 
                                 <div className="relative inline">
-                                    <Form {...disable.form()}>
+                                    <Form {...disable()}>
                                         {({ processing }) => (
                                             <Button
                                                 variant="destructive"
@@ -111,7 +111,7 @@ export default function TwoFactor({
                                         </Button>
                                     ) : (
                                         <Form
-                                            {...enable.form()}
+                                            {...enable()}
                                             onSuccess={() =>
                                                 setShowSetupModal(true)
                                             }

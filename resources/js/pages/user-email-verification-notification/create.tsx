@@ -1,6 +1,6 @@
 // Components
-import UserEmailVerificationNotificationController from "@/actions/App/Http/Controllers/UserEmailVerificationNotificationController";
-import { logout } from "@/routes";
+import UserEmailVerificationNotificationController from "@/wayfinder/actions/App/Http/Controllers/UserEmailVerificationNotificationController";
+import { logout } from "@/wayfinder/routes";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
@@ -24,7 +24,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
             )}
 
             <Form
-                {...UserEmailVerificationNotificationController.store.form()}
+                {...UserEmailVerificationNotificationController.store()}
                 className="space-y-6 text-center"
             >
                 {({ processing }) => (

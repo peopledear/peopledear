@@ -27,7 +27,6 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::middleware(['role:people_manager|owner'])
         ->prefix('org')
         ->as('org.')->group(function (): void {
-            // Organization Creation...
 
             Route::get('/', [OrganizationController::class, 'index'])
                 ->middleware('can:employees.view')
@@ -40,17 +39,19 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             Route::get('settings', [OrganizationController::class, 'edit'])
                 ->middleware('can:organizations.edit')
                 ->name('settings.organization.edit');
+
             Route::put('settings/organization', [OrganizationController::class, 'update'])
                 ->middleware('can:organizations.edit')
                 ->name('settings.organization.update');
 
-            // Office Management...
             Route::post('offices', [OrganizationOfficeController::class, 'store'])
                 ->middleware('can:organizations.edit')
                 ->name('offices.store');
+
             Route::put('offices/{office}', [OrganizationOfficeController::class, 'update'])
                 ->middleware('can:organizations.edit')
                 ->name('offices.update');
+
             Route::delete('offices/{office}', [OrganizationOfficeController::class, 'destroy'])
                 ->middleware('can:organizations.edit')
                 ->name('offices.destroy');

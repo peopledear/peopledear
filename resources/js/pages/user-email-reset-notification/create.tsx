@@ -1,6 +1,6 @@
 // Components
-import UserEmailResetNotification from "@/actions/App/Http/Controllers/UserEmailResetNotification";
-import { login } from "@/routes";
+import UserEmailResetNotification from "@/wayfinder/actions/App/Http/Controllers/UserEmailResetNotification";
+import { login } from "@/wayfinder/routes";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
@@ -26,7 +26,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
             )}
 
             <div className="space-y-6">
-                <Form {...UserEmailResetNotification.store.form()}>
+                <Form {...UserEmailResetNotification.store()}>
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">

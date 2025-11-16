@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { home } from "@/routes";
 import type { Country } from "@/types/country";
+import { home } from "@/wayfinder/routes";
 import { Head, Link, useForm } from "@inertiajs/react";
 
 interface CreateOrganizationProps {

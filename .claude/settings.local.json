@@ -24,7 +24,14 @@
       "Bash(php artisan app:install:*)",
       "Bash(php artisan tinker:*)",
       "Bash(php artisan migrate:fresh:*)",
-      "Bash(php -r:*)"
+      "Bash(php -r:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(php artisan wayfinder:generate:*)",
+      "Bash(xargs sed:*)",
+      "Bash(npm run test:types:*)",
+      "Bash(composer test:types:*)",
+      "Bash(find:*)",
+      "mcp__laravel-boost__browser-logs"
     ]
   },
   "enableAllProjectMcpServers": true,

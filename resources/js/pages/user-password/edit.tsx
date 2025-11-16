@@ -1,8 +1,8 @@
-import UserPasswordController from "@/actions/App/Http/Controllers/UserPasswordController";
 import InputError from "@/components/input-error";
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
 import { type BreadcrumbItem } from "@/types";
+import UserPasswordController from "@/wayfinder/actions/App/Http/Controllers/UserPasswordController";
 import { Transition } from "@headlessui/react";
 import { Form, Head } from "@inertiajs/react";
 import { useRef } from "react";
@@ -25,7 +25,7 @@ import {
     FieldSet,
 } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { edit } from "@/routes/password";
+import { edit } from "@/wayfinder/routes/password";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -53,7 +53,7 @@ export default function Password() {
                     </CardHeader>
                     <CardContent>
                         <Form
-                            {...UserPasswordController.update.form()}
+                            {...UserPasswordController.update()}
                             options={{
                                 preserveScroll: true,
                             }}

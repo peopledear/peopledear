@@ -1,6 +1,6 @@
-import UserProfileController from "@/actions/App/Http/Controllers/UserProfileController";
-import { send } from "@/routes/verification";
 import { type BreadcrumbItem, type SharedData } from "@/types";
+import UserProfileController from "@/wayfinder/actions/App/Http/Controllers/UserProfileController";
+import { send } from "@/wayfinder/routes/verification";
 import { Transition } from "@headlessui/react";
 import { Form, Head, Link, usePage } from "@inertiajs/react";
 
@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
-import userProfile from "@/routes/user-profile";
+import userProfile from "@/wayfinder/routes/user-profile";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -53,7 +53,7 @@ export default function Edit({ status }: { status?: string }) {
                     </CardHeader>
                     <CardContent>
                         <Form
-                            {...UserProfileController.update.form()}
+                            {...UserProfileController.update()}
                             options={{
                                 preserveScroll: true,
                             }}

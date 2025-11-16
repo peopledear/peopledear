@@ -1,4 +1,3 @@
-import UserController from "@/actions/App/Http/Controllers/UserController";
 import HeadingSmall from "@/components/heading-small";
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
+import UserController from "@/wayfinder/actions/App/Http/Controllers/UserController";
 import { Form } from "@inertiajs/react";
 import { useRef } from "react";
 
@@ -54,7 +54,7 @@ export default function DeleteUser() {
                         </DialogDescription>
 
                         <Form
-                            {...UserController.destroy.form()}
+                            {...UserController.destroy()}
                             options={{
                                 preserveScroll: true,
                             }}

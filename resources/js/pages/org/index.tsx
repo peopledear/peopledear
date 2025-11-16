@@ -1,7 +1,7 @@
 import { PlaceholderPattern } from "@/components/ui/placeholder-pattern";
 import AdminLayout from "@/layouts/org-layout";
-import { overview } from "@/routes/org";
 import { type BreadcrumbItem } from "@/types";
+import { overview } from "@/wayfinder/routes/org";
 import { Head } from "@inertiajs/react";
 
 const breadcrumbs: BreadcrumbItem[] = [

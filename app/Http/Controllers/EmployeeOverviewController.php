@@ -10,11 +10,11 @@ use Inertia\Response;
 
 final class EmployeeOverviewController
 {
-    public function index(CurrentEmployeeQuery $employeeByUserIdQuery): Response
+    public function index(CurrentEmployeeQuery $currentEmployeeQuery): Response
     {
         return Inertia::render(
             'employee-overview/index', [
-                'employee' => $employeeByUserIdQuery->builder()->first(),
+                'employee' => $currentEmployeeQuery->builder()->first(),
             ]);
     }
 }

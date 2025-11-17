@@ -49,149 +49,102 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - prettier (PRETTIER) - v3
 
 
-## Conventions
-- You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, naming.
-- Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
-- Check for existing components to reuse before writing a new one.
-- **Always chain methods on new lines** - each chained method call should be on its own line for better readability
-
-## Verification Scripts
-- Do not create verification scripts or tinker when tests cover that functionality and prove it works. Unit and feature tests are more important.
-
-## Application Structure & Architecture
-- Stick to existing directory structure - don't create new base folders without approval.
-- Do not change the application's dependencies without approval.
+## Core Conventions
+- Follow all existing code conventions - check sibling files for structure, approach, and naming
+- Use descriptive names: `isRegisteredForDiscounts` not `discount()`
+- **Always chain methods on new lines** for better readability
+- Reuse existing components before creating new ones
+- Prefer tests over verification scripts or tinker sessions
+- Do not create new base folders or change dependencies without approval
 
 ## Git Workflow
-- **Always create a new feature branch** when starting a new task or feature
-- Before creating a new branch, fetch and pull the latest changes from main: `git fetch && git pull origin main`
-- Create feature branches with descriptive names: `git checkout -b feature/descriptive-name`
-- **ALWAYS run `php artisan test` before every commit** - all tests must pass
-- **ALWAYS run `vendor/bin/pint --dirty` before every commit** - code must be formatted
-- Commit and push changes to the feature branch
-- Only merge to main after all tests pass and code is reviewed
+- **Always create feature branches**: `git checkout -b feature/descriptive-name`
+- **Before branching**: `git fetch && git pull origin main`
+- **Before every commit**:
+  - Run `composer test:unit` (requires 100% coverage)
+  - Run `vendor/bin/pint --dirty` (format code)
+  - Run `composer test:types` (static analysis)
+- Only merge to main after tests pass and code is reviewed
 
 ## Composer Scripts
-This project has several composer scripts for development workflows:
 
-### Testing Scripts
-- **`composer test`** - Run complete test suite (type coverage, unit tests, linting, type checking)
-  - Runs: type-coverage, unit tests, lint checks, PHPStan + npm type checks
-- **`composer test:unit`** - Run unit tests with coverage (requires exactly 100.0%)
-  - Command: `pest --parallel --coverage --compact --exactly=100.0`
-- **`composer test:type-coverage`** - Run Pest type coverage (requires min 100%)
-  - Command: `pest --type-coverage --compact --min=100`
-- **`composer test:types`** - Run static analysis (PHPStan + npm types)
-  - Runs: `phpstan` and `npm run test:types`
-- **`composer test:lint`** - Test code formatting without fixing
-  - Runs: `pint --parallel --test`, `rector --dry-run`, `npm run test:lint`
+### Key Commands
+- **`composer test`** - Full test suite (type coverage, unit tests, linting, PHPStan)
+- **`composer test:unit`** - Unit tests with 100% coverage requirement
+- **`composer test:types`** - Static analysis (PHPStan + npm types)
+- **`composer lint`** - Fix code style (rector, pint, npm lint)
+- **`composer dev`** - Start all dev servers (serve, queue, pail, npm dev)
 
-### Development Scripts
-- **`composer dev`** - Start all development servers concurrently
-  - Runs: artisan serve, queue:listen, pail (logs), npm dev
-  - Uses concurrently with color-coded output
-- **`composer lint`** - Fix code style and formatting
-  - Runs: `rector`, `pint --parallel`, `npm run lint`
-- **`composer setup`** - Initial project setup
-  - Runs: install, copy .env, generate key, migrate, npm install, npm build
-
-### Before Committing
-- **ALWAYS run `composer test:unit`** to ensure 100% unit test coverage
-- **ALWAYS run `vendor/bin/pint --dirty`** to format code
-- **Run `composer test:types`** to check static analysis
-- **Optionally run full `composer test`** for complete validation
-
-## Frontend Bundling
-- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
-
-## Replies
-- Be concise in your explanations - focus on what's important rather than explaining obvious details.
-
-## Documentation Files
-- You must only create documentation files if explicitly requested by the user.
+## Communication & Documentation
+- Be concise - focus on important details, not obvious ones
+- Only create documentation files when explicitly requested
+- If frontend changes aren't visible, suggest running `npm run build`, `npm run dev`, or `composer run dev`
 
 
 === boost rules ===
 
-## Laravel Boost
-- Laravel Boost is an MCP server that comes with powerful tools designed specifically for this application. Use them.
+## Laravel Boost Tools
+Laravel Boost is an MCP server with powerful tools for this application:
 
-## Artisan
-- Use the `list-artisan-commands` tool when you need to call an Artisan command to double check the available parameters.
+- **`search-docs`** - Search version-specific Laravel ecosystem documentation (use FIRST before other approaches)
+- **`list-artisan-commands`** - Verify available Artisan command parameters
+- **`get-absolute-url`** - Generate correct absolute URLs with proper scheme/domain/port
+- **`tinker`** - Execute PHP to debug code or query Eloquent models
+- **`database-query`** - Read-only database queries
+- **`browser-logs`** - Read recent browser logs, errors, and exceptions
 
-## URLs
-- Whenever you share a project URL with the user you should use the `get-absolute-url` tool to ensure you're using the correct scheme, domain / IP, and port.
+## Documentation Search Best Practices
+**Search docs BEFORE making code changes** to ensure correct approach.
 
-## Tinker / Debugging
-- You should use the `tinker` tool when you need to execute PHP to debug code or query Eloquent models directly.
-- Use the `database-query` tool when you only need to read from the database.
+### Query Guidelines
+- Use multiple, broad, topic-based queries: `['rate limiting', 'routing rate limiting', 'routing']`
+- DO NOT include package names - versions are auto-included: `test resource table` not `filament 4 test resource table`
+- Pass multiple queries at once for best results
 
-## Reading Browser Logs With the `browser-logs` Tool
-- You can read browser logs, errors, and exceptions using the `browser-logs` tool from Boost.
-- Only recent browser logs will be useful - ignore old logs.
-
-## Searching Documentation (Critically Important)
-- Boost comes with a powerful `search-docs` tool you should use before any other approaches. This tool automatically passes a list of installed packages and their versions to the remote Boost API, so it returns only version-specific documentation specific for the user's circumstance. You should pass an array of packages to filter on if you know you need docs for particular packages.
-- The 'search-docs' tool is perfect for all Laravel related packages, including Laravel, Inertia, Livewire, Filament, Tailwind, Pest, Nova, Nightwatch, etc.
-- You must use this tool to search for Laravel-ecosystem documentation before falling back to other approaches.
-- Search the documentation before making code changes to ensure we are taking the correct approach.
-- Use multiple, broad, simple, topic based queries to start. For example: `['rate limiting', 'routing rate limiting', 'routing']`.
-- Do not add package names to queries - package information is already shared. For example, use `test resource table`, not `filament 4 test resource table`.
-
-### Available Search Syntax
-- You can and should pass multiple queries at once. The most relevant results will be returned first.
-
-1. Simple Word Searches with auto-stemming - query=authentication - finds 'authenticate' and 'auth'
-2. Multiple Words (AND Logic) - query=rate limit - finds knowledge containing both "rate" AND "limit"
-3. Quoted Phrases (Exact Position) - query="infinite scroll" - Words must be adjacent and in that order
-4. Mixed Queries - query=middleware "rate limit" - "middleware" AND exact phrase "rate limit"
-5. Multiple Queries - queries=["authentication", "middleware"] - ANY of these terms
+### Search Syntax
+1. **Simple words** (auto-stemming): `authentication` finds 'authenticate' and 'auth'
+2. **Multiple words** (AND logic): `rate limit` finds both "rate" AND "limit"
+3. **Quoted phrases** (exact): `"infinite scroll"` finds words adjacent in that order
+4. **Mixed queries**: `middleware "rate limit"` finds "middleware" AND exact phrase "rate limit"
+5. **Multiple queries**: `["authentication", "middleware"]` finds ANY of these terms
 
 
 === php rules ===
 
-## PHP
+## PHP Standards
 
-- Always use curly braces for control structures, even if it has one line.
+### Type Safety
+- Always use explicit return type declarations for methods and functions
+- Always use type hints for method parameters
+- Use PHP 8 constructor property promotion: `public function __construct(public GitHub $github) {}`
+- No empty `__construct()` methods with zero parameters
 
-### Constructors
-- Use PHP 8 constructor property promotion in `__construct()`.
-    - <code-snippet>public function __construct(public GitHub $github) { }</code-snippet>
-- Do not allow empty `__construct()` methods with zero parameters.
-
-### Type Declarations
-- Always use explicit return type declarations for methods and functions.
-- Use appropriate PHP type hints for method parameters.
-
-<code-snippet name="Explicit Return Types and Method Params" lang="php">
+<code-snippet name="Type Declarations Example" lang="php">
 protected function isAccessible(User $user, ?string $path = null): bool
 {
     ...
 }
 </code-snippet>
 
-## Comments
-- Prefer PHPDoc blocks over comments. Never use comments within the code itself unless there is something _very_ complex going on.
-
-## PHPDoc Blocks
-- Add useful array shape type definitions for arrays when appropriate.
-
-## Enums
-- Typically, keys in an Enum should be TitleCase. For example: `FavoritePerson`, `BestLake`, `Monthly`.
+### Code Style
+- Always use curly braces for control structures (even single-line)
+- Prefer PHPDoc blocks over inline comments (only comment very complex logic)
+- Add array shape type definitions in PHPDoc when appropriate
+- Enum keys should be TitleCase: `FavoritePerson`, `BestLake`, `Monthly`
 
 
-=== inertia-laravel/core rules ===
+=== inertia-laravel rules ===
 
-## Inertia Core
+## Inertia.js (React + TypeScript)
 
-- This application uses **React** with Inertia.js (NOT Vue.js)
-- Inertia.js pages are React components in `resources/js/pages/` directory (lowercase folder names)
-- Page components use `.tsx` extension (TypeScript + JSX)
-- Use `Inertia::render()` for server-side routing instead of traditional Blade views
-- Use `search-docs` for accurate guidance on all things Inertia
+This application uses **React** with Inertia.js v2 (NOT Vue.js).
+
+### Core Concepts
+- Use `Inertia::render()` for server-side routing (not Blade views)
+- Page components are `.tsx` files in `resources/js/pages/` (lowercase folders)
+- Use `search-docs` for accurate Inertia guidance
 
 <code-snippet lang="php" name="Inertia::render Example">
-// routes/web.php example
 Route::get('/users', function () {
     return Inertia::render('Users/Index', [
         'users' => User::query()->get()
@@ -199,138 +152,97 @@ Route::get('/users', function () {
 });
 </code-snippet>
 
-### React & Inertia Conventions
-- **Page components** in `resources/js/pages/` (e.g., `dashboard.tsx`, `user/create.tsx`)
-- **Layout components** in `resources/js/layouts/` (e.g., `app-layout.tsx`)
-- **Reusable components** in `resources/js/components/` (e.g., `ui/button.tsx`)
-- **Use TypeScript** - proper typing for all components and props
-- **Props interface** - define props interface for each page component
-- **Head component** - use `<Head>` from `@inertiajs/react` for page titles
-- **useForm hook** - use Inertia's `useForm` for form handling
+### File Organization
+- **Pages**: `resources/js/pages/` (e.g., `dashboard.tsx`, `user/create.tsx`)
+- **Layouts**: `resources/js/layouts/` (e.g., `app-layout.tsx`)
+- **Components**: `resources/js/components/` (e.g., `ui/button.tsx`)
 
+### TypeScript Conventions
+- Define props interface for each page component
+- Use `<Head>` from `@inertiajs/react` for page titles
+- Use `useForm` hook for form handling
 
-=== inertia-laravel/v2 rules ===
-
-## Inertia v2
-
-- Make use of all Inertia features from v1 & v2. Check the documentation before making any changes to ensure we are taking the correct approach.
-
-### Inertia v2 New Features
-- Polling
-- Prefetching
-- Deferred props
-- Infinite scrolling using merging props and `WhenVisible`
-- Lazy loading data on scroll
-
-### Deferred Props & Empty States
-- When using deferred props on the frontend, you should add a nice empty state with pulsing / animated skeleton.
-
-### Inertia Form General Guidance
-- Build forms using the `useForm` helper. Use the code examples and `search-docs` tool with a query of `useForm helper` for guidance.
+### Inertia v2 Features
+- **Polling** - Auto-refresh data at intervals
+- **Prefetching** - Load data before navigation
+- **Deferred props** - Load heavy data after page render (add skeleton/empty states)
+- **Infinite scrolling** - Use merging props and `WhenVisible`
+- **Lazy loading** - Load data on scroll
 
 
 === laravel/core rules ===
 
-## Do Things the Laravel Way
+## Laravel Best Practices
 
-- Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using the `list-artisan-commands` tool.
-- If you're creating a generic PHP class, use `artisan make:class`.
-- Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
+### Artisan Commands
+- Use `php artisan make:` for all file creation (migrations, controllers, models, etc.)
+- Use `artisan make:class` for generic PHP classes
+- Always pass `--no-interaction` and appropriate `--options`
 
-### Database
-- Always use proper Eloquent relationship methods with return type hints. Prefer relationship methods over raw queries or manual joins.
-- Use Eloquent models and relationships before suggesting raw database queries
-- **ALWAYS use `Model::query()` for querying models** - NEVER use `Model::all()`, `Model::find()`, `Model::where()` directly
-  - Correct: `User::query()->where('email', $email)->first()`
-  - Incorrect: `User::where('email', $email)->first()`
-  - Correct: `User::query()->get()`
-  - Incorrect: `User::all()`
-- Avoid `DB::`; prefer `Model::query()`. Generate code that leverages Laravel's ORM capabilities rather than bypassing them.
-- Generate code that prevents N+1 query problems by using eager loading.
-- Use Laravel's query builder for very complex database operations.
-
-### Migrations
-- See `.ai/guidelines/database-migrations.blade.php` for comprehensive migration guidelines
-- **Always remove the `down()` method from migrations** - we don't roll back migrations in this application
-- **No default values in migrations** - default values are business logic, NOT database constraints
-- **Column order**: `id()` first, then `timestamps()`, then all other columns
-- **No `after()` method** in ALTER TABLE - breaks PostgreSQL compatibility
-- **No cascade constraints** - handle deletions explicitly in Actions
-- Use `$table->foreignIdFor(Model::class)` for foreign keys
+### Database & Models
+- **CRITICAL**: Always use `Model::query()` for all queries
+  - ✅ `User::query()->where('email', $email)->first()`
+  - ❌ `User::where('email', $email)->first()` or `User::all()`
+- Prefer Eloquent relationships over raw queries or manual joins
+- Use eager loading to prevent N+1 query problems
+- Use proper return type hints for relationship methods
 
 ### Model Creation
-- **ALWAYS use `php artisan make:model {Name} -mfs`** to create model with migration, factory, and seeder
-  - `-m` creates migration
-  - `-f` creates factory
-  - `-s` creates seeder
-  - Example: `php artisan make:model Organization -mfs --no-interaction`
-- This ensures all related files are created together and follow consistent naming
+**ALWAYS use `php artisan make:model {Name} -mfs --no-interaction`**
+- `-m` creates migration, `-f` creates factory, `-s` creates seeder
+- Example: `php artisan make:model Organization -mfs --no-interaction`
 
-### APIs & Eloquent Resources
-- For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
+### Migrations
+See `.ai/guidelines/database-migrations.blade.php` for details.
+- **Remove `down()` method** - we don't roll back migrations
+- **No default values** - defaults are business logic, not DB constraints
+- **Column order**: `id()`, then `timestamps()`, then other columns
+- **No `after()` method** - breaks PostgreSQL compatibility
+- **No cascade constraints** - handle deletions in Actions
+- Use `$table->foreignIdFor(Model::class)` for foreign keys
 
 ### Controllers & Validation
-- Always create Form Request classes for validation rather than inline validation in controllers. Include both validation rules and custom error messages.
-- Check sibling Form Requests to see if the application uses array or string based validation rules.
+- Create Form Request classes (not inline validation)
+- Include validation rules and custom error messages
+- Check sibling Form Requests for array vs string-based rules convention
 
-### Queues
-- Use queued jobs for time-consuming operations with the `ShouldQueue` interface.
-
-### Authentication & Authorization
-- Use Laravel's built-in authentication and authorization features (gates, policies, Sanctum, etc.).
-
-### URL Generation
-- When generating links to other pages, prefer named routes and the `route()` function.
-
-### Configuration
-- Use environment variables only in configuration files - never use the `env()` function directly outside of config files. Always use `config('app.name')`, not `env('APP_NAME')`.
-
-### Testing
-- When creating models for tests, use the factories for the models. Check if the factory has custom states that can be used before manually setting up the model.
-- Faker: Use methods such as `$this->faker->word()` or `fake()->randomDigit()`. Follow existing conventions whether to use `$this->faker` or `fake()`.
-- When creating tests, make use of `php artisan make:test [options] <name>` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
-
-### Vite Error
-- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+### Other Conventions
+- **Configuration**: Use `config('app.name')` not `env('APP_NAME')` (env only in config files)
+- **URLs**: Prefer named routes with `route()` function
+- **APIs**: Use Eloquent API Resources and versioning (unless existing code differs)
+- **Queues**: Use `ShouldQueue` interface for time-consuming operations
+- **Auth**: Use built-in features (gates, policies, Sanctum)
+- **Testing**: Use model factories, check for custom states, prefer feature tests over unit tests
+- **Vite errors**: Suggest running `npm run build` or `composer run dev`
 
 
 === laravel/v12 rules ===
 
-## Laravel 12
+## Laravel 12 Streamlined Structure
 
-- Use the `search-docs` tool to get version specific documentation.
-- Since Laravel 11, Laravel has a new streamlined file structure which this project uses.
+### File Structure Changes
+- **No `app/Http/Middleware/`** - register middleware in `bootstrap/app.php`
+- **No `app/Console/Kernel.php`** - use `bootstrap/app.php` or `routes/console.php`
+- **Commands auto-register** from `app/Console/Commands/`
+- **`bootstrap/app.php`** - middleware, exceptions, routing
+- **`bootstrap/providers.php`** - application service providers
 
-### Laravel 12 Structure
-- No middleware files in `app/Http/Middleware/`.
-- `bootstrap/app.php` is the file to register middleware, exceptions, and routing files.
-- `bootstrap/providers.php` contains application specific service providers.
-- **No app\Console\Kernel.php** - use `bootstrap/app.php` or `routes/console.php` for console configuration.
-- **Commands auto-register** - files in `app/Console/Commands/` are automatically available and do not require manual registration.
+### Database & Models
+- When modifying columns, include ALL previous attributes (or they'll be dropped)
+- Limit eager loaded records natively: `$query->latest()->limit(10);`
+- Use `casts()` method instead of `$casts` property (follow existing conventions)
 
-### Database
-- When modifying a column, the migration must include all of the attributes that were previously defined on the column. Otherwise, they will be dropped and lost.
-- Laravel 11 allows limiting eagerly loaded records natively, without external packages: `$query->latest()->limit(10);`.
+### Contextual Attributes (Dependency Injection)
+**ALWAYS use contextual attributes** - cleaner, more explicit, type-safe.
 
-### Models
-- Casts can and likely should be set in a `casts()` method on a model rather than the `$casts` property. Follow existing conventions from other models.
-
-### Contextual Attributes for Dependency Injection
-- **ALWAYS use Laravel 12's contextual attributes for common dependencies** - cleaner and more expressive than manual injection
-- **Available Attributes**:
-  - `#[CurrentUser]` - Inject the currently authenticated user
-  - `#[Auth('guard')]` - Inject a specific authentication guard
-  - `#[Cache('store')]` - Inject a specific cache store
-  - `#[Config('key')]` - Inject a config value
-  - `#[DB('connection')]` - Inject a specific database connection
-  - `#[RouteParameter('name')]` - Inject a route parameter
-  - `#[Storage('disk')]` - Inject a specific storage disk
-
-**Use `#[CurrentUser]` instead of `Request::user()`**:
+**Available Attributes**:
+- `#[CurrentUser]` - Currently authenticated user
+- `#[Auth('guard')]` - Specific auth guard
+- `#[Cache('store')]`, `#[Config('key')]`, `#[DB('connection')]`, `#[Storage('disk')]`
+- `#[RouteParameter('name')]` - Route parameter
 
 ```php
 // ✅ CORRECT - Use CurrentUser attribute
-use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 
 public function store(
@@ -343,59 +255,39 @@ public function store(
 }
 
 // ❌ WRONG - Don't inject Request just to get user
-use Illuminate\Http\Request;
-
 public function store(
     CreateInvitationData $data,
     CreateInvitation $action,
     Request $request
 ): RedirectResponse {
     $user = $request->user();
-    $invitation = $action->handle($data->email, $data->role_id, $user->id);
-    return to_route('users.index');
+    // ...
 }
 ```
-
-**Benefits**:
-- More explicit and readable
-- Works everywhere dependency injection is supported (controllers, commands, jobs, middleware)
-- Type-safe - no casting needed
-- Cleaner method signatures
 
 
 === laravel-data/core rules ===
 
-## Spatie Laravel Data
+## Spatie Laravel Data (DTOs)
 
-This application uses Spatie Laravel Data for **type-safe Data Transfer Objects (DTOs)** - NOT for validation.
+**Type-safe Data Transfer Objects** - NOT for validation.
 
 ### Separation of Concerns
-- **Form Requests** - Handle HTTP validation (required fields, formats, rules)
-- **Data Objects** - Provide type-safe data transfer between layers
-- **Actions** - Contain business logic, receive type-safe Data objects
+- **Form Requests** - HTTP validation (required fields, formats, rules)
+- **Data Objects** - Type-safe data transfer between layers
+- **Actions** - Business logic, receive type-safe Data objects
 
-### Data Objects
-- **Store Data objects in `app/Data/`** namespace
-- **All Data objects MUST be suffixed with `Data`**
-  - Correct: `UpdateOfficeData`, `CreateOfficeData`, `AddressData`
-  - Incorrect: `UpdateOfficeRequest`, `UpdateOffice`, `OfficeDto`
-- **Use `Optional` type for update operations** - Supports partial updates
-- **Use required types for create operations** - Ensures all fields provided
-- **Use readonly properties** - Data objects are immutable
-- **NO validation attributes** - Validation belongs in Form Requests
+### Data Object Rules
+- Store in `app/Data/` namespace
+- **MUST suffix with `Data`**: `UpdateOfficeData`, `CreateOfficeData`, `AddressData`
+  - ❌ NOT: `UpdateOfficeRequest`, `UpdateOffice`, `OfficeDto`
+- **Use `Optional` for updates** (partial updates)
+- **Use required types for creates** (all fields required)
+- **Use `readonly` properties** (immutable)
+- **NO validation attributes** (validation in Form Requests)
 
-### Data Object Structure
 @boostsnippet('Update Data Object with Optional')
-
 ```php
-<?php
-
-declare(strict_types=1);
-
-namespace App\Data;
-
-use App\Enums\PeopleDear\OfficeType;use Spatie\LaravelData\Data;use Spatie\LaravelData\Optional;
-
 final class UpdateOfficeData extends Data
 {
     public function __construct(
@@ -407,10 +299,6 @@ final class UpdateOfficeData extends Data
 }
 ```
 
-### Creating Data Objects
-
-**ALWAYS use `::from()` to create Data objects from validated data:**
-
 @boostsnippet('Create Data from Form Request')
 ```php
 public function update(
@@ -418,339 +306,176 @@ public function update(
     Office $office,
     UpdateOfficeAction $action
 ): RedirectResponse {
-    // Request validation already happened in UpdateOfficeRequest
     $data = UpdateOfficeData::from($request->validated());
-
     $action->handle($data, $office);
-
     return redirect()->route('admin.settings.organization.edit');
 }
 ```
 
-### Benefits
-- Type-safe data handling with IDE autocompletion
-- Clean separation: Form Requests validate, Data objects transfer
-- Nullable properties support partial updates correctly
-- Data objects can be reused across HTTP, Console, Jobs
-- No duplicate validation logic
-
 
 === pint/core rules ===
 
-## Laravel Pint Code Formatter
+## Laravel Pint
 
-- You must run `vendor/bin/pint --dirty` before finalizing changes to ensure your code matches the project's expected style.
-- Do not run `vendor/bin/pint --test`, simply run `vendor/bin/pint` to fix any formatting issues.
+Run `vendor/bin/pint --dirty` before finalizing changes (NOT `--test`, just run to fix).
 
 
 === pest/core rules ===
 
-## Pest
+## Pest Testing
 
-### Testing
-- If you need to verify a feature is working, write or update a Unit / Feature test.
+### Core Rules
+- All tests use Pest: `php artisan make:test --pest <name>`
+- **Never remove tests** without approval - they're core to the application
+- Test happy paths, failure paths, and edge cases
+- Tests live in `tests/Feature`, `tests/Unit`, `tests/Browser`
 
-### Pest Tests
-- All tests must be written using Pest. Use `php artisan make:test --pest <name>`.
-- You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files - these are core to the application.
-- Tests should test all of the happy paths, failure paths, and weird paths.
-- Tests live in the `tests/Feature`, `tests/Unit`, and `tests/Browser` directories.
-- **ALWAYS use flat test structure** - NO nested subdirectories in test folders
-  - Correct: `tests/Browser/AdminLayoutTest.php`
-  - Incorrect: `tests/Browser/Admin/AdminLayoutTest.php`
-  - Correct: `tests/Feature/Controllers/UserControllerTest.php`
-  - Exception: Organizing by type within test directories IS allowed (e.g., `tests/Unit/Models/`, `tests/Unit/Actions/`, `tests/Feature/Controllers/`)
-- **New tests should always come first in test files** - place newly written tests at the top of the file, before existing tests
-- **ALWAYS import all classes used in tests** - never use fully qualified class names inline
-  - Correct: `use Illuminate\Validation\ValidationException;` then use `ValidationException::class`
-  - Incorrect: `\Illuminate\Validation\ValidationException::class` without import
-- **ALWAYS chain expect() methods** - chain multiple assertions on the same expect() call for cleaner tests
-  - Correct: `expect($role)->not->toBeNull()->name->toBe('employee');`
-  - Incorrect: `expect($role)->not->toBeNull(); expect($role->name)->toBe('employee');`
-- **ALWAYS type hint variables in tests** - use explicit type declarations for all test function parameters and variables where applicable
-  - Correct: `test('example', function (): void { ... });`
-  - Incorrect: `test('example', function () { ... });`
-- **ALWAYS type hint ALL variables in tests** - add PHPDoc type hints for all variables
-  - Models created with factories: `/** @var User $user */ $user = User::factory()->createQuietly();`
-  - Models retrieved from database: `/** @var Role $role */ $role = Role::query()->where('name', 'employee')->first()?->fresh();`
-  - Collections: `/** @var Collection<int, Permission> $permissions */ $permissions = Permission::query()->get();`
-  - Simple types: Type hints help IDE autocomplete and catch errors early
-- **ALWAYS use `createQuietly()` instead of `create()`** - prevents model events from firing during tests
-  - Correct: `User::factory()->createQuietly();`
-  - Incorrect: `User::factory()->create();`
-- **ALWAYS use `fresh()` when retrieving seeded/migration records from database** - ensures you get the latest data from the database after creation
-  - For records created by migrations or seeders: `$role = Role::query()->where('name', 'employee')->first()?->fresh();`
-  - For records created in tests with `createQuietly()`: use directly without `fresh()` since they're already fresh
-  - `fresh()` reloads the model from the database, ensuring all attributes are up-to-date
-- Pest tests look and behave like this:
-<code-snippet name="Basic Pest Test Example" lang="php">
+### Test Structure
+- **Flat structure** - NO nested subdirectories (exception: organizing by type like `tests/Unit/Models/`)
+  - ✅ `tests/Browser/AdminLayoutTest.php`
+  - ❌ `tests/Browser/Admin/AdminLayoutTest.php`
+- **New tests come first** in test files
+- **Import all classes** - never use fully qualified names inline
+
+### Type Safety in Tests
+- **Type hint everything**: `test('example', function (): void { ... });`
+- **PHPDoc for variables**:
+  - Factories: `/** @var User $user */ $user = User::factory()->createQuietly();`
+  - DB queries: `/** @var Role $role */ $role = Role::query()->where('name', 'employee')->first()?->fresh();`
+  - Collections: `/** @var Collection<int, Permission> $permissions */`
+
+### Critical Patterns
+- **Use `createQuietly()`** not `create()` (prevents model events)
+- **Use `fresh()`** when retrieving seeded/migration records
+- **Chain expect() methods**: `expect($role)->not->toBeNull()->name->toBe('employee');`
+- **Use `->throws()`** for exceptions (NOT `expect()->toThrow()`)
+
+<code-snippet name="Pest Test Example" lang="php">
 test('example', function (): void {
     /** @var User $user */
     $user = User::factory()->createQuietly();
 
     /** @var Role $role */
-    $role = Role::query()
-        ->where('name', 'employee')
-        ->first()
-        ?->fresh();
+    $role = Role::query()->where('name', 'employee')->first()?->fresh();
 
-    expect($user->id)
-        ->toBeInt()
-        ->and($role)
-        ->not->toBeNull();
+    expect($user->id)->toBeInt()
+        ->and($role)->not->toBeNull();
 });
+</code-snippet>
+
+<code-snippet name="Exception Testing" lang="php">
+test('validates required email', function () {
+    CreateInvitationData::validateAndCreate([]);
+})->throws(ValidationException::class, 'email');
 </code-snippet>
 
 ### Running Tests
-- **Full Test Coverage Required**: Write comprehensive tests for all features, covering happy paths, failure paths, edge cases, and error conditions.
-- Run the minimal number of tests using an appropriate filter before finalizing code edits.
-- To run all tests: `php artisan test`.
-- To run all tests in a file: `php artisan test tests/Feature/ExampleTest.php`.
-- To filter on a particular test name: `php artisan test --filter=testName` (recommended after making a change to a related file).
-- When the tests relating to your changes are passing, ask the user if they would like to run the entire test suite to ensure everything is still passing.
-
-### Pest Assertions
-- When asserting status codes on a response, use the specific method like `assertForbidden` and `assertNotFound` instead of using `assertStatus(403)` or similar, e.g.:
-<code-snippet name="Pest Example Asserting postJson Response" lang="php">
-it('returns all', function () {
-    $response = $this->postJson('/api/docs', []);
-
-    $response->assertSuccessful();
-});
-</code-snippet>
-
-### Testing Exceptions
-- **ALWAYS use Pest's `->throws()` method for exception assertions** - DO NOT wrap in `expect()->toThrow()`
-- Call the method directly and chain `->throws()` to assert the exception
-- This is the clean, idiomatic Pest pattern
-
-<code-snippet name="Correct Exception Testing Pattern" lang="php">
-use Illuminate\Validation\ValidationException;
-
-test('it validates required email', function () {
-    $data = [];
-
-    CreateInvitationData::validateAndCreate($data);
-})->throws(ValidationException::class, 'email');
-</code-snippet>
-
-<code-snippet name="WRONG Exception Testing Pattern - DO NOT USE" lang="php">
-// ❌ WRONG - Do not use expect()->toThrow()
-test('it validates required email', function () {
-    $data = [];
-
-    expect(fn () => CreateInvitationData::validateAndCreate($data))
-        ->toThrow(ValidationException::class);
-})->throws(ValidationException::class, 'email');
-</code-snippet>
-
-### Mocking
-- Mocking can be very helpful when appropriate.
-- When mocking, you can use the `Pest\Laravel\mock` Pest function, but always import it via `use function Pest\Laravel\mock;` before using it. Alternatively, you can use `$this->mock()` if existing tests do.
-- You can also create partial mocks using the same import or self method.
-
-### Datasets
-- Use datasets in Pest to simplify tests which have a lot of duplicated data. This is often the case when testing validation rules, so consider going with this solution when writing tests for validation rules.
-
-<code-snippet name="Pest Dataset Example" lang="php">
-it('has emails', function (string $email) {
-    expect($email)->not->toBeEmpty();
-})->with([
-    'james' => 'james@laravel.com',
-    'taylor' => 'taylor@laravel.com',
-]);
-</code-snippet>
+- Run minimal tests with filters before finalizing: `php artisan test --filter=testName`
+- Use specific methods for status codes: `assertForbidden()` not `assertStatus(403)`
+- Use datasets for validation rule tests (reduce duplication)
+- Import mocks: `use function Pest\Laravel\mock;` or use `$this->mock()`
 
 
 === pest/v4 rules ===
 
-## Pest 4
+## Pest 4 Browser Testing
 
-- Pest v4 is a huge upgrade to Pest and offers: browser testing, smoke testing, visual regression testing, test sharding, and faster type coverage.
-- Browser testing is incredibly powerful and useful for this project.
-- Browser tests should live in `tests/Browser/`.
-- Use the `search-docs` tool for detailed guidance on utilizing these features.
+Pest v4 adds: browser testing, smoke testing, visual regression, test sharding, faster type coverage.
 
-### Browser Testing
-- You can use Laravel features like `Event::fake()`, `assertAuthenticated()`, and model factories within Pest v4 browser tests, as well as `RefreshDatabase` (when needed) to ensure a clean state for each test.
-- Interact with the page (click, type, scroll, select, submit, drag-and-drop, touch gestures, etc.) when appropriate to complete the test.
-- If requested, test on multiple browsers (Chrome, Firefox, Safari).
-- If requested, test on different devices and viewports (like iPhone 14 Pro, tablets, or custom breakpoints).
-- Switch color schemes (light/dark mode) when appropriate.
-- Take screenshots or pause tests for debugging when appropriate.
+### Browser Tests (`tests/Browser/`)
+- Use Laravel features: `Event::fake()`, `assertAuthenticated()`, model factories
+- Interact with page: click, type, scroll, select, submit, drag-and-drop
+- Test multiple browsers (Chrome, Firefox, Safari) or devices if needed
+- Switch color schemes (light/dark mode) when appropriate
+- Take screenshots for debugging
 
-### Example Tests
-
-<code-snippet name="Pest Browser Test Example" lang="php">
-it('may reset the password', function () {
+<code-snippet name="Browser Test Example" lang="php">
+it('may reset password', function () {
     Notification::fake();
-
     $this->actingAs(User::factory()->create());
 
-    $page = visit('/sign-in'); // Visit on a real browser...
-
+    $page = visit('/sign-in');
     $page->assertSee('Sign In')
-        ->assertNoJavascriptErrors() // or ->assertNoConsoleLogs()
+        ->assertNoJavascriptErrors()
         ->click('Forgot Password?')
-        ->fill('email', 'nuno@laravel.com')
+        ->fill('email', 'user@example.com')
         ->click('Send Reset Link')
-        ->assertSee('We have emailed your password reset link!')
+        ->assertSee('We have emailed your password reset link!');
 
     Notification::assertSent(ResetPassword::class);
 });
 </code-snippet>
 
-<code-snippet name="Pest Smoke Testing Example" lang="php">
+<code-snippet name="Smoke Testing Example" lang="php">
 $pages = visit(['/', '/about', '/contact']);
-
 $pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
 </code-snippet>
 
-### Pest Configuration & Best Practices
+### Configuration Best Practices
+- **`RefreshDatabase` is global** - DO NOT add in individual test files
+- **Use `$this->actingAs($user)`** - NOT `actingAs($user)` or `Auth::login($user)`
+- **Use `visit()`** (no `$this->`) - it's globally available
 
-- **Global Configuration in `tests/Pest.php`**:
-  - `RefreshDatabase` trait is applied globally to all tests - DO NOT add `uses(RefreshDatabase::class)` in individual test files
-  - Global `beforeEach` hook configures test environment (fake strings, prevent stray HTTP requests, freeze time)
-  - Configuration applies to all test directories: Browser, Feature, and Unit
-
-- **Test Methods**:
-  - Use `$this->actingAs($user)` for authentication in tests - NOT `actingAs($user)` or `Auth::login($user)`
-  - Use `visit()` function (no `$this->`) for Pest browser tests - it's globally available
-  - Follow existing test patterns - check sibling test files for conventions
-
-<code-snippet name="Correct Test Authentication Pattern" lang="php">
-it('admin can access users page', function (): void {
+<code-snippet name="Correct Pattern" lang="php">
+it('admin can access users', function (): void {
     $admin = User::factory()->create(['role_id' => $adminRole->id]);
-
-    $this->actingAs($admin);  // ✅ CORRECT
-
-    $page = visit('/admin/users');  // ✅ CORRECT - no $this->
-
+    $this->actingAs($admin);  // ✅
+    $page = visit('/admin/users');  // ✅
     $page->assertSee('Users');
 });
 </code-snippet>
 
-<code-snippet name="WRONG Test Patterns - DO NOT USE" lang="php">
-it('admin can access users page', function (): void {
-    $admin = User::factory()->create(['role_id' => $adminRole->id]);
 
-    actingAs($admin);  // ❌ WRONG - missing $this->
-    Auth::login($admin);  // ❌ WRONG - use $this->actingAs() instead
+=== tailwindcss rules ===
 
-    $page = $this->visit('/admin/users');  // ❌ WRONG - visit() not $this->visit()
-});
+## Tailwind CSS v4
+
+### Core Principles
+- Check and use existing Tailwind conventions before writing your own
+- Extract repeated patterns into components (JSX/React)
+- Think through class placement, order, priority - remove redundancies
+- Use `gap` utilities for spacing (not margins)
+- Match dark mode support: use `dark:` prefix if existing components support it
+
+<code-snippet name="Spacing Example" lang="html">
+<div class="flex gap-8">
+    <div>Superior</div>
+    <div>Michigan</div>
+    <div>Erie</div>
+</div>
 </code-snippet>
 
-
-=== tailwindcss/core rules ===
-
-## Tailwind Core
-
-- Use Tailwind CSS classes to style HTML, check and use existing tailwind conventions within the project before writing your own.
-- Offer to extract repeated patterns into components that match the project's conventions (i.e. Blade, JSX, Vue, etc..)
-- Think through class placement, order, priority, and defaults - remove redundant classes, add classes to parent or child carefully to limit repetition, group elements logically
-- You can use the `search-docs` tool to get exact examples from the official documentation when needed.
-
-### Spacing
-- When listing items, use gap utilities for spacing, don't use margins.
-
-    <code-snippet name="Valid Flex Gap Spacing Example" lang="html">
-        <div class="flex gap-8">
-            <div>Superior</div>
-            <div>Michigan</div>
-            <div>Erie</div>
-        </div>
-    </code-snippet>
-
-
-### Dark Mode
-- If existing pages and components support dark mode, new pages and components must support dark mode in a similar way, typically using `dark:`.
-
-
-=== tailwindcss/v4 rules ===
-
-## Tailwind 4
-
-- Always use Tailwind CSS v4 - do not use the deprecated utilities.
-- `corePlugins` is not supported in Tailwind v4.
-- In Tailwind v4, you import Tailwind using a regular CSS `@import` statement, not using the `@tailwind` directives used in v3:
-
-<code-snippet name="Tailwind v4 Import Tailwind Diff" lang="diff"
-   - @tailwind base;
-   - @tailwind components;
-   - @tailwind utilities;
-   + @import "tailwindcss";
-</code-snippet>
-
+### Tailwind v4 Changes
+- Import via `@import "tailwindcss";` (NOT `@tailwind` directives)
+- `corePlugins` not supported in v4
 
 ### Replaced Utilities
-- Tailwind v4 removed deprecated utilities. Do not use the deprecated option - use the replacement.
-- Opacity values are still numeric.
-
-| Deprecated |	Replacement |
-|------------+--------------|
-| bg-opacity-* | bg-black/* |
-| text-opacity-* | text-black/* |
-| border-opacity-* | border-black/* |
-| divide-opacity-* | divide-black/* |
-| ring-opacity-* | ring-black/* |
-| placeholder-opacity-* | placeholder-black/* |
-| flex-shrink-* | shrink-* |
-| flex-grow-* | grow-* |
+| Deprecated | Replacement |
+|------------|-------------|
+| bg-opacity-*, text-opacity-*, border-opacity-* | bg-black/*, text-black/*, border-black/* |
+| flex-shrink-*, flex-grow-* | shrink-*, grow-* |
 | overflow-ellipsis | text-ellipsis |
-| decoration-slice | box-decoration-slice |
-| decoration-clone | box-decoration-clone |
+| decoration-slice, decoration-clone | box-decoration-slice, box-decoration-clone |
 
 
 === shadcn/ui rules ===
 
 ## shadcn/ui Components
 
-This application uses **shadcn/ui** for UI components - a collection of re-usable components built with Radix UI and Tailwind CSS.
+**Re-usable components** built with Radix UI and Tailwind CSS.
 
 ### Component Usage
-- **ALWAYS check existing components** before creating new ones - look in `resources/js/components/ui/`
-- **Reuse existing components** - Button, Card, Input, Select, Dialog, Sheet, Dropdown, etc.
-- **Follow shadcn patterns** - components are copied into your codebase, not installed as dependencies
-- **Customize as needed** - modify components in `resources/js/components/ui/` to fit project needs
+- **ALWAYS check `resources/js/components/ui/` FIRST** before creating new components
+- Components are copied into codebase (not npm packages)
+- Import from `@/components/ui/` path alias
+- Use composition to build complex UI
+- Use built-in variants instead of custom styling
+- Built-in accessibility and dark mode support
 
-### Common Components Available
-Check `resources/js/components/ui/` for available components. Common ones include:
-- `button.tsx` - Buttons with variants (default, destructive, outline, ghost, link)
-- `card.tsx` - Card container with header, content, footer
-- `input.tsx` - Form input fields
-- `label.tsx` - Form labels
-- `select.tsx` - Dropdown selects
-- `dialog.tsx` - Modal dialogs
-- `sheet.tsx` - Slide-out panels
-- `dropdown-menu.tsx` - Dropdown menus
-- `separator.tsx` - Visual separators
-- `badge.tsx` - Status badges
-- `avatar.tsx` - User avatars
-- `skeleton.tsx` - Loading skeletons
+### Available Components
+button, card, input, label, select, dialog, sheet, dropdown-menu, separator, badge, avatar, skeleton
 
-### Component Conventions
-- **Import from `@/components/ui/`** - use path alias
-- **Use composition** - combine primitive components to build complex UI
-- **Variant props** - use built-in variants instead of custom styling
-- **Accessibility** - shadcn components have built-in accessibility
-- **Dark mode** - components support dark mode automatically
-
-<code-snippet name="shadcn Button Example" lang="tsx">
-import { Button } from "@/components/ui/button";
-
-export default function MyComponent() {
-    return (
-        <div>
-            <Button variant="default">Click me</Button>
-            <Button variant="destructive">Delete</Button>
-            <Button variant="outline">Cancel</Button>
-        </div>
-    );
-}
-</code-snippet>
-
-<code-snippet name="shadcn Form Example" lang="tsx">
+<code-snippet name="shadcn Example" lang="tsx">
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -762,46 +487,41 @@ export default function MyForm() {
             <CardHeader>
                 <CardTitle>User Information</CardTitle>
             </CardHeader>
-            <CardContent>
-                <div className="space-y-4">
-                    <div>
-                        <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" />
-                    </div>
-                    <Button type="submit">Save</Button>
+            <CardContent className="space-y-4">
+                <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" />
                 </div>
+                <Button type="submit">Save</Button>
             </CardContent>
         </Card>
     );
 }
 </code-snippet>
 
-### Adding New shadcn Components
-- Check if component exists in `resources/js/components/ui/` first
-- If not, check sibling projects or shadcn/ui documentation
-- Copy component code to `resources/js/components/ui/`
-- Ensure Tailwind v4 compatibility
-- Test dark mode support
+### Adding New Components
+1. Check `resources/js/components/ui/` first
+2. Check shadcn/ui documentation
+3. Copy to `resources/js/components/ui/`
+4. Ensure Tailwind v4 compatibility and dark mode support
 
 
-===react rules ===
+=== react rules ===
 
-## React & TypeScript
-
-This application uses React 18 with TypeScript for all frontend code.
+## React 18 & TypeScript
 
 ### Component Structure
-- **Use functional components** - no class components
-- **TypeScript interfaces** - define props interface for every component
-- **Export default** - page components use `export default`
-- **Named exports** - reusable components can use named exports
-- **File naming** - use lowercase with hyphens (e.g., `user-profile.tsx`, not `UserProfile.tsx`)
+- **Functional components only** (no class components)
+- **File naming**: lowercase with hyphens (`user-profile.tsx` not `UserProfile.tsx`)
+- **Page components**: `export default`
+- **Reusable components**: can use named exports
+- **TypeScript**: Define props interface for every component
 
 ### TypeScript Conventions
-- **Proper typing** - type all props, state, and function parameters
-- **Interface over type** - prefer `interface` for props
-- **No `any` type** - avoid using `any`, use proper types
-- **Import types** - use `import type` for type-only imports
+- Type all props, state, and function parameters
+- Prefer `interface` over `type` for props
+- No `any` type - use proper types
+- Use `import type` for type-only imports
 
 <code-snippet name="React Component Example" lang="tsx">
 import { type ReactNode } from "react";
@@ -809,14 +529,8 @@ import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
 
 interface DashboardProps {
-    user: {
-        name: string;
-        email: string;
-    };
-    stats: {
-        totalUsers: number;
-        activeUsers: number;
-    };
+    user: { name: string; email: string };
+    stats: { totalUsers: number; activeUsers: number };
 }
 
 export default function Dashboard({ user, stats }: DashboardProps) {
@@ -832,18 +546,16 @@ export default function Dashboard({ user, stats }: DashboardProps) {
 }
 </code-snippet>
 
-### State Management
-- **useState** - for local component state
-- **Inertia props** - for server state (passed from Laravel)
-- **useForm** - for form state (from `@inertiajs/react`)
-- **No Redux/Zustand** - unless explicitly needed and approved
+### State & Forms
+- **`useState`** - local component state
+- **Inertia props** - server state (from Laravel)
+- **`useForm`** - form state (from `@inertiajs/react`)
+- **No Redux/Zustand** unless explicitly approved
 
-### Form Handling with Inertia
-- **Always use `useForm` hook** from `@inertiajs/react`
-- **Type-safe** - define form data interface
-- **Validation** - backend validation via Laravel Data objects
-- **Error display** - use `form.errors` for validation errors
-- **Loading states** - use `form.processing` for submit state
+### Inertia Forms
+- Type-safe: define form data interface
+- Validation: backend via Laravel Data objects
+- Errors: `form.errors`, Loading: `form.processing`
 
 <code-snippet name="Inertia Form Example" lang="tsx">
 import { useForm } from "@inertiajs/react";
@@ -857,10 +569,7 @@ interface FormData {
 }
 
 export default function UserForm() {
-    const form = useForm<FormData>({
-        name: "",
-        email: "",
-    });
+    const form = useForm<FormData>({ name: "", email: "" });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -892,50 +601,40 @@ export default function UserForm() {
 
 === peopledear architecture ===
 
-## PeopleDear Architecture Patterns
+## PeopleDear Architecture
 
-This application follows specific architecture patterns to maintain clean, testable, and maintainable code. See `.ai/guidelines/app.actions.blade.php` for comprehensive Action pattern guidelines.
+See `.ai/guidelines/app.actions.blade.php` for comprehensive Action pattern guidelines.
 
-### Controller Structure
-- **Flat Hierarchy**: Controllers live directly in `app/Http/Controllers/` - no nested `Admin/` folders
-- **Clear Naming**: Controller names are descriptive enough without namespace nesting
-- **Single Action Controllers**: Use `__invoke()` for controllers that handle one specific action
-  - Examples: `ActivateUserController`, `DeactivateUserController`, `ResendInvitationController`
-- **Multi-Action Controllers**: Use named methods for related actions
-  - Examples: `UserController` with `index()`, `InvitationController` with `store()` and `destroy()`
+### Controllers (`app/Http/Controllers/`)
+- **Flat hierarchy** - NO nested `Admin/` folders
+- **Single-action controllers**: Use `__invoke()` (e.g., `ActivateUserController`)
+- **Multi-action controllers**: Named methods for related actions (e.g., `UserController` with `index()`)
+- Receive Actions/Queries via dependency injection
+- Use Laravel 12 contextual attributes (`#[CurrentUser]`)
 
 ### Actions vs Queries
-- **Actions** (`app/Actions/`): Handle create and update operations
-  - Use `php artisan make:action "{name}" --no-interaction` to create
-  - Must implement a `handle()` method - NOT `__invoke()`
-  - Actions perform ALL business logic and updates - keep models lean
-  - Wrap complex operations in `DB::transaction()` when needed
-- **Queries** (`app/Queries/`): Handle read operations
-  - Must implement a `builder()` method that returns an Eloquent or Query Builder instance
-  - Use descriptive names without "Get" prefix (e.g., `UsersQuery` not `GetUsersQuery`)
+**Actions** (`app/Actions/`) - Create & update operations
+- Create: `php artisan make:action "{name}" --no-interaction`
+- Must implement `handle()` method (NOT `__invoke()`)
+- Contain ALL business logic - keep models lean
+- Wrap complex operations in `DB::transaction()`
+
+**Queries** (`app/Queries/`) - Read operations
+- Must implement `builder()` method returning Eloquent/Query Builder
+- Descriptive names WITHOUT "Get" prefix (e.g., `UsersQuery` not `GetUsersQuery`)
 
 ### Lean Models Philosophy
-- **Keep Models as lean as possible** - Models should contain ONLY:
-  - Relationships, simple attribute accessors/mutators, casts, simple query scopes
-  - Simple boolean helper methods (e.g., `isAdmin()`, `isPending()`)
-- **Do NOT add update methods to Models** - all updates must be in Action classes
-- **Default Values**: Use Model's `$attributes` property ONLY for simple defaults
-- This ensures Models stay simple and business logic is explicit and testable
+**Models contain ONLY**:
+- Relationships, simple accessors/mutators, casts, simple query scopes
+- Simple boolean helpers (`isAdmin()`, `isPending()`)
+- Simple defaults via `$attributes` property
 
-### Frontend Structure
-- **Flat Page Structure**: Pages live in `resources/js/pages/` with lowercase folder names
-  - Use `resources/js/pages/user/index.tsx` not `resources/js/pages/Admin/Users/Index.tsx`
-  - Nested folders allowed for grouping (e.g., `pages/admin/`, `pages/user/`)
-- **shadcn/ui Components**: Use shadcn/ui components from `@/components/ui/` for all UI elements
-  - Check existing components before creating new ones
-- **Component Organization**:
-  - UI primitives: `resources/js/components/ui/`
-  - Reusable components: `resources/js/components/`
-  - Layouts: `resources/js/layouts/`
-  - Pages: `resources/js/pages/`
+**❌ NO update methods in Models** - all updates in Action classes
 
-### Dependency Injection
-- Controllers receive Actions and Queries via dependency injection
-- Use Laravel 12's contextual attributes (`#[CurrentUser]`, etc.)
+### Frontend Organization
+- **Pages**: `resources/js/pages/` (lowercase, flat with optional grouping: `pages/admin/`)
+- **Layouts**: `resources/js/layouts/`
+- **Components**: `resources/js/components/`
+- **UI primitives**: `resources/js/components/ui/` (shadcn/ui)
 
 </laravel-boost-guidelines>

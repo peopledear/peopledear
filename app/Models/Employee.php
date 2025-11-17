@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\PeopleDear\EmploymentStatus;
+use App\Models\Scopes\OrganizationScope;
 use Database\Factories\EmployeeFactory;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property-read Office|null $office
  * @property-read User|null $user
  */
+#[ScopedBy([OrganizationScope::class])]
 final class Employee extends Model
 {
     /** @use HasFactory<EmployeeFactory> */

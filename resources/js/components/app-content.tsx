@@ -20,7 +20,7 @@ export function AppContent({
         <main className="flex flex-1 flex-col px-0 py-px sm:px-2" {...props}>
             <div
                 id="main-content-wrapper"
-                className="bg-background relative mx-auto flex w-full grow flex-col items-stretch rounded-none shadow-xs ring-0 ring-gray-200 sm:rounded-lg sm:ring-1"
+                className="bg-weak relative mx-auto flex w-full grow flex-col items-stretch rounded-none shadow-xs ring-0 ring-gray-200 sm:rounded-lg sm:ring-1 dark:ring-gray-700"
             >
                 {pageHeader && pageHeader}
                 <div

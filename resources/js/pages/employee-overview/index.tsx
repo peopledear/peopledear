@@ -17,7 +17,7 @@ export default function EmployeeOverview() {
         <EmployeeLayout
             breadcrumbs={breadcrumbs}
             pageHeader={
-                <div className="rounded-t-xl border-b border-gray-200 bg-gray-50 px-4 py-10 sm:px-6">
+                <div className="rounded-t-xl border-b border-gray-200 px-4 py-10 sm:px-6">
                     <div className="mx-auto flex w-full max-w-6xl flex-col">
                         {/* Page Header To be extracted later */}
                         <div className="flex items-center justify-between">

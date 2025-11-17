@@ -41,5 +41,12 @@ final class OrganizationSeeder extends Seeder
             'postal_code' => '94102',
             'country' => 'United States',
         ]);
+
+        Organization::factory()->create([
+            'name' => 'PeopleDear The Scond.',
+            'vat_number' => 'VAT123456779',
+            'ssn' => 'SSN987654421',
+            'phone' => '+1-555-0100',
+        ]);
     }
 }

@@ -7,7 +7,9 @@ namespace App\Models;
 use App\Contracts\Addressable;
 use App\Enums\PeopleDear\OfficeType;
 use App\Models\Concerns\HasAddress;
+use App\Models\Scopes\OrganizationScope;
 use Database\Factories\OfficeFactory;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read Organization $organization
  * @property-read Address $address
  */
+#[ScopedBy([OrganizationScope::class])]
 final class Office extends Model implements Addressable
 {
     use HasAddress;

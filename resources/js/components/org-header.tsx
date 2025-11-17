@@ -2,6 +2,7 @@ import { AppHeader } from "@/components/app-header";
 import { type BreadcrumbItem, type NavItem } from "@/types";
 import { dashboard } from "@/wayfinder/routes";
 import { overview } from "@/wayfinder/routes/org";
+import { index } from "@/wayfinder/routes/org/employees";
 import { edit } from "@/wayfinder/routes/org/settings/organization";
 import {
     Calendar,
@@ -39,7 +40,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: "Employees",
-        href: dashboard(),
+        href: index(),
         icon: UsersIcon,
         show: true,
     },

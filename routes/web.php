@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\EmployeeOverviewController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationEmployeeController;
 use App\Http\Controllers\OrganizationOfficeController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
@@ -41,8 +42,17 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                 ->middleware('can:employees.view')
                 ->name('overview');
 
-            Route::get('create', [OrganizationController::class, 'create'])->name('create');
-            Route::post('create', [OrganizationController::class, 'store'])->name('store');
+            Route::as('employees.')->prefix('employees')
+                ->group(function (): void {
+                    Route::get('/', [OrganizationEmployeeController::class, 'index'])
+                        ->name('index');
+                });
+
+            Route::get('create', [OrganizationController::class, 'create'])
+                ->name('create');
+
+            Route::post('create', [OrganizationController::class, 'store'])
+                ->name('store');
 
             // Organization Settings...
             Route::get('settings', [OrganizationController::class, 'edit'])

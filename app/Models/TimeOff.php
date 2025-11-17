@@ -6,8 +6,10 @@ namespace App\Models;
 
 use App\Enums\PeopleDear\TimeOffStatus;
 use App\Enums\PeopleDear\TimeOffType;
+use App\Models\Scopes\OrganizationScope;
 use Carbon\Carbon;
 use Database\Factories\TimeOffFactory;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Organization $organization
  * @property-read Employee $employee
  */
+#[ScopedBy([OrganizationScope::class])]
 final class TimeOff extends Model
 {
     /** @use HasFactory<TimeOffFactory> */

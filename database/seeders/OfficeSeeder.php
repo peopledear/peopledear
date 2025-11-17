@@ -16,9 +16,22 @@ final class OfficeSeeder extends Seeder
      */
     public function run(): void
     {
-        $organization = Organization::query()->first();
+        /** @var Organization $organization */
+        $organization = Organization::query()
+            ->first();
+
+        /** @var Organization $secondOrganization */
+        $secondOrganization = Organization::query()
+            ->skip(1)
+            ->first();
 
         Office::factory()->for($organization)
+            ->create([
+                'name' => 'Headquarters',
+                'type' => OfficeType::Headquarters,
+            ]);
+
+        Office::factory()->for($secondOrganization)
             ->create([
                 'name' => 'Headquarters',
                 'type' => OfficeType::Headquarters,

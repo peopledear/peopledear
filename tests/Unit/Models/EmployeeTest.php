@@ -7,7 +7,9 @@ use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;
 use App\Models\User;
+use App\Models\VacationBalance;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 test('employee has organization relationship', function (): void {
     /** @var Employee $employee */
@@ -174,6 +176,31 @@ test('employee hire_date can be null', function (): void {
     ]);
 
     expect($employee->hire_date)->toBeNull();
+});
+
+test('employee has vacation balances relationship', function (): void {
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly();
+
+    expect($employee->vacationBalances())->toBeInstanceOf(HasMany::class);
+});
+
+test('employee vacation balances relationship is properly loaded', function (): void {
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly();
+
+    /** @var VacationBalance $vacationBalance */
+    $vacationBalance = VacationBalance::factory()
+        ->for($employee)
+        ->for($employee->organization)
+        ->createQuietly();
+
+    $employee->load('vacationBalances');
+
+    expect($employee->vacationBalances)
+        ->toHaveCount(1)
+        ->and($employee->vacationBalances->first()->id)
+        ->toBe($vacationBalance->id);
 });
 
 test('to array', function (): void {

@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use App\Enums\PeopleDear\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Middleware;
 use Override;
@@ -60,6 +61,7 @@ final class HandleInertiaRequests extends Middleware
                     UserRole::Manager,
                 ]) ?? false) && ! $isOrgUri,
             ],
+            'previousPath' => URL::previousPath(),
         ];
 
     }

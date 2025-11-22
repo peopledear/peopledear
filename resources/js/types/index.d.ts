@@ -1,3 +1,4 @@
+import Organization from "@/wayfinder/routes/org/settings/organization";
 import { InertiaLinkProps } from "@inertiajs/react";
 import { LucideIcon } from "lucide-react";
 
@@ -37,6 +38,8 @@ export interface SharedData {
         author: string;
     };
 
+    previousPath?: string;
+
     [key: string]: unknown;
 }
 
@@ -51,4 +54,63 @@ export interface User {
     updated_at: string;
 
     [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface Employee {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string;
+    job_title?: string;
+    hire_date?: string;
+    status?: "active" | "inactive" | "on_leave";
+    organization?: Organization;
+    user?: User;
+}
+
+export interface Organization {
+    id: number;
+    name: string;
+    vat_number?: string;
+    ssn?: string;
+    phone?: string;
+}
+
+export enum RequestStatus {
+    Pending = 1,
+    Approved = 2,
+    Rejected = 3,
+    Cancelled = 4,
+}
+
+export enum TimeOffType {
+    Holiday = 1,
+    SickLeave = 2,
+    PersonalDay = 3,
+    Bereavement = 4,
+}
+
+export type EnumOptions = Record<number, string>;
+
+export interface TimeOffRequest {
+    id: number;
+    organizationId: number;
+    employeeId: number;
+    type: TimeOffType;
+    status: RequestStatus;
+    startDate: string;
+    endDate: string | null;
+    isHalfDay: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface VacationBalance {
+    year: number;
+    fromLastYear: string;
+    accrued: string;
+    taken: string;
+    remaining: string;
+    lastYearBalance: string;
+    yearBalance: string;
 }

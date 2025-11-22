@@ -87,6 +87,7 @@
             "composer bump",
             "npx npm-check-updates -u"
         ],
+        "wayfinder:generate": "php artisan wayfinder:generate --path=resources/js/wayfinder --with-form",
         "lint": [
             "rector",
             "pint --parallel",

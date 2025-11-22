@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\PeopleDear\EmploymentStatus;
+use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Scopes\OrganizationScope;
 use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -34,14 +36,10 @@ use Illuminate\Support\Carbon;
 #[ScopedBy([OrganizationScope::class])]
 final class Employee extends Model
 {
+    use BelongsToOrganization;
+
     /** @use HasFactory<EmployeeFactory> */
     use HasFactory;
-
-    /** @return BelongsTo<Organization, $this> */
-    public function organization(): BelongsTo
-    {
-        return $this->belongsTo(Organization::class);
-    }
 
     /** @return BelongsTo<Office, $this> */
     public function office(): BelongsTo
@@ -72,5 +70,13 @@ final class Employee extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @return HasMany<VacationBalance, $this>
+     */
+    public function vacationBalances(): HasMany
+    {
+        return $this->hasMany(VacationBalance::class, 'employee_id', 'id');
     }
 }

@@ -12,7 +12,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('time_offs', function (Blueprint $table): void {
+        Schema::create('time_off_requests', function (Blueprint $table): void {
             $table->id();
             $table->timestamps();
             $table->foreignIdFor(Organization::class)->constrained();

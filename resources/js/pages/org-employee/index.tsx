@@ -2,18 +2,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useInitials } from "@/hooks/use-initials";
 import OrgLayout from "@/layouts/org-layout";
+import { Employee } from "@/types";
 import { Head } from "@inertiajs/react";
 import { PlusIcon } from "lucide-react";
-
-interface Employee {
-    id: number;
-    name: string;
-    email: string;
-    phone?: string;
-    job_title?: string;
-    hire_date?: string;
-    status?: "active" | "inactive" | "on_leave";
-}
 
 interface OrgEmployeePageProps {
     employees?: Employee[];

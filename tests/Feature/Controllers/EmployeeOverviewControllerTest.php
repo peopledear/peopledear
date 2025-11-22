@@ -3,14 +3,26 @@
 declare(strict_types=1);
 
 use App\Enums\PeopleDear\UserRole;
+use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\User;
+use App\Models\VacationBalance;
 
 test('renders the employee overview page', function (): void {
-    Organization::factory()
+    $organization = Organization::factory()
         ->createQuietly();
 
     $user = User::factory()
+        ->createQuietly();
+
+    $employee = Employee::factory()
+        ->for($organization)
+        ->for($user)
+        ->createQuietly();
+
+    VacationBalance::factory()
+        ->for($employee)
+        ->for($organization)
         ->createQuietly();
 
     $user->assignRole(UserRole::Employee);
@@ -21,5 +33,10 @@ test('renders the employee overview page', function (): void {
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('employee-overview/index')
-            ->has('employee'));
+            ->has('employee')
+            ->has('vacationBalance')
+            ->has('timeOffRequests')
+            ->has('types')
+            ->has('statuses')
+        );
 });

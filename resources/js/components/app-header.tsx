@@ -30,7 +30,6 @@ import { UserMenuContent } from "@/components/user-menu-content";
 import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
-import { dashboard } from "@/wayfinder/routes";
 import { overview as employeeOverview } from "@/wayfinder/routes/employee";
 import { overview } from "@/wayfinder/routes/org";
 import { Link, usePage } from "@inertiajs/react";
@@ -164,7 +163,7 @@ export function AppHeader({
                         </Sheet>
                     </div>
                     <Link
-                        href={dashboard()}
+                        href={employeeOverview()}
                         prefetch
                         className="flex items-center space-x-2"
                     >

@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property-read int $organization_id
  * @property-read int|null $office_id
  * @property-read int|null $user_id
+ * @property-read int|null $manager_id
  * @property-read string $name
  * @property-read string|null $email
  * @property-read string|null $phone
@@ -32,6 +33,8 @@ use Illuminate\Support\Carbon;
  * @property-read Organization $organization
  * @property-read Office|null $office
  * @property-read User|null $user
+ * @property-read Employee|null $manager
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Employee> $directReports
  */
 #[ScopedBy([OrganizationScope::class])]
 final class Employee extends Model
@@ -53,6 +56,18 @@ final class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
+    /** @return BelongsTo<Employee, $this> */
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class, 'manager_id');
+    }
+
+    /** @return HasMany<Employee, $this> */
+    public function directReports(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'manager_id');
+    }
+
     public function casts(): array
     {
         return [
@@ -60,6 +75,7 @@ final class Employee extends Model
             'organization_id' => 'integer',
             'office_id' => 'integer',
             'user_id' => 'integer',
+            'manager_id' => 'integer',
             'name' => 'string',
             'email' => 'string',
             'phone' => 'string',

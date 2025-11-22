@@ -4,34 +4,46 @@ declare(strict_types=1);
 
 namespace App\Actions\TimeOffRequest;
 
+use App\Actions\Approval\CreateApproval;
 use App\Data\PeopleDear\TimeOffRequest\CreateTimeOffRequestData;
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\TimeOffType;
 use App\Models\TimeOffRequest;
+use App\Registries\TimeOffTypeRegistry;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 final readonly class CreateTimeOffRequest
 {
+    public function __construct(
+        private TimeOffTypeRegistry $registry,
+        private CreateApproval $createApproval,
+    ) {}
+
+    /**
+     * @throws Throwable
+     */
     public function handle(CreateTimeOffRequestData $data): TimeOffRequest
     {
-        /** @var TimeOffRequest $timeOff */
-        $timeOff = TimeOffRequest::query()->create([
-            'organization_id' => $data->organization_id,
-            'employee_id' => $data->employee_id,
-            'type' => $data->type,
-            'status' => RequestStatus::Pending,
-            'start_date' => $data->start_date,
-            'end_date' => $data->end_date,
-            'is_half_day' => $data->is_half_day,
-        ]);
+        return DB::transaction(function () use ($data): TimeOffRequest {
+            /** @var TimeOffRequest $timeOff */
+            $timeOff = TimeOffRequest::query()
+                ->create([
+                    ...$data->toArray(),
+                    'status' => RequestStatus::Pending,
+                ]);
 
-        $isAutoApproved = $data->type === TimeOffType::SickLeave;
+            $status = $data->type->isAutomaticApproved()
+                ? RequestStatus::Approved
+                : RequestStatus::Pending;
 
-        $timeOff->approval()->create([
-            'organization_id' => $data->organization_id,
-            'status' => $isAutoApproved ? RequestStatus::Approved : RequestStatus::Pending,
-            'approved_at' => $isAutoApproved ? now() : null,
-        ]);
+            $this->createApproval->handle($timeOff, $data->organization_id, $status);
 
-        return $timeOff;
+            if ($data->type->isAutomaticApproved()) {
+                $processor = $this->registry->getProcessor($data->type);
+                $processor->process($timeOff);
+            }
+
+            return $timeOff;
+        });
     }
 }

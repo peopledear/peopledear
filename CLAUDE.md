@@ -638,3 +638,10 @@ See `.ai/guidelines/app.actions.blade.php` for comprehensive Action pattern guid
 - **UI primitives**: `resources/js/components/ui/` (shadcn/ui)
 
 </laravel-boost-guidelines>
+
+## Active Technologies
+- PHP 8.4 with `declare(strict_types=1)` + Laravel 12, Spatie Laravel Data v4, Inertia.js v2 (002-timeoff-type-processors)
+- PostgreSQL (existing VacationBalance table) (002-timeoff-type-processors)
+
+## Recent Changes
+- 002-timeoff-type-processors: Added PHP 8.4 with `declare(strict_types=1)` + Laravel 12, Spatie Laravel Data v4, Inertia.js v2

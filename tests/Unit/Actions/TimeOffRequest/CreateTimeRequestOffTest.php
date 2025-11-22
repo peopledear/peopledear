@@ -9,165 +9,197 @@ use App\Enums\PeopleDear\TimeOffType;
 use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\TimeOffRequest;
+use Illuminate\Support\Facades\Date;
 
-beforeEach(function (): void {
-    $this->action = app(CreateTimeOffRequest::class);
-});
+beforeEach(
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var CreateTimeOffRequest $action */
+        $action = app(CreateTimeOffRequest::class);
 
-test('creates time off with all fields', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+        $this->action = $action;
+    });
 
-    /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
-        'organization_id' => $organization->id,
-    ]);
+test('creates time off with all fields',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
 
-    $data = new CreateTimeOffRequestData(
-        organization_id: $organization->id,
-        employee_id: $employee->id,
-        type: TimeOffType::Vacation,
-        start_date: Illuminate\Support\Facades\Date::parse('2024-06-01'),
-        end_date: Illuminate\Support\Facades\Date::parse('2024-06-05'),
-        is_half_day: false,
-    );
+        /** @var Employee $employee */
+        $employee = Employee::factory()->createQuietly([
+            'organization_id' => $organization->id,
+        ]);
 
-    $result = $this->action->handle($data);
+        $data = new CreateTimeOffRequestData(
+            organization_id: $organization->id,
+            employee_id: $employee->id,
+            type: TimeOffType::Vacation,
+            start_date: Date::parse('2024-06-01'),
+            end_date: Date::parse('2024-06-05'),
+            is_half_day: false,
+        );
 
-    expect($result)
-        ->toBeInstanceOf(TimeOffRequest::class)
-        ->and($result->organization_id)->toBe($organization->id)
-        ->and($result->employee_id)->toBe($employee->id)
-        ->and($result->type)->toBe(TimeOffType::Vacation)
-        ->and($result->status)->toBe(RequestStatus::Pending)
-        ->and($result->start_date->format('Y-m-d'))->toBe('2024-06-01')
-        ->and($result->end_date->format('Y-m-d'))->toBe('2024-06-05')
-        ->and($result->is_half_day)->toBeFalse();
-});
+        $result = $this->action->handle($data);
 
-test('creates half day time off with null end_date', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+        expect($result)
+            ->toBeInstanceOf(TimeOffRequest::class)
+            ->and($result->organization_id)->toBe($organization->id)
+            ->and($result->employee_id)->toBe($employee->id)
+            ->and($result->type)->toBe(TimeOffType::Vacation)
+            ->and($result->status)->toBe(RequestStatus::Pending)
+            ->and($result->start_date->format('Y-m-d'))->toBe('2024-06-01')
+            ->and($result->end_date->format('Y-m-d'))->toBe('2024-06-05')
+            ->and($result->is_half_day)->toBeFalse();
+    });
 
-    /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
-        'organization_id' => $organization->id,
-    ]);
+test('creates half day time off with null end_date',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
 
-    $data = new CreateTimeOffRequestData(
-        organization_id: $organization->id,
-        employee_id: $employee->id,
-        type: TimeOffType::SickLeave,
-        start_date: Illuminate\Support\Facades\Date::parse('2024-06-01'),
-        end_date: null,
-        is_half_day: true,
-    );
+        /** @var Employee $employee */
+        $employee = Employee::factory()->createQuietly([
+            'organization_id' => $organization->id,
+        ]);
 
-    $result = $this->action->handle($data);
+        $data = new CreateTimeOffRequestData(
+            organization_id: $organization->id,
+            employee_id: $employee->id,
+            type: TimeOffType::SickLeave,
+            start_date: Date::parse('2024-06-01'),
+            end_date: null,
+            is_half_day: true,
+        );
 
-    expect($result)
-        ->toBeInstanceOf(TimeOffRequest::class)
-        ->and($result->type)->toBe(TimeOffType::SickLeave)
-        ->and($result->status)->toBe(RequestStatus::Pending)
-        ->and($result->start_date->format('Y-m-d'))->toBe('2024-06-01')
-        ->and($result->end_date)->toBeNull()
-        ->and($result->is_half_day)->toBeTrue();
-});
+        $result = $this->action->handle($data);
 
-test('creates time off with personal day type', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+        expect($result)
+            ->toBeInstanceOf(TimeOffRequest::class)
+            ->and($result->type)->toBe(TimeOffType::SickLeave)
+            ->and($result->status)->toBe(RequestStatus::Approved) // Auto-approved
+            ->and($result->start_date->format('Y-m-d'))->toBe('2024-06-01')
+            ->and($result->end_date)->toBeNull()
+            ->and($result->is_half_day)->toBeTrue();
+    });
 
-    /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
-        'organization_id' => $organization->id,
-    ]);
+test('creates time off with personal day type',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
 
-    $data = new CreateTimeOffRequestData(
-        organization_id: $organization->id,
-        employee_id: $employee->id,
-        type: TimeOffType::PersonalDay,
-        start_date: Illuminate\Support\Facades\Date::parse('2024-06-01'),
-        end_date: null,
-        is_half_day: true,
-    );
+        /** @var Employee $employee */
+        $employee = Employee::factory()->createQuietly([
+            'organization_id' => $organization->id,
+        ]);
 
-    $result = $this->action->handle($data);
+        $data = new CreateTimeOffRequestData(
+            organization_id: $organization->id,
+            employee_id: $employee->id,
+            type: TimeOffType::PersonalDay,
+            start_date: Date::parse('2024-06-01'),
+            end_date: null,
+            is_half_day: true,
+        );
 
-    expect($result->type)->toBe(TimeOffType::PersonalDay)
-        ->and($result->status)->toBe(RequestStatus::Pending);
-});
+        $result = $this->action->handle($data);
 
-test('creates time off with bereavement type', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+        expect($result->type)->toBe(TimeOffType::PersonalDay)
+            ->and($result->status)->toBe(RequestStatus::Pending);
+    });
 
-    /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
-        'organization_id' => $organization->id,
-    ]);
+test('creates time off with bereavement type',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
 
-    $data = new CreateTimeOffRequestData(
-        organization_id: $organization->id,
-        employee_id: $employee->id,
-        type: TimeOffType::Bereavement,
-        start_date: Illuminate\Support\Facades\Date::parse('2024-06-01'),
-        end_date: Illuminate\Support\Facades\Date::parse('2024-06-03'),
-        is_half_day: false,
-    );
+        /** @var Employee $employee */
+        $employee = Employee::factory()->createQuietly([
+            'organization_id' => $organization->id,
+        ]);
 
-    $result = $this->action->handle($data);
+        $data = new CreateTimeOffRequestData(
+            organization_id: $organization->id,
+            employee_id: $employee->id,
+            type: TimeOffType::Bereavement,
+            start_date: Date::parse('2024-06-01'),
+            end_date: Date::parse('2024-06-03'),
+            is_half_day: false,
+        );
 
-    expect($result->type)->toBe(TimeOffType::Bereavement)
-        ->and($result->status)->toBe(RequestStatus::Pending)
-        ->and($result->end_date)->not->toBeNull();
-});
+        $result = $this->action->handle($data);
 
-test('always sets status to pending on creation', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+        expect($result->type)->toBe(TimeOffType::Bereavement)
+            ->and($result->status)->toBe(RequestStatus::Approved) // Auto-approved
+            ->and($result->end_date)->not->toBeNull();
+    });
 
-    /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
-        'organization_id' => $organization->id,
-    ]);
+test('always sets status to pending on creation',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
 
-    $data = new CreateTimeOffRequestData(
-        organization_id: $organization->id,
-        employee_id: $employee->id,
-        type: TimeOffType::Vacation,
-        start_date: Illuminate\Support\Facades\Date::parse('2024-06-01'),
-        end_date: Illuminate\Support\Facades\Date::parse('2024-06-05'),
-        is_half_day: false,
-    );
+        /** @var Employee $employee */
+        $employee = Employee::factory()->createQuietly([
+            'organization_id' => $organization->id,
+        ]);
 
-    $result = $this->action->handle($data);
+        $data = new CreateTimeOffRequestData(
+            organization_id: $organization->id,
+            employee_id: $employee->id,
+            type: TimeOffType::Vacation,
+            start_date: Date::parse('2024-06-01'),
+            end_date: Date::parse('2024-06-05'),
+            is_half_day: false,
+        );
 
-    expect($result->status)->toBe(RequestStatus::Pending);
-});
+        $result = $this->action->handle($data);
 
-test('creates multi day time off with end_date', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+        expect($result->status)->toBe(RequestStatus::Pending);
+    });
 
-    /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
-        'organization_id' => $organization->id,
-    ]);
+test('creates multi day time off with end_date',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
 
-    $data = new CreateTimeOffRequestData(
-        organization_id: $organization->id,
-        employee_id: $employee->id,
-        type: TimeOffType::Vacation,
-        start_date: Illuminate\Support\Facades\Date::parse('2024-06-01'),
-        end_date: Illuminate\Support\Facades\Date::parse('2024-06-10'),
-        is_half_day: false,
-    );
+        /** @var Employee $employee */
+        $employee = Employee::factory()->createQuietly([
+            'organization_id' => $organization->id,
+        ]);
 
-    $result = $this->action->handle($data);
+        $data = new CreateTimeOffRequestData(
+            organization_id: $organization->id,
+            employee_id: $employee->id,
+            type: TimeOffType::Vacation,
+            start_date: Date::parse('2024-06-01'),
+            end_date: Date::parse('2024-06-10'),
+            is_half_day: false,
+        );
 
-    expect($result->is_half_day)->toBeFalse()
-        ->and($result->end_date)->not->toBeNull()
-        ->and($result->end_date->format('Y-m-d'))->toBe('2024-06-10')
-        ->and($result->start_date->format('Y-m-d'))->toBe('2024-06-01');
-});
+        $result = $this->action->handle($data);
+
+        expect($result->is_half_day)->toBeFalse()
+            ->and($result->end_date)->not->toBeNull()
+            ->and($result->end_date->format('Y-m-d'))->toBe('2024-06-10')
+            ->and($result->start_date->format('Y-m-d'))->toBe('2024-06-01');
+    });

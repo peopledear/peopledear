@@ -10,6 +10,9 @@ use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
+/**
+ * @method array<string, mixed> toArray()
+ */
 final class UpdateTimeOffRequestData extends Data
 {
     public function __construct(

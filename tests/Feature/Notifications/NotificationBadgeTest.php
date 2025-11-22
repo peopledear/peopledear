@@ -14,15 +14,16 @@ test('notification count is shared on authenticated pages', function (): void {
     /** @var User $user */
     $user = User::factory()->createQuietly();
 
-    Employee::factory()
+    /** @var Employee $employee */
+    $employee = Employee::factory()
         ->for($organization)
         ->for($user)
         ->createQuietly();
 
     Session::put('current_organization', $organization->id);
 
-    $user->notify(new GeneralNotification('Test 1', 'Message 1'));
-    $user->notify(new GeneralNotification('Test 2', 'Message 2'));
+    $employee->notify(new GeneralNotification('Test 1', 'Message 1'));
+    $employee->notify(new GeneralNotification('Test 2', 'Message 2'));
 
     $this->actingAs($user)
         ->get(route('notifications.index'))
@@ -39,17 +40,18 @@ test('notification count updates after marking as read', function (): void {
     /** @var User $user */
     $user = User::factory()->createQuietly();
 
-    Employee::factory()
+    /** @var Employee $employee */
+    $employee = Employee::factory()
         ->for($organization)
         ->for($user)
         ->createQuietly();
 
     Session::put('current_organization', $organization->id);
 
-    $user->notify(new GeneralNotification('Test 1', 'Message 1'));
-    $user->notify(new GeneralNotification('Test 2', 'Message 2'));
+    $employee->notify(new GeneralNotification('Test 1', 'Message 1'));
+    $employee->notify(new GeneralNotification('Test 2', 'Message 2'));
 
-    $notification = $user->notifications()->first();
+    $notification = $employee->notifications()->first();
     $this->actingAs($user)
         ->post(route('notifications.mark-read', $notification))
         ->assertRedirect();

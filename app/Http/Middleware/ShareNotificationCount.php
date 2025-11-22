@@ -22,7 +22,7 @@ final class ShareNotificationCount
     {
         if ($request->user()) {
             $notifications = $request->user()
-                ->notifications()
+                ->employee?->notifications()
                 ->take(5)
                 ->get()
                 ->map(function (Notification $notification): NotificationData {
@@ -41,7 +41,7 @@ final class ShareNotificationCount
                 })
                 ->all();
 
-            Inertia::share('notificationUnreadCount', $request->user()->unreadNotifications()->count());
+            Inertia::share('notificationUnreadCount', $request->user()->employee?->unreadNotifications()->count() ?? 0);
             Inertia::share('recentNotifications', $notifications);
         }
 

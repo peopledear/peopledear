@@ -33,9 +33,10 @@ import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
 import { overview as employeeOverview } from "@/wayfinder/routes/employee";
 import { overview } from "@/wayfinder/routes/org";
 import { Link, usePage } from "@inertiajs/react";
-import { BookOpen, EyeIcon, Folder, Menu, Search } from "lucide-react";
+import { EyeIcon, Menu, Search } from "lucide-react";
 import AppLogo from "./app-logo";
 import AppLogoIcon from "./app-logo-icon";
+import { NotificationDropdown } from "./notifications/notification-dropdown";
 
 interface AppHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
@@ -66,7 +67,7 @@ export function AppHeader({
             icon: EyeIcon,
             show: show.employeeLink,
         },
-        {
+        /*{
             title: "Repository",
             href: "https://github.com/laravel/react-starter-kit",
             icon: Folder,
@@ -77,7 +78,7 @@ export function AppHeader({
             href: "https://laravel.com/docs/starter-kits#react",
             icon: BookOpen,
             target: "_blank",
-        },
+        },*/
     ].filter((item) => item.show !== false);
 
     mainNavItems = mainNavItems.filter((item) => item.show !== false);
@@ -218,6 +219,7 @@ export function AppHeader({
                                 ))}
                             </div>
                         </div>
+                        <NotificationDropdown />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button

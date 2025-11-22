@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasNotifications;
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -33,8 +34,11 @@ final class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasFactory;
 
+    use HasNotifications;
     use HasRoles;
-    use Notifiable;
+    use Notifiable {
+        HasNotifications::notifications insteadof Notifiable;
+    }
     use TwoFactorAuthenticatable;
 
     /**

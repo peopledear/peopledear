@@ -7,7 +7,6 @@ namespace App\Actions\TimeOffRequest;
 use App\Data\PeopleDear\TimeOffRequest\CreateTimeOffRequestData;
 use App\Enums\PeopleDear\RequestStatus;
 use App\Enums\PeopleDear\TimeOffType;
-use App\Models\Approval;
 use App\Models\TimeOffRequest;
 
 final readonly class CreateTimeOffRequest
@@ -27,8 +26,7 @@ final readonly class CreateTimeOffRequest
 
         $isAutoApproved = $data->type === TimeOffType::SickLeave;
 
-        /** @var Approval $approval */
-        $approval = $timeOff->approval()->create([
+        $timeOff->approval()->create([
             'organization_id' => $data->organization_id,
             'status' => $isAutoApproved ? RequestStatus::Approved : RequestStatus::Pending,
             'approved_at' => $isAutoApproved ? now() : null,

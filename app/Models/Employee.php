@@ -59,13 +59,13 @@ final class Employee extends Model
     /** @return BelongsTo<Employee, $this> */
     public function manager(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'manager_id');
+        return $this->belongsTo(self::class, 'manager_id');
     }
 
     /** @return HasMany<Employee, $this> */
     public function directReports(): HasMany
     {
-        return $this->hasMany(Employee::class, 'manager_id');
+        return $this->hasMany(self::class, 'manager_id');
     }
 
     public function casts(): array

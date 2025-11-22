@@ -18,42 +18,48 @@ final class EmployeeSeeder extends Seeder
     public function run(): void
     {
         /** @var Organization $organization */
-        $organization = Organization::query()
-            ->first();
+        $organization = Organization::query()->first();
 
         /** @var Organization $secondOrganization */
-        $secondOrganization = Organization::query()
-            ->skip(1)->first();
+        $secondOrganization = Organization::query()->skip(1)->first();
 
         $users = User::query()->get();
 
-        $users->each(static function (User $user) use ($organization, $secondOrganization): void {
+        $this->createEmployeesWithHierarchy($organization, $users);
+        $this->createEmployeesWithHierarchy($secondOrganization, $users);
+    }
 
-            /** @var Office $office */
-            $office = $organization->offices()->first();
+    /**
+     * @param  \Illuminate\Database\Eloquent\Collection<int, User>  $users
+     */
+    private function createEmployeesWithHierarchy(Organization $organization, $users): void
+    {
+        /** @var Office $office */
+        $office = $organization->offices()->first();
 
-            Employee::factory()
+        $employees = [];
+
+        foreach ($users as $index => $user) {
+            $factory = Employee::factory()
                 ->for($organization)
                 ->for($user)
-                ->for($office)
-                ->create([
-                    'name' => $user->name,
-                ]);
+                ->for($office);
 
-            /** @var Office $secondOffice */
-            $secondOffice = $secondOrganization
-                ->offices()
-                ->first();
+            // First employee is the owner (no manager)
+            // Second employee reports to owner
+            // Remaining employees report to second employee (department manager)
+            if ($index === 1 && isset($employees[0])) {
+                $factory = $factory->withManager($employees[0]);
+            } elseif ($index > 1 && isset($employees[1])) {
+                $factory = $factory->withManager($employees[1]);
+            }
 
-            Employee::factory()
-                ->for($secondOrganization)
-                ->for($user)
-                ->for($secondOffice)
-                ->create([
-                    'name' => $user->name,
-                ]);
+            /** @var Employee $employee */
+            $employee = $factory->create([
+                'name' => $user->name,
+            ]);
 
-        });
-
+            $employees[] = $employee;
+        }
     }
 }

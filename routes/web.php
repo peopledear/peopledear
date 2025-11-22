@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\ApprovalQueueController;
 use App\Http\Controllers\EmployeeOverviewController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationEmployeeController;
@@ -45,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('organization-required', fn () => Inertia::render('organization-required', []))
         ->name('organization-required');
 
-    Route::middleware(['role:people_manager|owner'])
+    Route::middleware(['role:people_manager|owner|manager'])
         ->prefix('org')
         ->as('org.')->group(function (): void {
 
@@ -57,6 +58,16 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                 ->group(function (): void {
                     Route::get('/', [OrganizationEmployeeController::class, 'index'])
                         ->name('index');
+                });
+
+            Route::as('approvals.')->prefix('approvals')
+                ->group(function (): void {
+                    Route::get('/', [ApprovalQueueController::class, 'index'])
+                        ->name('index');
+                    Route::post('/{approval}/approve', [ApprovalQueueController::class, 'approve'])
+                        ->name('approve');
+                    Route::post('/{approval}/reject', [ApprovalQueueController::class, 'reject'])
+                        ->name('reject');
                 });
 
             Route::get('create', [OrganizationController::class, 'create'])

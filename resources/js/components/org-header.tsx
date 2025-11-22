@@ -1,5 +1,6 @@
 import { AppHeader } from "@/components/app-header";
 import { type BreadcrumbItem, type NavItem } from "@/types";
+import ApprovalQueueController from "@/wayfinder/actions/App/Http/Controllers/ApprovalQueueController";
 import { dashboard } from "@/wayfinder/routes";
 import { overview } from "@/wayfinder/routes/org";
 import { index } from "@/wayfinder/routes/org/employees";
@@ -22,7 +23,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: "Approvals",
-        href: dashboard(),
+        href: ApprovalQueueController.index(),
         icon: CheckSquare,
         show: true,
     },

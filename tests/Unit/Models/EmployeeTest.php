@@ -185,6 +185,73 @@ test('employee has vacation balances relationship', function (): void {
     expect($employee->vacationBalances())->toBeInstanceOf(HasMany::class);
 });
 
+test('employee has manager relationship', function (): void {
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly();
+
+    expect($employee->manager())->toBeInstanceOf(BelongsTo::class);
+});
+
+test('employee manager relationship is properly loaded', function (): void {
+    /** @var Employee $manager */
+    $manager = Employee::factory()->createQuietly();
+
+    /** @var Employee $employee */
+    $employee = Employee::factory()
+        ->for($manager->organization)
+        ->withManager($manager)
+        ->createQuietly();
+
+    $employee->load('manager');
+
+    expect($employee->manager)
+        ->toBeInstanceOf(Employee::class)
+        ->and($employee->manager->id)
+        ->toBe($manager->id);
+});
+
+test('employee manager can be null', function (): void {
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly([
+        'manager_id' => null,
+    ]);
+
+    $employee->load('manager');
+
+    expect($employee->manager)->toBeNull();
+});
+
+test('employee has direct reports relationship', function (): void {
+    /** @var Employee $employee */
+    $employee = Employee::factory()->createQuietly();
+
+    expect($employee->directReports())->toBeInstanceOf(HasMany::class);
+});
+
+test('employee direct reports relationship is properly loaded', function (): void {
+    /** @var Employee $manager */
+    $manager = Employee::factory()->createQuietly();
+
+    /** @var Employee $report1 */
+    $report1 = Employee::factory()
+        ->for($manager->organization)
+        ->withManager($manager)
+        ->createQuietly();
+
+    /** @var Employee $report2 */
+    $report2 = Employee::factory()
+        ->for($manager->organization)
+        ->withManager($manager)
+        ->createQuietly();
+
+    $manager->load('directReports');
+
+    expect($manager->directReports)
+        ->toHaveCount(2)
+        ->and($manager->directReports->pluck('id')->toArray())
+        ->toContain($report1->id, $report2->id);
+});
+
 test('employee vacation balances relationship is properly loaded', function (): void {
     /** @var Employee $employee */
     $employee = Employee::factory()->createQuietly();
@@ -224,5 +291,6 @@ test('to array', function (): void {
             'job_title',
             'hire_date',
             'employment_status',
+            'manager_id',
         ]);
 });

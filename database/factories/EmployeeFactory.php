@@ -27,6 +27,7 @@ final class EmployeeFactory extends Factory
             'organization_id' => Organization::factory(),
             'office_id' => fake()->optional()->randomElement([null, Office::factory()]),
             'user_id' => fake()->optional()->randomElement([null, User::factory()]),
+            'manager_id' => null,
             'name' => fake()->name(),
             'email' => fake()->boolean(80) ? fake()->unique()->safeEmail() : null,
             'phone' => fake()->optional()->phoneNumber(),
@@ -35,5 +36,12 @@ final class EmployeeFactory extends Factory
             'hire_date' => fake()->boolean(80) ? fake()->dateTimeBetween('-5 years', 'now') : null,
             'employment_status' => fake()->randomElement(EmploymentStatus::cases()),
         ];
+    }
+
+    public function withManager(?Employee $manager = null): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'manager_id' => $manager instanceof Employee ? $manager->id : Employee::factory(),
+        ]);
     }
 }

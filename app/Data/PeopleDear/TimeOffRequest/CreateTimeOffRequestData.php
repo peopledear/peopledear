@@ -10,6 +10,9 @@ use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 
+/**
+ * @method array<string, mixed> toArray()
+ */
 final class CreateTimeOffRequestData extends Data
 {
     public function __construct(

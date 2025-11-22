@@ -25,4 +25,12 @@ enum TimeOffType: int
     {
         return __('time_off_type.'.mb_strtolower($this->name));
     }
+
+    public function isAutomaticApproved(): bool
+    {
+        return match ($this) {
+            self::SickLeave, self::Bereavement => true,
+            self::Vacation, self::PersonalDay => false,
+        };
+    }
 }

@@ -101,6 +101,43 @@ beforeEach(function (): void {
 3. **Testing Real Behavior** - Tests actual dependency wiring
 4. **Refactoring Safety** - Adding dependencies doesn't break tests
 
+### Processors, Validators & Other Classes
+
+**Same pattern applies to ALL container-resolved classes** (Processors, Validators, Services, etc.):
+
+@boostsnippet('Processor Test with beforeEach')
+```php
+<?php
+
+use App\Processors\TimeOffType\VacationProcessor;
+use App\Models\VacationBalance;
+
+beforeEach(function (): void {
+    /** @var Organization $organization */
+    $this->organization = Organization::factory()->createQuietly();
+
+    /** @var Employee $employee */
+    $this->employee = Employee::factory()->createQuietly([
+        'organization_id' => $this->organization->id,
+    ]);
+
+    /** @var VacationProcessor $processor */
+    $this->processor = app(VacationProcessor::class);
+});
+
+test('deducts days from vacation balance when processed', function (): void {
+    /** @var VacationBalance $balance */
+    $balance = VacationBalance::factory()->createQuietly([
+        'employee_id' => $this->employee->id,
+        // ...
+    ]);
+
+    $this->processor->process($request);  // ✅ Using $this->processor
+
+    expect($balance->refresh()->taken)->toBe(800);
+});
+```
+
 ### Reusable Test Data in beforeEach
 
 **If models, actions, or other resources are reused across multiple tests, ALWAYS define them in `beforeEach`:**

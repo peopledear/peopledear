@@ -13,6 +13,9 @@ use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
 
+/**
+ * @method array<string, mixed> toArray()
+ */
 #[MapOutputName(CamelCaseMapper::class)]
 final class TimeOffRequestData extends Data
 {

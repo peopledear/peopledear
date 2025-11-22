@@ -7,6 +7,40 @@ use App\Enums\PeopleDear\RequestStatus;
 use App\Models\Approval;
 use App\Models\TimeOffRequest;
 
+test('reverses processor when cancelling approved vacation request', function (): void {
+    /** @var TimeOffRequest $timeOffRequest */
+    $timeOffRequest = TimeOffRequest::factory()
+        ->vacation()
+        ->createQuietly([
+            'start_date' => now(),
+            'end_date' => null,
+            'is_half_day' => false,
+        ]);
+
+    /** @var App\Models\VacationBalance $balance */
+    $balance = App\Models\VacationBalance::factory()->createQuietly([
+        'employee_id' => $timeOffRequest->employee_id,
+        'year' => $timeOffRequest->start_date->year,
+        'accrued' => 2500,
+        'taken' => 100,
+    ]);
+
+    /** @var Approval $approval */
+    $approval = Approval::factory()
+        ->approved()
+        ->for($timeOffRequest->organization)
+        ->createQuietly([
+            'approvable_type' => TimeOffRequest::class,
+            'approvable_id' => $timeOffRequest->id,
+        ]);
+
+    $action = app(CancelRequest::class);
+    $action->handle($approval);
+
+    $balance->refresh();
+    expect($balance->taken)->toBe(0);
+});
+
 test('cancels pending request', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()->createQuietly();

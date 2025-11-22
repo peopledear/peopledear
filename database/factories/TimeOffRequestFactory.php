@@ -64,6 +64,13 @@ final class TimeOffRequestFactory extends Factory
         ]);
     }
 
+    public function vacation(): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => TimeOffType::Vacation,
+        ]);
+    }
+
     public function halfDay(): self
     {
         return $this->state(fn (array $attributes): array => [

@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 final class EmployeeSeeder extends Seeder
@@ -30,7 +31,7 @@ final class EmployeeSeeder extends Seeder
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Collection<int, User>  $users
+     * @param  Collection<int, User>  $users
      */
     private function createEmployeesWithHierarchy(Organization $organization, $users): void
     {

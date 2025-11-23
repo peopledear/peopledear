@@ -2,12 +2,12 @@ import { NotificationItem } from "@/components/notifications/notification-item";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AppLayout from "@/layouts/app-layout";
-import type { NotificationListData } from "@/types/notifications";
+import type { Notification, NotificationList } from "@/types/notifications";
 import { Head, router } from "@inertiajs/react";
 import { Bell, CheckCheck } from "lucide-react";
 
 interface NotificationsIndexProps {
-    notifications: NotificationListData;
+    notifications: NotificationList;
 }
 
 export default function NotificationsIndex({
@@ -82,7 +82,7 @@ export default function NotificationsIndex({
                             <>
                                 <div className="divide-y">
                                     {notifications.notifications.map(
-                                        (notification) => (
+                                        (notification: Notification) => (
                                             <NotificationItem
                                                 key={notification.id}
                                                 notification={notification}

@@ -206,7 +206,7 @@ export default function CreateTimeOffPage({
                                             </DialogHeader>
                                             <Calendar
                                                 mode="range"
-                                                numberOfMonths={2}
+                                                numberOfMonths={1}
                                                 selected={{
                                                     from: data.start_date,
                                                     to: data.end_date,

@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
-import type { NotificationData } from "@/types/notifications";
+import type { Notification } from "@/types/notifications";
 import { router } from "@inertiajs/react";
 import { Check, Trash2 } from "lucide-react";
 
 interface NotificationItemProps {
-    notification: NotificationData;
+    notification: Notification;
 }
 
 export function NotificationItem({ notification }: NotificationItemProps) {
-    const isUnread = !notification.readAt;
+    const isUnread = !notification.read_at;
 
     const handleMarkAsRead = () => {
         router.post(
@@ -32,12 +32,12 @@ export function NotificationItem({ notification }: NotificationItemProps) {
         if (isUnread) {
             handleMarkAsRead();
         }
-        if (notification.actionUrl) {
-            router.visit(notification.actionUrl);
+        if (notification.data.action_utl) {
+            router.visit(notification.data.action_utl);
         }
     };
 
-    const formattedDate = new Date(notification.createdAt).toLocaleDateString(
+    const formattedDate = new Date(notification.created_at).toLocaleDateString(
         undefined,
         {
             month: "short",
@@ -60,14 +60,14 @@ export function NotificationItem({ notification }: NotificationItemProps) {
                         <span
                             className={`truncate font-medium ${isUnread ? "text-foreground" : "text-muted-foreground"}`}
                         >
-                            {notification.title}
+                            {notification.data.title}
                         </span>
                         {isUnread && (
                             <span className="bg-primary h-2 w-2 flex-shrink-0 rounded-full" />
                         )}
                     </div>
                     <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
-                        {notification.message}
+                        {notification.data.message}
                     </p>
                     <p className="text-muted-foreground mt-2 text-xs">
                         {formattedDate}

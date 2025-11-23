@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\ApprovalQueueController;
 use App\Http\Controllers\EmployeeOverviewController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationsDropdownController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationEmployeeController;
 use App\Http\Controllers\OrganizationOfficeController;
@@ -103,6 +104,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 
 Route::middleware('auth')->group(function (): void {
     // Notifications...
+
+    Route::get('notifications/dropdown', [NotificationsDropdownController::class, 'index'])
+        ->name('notifications.dropdown');
+
     Route::get('notifications', [NotificationController::class, 'index'])
         ->name('notifications.index');
     Route::post('notifications/{notification}/mark-read', [NotificationController::class, 'markAsRead'])

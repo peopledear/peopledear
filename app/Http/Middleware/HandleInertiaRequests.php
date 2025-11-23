@@ -39,6 +39,10 @@ final class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
 
+        if ($request->wantsDropdown()) {
+            return [];
+        }
+
         /** @var User|null $user */
         $user = $request->user();
 

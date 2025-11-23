@@ -50,7 +50,8 @@ export function SectionCards({ vacationBalance }: SectionCardsProps) {
                     ) : null}
                 </CardFooter>
             </Card>
-            <Card className="@container/card"></Card>
+            {/*
+            <Card className="@container/card"></Card>*/}
         </div>
     );
 }

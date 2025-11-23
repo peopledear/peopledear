@@ -1,15 +1,17 @@
-export interface NotificationData {
+export interface Notification {
     id: string;
     type: string;
-    title: string;
-    message: string;
-    actionUrl: string | null;
-    readAt: string | null;
-    createdAt: string;
+    data: {
+        title: string;
+        message: string;
+        action_utl: string | null;
+    };
+    read_at: string | null;
+    created_at: string;
 }
 
-export interface NotificationListData {
-    notifications: NotificationData[];
+export interface NotificationList {
+    notifications: Notification[];
     unreadCount: number;
     currentPage: number;
     lastPage: number;

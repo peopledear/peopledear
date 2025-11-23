@@ -17,6 +17,7 @@ final class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             TimeOffRequestSeeder::class,
             VacationBalanceSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }

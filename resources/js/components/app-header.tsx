@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Icon } from "@/components/icon";
+import NotificationsDropdown from "@/components/notifications/dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,13 +31,13 @@ import { UserMenuContent } from "@/components/user-menu-content";
 import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
+import NotificationsDropdownController from "@/wayfinder/actions/App/Http/Controllers/NotificationsDropdownController";
 import { overview as employeeOverview } from "@/wayfinder/routes/employee";
 import { overview } from "@/wayfinder/routes/org";
 import { Link, usePage } from "@inertiajs/react";
 import { EyeIcon, Menu, Search } from "lucide-react";
 import AppLogo from "./app-logo";
 import AppLogoIcon from "./app-logo-icon";
-import { NotificationDropdown } from "./notifications/notification-dropdown";
 
 interface AppHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
@@ -219,7 +220,9 @@ export function AppHeader({
                                 ))}
                             </div>
                         </div>
-                        <NotificationDropdown />
+                        <NotificationsDropdown
+                            href={NotificationsDropdownController.index().url}
+                        />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button

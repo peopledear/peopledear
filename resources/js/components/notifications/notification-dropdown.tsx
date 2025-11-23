@@ -5,7 +5,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { SharedData } from "@/types";
-import type { NotificationData } from "@/types/notifications";
+import type { Notification } from "@/types/notifications";
 import { router, usePage } from "@inertiajs/react";
 import { Bell, CheckCheck } from "lucide-react";
 import { NotificationBadge } from "./notification-badge";
@@ -13,7 +13,7 @@ import { NotificationItem } from "./notification-item";
 
 interface PageProps extends SharedData {
     notificationUnreadCount?: number;
-    recentNotifications?: NotificationData[];
+    recentNotifications?: Notification[];
 }
 
 export function NotificationDropdown() {

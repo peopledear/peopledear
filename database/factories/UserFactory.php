@@ -58,8 +58,6 @@ final class UserFactory extends Factory
 
     /**
      * Create users with proper, realistic names using a sequence.
-     *
-     * @return $this
      */
     public function withProperNames(): self
     {

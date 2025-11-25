@@ -10,63 +10,36 @@ use Spatie\Permission\Models\Role;
 
 final class UserSeeder extends Seeder
 {
+    /**
+     * Sequence of users with proper names, test emails, and their assigned roles.
+     *
+     * @var array<int, array{name: string, email: string, role: string}>
+     */
+    private const array USERS = [
+        ['name' => 'Emily Thompson', 'email' => 'employee@peopledear.test', 'role' => 'employee'],
+        ['name' => 'Michael Rodriguez', 'email' => 'manager@peopledear.test', 'role' => 'manager'],
+        ['name' => 'Sarah Chen', 'email' => 'peoplemanager@peopledear.test', 'role' => 'people_manager'],
+        ['name' => 'James Wilson', 'email' => 'owner@peopledear.test', 'role' => 'owner'],
+    ];
+
     public function run(): void
     {
-        /** @var Role $employeeRole */
-        $employeeRole = Role::query()
-            ->where('name', 'employee')
-            ->first();
-        /** @var Role $managerRole */
-        $managerRole = Role::query()
-            ->where('name', 'manager')
-            ->first();
-        /** @var Role $peopleManagerRole */
-        $peopleManagerRole = Role::query()
-            ->where('name', 'people_manager')
-            ->first();
-        /** @var Role $ownerRole */
-        $ownerRole = Role::query()
-            ->where('name', 'owner')
-            ->first();
+        foreach (self::USERS as $userData) {
+            /** @var Role $role */
+            $role = Role::query()
+                ->where('name', $userData['role'])
+                ->first();
 
-        /** @var User $employee */
-        $employee = User::factory()->create([
-            'name' => 'Employee User',
-            'email' => 'employee@peopledear.test',
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
-            'two_factor_confirmed_at' => null,
-        ]);
-        $employee->assignRole($employeeRole);
+            /** @var User $user */
+            $user = User::factory()->create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'two_factor_secret' => null,
+                'two_factor_recovery_codes' => null,
+                'two_factor_confirmed_at' => null,
+            ]);
 
-        /** @var User $manager */
-        $manager = User::factory()->create([
-            'name' => 'Manager User',
-            'email' => 'manager@peopledear.test',
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
-            'two_factor_confirmed_at' => null,
-        ]);
-        $manager->assignRole($managerRole);
-
-        /** @var User $peopleManager */
-        $peopleManager = User::factory()->create([
-            'name' => 'People Manager',
-            'email' => 'peoplemanager@peopledear.test',
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
-            'two_factor_confirmed_at' => null,
-        ]);
-        $peopleManager->assignRole($peopleManagerRole);
-
-        /** @var User $owner */
-        $owner = User::factory()->create([
-            'name' => 'Owner User',
-            'email' => 'owner@peopledear.test',
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
-            'two_factor_confirmed_at' => null,
-        ]);
-        $owner->assignRole($ownerRole);
+            $user->assignRole($role);
+        }
     }
 }

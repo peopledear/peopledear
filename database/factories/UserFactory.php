@@ -55,4 +55,27 @@ final class UserFactory extends Factory
             $user->assignRole(UserRole::PeopleManager);
         });
     }
+
+    /**
+     * Create users with proper, realistic names using a sequence.
+     *
+     * @return $this
+     */
+    public function withProperNames(): self
+    {
+        return $this->sequence(
+            ['name' => 'David Kim', 'email' => 'david.kim@peopledear.test'],
+            ['name' => 'Jessica Martinez', 'email' => 'jessica.martinez@peopledear.test'],
+            ['name' => 'Christopher Lee', 'email' => 'christopher.lee@peopledear.test'],
+            ['name' => 'Amanda Garcia', 'email' => 'amanda.garcia@peopledear.test'],
+            ['name' => 'Daniel Brown', 'email' => 'daniel.brown@peopledear.test'],
+            ['name' => 'Rachel Patel', 'email' => 'rachel.patel@peopledear.test'],
+            ['name' => 'Andrew Taylor', 'email' => 'andrew.taylor@peopledear.test'],
+            ['name' => 'Melissa Nguyen', 'email' => 'melissa.nguyen@peopledear.test'],
+            ['name' => 'Robert Johnson', 'email' => 'robert.johnson@peopledear.test'],
+            ['name' => 'Nicole Adams', 'email' => 'nicole.adams@peopledear.test'],
+            ['name' => "Kevin O'Brien", 'email' => 'kevin.obrien@peopledear.test'],
+            ['name' => 'Stephanie Wright', 'email' => 'stephanie.wright@peopledear.test'],
+        );
+    }
 }

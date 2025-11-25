@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Data\PeopleDear\Notification\NotificationData;
 use App\Models\Notification;
+use Illuminate\Support\Collection;
 
 test('has a human readable time ago', function (): void {
 
@@ -20,5 +21,18 @@ test('has a human readable time ago', function (): void {
 
     expect($data->created_ago)
         ->toBe('5 days ago');
+
+});
+
+test('creates a collection from eloquent collection', function (): void {
+
+    $notifications = Notification::factory()
+        ->count(15)
+        ->create();
+
+    $dataCollection = NotificationData::fromEloquentCollection($notifications);
+
+    expect($dataCollection)
+        ->toBeInstanceOf(Collection::class);
 
 });

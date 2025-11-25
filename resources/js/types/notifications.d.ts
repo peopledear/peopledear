@@ -1,19 +1,16 @@
 export interface Notification {
     id: string;
     type: string;
-    data: {
-        title: string;
-        message: string;
-        action_utl: string | null;
-    };
-    read_at: string | null;
-    created_at: string;
+    title: string;
+    message: string;
+    actionUrl: string | null;
+    readAt: string | null;
+    createdAt: string;
+    createdAgo;
 }
 
 export interface NotificationList {
     notifications: Notification[];
-    unreadCount: number;
-    currentPage: number;
-    lastPage: number;
+    unread: number;
     total: number;
 }

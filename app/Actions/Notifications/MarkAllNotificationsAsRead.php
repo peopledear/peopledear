@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Actions\Notifications;
 
-use App\Models\User;
+use App\Models\Employee;
 
 final readonly class MarkAllNotificationsAsRead
 {
-    public function handle(User $user): void
+    public function handle(Employee $employee): void
     {
-        $user->unreadNotifications()->update(['read_at' => now()]);
+        $employee->unreadNotifications()
+            ->update(['read_at' => now()]);
     }
 }

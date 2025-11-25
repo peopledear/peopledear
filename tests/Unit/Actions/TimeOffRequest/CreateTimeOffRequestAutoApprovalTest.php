@@ -22,7 +22,7 @@ test('sick leave is auto-approved', function (): void {
     ]);
 
     $action = app(CreateTimeOffRequest::class);
-    $result = $action->handle($data);
+    $result = $action->handle($data, $employee);
 
     $result->load('approval');
 
@@ -48,7 +48,7 @@ test('vacation requires approval', function (): void {
     ]);
 
     $action = app(CreateTimeOffRequest::class);
-    $result = $action->handle($data);
+    $result = $action->handle($data, $employee);
 
     $result->load('approval');
 
@@ -74,7 +74,7 @@ test('personal day requires approval', function (): void {
     ]);
 
     $action = app(CreateTimeOffRequest::class);
-    $result = $action->handle($data);
+    $result = $action->handle($data, $employee);
 
     $result->load('approval');
 

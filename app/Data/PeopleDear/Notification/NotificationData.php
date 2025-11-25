@@ -6,6 +6,8 @@ namespace App\Data\PeopleDear\Notification;
 
 use App\Models\Notification;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
@@ -36,5 +38,17 @@ final class NotificationData extends Data
             created_at: $notification->created_at,
             created_ago: $notification->created_ago
         );
+    }
+
+    /**
+     * @param  EloquentCollection<int, Notification>  $notifications
+     * @return Collection<int, NotificationData>
+     */
+    public static function fromEloquentCollection(EloquentCollection $notifications): Collection
+    {
+        $notifications = $notifications->map(fn (Notification $notification): NotificationData => self::fromModel($notification));
+
+        return self::collect($notifications, Collection::class);
+
     }
 }

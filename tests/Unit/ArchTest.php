@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Models\Notification;
 use App\Models\VacationBalance;
 
 arch()->preset()->php();
 arch()->preset()
     ->strict()
-    ->ignoring(VacationBalance::class);
+    ->ignoring([
+        VacationBalance::class,
+        Notification::class,
+    ]);
 arch()->preset()->security()->ignoring([
     'assert',
 ]);

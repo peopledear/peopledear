@@ -4,15 +4,15 @@ import axios from "axios";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ComponentType, useEffect, useState } from "react";
 
-interface ComponentResponse {
+interface ComponentResponse<T> {
     component: string;
-    props: Record<string, unknown>;
+    props: T;
 }
 
-const fetchComponent = async (
+const fetchComponent = async <T>(
     href: string,
     version: string,
-): Promise<ComponentResponse> => {
+): Promise<ComponentResponse<T>> => {
     const response = await axios.get(href, {
         headers: {
             Accept: "text/html, application/xhtml+xml",
@@ -26,12 +26,15 @@ const fetchComponent = async (
     return response.data;
 };
 
-export default function useComponent(href: string, pollInterval?: number) {
+export default function useComponent<TProps = Record<string, unknown>>(
+    href: string,
+    pollInterval?: number,
+) {
     const { version } = usePage<SharedData>();
     const [component, setComponent] = useState<null | {
         default: ComponentType<Record<string, unknown>>;
     }>(null);
-    const [props, setProps] = useState<Record<string, unknown> | null>(null);
+    const [props, setProps] = useState<TProps | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
@@ -41,7 +44,10 @@ export default function useComponent(href: string, pollInterval?: number) {
 
         const run = async () => {
             try {
-                const response = await fetchComponent(href, String(version));
+                const response = await fetchComponent<TProps>(
+                    href,
+                    String(version),
+                );
                 if (!mounted) return;
 
                 const componentModule = await resolvePageComponent(
@@ -56,7 +62,7 @@ export default function useComponent(href: string, pollInterval?: number) {
                         default: ComponentType<Record<string, unknown>>;
                     },
                 );
-                setProps(response.props ?? {});
+                setProps(response.props ?? null);
             } catch (err) {
                 if (!mounted) return;
                 setError(err as Error);

@@ -47,13 +47,6 @@ final class Notification extends DatabaseNotification
         return $this->belongsTo(Organization::class);
     }
 
-    public function createdAgo(): Attribute
-    {
-        return new Attribute(
-            get: fn (): string => $this->created_at->diffForHumans(),
-        );
-    }
-
     /**
      * Get the prunable model query.
      *
@@ -64,5 +57,15 @@ final class Notification extends DatabaseNotification
         return self::query()
             ->withoutGlobalScope(OrganizationScope::class)
             ->where('created_at', '<=', now()->subDays(90));
+    }
+
+    /**
+     * @return Attribute<string, never>
+     */
+    protected function createdAgo(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => $this->created_at->diffForHumans(),
+        );
     }
 }

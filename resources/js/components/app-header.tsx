@@ -31,7 +31,7 @@ import { UserMenuContent } from "@/components/user-menu-content";
 import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
-import NotificationsDropdownController from "@/wayfinder/actions/App/Http/Controllers/NotificationsDropdownController";
+import DropdownNotificationController from "@/wayfinder/actions/App/Http/Controllers/DropdownNotificationController";
 import { overview as employeeOverview } from "@/wayfinder/routes/employee";
 import { overview } from "@/wayfinder/routes/org";
 import { Link, usePage } from "@inertiajs/react";
@@ -86,7 +86,7 @@ export function AppHeader({
 
     return (
         <>
-            <header className="flex px-4 sm:px-12 md:max-w-full">
+            <header className="flex px-4 sm:px-8 md:max-w-full">
                 <div className="mx-auto flex h-16 w-full items-center md:max-w-full">
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
@@ -95,7 +95,7 @@ export function AppHeader({
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="mr-2 h-[34px] w-[34px]"
+                                    className="h-[34px] w-[34px]"
                                 >
                                     <Menu className="h-5 w-5" />
                                 </Button>
@@ -221,7 +221,7 @@ export function AppHeader({
                             </div>
                         </div>
                         <NotificationsDropdown
-                            href={NotificationsDropdownController.index().url}
+                            href={DropdownNotificationController.index().url}
                         />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>

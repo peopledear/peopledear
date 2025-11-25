@@ -44,7 +44,7 @@ test('creates time off with all fields',
             is_half_day: false,
         );
 
-        $result = $this->action->handle($data);
+        $result = $this->action->handle($data, $employee);
 
         expect($result)
             ->toBeInstanceOf(TimeOffRequest::class)
@@ -79,7 +79,7 @@ test('creates half day time off with null end_date',
             is_half_day: true,
         );
 
-        $result = $this->action->handle($data);
+        $result = $this->action->handle($data, $employee);
 
         expect($result)
             ->toBeInstanceOf(TimeOffRequest::class)
@@ -112,7 +112,7 @@ test('creates time off with personal day type',
             is_half_day: true,
         );
 
-        $result = $this->action->handle($data);
+        $result = $this->action->handle($data, $employee);
 
         expect($result->type)->toBe(TimeOffType::PersonalDay)
             ->and($result->status)->toBe(RequestStatus::Pending);
@@ -140,7 +140,7 @@ test('creates time off with bereavement type',
             is_half_day: false,
         );
 
-        $result = $this->action->handle($data);
+        $result = $this->action->handle($data, $employee);
 
         expect($result->type)->toBe(TimeOffType::Bereavement)
             ->and($result->status)->toBe(RequestStatus::Approved) // Auto-approved
@@ -169,7 +169,7 @@ test('always sets status to pending on creation',
             is_half_day: false,
         );
 
-        $result = $this->action->handle($data);
+        $result = $this->action->handle($data, $employee);
 
         expect($result->status)->toBe(RequestStatus::Pending);
     });
@@ -196,7 +196,7 @@ test('creates multi day time off with end_date',
             is_half_day: false,
         );
 
-        $result = $this->action->handle($data);
+        $result = $this->action->handle($data, $employee);
 
         expect($result->is_half_day)->toBeFalse()
             ->and($result->end_date)->not->toBeNull()

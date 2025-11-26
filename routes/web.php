@@ -6,13 +6,13 @@ use App\Http\Controllers\ApprovalQueueController;
 use App\Http\Controllers\DeleteNotificationController;
 use App\Http\Controllers\DropdownNotificationController;
 use App\Http\Controllers\EmployeeOverviewController;
+use App\Http\Controllers\EmployeeTimeOffController;
 use App\Http\Controllers\MarkAllNotificationsAsReadController;
 use App\Http\Controllers\MarkNotificationAsReadController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationEmployeeController;
 use App\Http\Controllers\OrganizationOfficeController;
 use App\Http\Controllers\SessionController;
-use App\Http\Controllers\TimeOffRequestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserEmailResetNotification;
 use App\Http\Controllers\UserEmailVerification;
@@ -35,12 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         Route::get('/overview', [EmployeeOverviewController::class, 'index'])
             ->name('overview');
 
-        Route::as('time-off.')->prefix('time-off')->group(function (): void {
+        Route::as('time-offs.')->prefix('time-offs')->group(function (): void {
 
-            Route::get('/create', [TimeOffRequestController::class, 'create'])
+            Route::get('/', [EmployeeTimeOffController::class, 'index'])
+                ->name('index');
+
+            Route::get('/create', [EmployeeTimeOffController::class, 'create'])
                 ->name('create');
 
-            Route::post('/store', [TimeOffRequestController::class, 'store'])
+            Route::post('/store', [EmployeeTimeOffController::class, 'store'])
                 ->name('store');
 
         });

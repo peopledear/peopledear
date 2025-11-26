@@ -7,6 +7,13 @@ import {
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
+    Empty,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from "@/components/ui/empty";
+import {
     Item,
     ItemActions,
     ItemContent,
@@ -25,7 +32,7 @@ import DeleteNotificationController from "@/wayfinder/actions/App/Http/Controlle
 import MarkAllNotificationsAsReadController from "@/wayfinder/actions/App/Http/Controllers/MarkAllNotificationsAsReadController";
 import MarkNotificationAsReadController from "@/wayfinder/actions/App/Http/Controllers/MarkNotificationAsReadController";
 import { router } from "@inertiajs/react";
-import { CheckCircle2, Trash2 } from "lucide-react";
+import { CheckCircle2, LucideBell, Trash2 } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 
 export default function NotificationsDropdownComponent({
@@ -111,98 +118,121 @@ export default function NotificationsDropdownComponent({
                 className="max-h-[686px] w-[386px] min-w-64 overflow-y-auto sm:w-[416px] sm:-translate-x-9"
                 align="start"
             >
-                <DropdownMenuLabel>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <Button variant="ghost">
-                                <span>Unread</span>
-                                <Badge
-                                    variant="secondary"
-                                    className="border border-gray-200"
+                {notifications.length > 0 ? (
+                    <>
+                        <DropdownMenuLabel>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-2">
+                                    <Button variant="ghost">
+                                        <span>Unread</span>
+                                        <Badge
+                                            variant="secondary"
+                                            className="border border-gray-200"
+                                        >
+                                            {unread}
+                                        </Badge>
+                                    </Button>
+                                </div>
+                                <Button
+                                    variant="link"
+                                    onClick={() => markAllAsRead()}
                                 >
-                                    {unread}
-                                </Badge>
-                            </Button>
-                        </div>
-                        <Button variant="link" onClick={() => markAllAsRead()}>
-                            Mark all as read
-                        </Button>
-                    </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <ItemGroup>
-                    {notifications &&
-                        notifications.map((notification) => (
-                            <Fragment key={notification.id}>
-                                <Item className="group relative transition-all hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <ItemContent>
-                                        <ItemTitle className="flex w-full items-center justify-between gap-2">
-                                            <span>{notification.title}</span>
-                                            {notification.readAt === null && (
-                                                <span
-                                                    className="flex size-2.5 rounded-full bg-green-600"
-                                                    title="Unread"
-                                                />
-                                            )}
-                                        </ItemTitle>
-                                        <ItemDescription>
-                                            <span
-                                                className="line-clamp-4 overflow-hidden text-sm text-wrap"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: notification.message,
-                                                }}
-                                            />
-                                        </ItemDescription>
-                                    </ItemContent>
-                                    <ItemActions className="absolute top-4 right-2 hidden transition-all duration-300 group-hover:block">
-                                        <ButtonGroup>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="icon"
-                                                        onClick={() =>
-                                                            deleteNotification(
-                                                                notification.id,
-                                                            )
-                                                        }
-                                                    >
-                                                        <Trash2 className="text-muted-foreground size-5" />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    Delete Notification
-                                                </TooltipContent>
-                                            </Tooltip>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="icon"
-                                                        onClick={() =>
-                                                            markAsRead(
-                                                                notification.id,
-                                                            )
-                                                        }
-                                                    >
-                                                        <CheckCircle2 className="text-muted-foreground size-5" />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    Mark as Read
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </ButtonGroup>
-                                    </ItemActions>
-                                    <ItemFooter>
-                                        <span className="text-muted-foreground">
-                                            {notification.createdAgo}
-                                        </span>
-                                    </ItemFooter>
-                                </Item>
-                            </Fragment>
-                        ))}
-                </ItemGroup>
+                                    Mark all as read
+                                </Button>
+                            </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <ItemGroup>
+                            {notifications &&
+                                notifications.map((notification) => (
+                                    <Fragment key={notification.id}>
+                                        <Item className="group relative transition-all hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            <ItemContent>
+                                                <ItemTitle className="flex w-full items-center justify-between gap-2">
+                                                    <span>
+                                                        {notification.title}
+                                                    </span>
+                                                    {notification.readAt ===
+                                                        null && (
+                                                        <span
+                                                            className="flex size-2.5 rounded-full bg-green-600"
+                                                            title="Unread"
+                                                        />
+                                                    )}
+                                                </ItemTitle>
+                                                <ItemDescription>
+                                                    <span
+                                                        className="line-clamp-4 overflow-hidden text-sm text-wrap"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: notification.message,
+                                                        }}
+                                                    />
+                                                </ItemDescription>
+                                            </ItemContent>
+                                            <ItemActions className="absolute top-4 right-2 hidden transition-all duration-300 group-hover:block">
+                                                <ButtonGroup>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant="outline"
+                                                                size="icon"
+                                                                onClick={() =>
+                                                                    deleteNotification(
+                                                                        notification.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Trash2 className="text-muted-foreground size-5" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            Delete Notification
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant="outline"
+                                                                size="icon"
+                                                                onClick={() =>
+                                                                    markAsRead(
+                                                                        notification.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <CheckCircle2 className="text-muted-foreground size-5" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            Mark as Read
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </ButtonGroup>
+                                            </ItemActions>
+                                            <ItemFooter>
+                                                <span className="text-muted-foreground">
+                                                    {notification.createdAgo}
+                                                </span>
+                                            </ItemFooter>
+                                        </Item>
+                                    </Fragment>
+                                ))}
+                        </ItemGroup>
+                    </>
+                ) : (
+                    <Empty className="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
+                        <EmptyHeader>
+                            <EmptyMedia variant="icon">
+                                <LucideBell />
+                            </EmptyMedia>
+                            <EmptyTitle>No Notifications</EmptyTitle>
+                            <EmptyDescription>
+                                You're all caught up. <br /> New notifications
+                                will appear here.
+                            </EmptyDescription>
+                        </EmptyHeader>
+                    </Empty>
+                )}
             </DropdownMenuContent>
         </>
     );

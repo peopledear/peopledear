@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/select";
 import AppLayout from "@/layouts/app-layout";
 import { Employee, SharedData } from "@/types";
-import employeeOverviewController from "@/wayfinder/actions/App/Http/Controllers/EmployeeOverviewController";
-import timeOffRequestController from "@/wayfinder/actions/App/Http/Controllers/TimeOffRequestController";
+import EmployeeOverviewController from "@/wayfinder/actions/App/Http/Controllers/EmployeeOverviewController";
+import EmployeeTimeOffController from "@/wayfinder/actions/App/Http/Controllers/EmployeeTimeOffController";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { ArrowLeftIcon } from "lucide-react";
 import React from "react";
@@ -41,7 +41,7 @@ export default function CreateTimeOffPage({
 
     const back =
         previousPath == page.url
-            ? employeeOverviewController.index().url
+            ? EmployeeOverviewController.index().url
             : previousPath;
 
     const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -91,7 +91,7 @@ export default function CreateTimeOffPage({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(timeOffRequestController.store().url);
+        post(EmployeeTimeOffController.store().url);
     };
 
     return (

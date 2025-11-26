@@ -645,6 +645,8 @@ See `.ai/guidelines/app.actions.blade.php` for comprehensive Action pattern guid
 - PHP 8.4 with strict typing, TypeScript 5 for frontend + Laravel 12, Inertia.js v2, React 18, shadcn/ui, Spatie Laravel Data (004-add-laravel-database-notifications)
 - PostgreSQL (using Laravel's notifications table) (004-add-laravel-database-notifications)
 - PostgreSQL (existing notifications table) (005-refactor-notifications)
+- PHP 8.4 with `declare(strict_types=1)`, TypeScript 5 + Laravel 12, Inertia.js v2, React 18, shadcn/ui, Spatie Laravel Data v4 (006-user-timeoffs-page)
+- PostgreSQL (existing `time_off_requests` table) (006-user-timeoffs-page)
 
 ## Recent Changes
 - 002-timeoff-type-processors: Added PHP 8.4 with `declare(strict_types=1)` + Laravel 12, Spatie Laravel Data v4, Inertia.js v2

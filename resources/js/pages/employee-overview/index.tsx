@@ -9,15 +9,15 @@ import {
     TimeOffRequest,
     VacationBalance,
 } from "@/types";
-import TimeOffRequestController from "@/wayfinder/actions/App/Http/Controllers/TimeOffRequestController";
-import { overview } from "@/wayfinder/routes/employee";
+import EmployeeOverviewController from "@/wayfinder/actions/App/Http/Controllers/EmployeeOverviewController";
+import EmployeeTimeOffController from "@/wayfinder/actions/App/Http/Controllers/EmployeeTimeOffController";
 import { Head, Link } from "@inertiajs/react";
 import { PlusIcon } from "lucide-react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: "Dashboard",
-        href: overview().url,
+        href: EmployeeOverviewController.index().url,
     },
 ];
 
@@ -62,7 +62,9 @@ export default function EmployeeOverview({
                                     Overtime
                                 </Button>
                                 <Link
-                                    href={TimeOffRequestController.create().url}
+                                    href={
+                                        EmployeeTimeOffController.create().url
+                                    }
                                 >
                                     <Button>
                                         <PlusIcon />
@@ -90,7 +92,9 @@ export default function EmployeeOverview({
                             </div>
                             <div>
                                 <Link
-                                    href={TimeOffRequestController.create().url}
+                                    href={
+                                        EmployeeTimeOffController.create().url
+                                    }
                                 >
                                     <Button size="icon" variant="outline">
                                         <PlusIcon />

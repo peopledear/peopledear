@@ -38,7 +38,7 @@ final class NotificationListData extends Data
 
         return new self(
             notifications: $notifications,
-            unread: $notifications->where('read_at', null)->count(),
+            unread: $notifications->where('read_at')->count(),
             total: $notifications->count(),
         );
     }

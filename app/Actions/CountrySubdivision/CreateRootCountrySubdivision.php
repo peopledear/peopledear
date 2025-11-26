@@ -32,8 +32,7 @@ final readonly class CreateRootCountrySubdivision
                 isoCode: $data->isoCode,
                 shortName: $data->shortName,
                 type: $data->type,
-                officialLanguages: $data->officialLanguages,
-                children: null
+                officialLanguages: $data->officialLanguages
             );
 
             $root = $this->createCountrySubdivision->handle($dataWithoutChildren);
@@ -62,8 +61,7 @@ final readonly class CreateRootCountrySubdivision
                 isoCode: $childData->isoCode,
                 shortName: $childData->shortName,
                 type: $childData->type,
-                officialLanguages: $childData->officialLanguages,
-                children: null
+                officialLanguages: $childData->officialLanguages
             );
 
             $child = $this->createCountrySubdivision->handle($childDataWithParent);

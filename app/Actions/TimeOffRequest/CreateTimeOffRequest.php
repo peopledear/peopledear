@@ -51,10 +51,10 @@ final readonly class CreateTimeOffRequest
 
             $notification = new GeneralNotification(
                 'Time Off Request Submitted',
-                sprintf('<strong>%s</strong> has request a new time off from %s%s.', $employee->name, $data->start_date->toFormattedDateString(), $endDateText)
+                sprintf('<strong>%s</strong> has requested a new time off from %s%s.', $employee->name, $data->start_date->toFormattedDateString(), $endDateText)
             );
 
-            $employee->manager?->notify($notification);
+            $employee->manager?->user?->notify($notification);
 
             return $timeOff;
         });

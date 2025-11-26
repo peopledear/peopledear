@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\Notifications\MarkAllNotificationsAsRead;
-use App\Attributes\CurrentEmployee;
-use App\Models\Employee;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 
 final class MarkAllNotificationsAsReadController
 {
     public function store(
         MarkAllNotificationsAsRead $action,
-        #[CurrentEmployee] Employee $employee,
+        #[CurrentUser] User $user,
     ): RedirectResponse {
-        $action->handle($employee);
+        $action->handle($user);
 
         return back();
     }

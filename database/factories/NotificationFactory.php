@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Notification;
-use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -33,7 +32,6 @@ final class NotificationFactory extends Factory
                 'action_url' => null,
             ],
             'read_at' => null,
-            'organization_id' => Organization::factory(),
         ];
     }
 

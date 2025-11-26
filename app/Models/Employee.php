@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Enums\PeopleDear\EmploymentStatus;
 use App\Models\Concerns\BelongsToOrganization;
-use App\Models\Concerns\HasNotifications;
 use App\Models\Scopes\OrganizationScope;
 use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
@@ -15,7 +14,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 
 /**
@@ -46,11 +44,6 @@ final class Employee extends Model
 
     /** @use HasFactory<EmployeeFactory> */
     use HasFactory;
-
-    use HasNotifications;
-    use Notifiable {
-        HasNotifications::notifications insteadof Notifiable;
-    }
 
     /** @return BelongsTo<Office, $this> */
     public function office(): BelongsTo

@@ -115,7 +115,7 @@ test('filtering by status returns only matching requests', function (): void {
         ->assertInertia(fn ($page) => $page
             ->component('employee-time-offs/index')
             ->has('timeOffRequests.data', 1)
-            ->where('timeOffRequests.data.0.status', RequestStatus::Pending->value)
+            ->where('timeOffRequests.data.0.status.status', RequestStatus::Pending->value)
         );
 });
 
@@ -169,7 +169,7 @@ test('filtering by type returns only matching requests', function (): void {
         ->assertInertia(fn ($page) => $page
             ->component('employee-time-offs/index')
             ->has('timeOffRequests.data', 1)
-            ->where('timeOffRequests.data.0.type', TimeOffType::Vacation->value)
+            ->where('timeOffRequests.data.0.type.type', TimeOffType::Vacation->value)
         );
 });
 
@@ -208,8 +208,8 @@ test('combined status and type filters return correct results', function (): voi
         ->assertInertia(fn ($page) => $page
             ->component('employee-time-offs/index')
             ->has('timeOffRequests.data', 1)
-            ->where('timeOffRequests.data.0.status', RequestStatus::Pending->value)
-            ->where('timeOffRequests.data.0.type', TimeOffType::Vacation->value)
+            ->where('timeOffRequests.data.0.status.status', RequestStatus::Pending->value)
+            ->where('timeOffRequests.data.0.type.type', TimeOffType::Vacation->value)
         );
 });
 

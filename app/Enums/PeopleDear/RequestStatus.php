@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Enums\PeopleDear;
 
+use App\Enums\Support\RequestStatusIcon;
+
 enum RequestStatus: int
 {
     case Pending = 1;
@@ -24,5 +26,25 @@ enum RequestStatus: int
     public function label(): string
     {
         return __('time_off_status.'.mb_strtolower($this->name));
+    }
+
+    public function icon(): RequestStatusIcon
+    {
+        return match ($this) {
+            self::Pending => RequestStatusIcon::Timer,
+            self::Approved => RequestStatusIcon::CheckCircle,
+            self::Rejected => RequestStatusIcon::CircleOff,
+            self::Cancelled => RequestStatusIcon::XCircle,
+        };
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::Pending => 'yellow',
+            self::Approved => 'green',
+            self::Rejected => 'red',
+            self::Cancelled => 'gray',
+        };
     }
 }

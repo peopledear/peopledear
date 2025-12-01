@@ -76,18 +76,32 @@ export interface Organization {
     phone?: string;
 }
 
-export enum RequestStatus {
+export enum RequestStatusEnum {
     Pending = 1,
     Approved = 2,
     Rejected = 3,
     Cancelled = 4,
 }
 
-export enum TimeOffType {
+export interface RequestStatus {
+    status: RequestStatusEnum;
+    label: string;
+    color: string;
+    icon: string;
+}
+
+export enum TimeOffTypeEnum {
     Holiday = 1,
     SickLeave = 2,
     PersonalDay = 3,
     Bereavement = 4,
+}
+
+export interface TimeOffType {
+    type: TimeOffTypeEnum;
+    label: string;
+    color: string;
+    icon: string;
 }
 
 export type EnumOptions = Record<number, string>;

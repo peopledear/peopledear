@@ -1,4 +1,6 @@
-import { Badge } from "@/components/ui/badge";
+import RequestStatusBadge from "@/components/request-status/badge";
+import TimeOffTypeDisplay from "@/components/time-offs/type-display";
+import { formatDateRange } from "@/components/time-offs/utils";
 import {
     Pagination,
     PaginationContent,
@@ -153,31 +155,26 @@ export default function TimeOffsIndex({
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Type</TableHead>
-                                    <TableHead>Date Range</TableHead>
+                                    <TableHead>Details</TableHead>
                                     <TableHead>Status</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {timeOffRequests.data.map((request) => (
                                     <TableRow key={request.id}>
-                                        <TableCell className="font-medium">
-                                            {types[request.type]}
-                                        </TableCell>
                                         <TableCell>
-                                            {new Date(
-                                                request.startDate,
-                                            ).toLocaleDateString()}{" "}
-                                            -{" "}
-                                            {request.endDate &&
-                                                new Date(
+                                            <TimeOffTypeDisplay
+                                                type={request.type}
+                                                subtitle={formatDateRange(
+                                                    request.startDate,
                                                     request.endDate,
-                                                ).toLocaleDateString()}
+                                                )}
+                                            />
                                         </TableCell>
                                         <TableCell>
-                                            <Badge className="rounded-full">
-                                                {statuses[request.status]}
-                                            </Badge>
+                                            <RequestStatusBadge
+                                                status={request.status}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))}

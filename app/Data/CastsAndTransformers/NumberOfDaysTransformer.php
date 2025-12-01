@@ -6,14 +6,15 @@ namespace App\Data\CastsAndTransformers;
 
 use Illuminate\Support\Number;
 use Spatie\LaravelData\Casts\Cast;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 
-final class ToNumberOfDaysTransformer implements Cast
+final class NumberOfDaysTransformer implements Cast
 {
     /**
      * @param  array<string, mixed>  $properties
-     * @param  CreationContext<\Spatie\LaravelData\Data>  $context
+     * @param  CreationContext<Data>  $context
      */
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): string
     {

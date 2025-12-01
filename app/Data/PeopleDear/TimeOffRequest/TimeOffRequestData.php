@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\TimeOffRequest;
 
+use App\Data\CastsAndTransformers\RequestStatusTransformer;
+use App\Data\CastsAndTransformers\TimeOffTypeTransformer;
 use App\Enums\PeopleDear\RequestStatus;
 use App\Enums\PeopleDear\TimeOffType;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
@@ -24,8 +27,10 @@ final class TimeOffRequestData extends Data
         public readonly int $organizationId,
         public readonly int $employeeId,
         #[WithCast(EnumCast::class, TimeOffType::class)]
+        #[WithTransformer(TimeOffTypeTransformer::class)]
         public readonly TimeOffType $type,
         #[WithCast(EnumCast::class, RequestStatus::class)]
+        #[WithTransformer(RequestStatusTransformer::class)]
         public readonly RequestStatus $status,
         #[WithCast(DateTimeInterfaceCast::class)]
         public readonly string $startDate,

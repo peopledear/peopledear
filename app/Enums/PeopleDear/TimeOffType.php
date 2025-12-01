@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Enums\PeopleDear;
 
+use App\Enums\Support\TimeOffIcon;
+
 enum TimeOffType: int
 {
     case Vacation = 1;
@@ -24,6 +26,26 @@ enum TimeOffType: int
     public function label(): string
     {
         return __('time_off_type.'.mb_strtolower($this->name));
+    }
+
+    public function icon(): TimeOffIcon
+    {
+        return match ($this) {
+            self::Vacation => TimeOffIcon::Plane,
+            self::SickLeave => TimeOffIcon::HeartPulse,
+            self::PersonalDay => TimeOffIcon::House,
+            self::Bereavement => TimeOffIcon::EyeOff,
+        };
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::Vacation => 'blue',
+            self::SickLeave => 'red',
+            self::PersonalDay => 'purple',
+            self::Bereavement => 'gray',
+        };
     }
 
     public function isAutomaticApproved(): bool

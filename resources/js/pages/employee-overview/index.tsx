@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import TimeOffRequestListItem from "@/components/time-offs/request-list-item";
 import { Button } from "@/components/ui/button";
 import EmployeeLayout from "@/layouts/employee-layout";
 import { SectionCards } from "@/pages/employee-overview/section-cards";
@@ -33,8 +33,6 @@ export default function EmployeeOverview({
     employee,
     vacationBalance,
     timeOffRequests,
-    types,
-    statuses,
 }: EmployeeOverviewPageProps) {
     return (
         <EmployeeLayout
@@ -109,31 +107,10 @@ export default function EmployeeOverview({
                                 </div>
                             )}
                             {timeOffRequests.map((request) => (
-                                <div
+                                <TimeOffRequestListItem
                                     key={request.id}
-                                    className="flex items-center justify-between px-6 py-4 text-sm"
-                                >
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">
-                                            {types[request.type]}
-                                        </span>
-                                        <span className="text-muted-foreground text-sm">
-                                            {new Date(
-                                                request.startDate,
-                                            ).toLocaleDateString()}{" "}
-                                            -{" "}
-                                            {request.endDate &&
-                                                new Date(
-                                                    request.endDate,
-                                                ).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                    <div className="text-sm">
-                                        <Badge className="rounded-full">
-                                            {statuses[request.status]}
-                                        </Badge>
-                                    </div>
-                                </div>
+                                    request={request}
+                                />
                             ))}
                         </div>
                     </div>

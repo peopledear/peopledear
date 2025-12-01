@@ -38,7 +38,7 @@ final class NotificationListData extends Data
 
         return new self(
             notifications: $notifications,
-            unread: $notifications->where('read_at')->count(),
+            unread: $notifications->toCollection()->reject(fn (NotificationData $n): bool => $n->read_at instanceof \Carbon\CarbonInterface)->count(),
             total: $notifications->count(),
         );
     }

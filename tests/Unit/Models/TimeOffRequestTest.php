@@ -9,6 +9,14 @@ use App\Models\Organization;
 use App\Models\TimeOffRequest;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+test('time off model has period relationship', function (): void {
+    /** @var TimeOffRequest $timeOff */
+    $timeOff = TimeOffRequest::factory()->createQuietly();
+
+    expect($timeOff->period())
+        ->toBeInstanceOf(BelongsTo::class);
+});
+
 test('time off has organization relationship', function (): void {
     /** @var TimeOffRequest $timeOff */
     $timeOff = TimeOffRequest::factory()->createQuietly();
@@ -205,6 +213,7 @@ test('to array', function (): void {
             'created_at',
             'updated_at',
             'organization_id',
+            'period_id',
             'employee_id',
             'type',
             'status',

@@ -10,6 +10,14 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+test('has a periods relationship', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    expect($organization->periods())
+        ->toBeInstanceOf(HasMany::class);
+});
+
 test('organization has correct fillable attributes', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([

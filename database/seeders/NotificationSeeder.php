@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Employee;
 use App\Models\Notification;
-use App\Models\Organization;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 final class NotificationSeeder extends Seeder
@@ -17,19 +15,13 @@ final class NotificationSeeder extends Seeder
      */
     public function run(): void
     {
-        /** @var Collection<int, Employee> $employees */
-        $employees = Employee::query()->get();
+        $users = User::query()->get();
 
-        /** @var Organization $organization */
-        $organization = Organization::query()
-            ->first();
-
-        $employees->each(function (Employee $employee) use ($organization): void {
+        $users->each(function (User $user): void {
 
             Notification::factory()
                 ->count(10)
-                ->for($organization)
-                ->for($employee, 'notifiable')
+                ->for($user, 'notifiable')
                 ->createQuietly();
 
         });

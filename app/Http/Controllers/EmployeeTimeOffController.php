@@ -12,8 +12,10 @@ use App\Enums\PeopleDear\RequestStatus;
 use App\Enums\PeopleDear\TimeOffType;
 use App\Http\Requests\StoreTimeOffRequest;
 use App\Models\Employee;
+use App\Models\Period;
 use App\Queries\CurrentEmployeeQuery;
 use App\Queries\EmployeeTimeOffRequestsQuery;
+use App\Queries\PeriodQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -68,11 +70,18 @@ final class EmployeeTimeOffController
     public function store(
         StoreTimeOffRequest $request,
         CreateTimeOffRequest $createTimeOff,
+        PeriodQuery $periodQuery,
         #[CurrentEmployee] Employee $employee,
     ): RedirectResponse {
 
+        /** @var Period $period */
+        $period = $periodQuery->active()->first();
+
         $createTimeOff->handle(
-            CreateTimeOffRequestData::from($request->validated()),
+            CreateTimeOffRequestData::from([
+                ...$request->validated(),
+                'period_id' => $period->id,
+            ]),
             $employee
         );
 

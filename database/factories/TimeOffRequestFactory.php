@@ -8,6 +8,7 @@ use App\Enums\PeopleDear\RequestStatus;
 use App\Enums\PeopleDear\TimeOffType;
 use App\Models\Employee;
 use App\Models\Organization;
+use App\Models\Period;
 use App\Models\TimeOffRequest;
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -27,6 +28,7 @@ final class TimeOffRequestFactory extends Factory
 
         return [
             'organization_id' => Organization::factory(),
+            'period_id' => Period::factory(),
             'employee_id' => Employee::factory(),
             'type' => fake()->randomElement(TimeOffType::cases()),
             'status' => fake()->randomElement(RequestStatus::cases()),

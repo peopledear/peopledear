@@ -6,11 +6,18 @@ use App\Enums\PeopleDear\TimeOffType;
 use App\Enums\PeopleDear\UserRole;
 use App\Models\Employee;
 use App\Models\Organization;
+use App\Models\Period;
 use App\Models\User;
 use App\Models\VacationBalance;
 
 beforeEach(function (): void {
-    $this->organization = Organization::factory()->createQuietly();
+    $this->organization = Organization::factory()
+        ->createQuietly();
+
+    $this->period = Period::factory()
+        ->for($this->organization)
+        ->active()
+        ->createQuietly();
 
     $this->user = User::factory()->createQuietly();
 

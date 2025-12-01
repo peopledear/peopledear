@@ -30,6 +30,20 @@ final class Organization extends Model
     /** @use HasFactory<OrganizationFactory> */
     use HasFactory;
 
+    public function casts(): array
+    {
+        return [
+            'id' => 'integer',
+            'name' => 'string',
+            'vat_number' => 'string',
+            'ssn' => 'string',
+            'phone' => 'string',
+            'country_id' => 'integer',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
+
     /** @return BelongsTo<Country, $this> */
     public function country(): BelongsTo
     {
@@ -48,22 +62,14 @@ final class Organization extends Model
         return $this->hasMany(Holiday::class);
     }
 
+    /** @return HasMany<Period, $this> */
+    public function periods(): HasMany
+    {
+        return $this->hasMany(Period::class);
+    }
+
     public function hasLocationConfigured(): bool
     {
         return $this->country_id !== null;
-    }
-
-    public function casts(): array
-    {
-        return [
-            'id' => 'integer',
-            'name' => 'string',
-            'vat_number' => 'string',
-            'ssn' => 'string',
-            'phone' => 'string',
-            'country_id' => 'integer',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
     }
 }

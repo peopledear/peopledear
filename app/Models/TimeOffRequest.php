@@ -7,7 +7,9 @@ namespace App\Models;
 use App\Contracts\Approvable;
 use App\Enums\PeopleDear\RequestStatus;
 use App\Enums\PeopleDear\TimeOffType;
+use App\Models\Concerns\BelongsToEmployee;
 use App\Models\Concerns\BelongsToOrganization;
+use App\Models\Concerns\BelongsToPeriod;
 use App\Models\Concerns\HasApproval;
 use App\Models\Scopes\OrganizationScope;
 use Carbon\Carbon;
@@ -15,7 +17,6 @@ use Database\Factories\TimeOffRequestFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read int $id
@@ -35,19 +36,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[ScopedBy([OrganizationScope::class])]
 final class TimeOffRequest extends Model implements Approvable
 {
+    use BelongsToEmployee;
     use BelongsToOrganization;
+    use BelongsToPeriod;
     use HasApproval;
 
     /** @use HasFactory<TimeOffRequestFactory> */
     use HasFactory;
-
-    /**
-     * @return BelongsTo<Employee, $this>
-     */
-    public function employee(): BelongsTo
-    {
-        return $this->belongsTo(Employee::class);
-    }
 
     /**
      * @return array<string, string>

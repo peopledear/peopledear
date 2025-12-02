@@ -26,7 +26,7 @@ final class EmployeeOverviewController
 
         $timeOffRequests = $latestUserTimeOffRequestsQuery
             ->builder()
-            ->with(['employee', 'organization'])
+            ->with(['employee', 'organization', 'period'])
             ->get();
 
         return Inertia::render(

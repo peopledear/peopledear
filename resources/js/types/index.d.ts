@@ -106,10 +106,19 @@ export interface TimeOffType {
 
 export type EnumOptions = Record<number, string>;
 
+export interface Period {
+    id: string;
+    organizationId: number;
+    start: string;
+    end: string;
+    year: number;
+}
+
 export interface TimeOffRequest {
     id: number;
     organizationId: number;
     employeeId: number;
+    period: Period;
     type: TimeOffType;
     status: RequestStatus;
     startDate: string;

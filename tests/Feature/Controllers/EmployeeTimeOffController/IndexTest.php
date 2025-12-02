@@ -7,11 +7,18 @@ use App\Enums\PeopleDear\TimeOffType;
 use App\Enums\PeopleDear\UserRole;
 use App\Models\Employee;
 use App\Models\Organization;
+use App\Models\Period;
 use App\Models\TimeOffRequest;
 use App\Models\User;
 
 beforeEach(function (): void {
-    $this->organization = Organization::factory()->createQuietly();
+    $this->organization = Organization::factory()
+        ->createQuietly();
+
+    $this->period = Period::factory()
+        ->for($this->organization)
+        ->active()
+        ->create();
 
     $this->user = User::factory()->createQuietly();
 
@@ -47,6 +54,7 @@ test('employee sees paginated time off requests with 20 per page', function (): 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->count(25)
         ->createQuietly();
 
@@ -78,12 +86,14 @@ test('requests are ordered by created_at desc', function (): void {
     $oldRequest = TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['created_at' => now()->subDays(2)]);
 
     /** @var TimeOffRequest $newRequest */
     $newRequest = TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['created_at' => now()]);
 
     $response = $this->actingAs($this->user)
@@ -101,11 +111,13 @@ test('filtering by status returns only matching requests', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['status' => RequestStatus::Approved]);
 
     $response = $this->actingAs($this->user)
@@ -123,11 +135,13 @@ test('clearing status filter returns all requests', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['status' => RequestStatus::Approved]);
 
     $response = $this->actingAs($this->user)
@@ -155,11 +169,13 @@ test('filtering by type returns only matching requests', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['type' => TimeOffType::Vacation]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly(['type' => TimeOffType::SickLeave]);
 
     $response = $this->actingAs($this->user)
@@ -177,6 +193,7 @@ test('combined status and type filters return correct results', function (): voi
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly([
             'status' => RequestStatus::Pending,
             'type' => TimeOffType::Vacation,
@@ -185,6 +202,7 @@ test('combined status and type filters return correct results', function (): voi
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly([
             'status' => RequestStatus::Approved,
             'type' => TimeOffType::Vacation,
@@ -193,6 +211,7 @@ test('combined status and type filters return correct results', function (): voi
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
         ->createQuietly([
             'status' => RequestStatus::Pending,
             'type' => TimeOffType::SickLeave,

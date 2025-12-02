@@ -6,6 +6,7 @@ namespace App\Data\PeopleDear\TimeOffRequest;
 
 use App\Data\CastsAndTransformers\RequestStatusTransformer;
 use App\Data\CastsAndTransformers\TimeOffTypeTransformer;
+use App\Data\PeopleDear\Period\PeriodData;
 use App\Enums\PeopleDear\RequestStatus;
 use App\Enums\PeopleDear\TimeOffType;
 use Spatie\LaravelData\Attributes\MapOutputName;
@@ -37,6 +38,7 @@ final class TimeOffRequestData extends Data
         #[WithCast(DateTimeInterfaceCast::class)]
         public readonly ?string $endDate,
         public readonly bool $isHalfDay,
+        public readonly PeriodData $period,
         #[WithCast(DateTimeInterfaceCast::class)]
         public readonly string $createdAt,
         #[WithCast(DateTimeInterfaceCast::class)]

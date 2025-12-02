@@ -40,6 +40,7 @@ final class EmployeeTimeOffController
             ->withStatus($status)
             ->withType($type)
             ->builder()
+            ->with('employee', 'organization', 'period')
             ->paginate(20)
             ->withQueryString();
 

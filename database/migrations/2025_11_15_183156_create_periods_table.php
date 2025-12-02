@@ -15,7 +15,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('periods', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->timestamps();
             $table->foreignIdFor(Organization::class)
                 ->constrained();

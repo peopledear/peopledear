@@ -9,6 +9,7 @@ use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Scopes\OrganizationScope;
 use Database\Factories\PeriodFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -32,13 +33,15 @@ final class Period extends Model
     /** @use HasFactory<PeriodFactory> */
     use HasFactory;
 
+    use HasUuids;
+
     /**
      * @return array<string, string>
      */
     public function casts(): array
     {
         return [
-            'id' => 'integer',
+            'id' => 'string',
             'year' => 'integer',
             'organization_id' => 'integer',
             'start' => 'date',

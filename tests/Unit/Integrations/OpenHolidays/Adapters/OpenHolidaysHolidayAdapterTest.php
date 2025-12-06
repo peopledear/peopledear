@@ -14,31 +14,35 @@ beforeEach(function (): void {
     $this->holidays = collect(json_decode((string) $data['data'], true));
 });
 
-test('transforms OpenHolidays holiday response to CreateHolidayData', function (): void {
-
-    $openHolidaysHolidayData = OpenHolidaysHolidayData::from(
-        $this->holidays
-            ->where('type', OpenHolidaysHolidayType::Optional)
-            ->first()
-    );
-
+test('transforms OpenHolidays holiday response to CreateHolidayData',
     /**
-     * @var OpenHolidaysHolidayAdapter $adapter
+     * @throws Throwable
      */
-    $adapter = app(OpenHolidaysHolidayAdapter::class);
+    function (): void {
 
-    $createHolidayData = $adapter->toCreateData(
-        $openHolidaysHolidayData,
-        organizationId: $organizationId = Str::uuid7()->toString(),
-    );
+        $openHolidaysHolidayData = OpenHolidaysHolidayData::from(
+            $this->holidays
+                ->where('type', OpenHolidaysHolidayType::Optional)
+                ->first()
+        );
 
-    expect($openHolidaysHolidayData)
-        ->toBeInstanceOf(OpenHolidaysHolidayData::class)
-        ->and($createHolidayData->name)
-        ->toBe('Feriado Municipal')
-        ->and($createHolidayData->organizationId)
-        ->toBe($organizationId)
-        ->and($createHolidayData)
-        ->toBeInstanceOf(CreateHolidayData::class);
+        /**
+         * @var OpenHolidaysHolidayAdapter $adapter
+         */
+        $adapter = app(OpenHolidaysHolidayAdapter::class);
 
-});
+        $createHolidayData = $adapter->toCreateData(
+            $openHolidaysHolidayData,
+            organizationId: $organizationId = Str::uuid7()->toString(),
+        );
+
+        expect($openHolidaysHolidayData)
+            ->toBeInstanceOf(OpenHolidaysHolidayData::class)
+            ->and($createHolidayData->name)
+            ->toBe('Feriado Municipal')
+            ->and($createHolidayData->organizationId)
+            ->toBe($organizationId)
+            ->and($createHolidayData)
+            ->toBeInstanceOf(CreateHolidayData::class);
+
+    });

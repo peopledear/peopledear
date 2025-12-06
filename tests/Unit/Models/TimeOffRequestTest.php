@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 test('time off model has period relationship', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->create();
 
     expect($timeOff->period())
         ->toBeInstanceOf(BelongsTo::class);
@@ -19,7 +19,7 @@ test('time off model has period relationship', function (): void {
 
 test('time off has organization relationship', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->create();
 
     expect($timeOff->organization())
         ->toBeInstanceOf(BelongsTo::class);
@@ -27,10 +27,10 @@ test('time off has organization relationship', function (): void {
 
 test('time off organization relationship is properly loaded', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -44,7 +44,7 @@ test('time off organization relationship is properly loaded', function (): void 
 
 test('time off has employee relationship', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->create();
 
     expect($timeOff->employee())
         ->toBeInstanceOf(BelongsTo::class);
@@ -52,10 +52,10 @@ test('time off has employee relationship', function (): void {
 
 test('time off employee relationship is properly loaded', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'employee_id' => $employee->id,
     ]);
 
@@ -69,7 +69,7 @@ test('time off employee relationship is properly loaded', function (): void {
 
 test('time off type is cast to TimeOffType enum', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'type' => TimeOffType::Vacation,
     ]);
 
@@ -85,7 +85,7 @@ test('time off type is cast to TimeOffType enum', function (): void {
 
 test('time off status is cast to TimeOffStatus enum', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'status' => RequestStatus::Pending,
     ]);
 
@@ -101,7 +101,7 @@ test('time off status is cast to TimeOffStatus enum', function (): void {
 
 test('time off start_date is cast to date', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'start_date' => '2024-03-15',
     ]);
 
@@ -113,7 +113,7 @@ test('time off start_date is cast to date', function (): void {
 
 test('time off end_date is cast to date', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'start_date' => '2024-03-15',
         'end_date' => '2024-03-20',
         'is_half_day' => false,
@@ -127,7 +127,7 @@ test('time off end_date is cast to date', function (): void {
 
 test('time off end_date can be null', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'end_date' => null,
         'is_half_day' => true,
     ]);
@@ -137,7 +137,7 @@ test('time off end_date can be null', function (): void {
 
 test('time off is_half_day is cast to boolean', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'is_half_day' => true,
     ]);
 
@@ -149,7 +149,7 @@ test('time off is_half_day is cast to boolean', function (): void {
 
 test('time off half day has null end_date', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->halfDay()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->halfDay()->create();
 
     expect($timeOff->is_half_day)
         ->toBeTrue()
@@ -159,7 +159,7 @@ test('time off half day has null end_date', function (): void {
 
 test('time off multi day has end_date', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->multiDay()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->multiDay()->create();
 
     expect($timeOff->is_half_day)
         ->toBeFalse()
@@ -171,7 +171,7 @@ test('time off multi day has end_date', function (): void {
 
 test('time off pending state sets status correctly', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->pending()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->pending()->create();
 
     expect($timeOff->status)
         ->toBe(RequestStatus::Pending);
@@ -179,7 +179,7 @@ test('time off pending state sets status correctly', function (): void {
 
 test('time off approved state sets status correctly', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->approved()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->approved()->create();
 
     expect($timeOff->status)
         ->toBe(RequestStatus::Approved);
@@ -187,7 +187,7 @@ test('time off approved state sets status correctly', function (): void {
 
 test('time off rejected state sets status correctly', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->rejected()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->rejected()->create();
 
     expect($timeOff->status)
         ->toBe(RequestStatus::Rejected);
@@ -195,7 +195,7 @@ test('time off rejected state sets status correctly', function (): void {
 
 test('time off cancelled state sets status correctly', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->cancelled()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->cancelled()->create();
 
     expect($timeOff->status)
         ->toBe(RequestStatus::Cancelled);
@@ -204,7 +204,7 @@ test('time off cancelled state sets status correctly', function (): void {
 test('to array', function (): void {
     /** @var TimeOffRequest $timeOff */
     $timeOff = TimeOffRequest::factory()
-        ->createQuietly()
+        ->create()
         ->refresh();
 
     expect(array_keys($timeOff->toArray()))

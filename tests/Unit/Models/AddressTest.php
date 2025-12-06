@@ -10,19 +10,21 @@ test('address has addressable relationship', function (): void {
     /** @var Address $address */
     $address = Address::factory()
         ->for(Office::factory(), 'addressable')
-        ->createQuietly();
+        ->create();
 
-    expect($address->addressable())->toBeInstanceOf(MorphTo::class);
+    expect($address->addressable())
+        ->toBeInstanceOf(MorphTo::class);
 });
 
 test('address addressable relationship is properly loaded for office', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->createQuietly();
+    $office = Office::factory()
+        ->create();
 
     /** @var Address $address */
     $address = Address::factory()
         ->for($office, 'addressable')
-        ->createQuietly();
+        ->create();
 
     $address->load('addressable');
 
@@ -36,7 +38,7 @@ test('to array', function (): void {
     /** @var Address $address */
     $address = Address::factory()
         ->for(Office::factory(), 'addressable')
-        ->createQuietly()
+        ->create()
         ->refresh();
 
     expect(array_keys($address->toArray()))

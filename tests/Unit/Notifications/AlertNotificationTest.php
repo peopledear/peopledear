@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Session;
 
 test('sends alert notification', function (): void {
     $user = User::factory()
-        ->createQuietly();
+        ->create();
 
     $organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     Session::put(SessionKey::CurrentOrganization->value, $organization->id);
 
@@ -31,10 +31,10 @@ test('sends alert notification', function (): void {
 
 test('sends alert notification with action url', function (): void {
     $user = User::factory()
-        ->createQuietly();
+        ->create();
 
     $organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     Session::put(SessionKey::CurrentOrganization->value, $organization->id);
 

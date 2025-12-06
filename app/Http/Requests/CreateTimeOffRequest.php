@@ -29,8 +29,8 @@ final class CreateTimeOffRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'employee_id' => ['required', 'integer', 'exists:employees,id'],
-            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
+            'employee_id' => ['required', 'string', 'exists:employees,id'],
+            'organization_id' => ['required', 'string', 'exists:organizations,id'],
             'period_id' => ['required', 'string', 'exists:periods,id'],
             'type' => ['required', Rule::enum(TimeOffType::class)],
             'start_date' => ['required', 'date'],

@@ -14,31 +14,18 @@ use InvalidArgumentException;
 use Throwable;
 
 /**
- * Adapter for transforming OpenHolidays subdivision data to internal format.
- *
- * Handles recursive transformation of nested subdivision hierarchies,
- * official language parsing and inheritance, and type mapping.
- *
  * @implements Adapter<OpenHolidaysSubdivisionData,CreateCountrySubdivisionData>
  */
 final readonly class OpenHolidaysSubdivisionAdapter implements Adapter
 {
     /**
-     * Transform OpenHolidays subdivision data to CreateCountrySubdivisionData.
-     *
-     * Supports both array context (for Adapter interface) and named parameters
-     * (for direct usage and backward compatibility).
-     *
-     * @param  OpenHolidaysSubdivisionData  $data  The subdivision data from OpenHolidays API
-     * @param  int|null  $countryId  Country ID when using named parameters
-     * @param  array<int, string>  $countryLanguages  Country languages when using named parameters
-     * @return CreateCountrySubdivisionData The transformed internal subdivision data
+     * @param  string[]  $countryLanguages
      *
      * @throws Throwable
      */
     public function toCreateData(
         mixed $data,
-        ?int $countryId = null,
+        ?string $countryId = null,
         array $countryLanguages = []
     ): CreateCountrySubdivisionData {
 
@@ -81,14 +68,9 @@ final readonly class OpenHolidaysSubdivisionAdapter implements Adapter
     }
 
     /**
-     * Parse official languages from API data or inherit from country.
-     *
-     * When subdivision has no specific official languages defined,
-     * inherits from the parent country's official languages.
-     *
-     * @param  array<int, string>|null  $subdivisionLanguages  Subdivision's official languages from API
-     * @param  array<int, string>  $countryLanguages  Country's official languages as fallback
-     * @return array<int, string> Array of official language codes
+     * @param  array<int, string>|null  $subdivisionLanguages
+     * @param  string[]  $countryLanguages
+     * @return string[]
      */
     private function parseOfficialLanguages(
         ?array $subdivisionLanguages,
@@ -102,19 +84,13 @@ final readonly class OpenHolidaysSubdivisionAdapter implements Adapter
     }
 
     /**
-     * Recursively transform nested subdivision children.
-     *
-     * Maintains hierarchy structure by recursively transforming
-     * all nested subdivision levels.
-     *
-     * @param  array<int, array<string, mixed>>|null  $children  Child subdivisions from API
-     * @param  int  $countryId  Parent country ID to pass to children
-     * @param  array<int, string>  $countryLanguages  Country languages to pass to children
-     * @return Collection<int, CreateCountrySubdivisionData>|null Transformed child subdivisions
+     * @param  array<int, array<string, mixed>>|null  $children
+     * @param  string[]  $countryLanguages
+     * @return Collection<int, CreateCountrySubdivisionData>|null
      */
     private function transformChildren(
         ?array $children,
-        int $countryId,
+        string $countryId,
         array $countryLanguages
     ): ?Collection {
         if ($children === null || $children === []) {

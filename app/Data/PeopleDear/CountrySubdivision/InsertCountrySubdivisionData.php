@@ -22,8 +22,8 @@ final class InsertCountrySubdivisionData extends Data
      * @param  array<int, string>  $officialLanguages
      */
     public function __construct(
-        public readonly int $countryId,
-        public readonly ?int $countrySubdivisionId,
+        public readonly string $countryId,
+        public readonly ?string $countrySubdivisionId,
         #[WithTransformer(ArrayableToJsonTransformer::class)]
         public readonly array $name,
         public readonly string $code,

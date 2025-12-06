@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace App\Data\PeopleDear\Country;
 
 use Spatie\LaravelData\Attributes\Computed;
+use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 /**
  * @method array<string, mixed> toArray()
  */
 #[MapOutputName(CamelCaseMapper::class)]
+#[MapInputName(SnakeCaseMapper::class)]
 final class CountryData extends Data
 {
     #[Computed]
@@ -22,7 +25,7 @@ final class CountryData extends Data
      * @param  array<string, string>  $name
      */
     public function __construct(
-        public readonly int $id,
+        public readonly string $id,
         public readonly string $isoCode,
         public readonly array $name,
     ) {

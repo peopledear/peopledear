@@ -17,11 +17,11 @@ it('people manager can create office with address', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -58,7 +58,6 @@ it('people manager can create office with address', function (): void {
         ->and($office->phone)
         ->toBe('+1234567890');
 
-    /** @var Address $address */
     $address = $office->address;
 
     expect($address)
@@ -85,11 +84,11 @@ it('owner can create office with address', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     $this->actingAs($owner);
 
@@ -126,10 +125,10 @@ it('employee cannot create office', function (): void {
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($employee);
 
@@ -162,14 +161,14 @@ it('people manager can update office and address', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'organization_id' => $organization->id,
         'name' => 'Old Office Name',
         'type' => OfficeType::Branch,
@@ -178,7 +177,7 @@ it('people manager can update office and address', function (): void {
     /** @var Address $address */
     $address = Address::factory()
         ->for($office, 'addressable')
-        ->createQuietly([
+        ->create([
             'line1' => 'Old Address',
             'city' => 'Old City',
             'postal_code' => '00000',
@@ -238,21 +237,21 @@ it('owner can update office', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'organization_id' => $organization->id,
         'name' => 'Old Name',
     ]);
 
     Address::factory()
         ->for($office, 'addressable')
-        ->createQuietly();
+        ->create();
 
     $this->actingAs($owner);
 
@@ -286,21 +285,21 @@ it('employee cannot update office', function (): void {
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'organization_id' => $organization->id,
         'name' => 'Protected Office',
     ]);
 
     Address::factory()
         ->for($office, 'addressable')
-        ->createQuietly();
+        ->create();
 
     $this->actingAs($employee);
 
@@ -331,14 +330,14 @@ it('people manager can delete office', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -364,14 +363,14 @@ it('owner can delete office', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -397,14 +396,14 @@ it('employee cannot delete office', function (): void {
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -431,10 +430,10 @@ it('requires office name', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -461,10 +460,10 @@ it('requires office type', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -491,10 +490,10 @@ it('requires address line1', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -521,10 +520,10 @@ it('requires address city', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -551,10 +550,10 @@ it('requires address postal_code', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -581,10 +580,10 @@ it('requires address country', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -611,11 +610,11 @@ it('allows optional address fields', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 

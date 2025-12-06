@@ -6,24 +6,27 @@ namespace App\Data\PeopleDear\TimeOffRequest;
 
 use App\Enums\PeopleDear\TimeOffType;
 use Carbon\CarbonImmutable;
+use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 /**
  * @method array<string, mixed> toArray()
  */
+#[MapName(SnakeCaseMapper::class)]
 final class CreateTimeOffRequestData extends Data
 {
     public function __construct(
-        public readonly int $organization_id,
-        public readonly int $employee_id,
-        public readonly string $period_id,
+        public readonly string $organizationId,
+        public readonly string $employeeId,
+        public readonly string $periodId,
         public readonly TimeOffType $type,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.v\Z')]
-        public readonly CarbonImmutable $start_date,
+        public readonly CarbonImmutable $startDate,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.v\Z')]
-        public readonly ?CarbonImmutable $end_date,
-        public readonly bool $is_half_day,
+        public readonly ?CarbonImmutable $endDate,
+        public readonly bool $isHalfDay,
     ) {}
 }

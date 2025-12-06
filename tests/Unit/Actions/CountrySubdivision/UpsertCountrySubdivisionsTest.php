@@ -13,8 +13,8 @@ beforeEach(
      * @throws Throwable
      */
     function (): void {
-        $this->usa = Country::factory()->createQuietly(['iso_code' => 'US']);
-        $this->germany = Country::factory()->createQuietly(['iso_code' => 'DE']);
+        $this->usa = Country::factory()->create(['iso_code' => 'US']);
+        $this->germany = Country::factory()->create(['iso_code' => 'DE']);
 
         $this->subdivisions = collect([
             [

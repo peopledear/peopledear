@@ -10,15 +10,15 @@ use App\Queries\UserNotificationsQuery;
 use Illuminate\Support\Facades\Session;
 
 test('query returns notifications for user', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -35,15 +35,15 @@ test('query returns notifications for user', function (): void {
 });
 
 test('query returns unread count', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -59,15 +59,15 @@ test('query returns unread count', function (): void {
 });
 
 test('query orders unread notifications first', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -92,15 +92,15 @@ test('query orders unread notifications first', function (): void {
 });
 
 test('unread count returns zero for no notifications', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     $this->actingAs($user);
 
@@ -111,15 +111,15 @@ test('unread count returns zero for no notifications', function (): void {
 });
 
 test('unread count excludes read notifications', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 

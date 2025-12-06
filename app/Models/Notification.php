@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property-read string $id
  * @property-read string $type
  * @property-read string $notifiable_type
- * @property-read int $notifiable_id
+ * @property-read string $notifiable_id
  * @property-read array{title?: string, message?: string, action_url?: string|null} $data
  * @property-read Carbon|null $read_at
  * @property-read Carbon $created_at

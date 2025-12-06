@@ -12,7 +12,7 @@ final readonly class CreateApproval
 {
     public function handle(
         Approvable $approvable,
-        int $organizationId,
+        string $organizationId,
         RequestStatus $status = RequestStatus::Pending,
     ): Approval {
         /** @var Approval $approval */

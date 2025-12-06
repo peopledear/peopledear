@@ -18,10 +18,10 @@ beforeEach(
      */
     function (): void {
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->createQuietly([
+        $employee = Employee::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
@@ -39,7 +39,7 @@ test('deducts days from vacation balance when processed',
      */
     function (): void {
         /** @var VacationBalance $balance */
-        $balance = VacationBalance::factory()->createQuietly([
+        $balance = VacationBalance::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'year' => now()->year,
@@ -49,7 +49,7 @@ test('deducts days from vacation balance when processed',
         ]);
 
         /** @var TimeOffRequest $request */
-        $request = TimeOffRequest::factory()->createQuietly([
+        $request = TimeOffRequest::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'type' => TimeOffType::Vacation,
@@ -72,7 +72,7 @@ test('restores days to vacation balance when reversed',
      */
     function (): void {
         /** @var VacationBalance $balance */
-        $balance = VacationBalance::factory()->createQuietly([
+        $balance = VacationBalance::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'year' => now()->year,
@@ -82,7 +82,7 @@ test('restores days to vacation balance when reversed',
         ]);
 
         /** @var TimeOffRequest $request */
-        $request = TimeOffRequest::factory()->createQuietly([
+        $request = TimeOffRequest::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'type' => TimeOffType::Vacation,
@@ -105,7 +105,7 @@ test('deducts half day as 0.5',
      */
     function (): void {
         /** @var VacationBalance $balance */
-        $balance = VacationBalance::factory()->createQuietly([
+        $balance = VacationBalance::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'year' => now()->year,
@@ -115,7 +115,7 @@ test('deducts half day as 0.5',
         ]);
 
         /** @var TimeOffRequest $request */
-        $request = TimeOffRequest::factory()->createQuietly([
+        $request = TimeOffRequest::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'type' => TimeOffType::Vacation,

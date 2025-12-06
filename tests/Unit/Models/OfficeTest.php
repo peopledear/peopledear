@@ -11,24 +11,24 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 test('office has organization relationship', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->createQuietly();
+    $office = Office::factory()->create();
 
     expect($office->organization())->toBeInstanceOf(BelongsTo::class);
 });
 
 test('office has address relationship', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->createQuietly();
+    $office = Office::factory()->create();
 
     expect($office->address())->toBeInstanceOf(MorphOne::class);
 });
 
 test('office organization relationship is properly loaded', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -42,12 +42,12 @@ test('office organization relationship is properly loaded', function (): void {
 
 test('office address relationship is properly loaded', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->createQuietly();
+    $office = Office::factory()->create();
 
     /** @var Address $address */
     $address = Address::factory()
         ->for($office, 'addressable')
-        ->createQuietly();
+        ->create();
 
     $office->load('address');
 
@@ -63,7 +63,7 @@ test('office address relationship is properly loaded', function (): void {
 
 test('office type is cast to OfficeType enum', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->createQuietly([
+    $office = Office::factory()->create([
         'type' => OfficeType::Headquarters,
     ]);
 
@@ -80,7 +80,7 @@ test('office type is cast to OfficeType enum', function (): void {
 test('to array', function (): void {
     /** @var Office $office */
     $office = Office::factory()
-        ->createQuietly()
+        ->create()
         ->refresh();
 
     expect(array_keys($office->toArray()))

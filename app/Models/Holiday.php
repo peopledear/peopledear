@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\PeopleDear\HolidayType;
+use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Scopes\OrganizationScope;
 use Database\Factories\HolidayFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * @property-read int $id
- * @property-read int $organization_id
- * @property-read int $country_id
+ * @property-read string $id
+ * @property-read string $organization_id
+ * @property-read string $country_id
  * @property-read Carbon $date
  * @property-read array<string, string> $name
  * @property-read HolidayType $type
@@ -32,14 +34,12 @@ use Illuminate\Support\Carbon;
 #[ScopedBy([OrganizationScope::class])]
 final class Holiday extends Model
 {
+    use BelongsToOrganization;
+
     /** @use HasFactory<HolidayFactory> */
     use HasFactory;
 
-    /** @return BelongsTo<Organization, $this> */
-    public function organization(): BelongsTo
-    {
-        return $this->belongsTo(Organization::class);
-    }
+    use HasUuids;
 
     /** @return BelongsTo<Country, $this> */
     public function country(): BelongsTo
@@ -50,9 +50,9 @@ final class Holiday extends Model
     public function casts(): array
     {
         return [
-            'id' => 'integer',
-            'organization_id' => 'integer',
-            'country_id' => 'integer',
+            'id' => 'string',
+            'organization_id' => 'string',
+            'country_id' => 'string',
             'date' => 'date',
             'name' => 'array',
             'type' => HolidayType::class,

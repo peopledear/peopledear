@@ -22,16 +22,16 @@ final readonly class UpdateTimeOffRequest
             $updates['status'] = $data->status;
         }
 
-        if (! $data->start_date instanceof Optional) {
-            $updates['start_date'] = $data->start_date;
+        if (! $data->startDate instanceof Optional) {
+            $updates['start_date'] = $data->startDate;
         }
 
-        if (! $data->end_date instanceof Optional) {
-            $updates['end_date'] = $data->end_date;
+        if (! $data->endDate instanceof Optional) {
+            $updates['end_date'] = $data->endDate;
         }
 
-        if (! $data->is_half_day instanceof Optional) {
-            $updates['is_half_day'] = $data->is_half_day;
+        if (! $data->isHalfDay instanceof Optional) {
+            $updates['is_half_day'] = $data->isHalfDay;
         }
 
         if ($updates !== []) {

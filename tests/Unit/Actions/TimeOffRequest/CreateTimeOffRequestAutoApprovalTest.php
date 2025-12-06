@@ -13,16 +13,16 @@ use App\Models\Period;
 beforeEach(function (): void {
 
     $this->organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     $this->period = Period::factory()
         ->active()
         ->for($this->organization)
-        ->createQuietly();
+        ->create();
 
     $this->employee = Employee::factory()
         ->for($this->organization)
-        ->createQuietly();
+        ->create();
 
 });
 

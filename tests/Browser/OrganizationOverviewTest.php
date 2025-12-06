@@ -10,7 +10,7 @@ use function Pest\Laravel\actingAs;
 
 beforeEach(function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Test Organization',
     ]);
 
@@ -31,17 +31,17 @@ beforeEach(function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
     $this->peopleManager = $peopleManager;
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
     $this->owner = $owner;
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
     $this->employee = $employee;
 });

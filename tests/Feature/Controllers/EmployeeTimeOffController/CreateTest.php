@@ -8,14 +8,14 @@ use App\Models\Organization;
 use App\Models\User;
 
 beforeEach(function (): void {
-    $this->organization = Organization::factory()->createQuietly();
+    $this->organization = Organization::factory()->create();
 
-    $this->user = User::factory()->createQuietly();
+    $this->user = User::factory()->create();
 
     $this->employee = Employee::factory()
         ->for($this->organization)
         ->for($this->user)
-        ->createQuietly();
+        ->create();
 
     $this->user->assignRole(UserRole::Employee);
 });

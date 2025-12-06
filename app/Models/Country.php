@@ -6,12 +6,13 @@ namespace App\Models;
 
 use Database\Factories\CountryFactory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read int $id
+ * @property-read string $id
  * @property-read string $iso_code
  * @property-read array<string, string> $name
  * @property-read array<int, string> $official_languages
@@ -22,6 +23,8 @@ final class Country extends Model
 {
     /** @use HasFactory<CountryFactory> */
     use HasFactory;
+
+    use HasUuids;
 
     public $timestamps = false;
 
@@ -43,7 +46,7 @@ final class Country extends Model
     public function casts(): array
     {
         return [
-            'id' => 'integer',
+            'id' => 'string',
             'name' => 'array',
             'official_languages' => 'array',
         ];

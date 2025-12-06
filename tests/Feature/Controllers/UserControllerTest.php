@@ -178,7 +178,7 @@ it('requires correct password to delete account', function (): void {
 });
 
 it('redirects authenticated users away from registration', function (): void {
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $user = User::factory()->create();
 

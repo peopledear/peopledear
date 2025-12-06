@@ -18,17 +18,17 @@ test('deletes office and its address',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
         /** @var Address $address */
         $address = Address::factory()
             ->for($office, 'addressable')
-            ->createQuietly();
+            ->create();
 
         $officeId = $office->id;
         $addressId = $address->id;
@@ -52,10 +52,10 @@ test('deletes office without address gracefully',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 

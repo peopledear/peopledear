@@ -17,8 +17,10 @@ return new class extends Migration
         Schema::create('periods', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->timestamps();
+
             $table->foreignIdFor(Organization::class)
                 ->constrained();
+
             $table->smallInteger('year');
             $table->date('start');
             $table->date('end');

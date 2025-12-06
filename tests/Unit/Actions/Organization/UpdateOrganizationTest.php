@@ -17,7 +17,7 @@ test('updates organization with all fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly([
+        $organization = Organization::factory()->create([
             'name' => 'Old Name',
             'phone' => 'Old Phone',
         ]);
@@ -48,7 +48,7 @@ test('updates organization with partial fields only',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly([
+        $organization = Organization::factory()->create([
             'name' => 'Old Name',
             'phone' => '+9999999999',
             'vat_number' => 'OLD_VAT',
@@ -75,7 +75,7 @@ test('can set fields to null explicitly',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly([
+        $organization = Organization::factory()->create([
             'name' => 'Test Company',
             'phone' => '+1234567890',
             'vat_number' => 'VAT123',
@@ -103,7 +103,7 @@ test('empty data object does not change anything',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly([
+        $organization = Organization::factory()->create([
             'name' => 'Test Company',
             'phone' => '+1234567890',
             'vat_number' => 'VAT123',

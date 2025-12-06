@@ -12,25 +12,25 @@ use App\Models\VacationBalance;
 
 beforeEach(function (): void {
     $this->organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     $this->period = Period::factory()
         ->for($this->organization)
         ->active()
-        ->createQuietly();
+        ->create();
 
-    $this->user = User::factory()->createQuietly();
+    $this->user = User::factory()->create();
 
     $this->employee = Employee::factory()
         ->for($this->organization)
         ->for($this->user)
-        ->createQuietly();
+        ->create();
 
     $this->user->assignRole(UserRole::Employee);
 });
 
 test('can store a time off request', function (): void {
-    VacationBalance::factory()->createQuietly([
+    VacationBalance::factory()->create([
         'organization_id' => $this->organization->id,
         'employee_id' => $this->employee->id,
         'year' => 2025,
@@ -43,6 +43,7 @@ test('can store a time off request', function (): void {
         ->post(route('employee.time-offs.store'), [
             'employee_id' => $this->employee->id,
             'organization_id' => $this->organization->id,
+            'period_id' => $this->period->id,
             'type' => (string) TimeOffType::Vacation->value,
             'start_date' => '2025-01-15T00:00:00.000Z',
             'end_date' => '2025-01-17T00:00:00.000Z',
@@ -72,7 +73,7 @@ test('validates required fields when storing time off request', function (): voi
 });
 
 test('validates type-specific rules with insufficient vacation balance', function (): void {
-    VacationBalance::factory()->createQuietly([
+    VacationBalance::factory()->create([
         'organization_id' => $this->organization->id,
         'employee_id' => $this->employee->id,
         'year' => 2025,
@@ -85,6 +86,7 @@ test('validates type-specific rules with insufficient vacation balance', functio
         ->post(route('employee.time-offs.store'), [
             'employee_id' => $this->employee->id,
             'organization_id' => $this->organization->id,
+            'period_id' => $this->period->id,
             'type' => (string) TimeOffType::Vacation->value,
             'start_date' => '2025-01-15T00:00:00.000Z',
             'end_date' => '2025-01-20T00:00:00.000Z',

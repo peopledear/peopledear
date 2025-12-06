@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Database\Factories\OrganizationFactory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
- * @property-read int $id
+ * @property-read string $id
  * @property-read string $name
  * @property-read string|null $vat_number
  * @property-read string|null $ssn
@@ -30,15 +31,17 @@ final class Organization extends Model
     /** @use HasFactory<OrganizationFactory> */
     use HasFactory;
 
+    use HasUuids;
+
     public function casts(): array
     {
         return [
-            'id' => 'integer',
+            'id' => 'string',
             'name' => 'string',
             'vat_number' => 'string',
             'ssn' => 'string',
             'phone' => 'string',
-            'country_id' => 'integer',
+            'country_id' => 'string',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

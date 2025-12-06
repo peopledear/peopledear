@@ -14,13 +14,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')
+                ->primary();
             $table->timestamps();
-            $table->morphs('addressable');
+            $table->uuidMorphs('addressable');
             $table->string('line1');
-            $table->string('line2')->nullable();
+            $table->string('line2')
+                ->nullable();
             $table->string('city');
-            $table->string('state')->nullable();
+            $table->string('state')
+                ->nullable();
             $table->string('postal_code');
             $table->string('country');
         });

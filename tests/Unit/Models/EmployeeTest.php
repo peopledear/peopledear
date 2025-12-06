@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 test('employee has organization relationship', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     expect($employee->organization())
         ->toBeInstanceOf(BelongsTo::class);
@@ -22,7 +22,7 @@ test('employee has organization relationship', function (): void {
 test('employee has office relationship', function (): void {
     /** @var Employee $employee */
     $employee = Employee::factory()
-        ->createQuietly();
+        ->create();
 
     expect($employee->office())
         ->toBeInstanceOf(BelongsTo::class);
@@ -31,10 +31,10 @@ test('employee has office relationship', function (): void {
 test('employee organization relationship is properly loaded', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -49,11 +49,11 @@ test('employee organization relationship is properly loaded', function (): void 
 test('employee office relationship is properly loaded', function (): void {
     /** @var Office $office */
     $office = Office::factory()
-        ->createQuietly();
+        ->create();
 
     /** @var Employee $employee */
     $employee = Employee::factory()
-        ->createQuietly([
+        ->create([
             'office_id' => $office->id,
         ]);
 
@@ -67,7 +67,7 @@ test('employee office relationship is properly loaded', function (): void {
 
 test('employee office can be null', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'office_id' => null,
     ]);
 
@@ -78,17 +78,17 @@ test('employee office can be null', function (): void {
 
 test('employee has user relationship', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     expect($employee->user())->toBeInstanceOf(BelongsTo::class);
 });
 
 test('employee user relationship is properly loaded', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'user_id' => $user->id,
     ]);
 
@@ -102,7 +102,7 @@ test('employee user relationship is properly loaded', function (): void {
 
 test('employee user can be null', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'user_id' => null,
     ]);
 
@@ -113,7 +113,7 @@ test('employee user can be null', function (): void {
 
 test('employee employment_status is cast to EmploymentStatus enum', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'employment_status' => EmploymentStatus::Active,
     ]);
 
@@ -129,7 +129,7 @@ test('employee employment_status is cast to EmploymentStatus enum', function ():
 
 test('employee hire_date is cast to date', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'hire_date' => '2024-01-15',
     ]);
 
@@ -141,11 +141,11 @@ test('employee hire_date is cast to date', function (): void {
 
 test('employee number is unique', function (): void {
     /** @var Employee $employee1 */
-    $employee1 = Employee::factory()->createQuietly([
+    $employee1 = Employee::factory()->create([
         'employee_number' => 'EMP-1234',
     ]);
 
-    expect(fn () => Employee::factory()->createQuietly([
+    expect(fn () => Employee::factory()->create([
         'employee_number' => 'EMP-1234',
     ]))
         ->toThrow(Illuminate\Database\QueryException::class);
@@ -153,7 +153,7 @@ test('employee number is unique', function (): void {
 
 test('employee email can be null', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'email' => null,
     ]);
 
@@ -162,7 +162,7 @@ test('employee email can be null', function (): void {
 
 test('employee job_title can be null', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'job_title' => null,
     ]);
 
@@ -171,7 +171,7 @@ test('employee job_title can be null', function (): void {
 
 test('employee hire_date can be null', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'hire_date' => null,
     ]);
 
@@ -180,27 +180,27 @@ test('employee hire_date can be null', function (): void {
 
 test('employee has vacation balances relationship', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     expect($employee->vacationBalances())->toBeInstanceOf(HasMany::class);
 });
 
 test('employee has manager relationship', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     expect($employee->manager())->toBeInstanceOf(BelongsTo::class);
 });
 
 test('employee manager relationship is properly loaded', function (): void {
     /** @var Employee $manager */
-    $manager = Employee::factory()->createQuietly();
+    $manager = Employee::factory()->create();
 
     /** @var Employee $employee */
     $employee = Employee::factory()
         ->for($manager->organization)
         ->withManager($manager)
-        ->createQuietly();
+        ->create();
 
     $employee->load('manager');
 
@@ -212,7 +212,7 @@ test('employee manager relationship is properly loaded', function (): void {
 
 test('employee manager can be null', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'manager_id' => null,
     ]);
 
@@ -223,26 +223,26 @@ test('employee manager can be null', function (): void {
 
 test('employee has direct reports relationship', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     expect($employee->directReports())->toBeInstanceOf(HasMany::class);
 });
 
 test('employee direct reports relationship is properly loaded', function (): void {
     /** @var Employee $manager */
-    $manager = Employee::factory()->createQuietly();
+    $manager = Employee::factory()->create();
 
     /** @var Employee $report1 */
     $report1 = Employee::factory()
         ->for($manager->organization)
         ->withManager($manager)
-        ->createQuietly();
+        ->create();
 
     /** @var Employee $report2 */
     $report2 = Employee::factory()
         ->for($manager->organization)
         ->withManager($manager)
-        ->createQuietly();
+        ->create();
 
     $manager->load('directReports');
 
@@ -254,13 +254,13 @@ test('employee direct reports relationship is properly loaded', function (): voi
 
 test('employee vacation balances relationship is properly loaded', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     /** @var VacationBalance $vacationBalance */
     $vacationBalance = VacationBalance::factory()
         ->for($employee)
         ->for($employee->organization)
-        ->createQuietly();
+        ->create();
 
     $employee->load('vacationBalances');
 
@@ -273,7 +273,7 @@ test('employee vacation balances relationship is properly loaded', function (): 
 test('to array', function (): void {
     /** @var Employee $employee */
     $employee = Employee::factory()
-        ->createQuietly()
+        ->create()
         ->refresh();
 
     expect(array_keys($employee->toArray()))

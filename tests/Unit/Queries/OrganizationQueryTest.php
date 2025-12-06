@@ -24,17 +24,17 @@ test('builder returns organization query builder', function (): void {
 
 test('can retrieve all organizations using builder', function (): void {
     /** @var Organization $org1 */
-    $org1 = Organization::factory()->createQuietly([
+    $org1 = Organization::factory()->create([
         'name' => 'First Organization',
     ]);
 
     /** @var Organization $org2 */
-    $org2 = Organization::factory()->createQuietly([
+    $org2 = Organization::factory()->create([
         'name' => 'Second Organization',
     ]);
 
     /** @var Organization $org3 */
-    $org3 = Organization::factory()->createQuietly([
+    $org3 = Organization::factory()->create([
         'name' => 'Third Organization',
     ]);
 
@@ -48,11 +48,11 @@ test('can retrieve all organizations using builder', function (): void {
 
 test('can filter organizations using builder', function (): void {
     /** @var Organization $targetOrg */
-    $targetOrg = Organization::factory()->createQuietly([
+    $targetOrg = Organization::factory()->create([
         'name' => 'Target Organization',
     ]);
 
-    Organization::factory()->createQuietly([
+    Organization::factory()->create([
         'name' => 'Other Organization',
     ]);
 
@@ -67,9 +67,9 @@ test('can filter organizations using builder', function (): void {
 });
 
 test('can order organizations using builder', function (): void {
-    Organization::factory()->createQuietly(['name' => 'Zebra Org']);
-    Organization::factory()->createQuietly(['name' => 'Alpha Org']);
-    Organization::factory()->createQuietly(['name' => 'Beta Org']);
+    Organization::factory()->create(['name' => 'Zebra Org']);
+    Organization::factory()->create(['name' => 'Alpha Org']);
+    Organization::factory()->create(['name' => 'Beta Org']);
 
     $organizations = $this->query->builder()
         ->orderBy('name')
@@ -82,7 +82,7 @@ test('can order organizations using builder', function (): void {
 });
 
 test('can limit organizations using builder', function (): void {
-    Organization::factory()->count(5)->createQuietly();
+    Organization::factory()->count(5)->create();
 
     $organizations = $this->query->builder()
         ->limit(2)
@@ -93,7 +93,7 @@ test('can limit organizations using builder', function (): void {
 
 test('builder supports relationship eager loading', function (): void {
     /** @var Organization $org */
-    $org = Organization::factory()->createQuietly();
+    $org = Organization::factory()->create();
 
     $result = $this->query->builder()
         ->with('offices')

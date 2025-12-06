@@ -9,15 +9,15 @@ use App\Notifications\GeneralNotification;
 use Illuminate\Support\Facades\Session;
 
 test('user can delete notification', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -35,15 +35,15 @@ test('user can delete notification', function (): void {
 });
 
 test('deleted notification does not reappear', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -60,23 +60,23 @@ test('deleted notification does not reappear', function (): void {
 });
 
 test('user cannot delete other users notification', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     /** @var User $otherUser */
-    $otherUser = User::factory()->createQuietly();
+    $otherUser = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($otherUser)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -92,15 +92,15 @@ test('user cannot delete other users notification', function (): void {
 });
 
 test('unauthenticated user cannot delete notification', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 

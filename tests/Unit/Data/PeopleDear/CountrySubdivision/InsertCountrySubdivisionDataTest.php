@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Data\PeopleDear\CountrySubdivision\InsertCountrySubdivisionData;
 use App\Enums\PeopleDear\CountrySubdivisionType;
+use Illuminate\Support\Str;
 
 test('transforms country subdivision data correctly',
     /**
@@ -12,7 +13,7 @@ test('transforms country subdivision data correctly',
     function (): void {
 
         $subdivisionData = [
-            'countryId' => 1,
+            'countryId' => $countryId = Str::uuid7()->toString(),
             'countrySubdivisionId' => null,
             'name' => [
                 'EN' => 'California',
@@ -32,7 +33,7 @@ test('transforms country subdivision data correctly',
         expect($transformed)
             ->toBeArray()
             ->and($transformed['country_id'])
-            ->toBe(1)
+            ->toBe($countryId)
             ->and($transformed['country_subdivision_id'])
             ->toBeNull()
             ->and($transformed['code'])
@@ -57,8 +58,8 @@ test('creates country subdivision data instance correctly',
     function (): void {
 
         $subdivisionData = [
-            'countryId' => 2,
-            'countrySubdivisionId' => 5,
+            'countryId' => $countryId = Str::uuid7()->toString(),
+            'countrySubdivisionId' => $subdivisionId = Str::uuid7()->toString(),
             'name' => [
                 'EN' => 'Bavaria',
                 'DE' => 'Bayern',
@@ -75,9 +76,9 @@ test('creates country subdivision data instance correctly',
         expect($data)
             ->toBeInstanceOf(InsertCountrySubdivisionData::class)
             ->and($data->countryId)
-            ->toBe(2)
+            ->toBe($countryId)
             ->and($data->countrySubdivisionId)
-            ->toBe(5)
+            ->toBe($subdivisionId)
             ->and($data->code)
             ->toBe('BY')
             ->and($data->isoCode)

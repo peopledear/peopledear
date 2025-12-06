@@ -10,16 +10,16 @@ use App\Models\TimeOffRequest;
 test('create a time off request data', function (): void {
 
     $organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     $timeOffRequest = TimeOffRequest::factory()
         ->for($organization)
-        ->createQuietly();
+        ->create();
 
     $period = Period::factory()
         ->for($organization)
         ->active()
-        ->createQuietly();
+        ->create();
 
     $data = TimeOffRequestData::from([
         'id' => $timeOffRequest->id,

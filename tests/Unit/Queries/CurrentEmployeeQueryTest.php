@@ -15,12 +15,12 @@ test('gets the current user',
 
         /** @var User $user */
         $user = User::factory()
-            ->createQuietly()
+            ->create()
             ->fresh();
 
         Employee::factory()
             ->for($user)
-            ->createQuietly();
+            ->create();
 
         Auth::login($user);
 

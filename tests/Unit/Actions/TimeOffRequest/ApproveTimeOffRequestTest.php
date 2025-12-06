@@ -10,7 +10,7 @@ test('approves time off request', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->pending()
-        ->createQuietly();
+        ->create();
 
     $action = app(ApproveTimeOffRequest::class);
     $result = $action->handle($timeOffRequest);
@@ -23,7 +23,7 @@ test('returns refreshed model', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->pending()
-        ->createQuietly();
+        ->create();
 
     $action = app(ApproveTimeOffRequest::class);
     $result = $action->handle($timeOffRequest);

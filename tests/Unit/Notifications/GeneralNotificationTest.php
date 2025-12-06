@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Session;
 
 test('sends general notification', function (): void {
     $user = User::factory()
-        ->createQuietly();
+        ->create();
 
     $organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     Session::put(SessionKey::CurrentOrganization->value, $organization->id);
 

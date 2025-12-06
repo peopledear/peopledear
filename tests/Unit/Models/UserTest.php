@@ -10,21 +10,21 @@ use Spatie\Permission\Models\Role;
 
 test('user has roles relationship', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     expect($user->roles())->toBeInstanceOf(BelongsToMany::class);
 });
 
 test('user has permissions relationship', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     expect($user->permissions())->toBeInstanceOf(BelongsToMany::class);
 });
 
 test('user roles relationship is properly loaded', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'manager')
@@ -43,7 +43,7 @@ test('user roles relationship is properly loaded', function (): void {
 
 test('user permissions relationship is properly loaded', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Permission $permission */
     $permission = Permission::query()
         ->where('name', 'employees.view')
@@ -62,7 +62,7 @@ test('user permissions relationship is properly loaded', function (): void {
 
 test('to array', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly()->refresh();
+    $user = User::factory()->create()->refresh();
 
     expect(array_keys($user->toArray()))
         ->toBe([

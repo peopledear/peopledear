@@ -10,20 +10,20 @@ use App\Models\VacationBalance;
 
 test('renders the employee overview page', function (): void {
     $organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     $user = User::factory()
-        ->createQuietly();
+        ->create();
 
     $employee = Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     VacationBalance::factory()
         ->for($employee)
         ->for($organization)
-        ->createQuietly();
+        ->create();
 
     $user->assignRole(UserRole::Employee);
 

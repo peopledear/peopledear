@@ -11,6 +11,7 @@ use App\Models\Employee;
 use App\Models\TimeOffRequest;
 use App\Notifications\GeneralNotification;
 use App\Registries\TimeOffTypeRegistry;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -38,20 +39,20 @@ final readonly class CreateTimeOffRequest
                 ? RequestStatus::Approved
                 : RequestStatus::Pending;
 
-            $this->createApproval->handle($timeOff, $data->organization_id, $status);
+            $this->createApproval->handle($timeOff, $data->organizationId, $status);
 
             if ($data->type->isAutomaticApproved()) {
                 $processor = $this->registry->getProcessor($data->type);
                 $processor->process($timeOff);
             }
 
-            $endDateText = $data->end_date instanceof \Carbon\CarbonImmutable
-                ? ' to '.$data->end_date->toFormattedDateString()
+            $endDateText = $data->endDate instanceof CarbonImmutable
+                ? ' to '.$data->endDate->toFormattedDateString()
                 : '';
 
             $notification = new GeneralNotification(
                 'Time Off Request Submitted',
-                sprintf('<strong>%s</strong> has requested a new time off from %s%s.', $employee->name, $data->start_date->toFormattedDateString(), $endDateText)
+                sprintf('<strong>%s</strong> has requested a new time off from %s%s.', $employee->name, $data->startDate->toFormattedDateString(), $endDateText)
             );
 
             $employee->manager?->user?->notify($notification);

@@ -13,10 +13,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('holidays', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')
+                ->primary();
             $table->timestamps();
-            $table->foreignIdFor(Organization::class)->constrained();
-            $table->foreignIdFor(Country::class)->constrained();
+
+            $table->foreignIdFor(Organization::class)
+                ->constrained();
+
+            $table->foreignIdFor(Country::class)
+                ->constrained();
+
             $table->date('date');
             $table->json('name');
             $table->unsignedTinyInteger('type');

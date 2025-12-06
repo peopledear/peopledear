@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 use App\Data\PeopleDear\Country\CountryData;
 use App\Models\Country;
+use Illuminate\Support\Str;
 
 test('creates country data from country model', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTUS',
         'name' => ['EN' => 'United States', 'FR' => '?tats-Unis'],
     ]);
@@ -23,7 +24,7 @@ test('creates country data from country model', function (): void {
 
 test('displays name from en key when available', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTEN',
         'name' => ['en' => 'United States', 'FR' => '?tats-Unis'],
     ]);
@@ -35,7 +36,7 @@ test('displays name from en key when available', function (): void {
 
 test('displays name from EN key when en key not available', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTEN2',
         'name' => ['EN' => 'United States', 'FR' => '?tats-Unis'],
     ]);
@@ -47,7 +48,7 @@ test('displays name from EN key when en key not available', function (): void {
 
 test('displays name from first key when en and EN not available', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTFR',
         'name' => ['FR' => '?tats-Unis', 'DE' => 'Vereinigte Staaten'],
     ]);
@@ -59,7 +60,7 @@ test('displays name from first key when en and EN not available', function (): v
 
 test('displays iso code when name array is empty', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTEMPTY',
         'name' => [],
     ]);
@@ -71,7 +72,7 @@ test('displays iso code when name array is empty', function (): void {
 
 test('toArray includes computed displayName property', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTCOMP',
         'name' => ['EN' => 'United States', 'FR' => '?tats-Unis'],
     ]);
@@ -90,7 +91,7 @@ test('toArray includes computed displayName property', function (): void {
 
 test('toArray outputs properties in camelCase', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTCASE',
         'name' => ['EN' => 'United Kingdom'],
     ]);
@@ -107,7 +108,7 @@ test('toArray outputs properties in camelCase', function (): void {
 
 test('computed displayName property is accessible', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTPROP',
         'name' => ['EN' => 'United States', 'FR' => '?tats-Unis'],
     ]);
@@ -117,16 +118,16 @@ test('computed displayName property is accessible', function (): void {
     expect($data->displayName)->toBe('United States');
 });
 
-test('can create country data from array with snake_case keys', function (): void {
+test('can create country data from array with camel Case keys', function (): void {
     $data = CountryData::from([
-        'id' => 1,
+        'id' => $id = Str::uuid7()->toString(),
         'isoCode' => 'CA',  // Use property name directly for array input
         'name' => ['EN' => 'Canada'],
     ]);
 
     expect($data)
         ->toBeInstanceOf(CountryData::class)
-        ->id->toBe(1)
+        ->id->toBe($id)
         ->isoCode->toBe('CA')
         ->name->toBe(['EN' => 'Canada'])
         ->displayName->toBe('Canada');
@@ -134,7 +135,7 @@ test('can create country data from array with snake_case keys', function (): voi
 
 test('computed displayName is calculated in constructor', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTDYN',
         'name' => ['DE' => 'Deutschland', 'EN' => 'Germany'],
     ]);
@@ -147,7 +148,7 @@ test('computed displayName is calculated in constructor', function (): void {
 
 test('displayName prioritizes en over EN over first key over isoCode', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTPRIO',
         'name' => ['en' => 'English Name', 'EN' => 'Uppercase Name', 'FR' => 'French Name'],
     ]);
@@ -159,7 +160,7 @@ test('displayName prioritizes en over EN over first key over isoCode', function 
 
 test('displayName uses EN when en not available', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTEN3',
         'name' => ['EN' => 'Uppercase Name', 'FR' => 'French Name'],
     ]);
@@ -171,7 +172,7 @@ test('displayName uses EN when en not available', function (): void {
 
 test('displayName uses first key when en and EN not available', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTFIRST',
         'name' => ['FR' => 'French Name', 'DE' => 'German Name'],
     ]);
@@ -183,7 +184,7 @@ test('displayName uses first key when en and EN not available', function (): voi
 
 test('displayName falls back to isoCode when name array is empty', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'TESTFALLBACK',
         'name' => [],
     ]);

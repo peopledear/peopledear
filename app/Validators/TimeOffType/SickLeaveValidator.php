@@ -6,6 +6,7 @@ namespace App\Validators\TimeOffType;
 
 use App\Contracts\TimeOffTypeValidator;
 use App\Support\ValidationResult;
+use Illuminate\Support\Facades\Date;
 
 final readonly class SickLeaveValidator implements TimeOffTypeValidator
 {
@@ -18,13 +19,13 @@ final readonly class SickLeaveValidator implements TimeOffTypeValidator
 
         /** @var string $startDateValue */
         $startDateValue = $data['start_date'];
-        $startDate = \Illuminate\Support\Facades\Date::parse($startDateValue);
+        $startDate = Date::parse($startDateValue);
 
         $endDate = null;
         if (isset($data['end_date'])) {
             /** @var string $endDateValue */
             $endDateValue = $data['end_date'];
-            $endDate = \Illuminate\Support\Facades\Date::parse($endDateValue);
+            $endDate = Date::parse($endDateValue);
         }
 
         if ($endDate !== null && $endDate->startOfDay()->lt($startDate->startOfDay())) {

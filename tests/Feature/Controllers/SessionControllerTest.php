@@ -125,7 +125,7 @@ it('may destroy a session', function (): void {
 });
 
 it('redirects authenticated users away from login', function (): void {
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $user = User::factory()->create();
 

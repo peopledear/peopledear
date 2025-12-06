@@ -19,7 +19,7 @@ test('closes periods',
     function (): void {
 
         $organization = Organization::factory()
-            ->createQuietly();
+            ->create();
 
         $periods = Period::factory()->count(3)
             ->for($organization)
@@ -28,7 +28,7 @@ test('closes periods',
                 ['year' => 2023],
                 ['year' => 2024]
             ))
-            ->createQuietly([
+            ->create([
                 'status' => 1, // Active
             ])
             ->fresh();

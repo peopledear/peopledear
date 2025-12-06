@@ -10,14 +10,14 @@ test('restores single day to balance', function (): void {
     /** @var TimeOffRequest $request */
     $request = TimeOffRequest::factory()
         ->vacation()
-        ->createQuietly([
+        ->create([
             'start_date' => now(),
             'end_date' => null,
             'is_half_day' => false,
         ]);
 
     /** @var VacationBalance $balance */
-    $balance = VacationBalance::factory()->createQuietly([
+    $balance = VacationBalance::factory()->create([
         'employee_id' => $request->employee_id,
         'year' => $request->start_date->year,
         'accrued' => 2500,
@@ -35,14 +35,14 @@ test('restores multi-day to balance', function (): void {
     /** @var TimeOffRequest $request */
     $request = TimeOffRequest::factory()
         ->vacation()
-        ->createQuietly([
+        ->create([
             'start_date' => now(),
             'end_date' => now()->addDays(4),
             'is_half_day' => false,
         ]);
 
     /** @var VacationBalance $balance */
-    $balance = VacationBalance::factory()->createQuietly([
+    $balance = VacationBalance::factory()->create([
         'employee_id' => $request->employee_id,
         'year' => $request->start_date->year,
         'accrued' => 2500,
@@ -61,10 +61,10 @@ test('restores half day to balance', function (): void {
     $request = TimeOffRequest::factory()
         ->vacation()
         ->halfDay()
-        ->createQuietly();
+        ->create();
 
     /** @var VacationBalance $balance */
-    $balance = VacationBalance::factory()->createQuietly([
+    $balance = VacationBalance::factory()->create([
         'employee_id' => $request->employee_id,
         'year' => $request->start_date->year,
         'accrued' => 2500,

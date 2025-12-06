@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\AddressFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
 /**
- * @property-read int $id
- * @property-read int $addressable_id
+ * @property-read string $id
+ * @property-read string $addressable_id
  * @property-read string $addressable_type
  * @property-read string $line1
  * @property-read string|null $line2
@@ -29,6 +30,8 @@ final class Address extends Model
     /** @use HasFactory<AddressFactory> */
     use HasFactory;
 
+    use HasUuids;
+
     /** @return MorphTo<Model, $this> */
     public function addressable(): MorphTo
     {
@@ -38,8 +41,8 @@ final class Address extends Model
     public function casts(): array
     {
         return [
-            'id' => 'integer',
-            'addressable_id' => 'integer',
+            'id' => 'string',
+            'addressable_id' => 'string',
             'addressable_type' => 'string',
             'line1' => 'string',
             'line2' => 'string',

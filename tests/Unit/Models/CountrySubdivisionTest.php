@@ -11,19 +11,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 test('country subdivision can be created with factory', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
     ]);
 
     expect($subdivision)
         ->toBeInstanceOf(CountrySubdivision::class)
         ->and($subdivision->id)
-        ->toBeInt()
+        ->toBeString()
         ->and($subdivision->country_id)
-        ->toBeInt()
+        ->toBeString()
         ->and($subdivision->country_subdivision_id)
         ->toBeNull()
         ->and($subdivision->code)
@@ -40,10 +40,10 @@ test('country subdivision can be created with factory', function (): void {
 
 test('country subdivision type is cast to enum', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'type' => CountrySubdivisionType::State->value,
     ]);
@@ -56,10 +56,10 @@ test('country subdivision type is cast to enum', function (): void {
 
 test('country subdivision name is cast to array', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'name' => [
             'EN' => 'California',
@@ -80,10 +80,10 @@ test('country subdivision name is cast to array', function (): void {
 
 test('country subdivision official_languages is cast to array', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'official_languages' => ['EN', 'ES'],
     ]);
@@ -98,10 +98,10 @@ test('country subdivision official_languages is cast to array', function (): voi
 
 test('country subdivision has country relationship', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
     ]);
 
@@ -110,14 +110,14 @@ test('country subdivision has country relationship', function (): void {
 
 test('country subdivision country relationship is properly loaded', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'US',
         'name' => ['EN' => 'United States'],
         'official_languages' => ['EN'],
     ]);
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
     ]);
 
@@ -133,10 +133,10 @@ test('country subdivision country relationship is properly loaded', function ():
 
 test('country subdivision has parent relationship', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
     ]);
 
@@ -145,10 +145,10 @@ test('country subdivision has parent relationship', function (): void {
 
 test('country subdivision parent relationship can be null', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'country_subdivision_id' => null,
     ]);
@@ -161,17 +161,17 @@ test('country subdivision parent relationship can be null', function (): void {
 
 test('country subdivision parent relationship is properly loaded', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $parent */
-    $parent = CountrySubdivision::factory()->createQuietly([
+    $parent = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'name' => ['EN' => 'California'],
         'type' => CountrySubdivisionType::State->value,
     ]);
 
     /** @var CountrySubdivision $child */
-    $child = CountrySubdivision::factory()->createQuietly([
+    $child = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'country_subdivision_id' => $parent->id,
         'name' => ['EN' => 'Los Angeles County'],
@@ -190,10 +190,10 @@ test('country subdivision parent relationship is properly loaded', function (): 
 
 test('country subdivision has children relationship', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
-    $subdivision = CountrySubdivision::factory()->createQuietly([
+    $subdivision = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
     ]);
 
@@ -202,24 +202,24 @@ test('country subdivision has children relationship', function (): void {
 
 test('country subdivision children relationship is properly loaded', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $parent */
-    $parent = CountrySubdivision::factory()->createQuietly([
+    $parent = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'name' => ['EN' => 'California'],
         'type' => CountrySubdivisionType::State->value,
     ]);
 
     /** @var CountrySubdivision $child1 */
-    $child1 = CountrySubdivision::factory()->createQuietly([
+    $child1 = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'country_subdivision_id' => $parent->id,
         'name' => ['EN' => 'Los Angeles County'],
     ]);
 
     /** @var CountrySubdivision $child2 */
-    $child2 = CountrySubdivision::factory()->createQuietly([
+    $child2 = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'country_subdivision_id' => $parent->id,
         'name' => ['EN' => 'San Francisco County'],
@@ -236,13 +236,13 @@ test('country subdivision children relationship is properly loaded', function ()
 
 test('country subdivision hierarchical structure works', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'US',
         'name' => ['EN' => 'United States'],
     ]);
 
     /** @var CountrySubdivision $state */
-    $state = CountrySubdivision::factory()->createQuietly([
+    $state = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'country_subdivision_id' => null,
         'name' => ['EN' => 'California'],
@@ -250,7 +250,7 @@ test('country subdivision hierarchical structure works', function (): void {
     ]);
 
     /** @var CountrySubdivision $county */
-    $county = CountrySubdivision::factory()->createQuietly([
+    $county = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'country_subdivision_id' => $state->id,
         'name' => ['EN' => 'Los Angeles County'],
@@ -258,7 +258,7 @@ test('country subdivision hierarchical structure works', function (): void {
     ]);
 
     /** @var CountrySubdivision $city */
-    $city = CountrySubdivision::factory()->createQuietly([
+    $city = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'country_subdivision_id' => $county->id,
         'name' => ['EN' => 'Los Angeles'],
@@ -285,11 +285,11 @@ test('country subdivision hierarchical structure works', function (): void {
 
 test('to array', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var CountrySubdivision $subdivision */
     $subdivision = CountrySubdivision::factory()
-        ->createQuietly([
+        ->create([
             'country_id' => $country->id,
         ])
         ->refresh();

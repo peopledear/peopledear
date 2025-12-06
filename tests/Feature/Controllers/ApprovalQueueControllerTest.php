@@ -12,16 +12,16 @@ use App\Models\User;
 
 beforeEach(function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     /** @var Employee $manager */
     $manager = Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     $user->assignRole(UserRole::PeopleManager);
 
@@ -35,18 +35,18 @@ test('renders the approval queue page', function (): void {
     $directReport = Employee::factory()
         ->for($this->organization)
         ->withManager($this->manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($this->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     Approval::factory()
         ->pending()
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -65,25 +65,27 @@ test('approves a request', function (): void {
     $directReport = Employee::factory()
         ->for($this->organization)
         ->withManager($this->manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($this->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
 
     $this->actingAs($this->user)
-        ->post(sprintf('/org/approvals/%d/approve', $approval->id))
+        ->post(route('org.approvals.approve', [
+            'approval' => $approval->id,
+        ]))
         ->assertRedirect();
 
     $approval->refresh();
@@ -99,25 +101,27 @@ test('rejects a request with reason', function (): void {
     $directReport = Employee::factory()
         ->for($this->organization)
         ->withManager($this->manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($this->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
 
     $this->actingAs($this->user)
-        ->post(sprintf('/org/approvals/%d/reject', $approval->id), [
+        ->post(route('org.approvals.reject', [
+            'approval' => $approval->id,
+        ]), [
             'rejection_reason' => 'Team is understaffed',
         ])
         ->assertRedirect();
@@ -137,25 +141,27 @@ test('validates rejection reason is required', function (): void {
     $directReport = Employee::factory()
         ->for($this->organization)
         ->withManager($this->manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($this->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
 
     $this->actingAs($this->user)
-        ->post(sprintf('/org/approvals/%d/reject', $approval->id), [])
+        ->post(route('org.approvals.reject', [
+            'approval' => $approval->id,
+        ]), [])
         ->assertSessionHasErrors(['rejection_reason']);
 });
 
@@ -164,25 +170,27 @@ test('validates rejection reason max length', function (): void {
     $directReport = Employee::factory()
         ->for($this->organization)
         ->withManager($this->manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($this->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
 
     $this->actingAs($this->user)
-        ->post(sprintf('/org/approvals/%d/reject', $approval->id), [
+        ->post(route('org.approvals.reject', [
+            'approval' => $approval->id,
+        ]), [
             'rejection_reason' => str_repeat('a', 1001),
         ])
         ->assertSessionHasErrors(['rejection_reason']);

@@ -21,7 +21,7 @@ test('creates office with address',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         $addressData = CreateAddressData::from([
             'line1' => '123 Main St',
@@ -68,7 +68,7 @@ test('creates office with minimal address',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         $addressData = CreateAddressData::from([
             'line1' => '456 Oak St',

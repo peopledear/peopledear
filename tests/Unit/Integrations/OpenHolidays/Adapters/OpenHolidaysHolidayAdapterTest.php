@@ -6,6 +6,7 @@ use App\Data\Integrations\OpenHolidays\OpenHolidaysHolidayData;
 use App\Data\PeopleDear\Holiday\CreateHolidayData;
 use App\Enums\Integrations\OpenHolidays\OpenHolidaysHolidayType;
 use App\Http\Integrations\OpenHolidays\Adapters\OpenHolidaysHolidayAdapter;
+use Illuminate\Support\Str;
 
 beforeEach(function (): void {
     $fixture = file_get_contents(base_path('tests/Fixtures/Saloon/OpenHolidays/portugal-public-holidays.json'));
@@ -28,7 +29,7 @@ test('transforms OpenHolidays holiday response to CreateHolidayData', function (
 
     $createHolidayData = $adapter->toCreateData(
         $openHolidaysHolidayData,
-        organizationId: 1
+        organizationId: $organizationId = Str::uuid7()->toString(),
     );
 
     expect($openHolidaysHolidayData)
@@ -36,7 +37,7 @@ test('transforms OpenHolidays holiday response to CreateHolidayData', function (
         ->and($createHolidayData->name)
         ->toBe('Feriado Municipal')
         ->and($createHolidayData->organizationId)
-        ->toBe(1)
+        ->toBe($organizationId)
         ->and($createHolidayData)
         ->toBeInstanceOf(CreateHolidayData::class);
 

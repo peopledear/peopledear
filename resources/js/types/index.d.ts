@@ -44,7 +44,7 @@ export interface SharedData {
 }
 
 export interface User {
-    id: number;
+    id: string;
     name: string;
     email: string;
     avatar?: string;
@@ -57,7 +57,7 @@ export interface User {
 }
 
 export interface Employee {
-    id: number;
+    id: string;
     name: string;
     email: string;
     phone?: string;
@@ -69,7 +69,7 @@ export interface Employee {
 }
 
 export interface Organization {
-    id: number;
+    id: string;
     name: string;
     vat_number?: string;
     ssn?: string;
@@ -115,7 +115,7 @@ export interface Period {
 }
 
 export interface TimeOffRequest {
-    id: number;
+    id: string;
     organizationId: number;
     employeeId: number;
     period: Period;

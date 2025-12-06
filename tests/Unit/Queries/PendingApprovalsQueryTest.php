@@ -9,25 +9,25 @@ use App\Queries\PendingApprovalsQuery;
 
 test('returns pending approvals for direct reports', function (): void {
     /** @var Employee $manager */
-    $manager = Employee::factory()->createQuietly();
+    $manager = Employee::factory()->create();
 
     /** @var Employee $directReport */
     $directReport = Employee::factory()
         ->for($manager->organization)
         ->withManager($manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($manager->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($manager->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -43,24 +43,24 @@ test('returns pending approvals for direct reports', function (): void {
 
 test('excludes approved requests', function (): void {
     /** @var Employee $manager */
-    $manager = Employee::factory()->createQuietly();
+    $manager = Employee::factory()->create();
 
     /** @var Employee $directReport */
     $directReport = Employee::factory()
         ->for($manager->organization)
         ->withManager($manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($manager->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     Approval::factory()
         ->approved()
         ->for($manager->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -73,23 +73,23 @@ test('excludes approved requests', function (): void {
 
 test('excludes requests from non-direct reports', function (): void {
     /** @var Employee $manager */
-    $manager = Employee::factory()->createQuietly();
+    $manager = Employee::factory()->create();
 
     /** @var Employee $otherEmployee */
     $otherEmployee = Employee::factory()
         ->for($manager->organization)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($manager->organization)
         ->for($otherEmployee)
-        ->createQuietly();
+        ->create();
 
     Approval::factory()
         ->pending()
         ->for($manager->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -102,31 +102,31 @@ test('excludes requests from non-direct reports', function (): void {
 
 test('returns multiple pending approvals ordered by created_at', function (): void {
     /** @var Employee $manager */
-    $manager = Employee::factory()->createQuietly();
+    $manager = Employee::factory()->create();
 
     /** @var Employee $directReport */
     $directReport = Employee::factory()
         ->for($manager->organization)
         ->withManager($manager)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $request1 */
     $request1 = TimeOffRequest::factory()
         ->for($manager->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $request2 */
     $request2 = TimeOffRequest::factory()
         ->for($manager->organization)
         ->for($directReport)
-        ->createQuietly();
+        ->create();
 
     /** @var Approval $approval1 */
     $approval1 = Approval::factory()
         ->pending()
         ->for($manager->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $request1->id,
             'created_at' => now()->subDay(),
@@ -136,7 +136,7 @@ test('returns multiple pending approvals ordered by created_at', function (): vo
     $approval2 = Approval::factory()
         ->pending()
         ->for($manager->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $request2->id,
             'created_at' => now(),

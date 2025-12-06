@@ -1,5 +1,5 @@
 export interface Country {
-    id: number;
+    id: string;
     isoCode: string;
     name: Record<string, string>;
     displayName: string;

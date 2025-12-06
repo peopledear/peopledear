@@ -22,26 +22,26 @@ test('updates employee with all fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $oldOffice */
-        $oldOffice = Office::factory()->createQuietly([
+        $oldOffice = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
         /** @var Office $newOffice */
-        $newOffice = Office::factory()->createQuietly([
+        $newOffice = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
         /** @var User $oldUser */
-        $oldUser = User::factory()->createQuietly();
+        $oldUser = User::factory()->create();
 
         /** @var User $newUser */
-        $newUser = User::factory()->createQuietly();
+        $newUser = User::factory()->create();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->createQuietly([
+        $employee = Employee::factory()->create([
             'organization_id' => $organization->id,
             'office_id' => $oldOffice->id,
             'user_id' => $oldUser->id,
@@ -84,10 +84,10 @@ test('updates employee with partial fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->createQuietly([
+        $employee = Employee::factory()->create([
             'organization_id' => $organization->id,
             'name' => 'Original Name',
             'employee_number' => 'EMP-ORIG',
@@ -113,10 +113,10 @@ test('updates employee clearing nullable fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->createQuietly([
+        $employee = Employee::factory()->create([
             'organization_id' => $organization->id,
             'email' => 'test@example.com',
             'phone' => '+1-555-1234',
@@ -143,10 +143,10 @@ test('updates employee employment status',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->createQuietly([
+        $employee = Employee::factory()->create([
             'organization_id' => $organization->id,
             'employment_status' => EmploymentStatus::Active,
         ]);

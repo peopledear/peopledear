@@ -21,7 +21,7 @@ final class CreateOrganizationRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'country_id' => ['required', 'integer', 'exists:countries,id'],
+            'country_id' => ['required', 'string', 'exists:countries,id'],
         ];
     }
 }

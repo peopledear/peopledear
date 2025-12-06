@@ -12,10 +12,10 @@ covers(VacationValidator::class);
 
 beforeEach(function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly([
+    $employee = Employee::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -28,7 +28,7 @@ beforeEach(function (): void {
 });
 
 test('validates successfully with sufficient balance', function (): void {
-    VacationBalance::factory()->createQuietly([
+    VacationBalance::factory()->create([
         'organization_id' => $this->organization->id,
         'employee_id' => $this->employee->id,
         'year' => now()->year,
@@ -53,7 +53,7 @@ test('validates successfully with sufficient balance', function (): void {
 });
 
 test('fails validation with insufficient balance', function (): void {
-    VacationBalance::factory()->createQuietly([
+    VacationBalance::factory()->create([
         'organization_id' => $this->organization->id,
         'employee_id' => $this->employee->id,
         'year' => now()->year,
@@ -78,7 +78,7 @@ test('fails validation with insufficient balance', function (): void {
 });
 
 test('fails validation when end date is before start date', function (): void {
-    VacationBalance::factory()->createQuietly([
+    VacationBalance::factory()->create([
         'organization_id' => $this->organization->id,
         'employee_id' => $this->employee->id,
         'year' => now()->year,
@@ -103,7 +103,7 @@ test('fails validation when end date is before start date', function (): void {
 });
 
 test('calculates half day as 0.5 days', function (): void {
-    VacationBalance::factory()->createQuietly([
+    VacationBalance::factory()->create([
         'organization_id' => $this->organization->id,
         'employee_id' => $this->employee->id,
         'year' => now()->year,

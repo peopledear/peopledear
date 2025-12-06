@@ -15,6 +15,6 @@ final class CreateOrganizationData extends Data
     public function __construct(
         public readonly string $name,
         #[MapInputName('country_id')]
-        public readonly int $countryId,
+        public readonly string $countryId,
     ) {}
 }

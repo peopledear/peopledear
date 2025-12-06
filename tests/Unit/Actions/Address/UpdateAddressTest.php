@@ -20,16 +20,16 @@ test('updates address with all fields',
 
         /** @var Organization $organization */
         $organization = Organization::factory()
-            ->createQuietly();
+            ->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
         Address::factory()
             ->for($office, 'addressable')
-            ->createQuietly([
+            ->create([
                 'line1' => 'Old Street',
                 'line2' => 'Old Suite',
                 'city' => 'Old City',
@@ -64,16 +64,16 @@ test('updates address with partial fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
         Address::factory()
             ->for($office, 'addressable')
-            ->createQuietly([
+            ->create([
                 'line1' => 'Original Street',
                 'city' => 'Original City',
                 'postal_code' => '12345',
@@ -99,16 +99,16 @@ test('can set fields to null explicitly',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
         Address::factory()
             ->for($office, 'addressable')
-            ->createQuietly([
+            ->create([
                 'line1' => 'Street',
                 'line2' => 'Suite 200',
                 'city' => 'City',

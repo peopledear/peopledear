@@ -11,14 +11,14 @@ test('reverses processor when cancelling approved vacation request', function ()
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->vacation()
-        ->createQuietly([
+        ->create([
             'start_date' => now(),
             'end_date' => null,
             'is_half_day' => false,
         ]);
 
     /** @var App\Models\VacationBalance $balance */
-    $balance = App\Models\VacationBalance::factory()->createQuietly([
+    $balance = App\Models\VacationBalance::factory()->create([
         'employee_id' => $timeOffRequest->employee_id,
         'year' => $timeOffRequest->start_date->year,
         'accrued' => 2500,
@@ -29,7 +29,7 @@ test('reverses processor when cancelling approved vacation request', function ()
     $approval = Approval::factory()
         ->approved()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -43,13 +43,13 @@ test('reverses processor when cancelling approved vacation request', function ()
 
 test('cancels pending request', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -63,13 +63,13 @@ test('cancels pending request', function (): void {
 
 test('does not set approved_by on cancellation', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -85,13 +85,13 @@ test('does not set approved_by on cancellation', function (): void {
 
 test('preserves original request data on cancellation', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);

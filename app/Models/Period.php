@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
- * @property-read int $id
+ * @property-read string $id
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read int $organization_id

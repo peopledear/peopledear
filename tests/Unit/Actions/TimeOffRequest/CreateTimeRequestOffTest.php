@@ -23,16 +23,16 @@ beforeEach(
         $this->action = $action;
 
         $this->organization = Organization::factory()
-            ->createQuietly();
+            ->create();
 
-        $this->employee = Employee::factory()->createQuietly([
+        $this->employee = Employee::factory()->create([
             'organization_id' => $this->organization->id,
         ]);
 
         $this->period = Period::factory()
             ->for($this->organization)
             ->active()
-            ->createQuietly();
+            ->create();
 
     });
 
@@ -43,13 +43,13 @@ test('creates time off with all fields',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organization_id: $this->organization->id,
-            employee_id: $this->employee->id,
-            period_id: $this->period->id,
+            organizationId: $this->organization->id,
+            employeeId: $this->employee->id,
+            periodId: $this->period->id,
             type: TimeOffType::Vacation,
-            start_date: CarbonImmutable::parse('2024-06-01'),
-            end_date: CarbonImmutable::parse('2024-06-05'),
-            is_half_day: false,
+            startDate: CarbonImmutable::parse('2024-06-01'),
+            endDate: CarbonImmutable::parse('2024-06-05'),
+            isHalfDay: false,
         );
 
         $result = $this->action->handle($data, $this->employee);
@@ -78,13 +78,13 @@ test('creates half day time off with null end_date',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organization_id: $this->organization->id,
-            employee_id: $this->employee->id,
-            period_id: $this->period->id,
+            organizationId: $this->organization->id,
+            employeeId: $this->employee->id,
+            periodId: $this->period->id,
             type: TimeOffType::SickLeave,
-            start_date: CarbonImmutable::parse('2024-06-01'),
-            end_date: null,
-            is_half_day: true,
+            startDate: CarbonImmutable::parse('2024-06-01'),
+            endDate: null,
+            isHalfDay: true,
         );
 
         $result = $this->action->handle($data, $this->employee);
@@ -109,13 +109,13 @@ test('creates time off with personal day type',
      */
     function (): void {
         $data = new CreateTimeOffRequestData(
-            organization_id: $this->organization->id,
-            employee_id: $this->employee->id,
-            period_id: $this->period->id,
+            organizationId: $this->organization->id,
+            employeeId: $this->employee->id,
+            periodId: $this->period->id,
             type: TimeOffType::PersonalDay,
-            start_date: CarbonImmutable::parse('2024-06-01'),
-            end_date: null,
-            is_half_day: true,
+            startDate: CarbonImmutable::parse('2024-06-01'),
+            endDate: null,
+            isHalfDay: true,
         );
 
         $result = $this->action->handle($data, $this->employee);
@@ -133,13 +133,13 @@ test('creates time off with bereavement type',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organization_id: $this->organization->id,
-            employee_id: $this->employee->id,
-            period_id: $this->period->id,
+            organizationId: $this->organization->id,
+            employeeId: $this->employee->id,
+            periodId: $this->period->id,
             type: TimeOffType::Bereavement,
-            start_date: CarbonImmutable::parse('2024-06-01'),
-            end_date: CarbonImmutable::parse('2024-06-03'),
-            is_half_day: false,
+            startDate: CarbonImmutable::parse('2024-06-01'),
+            endDate: CarbonImmutable::parse('2024-06-03'),
+            isHalfDay: false,
         );
 
         $result = $this->action->handle($data, $this->employee);
@@ -159,13 +159,13 @@ test('always sets status to pending on creation',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organization_id: $this->organization->id,
-            employee_id: $this->employee->id,
-            period_id: $this->period->id,
+            organizationId: $this->organization->id,
+            employeeId: $this->employee->id,
+            periodId: $this->period->id,
             type: TimeOffType::Vacation,
-            start_date: CarbonImmutable::parse('2024-06-01'),
-            end_date: CarbonImmutable::parse('2024-06-05'),
-            is_half_day: false,
+            startDate: CarbonImmutable::parse('2024-06-01'),
+            endDate: CarbonImmutable::parse('2024-06-05'),
+            isHalfDay: false,
         );
 
         $result = $this->action->handle($data, $this->employee);
@@ -181,13 +181,13 @@ test('creates multi day time off with end_date',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organization_id: $this->organization->id,
-            employee_id: $this->employee->id,
-            period_id: $this->period->id,
+            organizationId: $this->organization->id,
+            employeeId: $this->employee->id,
+            periodId: $this->period->id,
             type: TimeOffType::Vacation,
-            start_date: CarbonImmutable::parse('2024-06-01'),
-            end_date: CarbonImmutable::parse('2024-06-10'),
-            is_half_day: false,
+            startDate: CarbonImmutable::parse('2024-06-01'),
+            endDate: CarbonImmutable::parse('2024-06-10'),
+            isHalfDay: false,
         );
 
         $result = $this->action->handle($data, $this->employee);

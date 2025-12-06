@@ -11,12 +11,12 @@ use Illuminate\Database\QueryException;
 
 test('country can be created with factory', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     expect($country)
         ->toBeInstanceOf(Country::class)
         ->and($country->id)
-        ->toBeInt()
+        ->toBeString()
         ->and($country->iso_code)
         ->toBeString()
         ->and($country->name)
@@ -27,11 +27,11 @@ test('country can be created with factory', function (): void {
 
 test('country iso_code is unique', function (): void {
 
-    Country::factory()->createQuietly([
+    Country::factory()->create([
         'iso_code' => 'XX',
     ]);
 
-    expect(fn () => Country::factory()->createQuietly([
+    expect(fn () => Country::factory()->create([
         'iso_code' => 'XX',
     ]))
         ->toThrow(QueryException::class);
@@ -39,7 +39,7 @@ test('country iso_code is unique', function (): void {
 
 test('country name is cast to array', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'name' => [
             'EN' => 'Test Country',
             'DE' => 'Testland',
@@ -59,7 +59,7 @@ test('country name is cast to array', function (): void {
 
 test('country official_languages is cast to array', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'official_languages' => ['EN', 'FR', 'DE'],
     ]);
 
@@ -73,7 +73,7 @@ test('country official_languages is cast to array', function (): void {
 
 test('country can have single official language', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'official_languages' => ['PT'],
     ]);
 
@@ -87,7 +87,7 @@ test('country can have single official language', function (): void {
 
 test('country can have multiple official languages', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'official_languages' => ['DE', 'FR', 'IT', 'RM'],
     ]);
 
@@ -174,27 +174,27 @@ test('seeded country belgium has multiple name translations', function (): void 
 
 test('country has organizations relationship', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     expect($country->organizations())->toBeInstanceOf(HasMany::class);
 });
 
 test('country organizations relationship is properly loaded', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'US',
         'name' => ['en' => 'United States'],
         'official_languages' => ['en'],
     ]);
 
     /** @var Organization $org1 */
-    $org1 = Organization::factory()->createQuietly([
+    $org1 = Organization::factory()->create([
         'country_id' => $country->id,
         'name' => 'Company A',
     ]);
 
     /** @var Organization $org2 */
-    $org2 = Organization::factory()->createQuietly([
+    $org2 = Organization::factory()->create([
         'country_id' => $country->id,
         'name' => 'Company B',
     ]);
@@ -210,27 +210,27 @@ test('country organizations relationship is properly loaded', function (): void 
 
 test('country has subdivisions relationship', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     expect($country->subdivisions())->toBeInstanceOf(HasMany::class);
 });
 
 test('country subdivisions relationship is properly loaded', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'US',
         'name' => ['EN' => 'United States'],
         'official_languages' => ['EN'],
     ]);
 
     /** @var CountrySubdivision $subdivision1 */
-    $subdivision1 = CountrySubdivision::factory()->createQuietly([
+    $subdivision1 = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'name' => ['EN' => 'California'],
     ]);
 
     /** @var CountrySubdivision $subdivision2 */
-    $subdivision2 = CountrySubdivision::factory()->createQuietly([
+    $subdivision2 = CountrySubdivision::factory()->create([
         'country_id' => $country->id,
         'name' => ['EN' => 'Texas'],
     ]);
@@ -247,7 +247,7 @@ test('country subdivisions relationship is properly loaded', function (): void {
 test('to array', function (): void {
     /** @var Country $country */
     $country = Country::factory()
-        ->createQuietly()
+        ->create()
         ->refresh();
 
     expect(array_keys($country->toArray()))

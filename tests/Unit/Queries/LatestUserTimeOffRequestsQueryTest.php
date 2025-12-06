@@ -10,22 +10,22 @@ use App\Queries\LatestUserTimeOffRequestsQuery;
 
 test('returns latest time off requests for current user', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     /** @var Employee $employee */
     $employee = Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     TimeOffRequest::factory()
         ->for($employee)
         ->for($organization)
         ->count(3)
-        ->createQuietly();
+        ->create();
 
     $query = new LatestUserTimeOffRequestsQuery($user);
 
@@ -36,22 +36,22 @@ test('returns latest time off requests for current user', function (): void {
 
 test('limits results to default count of 5', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     /** @var Employee $employee */
     $employee = Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     TimeOffRequest::factory()
         ->for($employee)
         ->for($organization)
         ->count(10)
-        ->createQuietly();
+        ->create();
 
     $query = new LatestUserTimeOffRequestsQuery($user);
 
@@ -62,22 +62,22 @@ test('limits results to default count of 5', function (): void {
 
 test('count method changes the limit', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     /** @var Employee $employee */
     $employee = Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     TimeOffRequest::factory()
         ->for($employee)
         ->for($organization)
         ->count(10)
-        ->createQuietly();
+        ->create();
 
     $query = new LatestUserTimeOffRequestsQuery($user);
 
@@ -88,7 +88,7 @@ test('count method changes the limit', function (): void {
 
 test('count method returns self for chaining', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     $query = new LatestUserTimeOffRequestsQuery($user);
 

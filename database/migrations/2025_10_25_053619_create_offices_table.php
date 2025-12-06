@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\OfficeType;
 use App\Models\Organization;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,12 +15,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('offices', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->timestamps();
-            $table->foreignIdFor(Organization::class)->constrained();
+
+            $table->foreignIdFor(Organization::class)
+                ->constrained();
+
             $table->string('name');
-            $table->integer('type')->default(OfficeType::Branch->value);
-            $table->string('phone')->nullable();
+            $table->integer('type');
+            $table->string('phone')
+                ->nullable();
         });
     }
 };

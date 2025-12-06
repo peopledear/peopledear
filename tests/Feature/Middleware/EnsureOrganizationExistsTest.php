@@ -18,7 +18,7 @@ test('middleware redirects owner to org create when no organization exists', fun
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -38,7 +38,7 @@ test('middleware redirects people manager to org create when no organization exi
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     $this->actingAs($peopleManager);
@@ -58,7 +58,7 @@ test('middleware redirects employee to organization-required when no organizatio
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
     $this->actingAs($employee);
@@ -78,7 +78,7 @@ test('middleware redirects manager to organization-required when no organization
         ?->fresh();
 
     /** @var User $manager */
-    $manager = User::factory()->createQuietly();
+    $manager = User::factory()->create();
     $manager->assignRole($managerRole);
 
     $this->actingAs($manager);
@@ -90,7 +90,7 @@ test('middleware redirects manager to organization-required when no organization
 
 test('middleware allows access when organization exists', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Test Organization',
     ]);
 
@@ -101,7 +101,7 @@ test('middleware allows access when organization exists', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -113,7 +113,7 @@ test('middleware allows access when organization exists', function (): void {
 
 test('middleware caches organization ID in session', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Test Organization',
     ]);
 
@@ -124,7 +124,7 @@ test('middleware caches organization ID in session', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -146,7 +146,7 @@ test('middleware does not redirect on org create route', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -166,7 +166,7 @@ test('middleware does not redirect on organization-required route', function ():
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
     $this->actingAs($employee);
@@ -180,7 +180,7 @@ test('creating organization sets session cache', function (): void {
     Organization::query()->delete();
 
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var Role $ownerRole */
     $ownerRole = Role::query()
@@ -189,7 +189,7 @@ test('creating organization sets session cache', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -203,7 +203,8 @@ test('creating organization sets session cache', function (): void {
 
     $response->assertRedirect('/org');
 
-    expect(session(SessionKey::CurrentOrganization->value))->toBeInt();
+    expect(session(SessionKey::CurrentOrganization->value))
+        ->toBeString();
 
     /** @var Organization $organization */
     $organization = Organization::query()->where('name', 'New Organization')->first();

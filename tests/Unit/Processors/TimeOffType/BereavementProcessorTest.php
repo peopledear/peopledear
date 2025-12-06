@@ -17,10 +17,10 @@ beforeEach(
      */
     function (): void {
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->createQuietly([
+        $employee = Employee::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
@@ -38,7 +38,7 @@ test('processes bereavement request without balance deduction',
      */
     function (): void {
         /** @var TimeOffRequest $request */
-        $request = TimeOffRequest::factory()->createQuietly([
+        $request = TimeOffRequest::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'type' => TimeOffType::Bereavement,
@@ -57,7 +57,7 @@ test('reverses bereavement processing',
      */
     function (): void {
         /** @var TimeOffRequest $request */
-        $request = TimeOffRequest::factory()->createQuietly([
+        $request = TimeOffRequest::factory()->create([
             'organization_id' => $this->organization->id,
             'employee_id' => $this->employee->id,
             'type' => TimeOffType::Bereavement,

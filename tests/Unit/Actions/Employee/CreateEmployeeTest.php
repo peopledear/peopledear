@@ -22,15 +22,15 @@ test('creates employee with all fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
         /** @var User $user */
-        $user = User::factory()->createQuietly();
+        $user = User::factory()->create();
 
         $data = new CreateEmployeeData(
             name: 'John Doe',
@@ -66,7 +66,7 @@ test('creates employee with minimal required fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         $data = new CreateEmployeeData(
             name: 'Jane Smith',
@@ -100,7 +100,7 @@ test('creates employee with different employment status',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         $data = new CreateEmployeeData(
             name: 'Bob Johnson',

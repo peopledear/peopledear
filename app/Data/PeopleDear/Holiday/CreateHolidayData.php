@@ -14,7 +14,7 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 final class CreateHolidayData extends Data
 {
     public function __construct(
-        public int $organizationId,
+        public string $organizationId,
         public readonly CarbonImmutable $date,
         public readonly string $name,
         public HolidayType $type,

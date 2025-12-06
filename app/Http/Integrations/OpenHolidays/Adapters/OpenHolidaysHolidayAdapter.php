@@ -21,7 +21,7 @@ final class OpenHolidaysHolidayAdapter implements HolidayAdapter
      *
      * @throws Throwable
      */
-    public function toCreateData(mixed $data, ?int $organizationId = null): CreateHolidayData
+    public function toCreateData(mixed $data, ?string $organizationId = null): CreateHolidayData
     {
 
         throw_unless($organizationId, InvalidArgumentException::class, 'organizationId is required in context');

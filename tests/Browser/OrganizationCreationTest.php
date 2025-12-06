@@ -11,7 +11,7 @@ test('owner can create organization via modal', function (): void {
     Organization::query()->delete();
 
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var Role $ownerRole */
     $ownerRole = Role::query()
@@ -20,7 +20,7 @@ test('owner can create organization via modal', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -47,7 +47,7 @@ test('people manager can create organization', function (): void {
     Organization::query()->delete();
 
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var Role $peopleManagerRole */
     $peopleManagerRole = Role::query()
@@ -56,7 +56,7 @@ test('people manager can create organization', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     $this->actingAs($peopleManager);
@@ -89,7 +89,7 @@ test('employee sees informational page when no organization exists', function ()
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
     $this->actingAs($employee);
@@ -112,7 +112,7 @@ test('manager sees informational page when no organization exists', function ():
         ?->fresh();
 
     /** @var User $manager */
-    $manager = User::factory()->createQuietly();
+    $manager = User::factory()->create();
     $manager->assignRole($managerRole);
 
     $this->actingAs($manager);
@@ -127,7 +127,7 @@ test('manager sees informational page when no organization exists', function ():
 
 test('owner can access org overview after organization is created', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Existing Organization',
     ]);
 
@@ -138,7 +138,7 @@ test('owner can access org overview after organization is created', function ():
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);

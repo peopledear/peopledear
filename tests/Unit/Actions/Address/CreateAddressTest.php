@@ -19,10 +19,10 @@ test('creates address for addressable model',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 
@@ -56,10 +56,10 @@ test('creates address with minimal fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
         ]);
 

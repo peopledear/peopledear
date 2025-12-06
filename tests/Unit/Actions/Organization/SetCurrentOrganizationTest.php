@@ -21,7 +21,7 @@ test('organization id is stored in the session',
     function (): void {
         /** @var Organization $organization */
         $organization = Organization::factory()
-            ->createQuietly();
+            ->create();
         $this->action->handle($organization);
 
         expect(session()->get(SessionKey::CurrentOrganization->value))

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 test('holiday has organization relationship', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly();
+    $holiday = Holiday::factory()->create();
 
     expect($holiday->organization())
         ->toBeInstanceOf(BelongsTo::class);
@@ -17,10 +17,10 @@ test('holiday has organization relationship', function (): void {
 
 test('holiday organization relationship is properly loaded', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -34,7 +34,7 @@ test('holiday organization relationship is properly loaded', function (): void {
 
 test('holiday type is cast to HolidayType enum', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'type' => HolidayType::Public,
     ]);
 
@@ -48,7 +48,7 @@ test('holiday type is cast to HolidayType enum', function (): void {
 
 test('holiday date is cast to date', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'date' => '2025-12-25',
     ]);
 
@@ -60,7 +60,7 @@ test('holiday date is cast to date', function (): void {
 
 test('holiday name is cast to array', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'name' => [
             'en' => 'Christmas Day',
             'pt' => 'Dia de Natal',
@@ -77,7 +77,7 @@ test('holiday name is cast to array', function (): void {
 
 test('holiday nationwide is cast to boolean', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'nationwide' => true,
     ]);
 
@@ -87,7 +87,7 @@ test('holiday nationwide is cast to boolean', function (): void {
 
 test('holiday is_custom is cast to boolean', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->custom()->createQuietly();
+    $holiday = Holiday::factory()->custom()->create();
 
     expect($holiday->is_custom)
         ->toBeTrue();
@@ -95,7 +95,7 @@ test('holiday is_custom is cast to boolean', function (): void {
 
 test('holiday can be created from api with api_holiday_id', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->fromApi()->createQuietly();
+    $holiday = Holiday::factory()->fromApi()->create();
 
     expect($holiday->is_custom)
         ->toBeFalse()
@@ -105,7 +105,7 @@ test('holiday can be created from api with api_holiday_id', function (): void {
 
 test('holiday can be nationwide without subdivision', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->nationwide()->createQuietly();
+    $holiday = Holiday::factory()->nationwide()->create();
 
     expect($holiday->nationwide)
         ->toBeTrue()
@@ -115,7 +115,7 @@ test('holiday can be nationwide without subdivision', function (): void {
 
 test('holiday can be regional with subdivision', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->regional()->createQuietly();
+    $holiday = Holiday::factory()->regional()->create();
 
     expect($holiday->nationwide)
         ->toBeFalse()
@@ -125,15 +125,15 @@ test('holiday can be regional with subdivision', function (): void {
 
 test('holiday unique constraint on organization and api_holiday_id', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'organization_id' => $organization->id,
         'api_holiday_id' => 'test-uuid-123',
     ]);
 
-    expect(fn () => Holiday::factory()->createQuietly([
+    expect(fn () => Holiday::factory()->create([
         'organization_id' => $organization->id,
         'api_holiday_id' => 'test-uuid-123',
     ]))
@@ -142,7 +142,7 @@ test('holiday unique constraint on organization and api_holiday_id', function ()
 
 test('holiday subdivision_code can be null', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'subdivision_code' => null,
     ]);
 
@@ -151,28 +151,28 @@ test('holiday subdivision_code can be null', function (): void {
 
 test('holiday api_holiday_id can be null for custom holidays', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->custom()->createQuietly();
+    $holiday = Holiday::factory()->custom()->create();
 
     expect($holiday->api_holiday_id)->toBeNull();
 });
 
 test('holiday has country relationship', function (): void {
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly();
+    $holiday = Holiday::factory()->create();
 
     expect($holiday->country())->toBeInstanceOf(BelongsTo::class);
 });
 
 test('holiday country relationship is properly loaded', function (): void {
     /** @var App\Models\Country $country */
-    $country = App\Models\Country::factory()->createQuietly([
+    $country = App\Models\Country::factory()->create([
         'iso_code' => 'XX',
         'name' => ['en' => 'Test Country'],
         'official_languages' => ['en'],
     ]);
 
     /** @var Holiday $holiday */
-    $holiday = Holiday::factory()->createQuietly([
+    $holiday = Holiday::factory()->create([
         'country_id' => $country->id,
     ]);
 
@@ -187,7 +187,7 @@ test('holiday country relationship is properly loaded', function (): void {
 test('to array', function (): void {
     /** @var Holiday $holiday */
     $holiday = Holiday::factory()
-        ->createQuietly()
+        ->create()
         ->refresh();
 
     expect(array_keys($holiday->toArray()))

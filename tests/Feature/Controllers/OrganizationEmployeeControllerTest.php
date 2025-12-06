@@ -15,7 +15,7 @@ test('renders organization employees index',
 
         $user = User::factory()
             ->peopleManager()
-            ->createQuietly();
+            ->create();
 
         $organization = Organization::factory()->create();
 

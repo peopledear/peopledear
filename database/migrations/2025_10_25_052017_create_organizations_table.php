@@ -12,15 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('organizations', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')
+                ->primary();
+
             $table->timestamps();
-            $table->string('name');
-            $table->string('vat_number')->nullable();
-            $table->string('ssn')->nullable();
-            $table->string('phone')->nullable();
+
             $table->foreignIdFor(Country::class)
                 ->nullable()
                 ->constrained();
+
+            $table->string('name');
+            $table->string('vat_number')
+                ->nullable();
+            $table->string('ssn')
+                ->nullable();
+            $table->string('phone')
+                ->nullable();
         });
     }
 };

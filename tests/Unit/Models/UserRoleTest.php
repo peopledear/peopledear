@@ -7,7 +7,7 @@ use Spatie\Permission\Models\Role;
 
 test('user can be assigned a role', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'employee')
@@ -21,7 +21,7 @@ test('user can be assigned a role', function (): void {
 
 test('user can have multiple roles', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $employeeRole */
     $employeeRole = Role::query()
         ->where('name', 'employee')
@@ -45,7 +45,7 @@ test('user can have multiple roles', function (): void {
 
 test('manager role has correct permissions', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'manager')
@@ -66,7 +66,7 @@ test('manager role has correct permissions', function (): void {
 
 test('people manager role has employee management permissions', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'people_manager')
@@ -87,7 +87,7 @@ test('people manager role has employee management permissions', function (): voi
 
 test('owner role has all permissions', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'owner')

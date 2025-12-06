@@ -10,15 +10,15 @@ use App\Notifications\GeneralNotification;
 use Illuminate\Support\Facades\Session;
 
 test('notifications older than 90 days are pruned', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -39,15 +39,15 @@ test('notifications older than 90 days are pruned', function (): void {
 });
 
 test('notifications exactly 89 days old are not pruned', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -63,15 +63,15 @@ test('notifications exactly 89 days old are not pruned', function (): void {
 });
 
 test('recent notifications are not pruned', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 

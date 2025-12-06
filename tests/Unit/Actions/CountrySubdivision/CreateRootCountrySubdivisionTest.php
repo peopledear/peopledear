@@ -13,7 +13,7 @@ beforeEach(
      * @throws Throwable
      */
     function (): void {
-        $this->country = Country::factory()->createQuietly();
+        $this->country = Country::factory()->create();
 
         $this->action = app(CreateRootCountrySubdivision::class);
     });

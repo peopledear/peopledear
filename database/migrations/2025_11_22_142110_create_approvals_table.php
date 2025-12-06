@@ -13,21 +13,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('approvals', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')->primary();
+
             $table->timestamps();
 
-            $table->foreignIdFor(Organization::class)->constrained();
+            $table->foreignIdFor(Organization::class)
+                ->constrained();
+
             $table->foreignIdFor(Employee::class, 'approved_by')
                 ->nullable()
                 ->constrained('employees');
 
-            $table->string('approvable_type');
-            $table->unsignedBigInteger('approvable_id');
+            $table->uuidMorphs('approvable');
+
             $table->string('status');
-            $table->timestamp('approved_at')->nullable();
             $table->text('rejection_reason')->nullable();
 
-            $table->index(['approvable_type', 'approvable_id']);
+            $table->timestamp('approved_at')->nullable();
+
             $table->index('status');
         });
     }

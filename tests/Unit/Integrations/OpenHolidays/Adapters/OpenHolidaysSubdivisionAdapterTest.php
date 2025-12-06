@@ -6,6 +6,7 @@ use App\Data\Integrations\OpenHolidays\OpenHolidaysSubdivisionData;
 use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
 use App\Enums\PeopleDear\CountrySubdivisionType;
 use App\Http\Integrations\OpenHolidays\Adapters\OpenHolidaysSubdivisionAdapter;
+use Illuminate\Support\Str;
 
 beforeEach(function (): void {
     $fixture = file_get_contents(base_path('tests/Fixtures/Saloon/OpenHolidays/portugal-subdivisions.json'));
@@ -13,137 +14,157 @@ beforeEach(function (): void {
     $this->subdivisions = collect(json_decode((string) $data['data'], true));
 });
 
-test('transforms simple subdivision correctly', function (): void {
-    /** @var array<string, mixed> $firstMunicipality */
-    $firstMunicipality = $this->subdivisions
-        ->where('code', 'PT-AV')
-        ->first()['children'][0];
+test('transforms simple subdivision correctly',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var array<string, mixed> $firstMunicipality */
+        $firstMunicipality = $this->subdivisions
+            ->where('code', 'PT-AV')
+            ->first()['children'][0];
 
-    $openHolidaysData = OpenHolidaysSubdivisionData::from($firstMunicipality);
+        $openHolidaysData = OpenHolidaysSubdivisionData::from($firstMunicipality);
 
-    /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        /** @var OpenHolidaysSubdivisionAdapter $adapter */
+        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
 
-    $createData = $adapter->toCreateData(
-        $openHolidaysData,
-        countryId: 1,
-        countryLanguages: ['pt']
-    );
+        $createData = $adapter->toCreateData(
+            $openHolidaysData,
+            countryId: $countryId = Str::uuid7()->toString(),
+            countryLanguages: ['pt']
+        );
 
-    expect($createData)
-        ->toBeInstanceOf(CreateCountrySubdivisionData::class)
-        ->and($createData->countryId)
-        ->toBe(1)
-        ->and($createData->code)
-        ->toBe('PT-AV-AG')
-        ->and($createData->isoCode)
-        ->toBe('PT-AV-AG')
-        ->and($createData->shortName)
-        ->toBe('AV-AG')
-        ->and($createData->type)
-        ->toBe(CountrySubdivisionType::Municipality)
-        ->and($createData->officialLanguages)
-        ->toBe(['PT']);
-});
+        expect($createData)
+            ->toBeInstanceOf(CreateCountrySubdivisionData::class)
+            ->and($createData->countryId)
+            ->toBe($countryId)
+            ->and($createData->code)
+            ->toBe('PT-AV-AG')
+            ->and($createData->isoCode)
+            ->toBe('PT-AV-AG')
+            ->and($createData->shortName)
+            ->toBe('AV-AG')
+            ->and($createData->type)
+            ->toBe(CountrySubdivisionType::Municipality)
+            ->and($createData->officialLanguages)
+            ->toBe(['PT']);
+    });
 
-test('transforms nested children recursively', function (): void {
-    /** @var array<string, mixed> $aveiro */
-    $aveiro = $this->subdivisions
-        ->where('code', 'PT-AV')
-        ->first();
+test('transforms nested children recursively',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var array<string, mixed> $aveiro */
+        $aveiro = $this->subdivisions
+            ->where('code', 'PT-AV')
+            ->first();
 
-    $openHolidaysData = OpenHolidaysSubdivisionData::from($aveiro);
+        $openHolidaysData = OpenHolidaysSubdivisionData::from($aveiro);
 
-    /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        /** @var OpenHolidaysSubdivisionAdapter $adapter */
+        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
 
-    $createData = $adapter->toCreateData(
-        $openHolidaysData,
-        countryId: 1,
-        countryLanguages: ['pt']
-    );
+        $createData = $adapter->toCreateData(
+            $openHolidaysData,
+            countryId: Str::uuid7()->toString(),
+            countryLanguages: ['pt']
+        );
 
-    expect($createData->children)
-        ->not->toBeNull()
-        ->toHaveCount(19)
-        ->each
-        ->toBeInstanceOf(CreateCountrySubdivisionData::class);
-});
+        expect($createData->children)
+            ->not->toBeNull()
+            ->toHaveCount(19)
+            ->each
+            ->toBeInstanceOf(CreateCountrySubdivisionData::class);
+    });
 
-test('parses comma-separated official languages to array', function (): void {
-    /** @var array<string, mixed> $subdivisionWithMultipleLanguages */
-    $subdivisionWithMultipleLanguages = [
-        'code' => 'ES-MD',
-        'isoCode' => 'ES-M',
-        'shortName' => 'MD',
-        'category' => [['language' => 'ES', 'text' => 'Comunidad de Madrid']],
-        'name' => [['language' => 'ES', 'text' => 'Madrid']],
-        'officialLanguages' => ['ES', 'CA'],
-    ];
+test('parses comma-separated official languages to array',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var array<string, mixed> $subdivisionWithMultipleLanguages */
+        $subdivisionWithMultipleLanguages = [
+            'code' => 'ES-MD',
+            'isoCode' => 'ES-M',
+            'shortName' => 'MD',
+            'category' => [['language' => 'ES', 'text' => 'Comunidad de Madrid']],
+            'name' => [['language' => 'ES', 'text' => 'Madrid']],
+            'officialLanguages' => ['ES', 'CA'],
+        ];
 
-    $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithMultipleLanguages);
+        $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithMultipleLanguages);
 
-    /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        /** @var OpenHolidaysSubdivisionAdapter $adapter */
+        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
 
-    $createData = $adapter->toCreateData(
-        $openHolidaysData,
-        countryId: 2,
-        countryLanguages: ['es']
-    );
+        $createData = $adapter->toCreateData(
+            $openHolidaysData,
+            countryId: Str::uuid7()->toString(),
+            countryLanguages: ['es']
+        );
 
-    expect($createData->officialLanguages)
-        ->toBe(['ES', 'CA']);
-});
+        expect($createData->officialLanguages)
+            ->toBe(['ES', 'CA']);
+    });
 
-test('inherits country languages when subdivision languages empty', function (): void {
-    /** @var array<string, mixed> $subdivisionWithoutLanguages */
-    $subdivisionWithoutLanguages = [
-        'code' => 'PT-LI',
-        'isoCode' => 'PT-10',
-        'shortName' => 'LI',
-        'category' => [['language' => 'PT', 'text' => 'distrito']],
-        'name' => [['language' => 'PT', 'text' => 'Lisboa']],
-        'officialLanguages' => null,
-    ];
+test('inherits country languages when subdivision languages empty',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var array<string, mixed> $subdivisionWithoutLanguages */
+        $subdivisionWithoutLanguages = [
+            'code' => 'PT-LI',
+            'isoCode' => 'PT-10',
+            'shortName' => 'LI',
+            'category' => [['language' => 'PT', 'text' => 'distrito']],
+            'name' => [['language' => 'PT', 'text' => 'Lisboa']],
+            'officialLanguages' => null,
+        ];
 
-    $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithoutLanguages);
+        $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithoutLanguages);
 
-    /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        /** @var OpenHolidaysSubdivisionAdapter $adapter */
+        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
 
-    $createData = $adapter->toCreateData(
-        $openHolidaysData,
-        countryId: 1,
-        countryLanguages: ['pt', 'en']
-    );
+        $createData = $adapter->toCreateData(
+            $openHolidaysData,
+            countryId: Str::uuid7()->toString(),
+            countryLanguages: ['pt', 'en']
+        );
 
-    expect($createData->officialLanguages)
-        ->toBe(['pt', 'en']);
-});
+        expect($createData->officialLanguages)
+            ->toBe(['pt', 'en']);
+    });
 
-test('preserves full ISO code in both code and isoCode fields', function (): void {
-    /** @var array<string, mixed> $aveiro */
-    $aveiro = $this->subdivisions
-        ->where('code', 'PT-AV')
-        ->first();
+test('preserves full ISO code in both code and isoCode fields',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var array<string, mixed> $aveiro */
+        $aveiro = $this->subdivisions
+            ->where('code', 'PT-AV')
+            ->first();
 
-    $openHolidaysData = OpenHolidaysSubdivisionData::from($aveiro);
+        $openHolidaysData = OpenHolidaysSubdivisionData::from($aveiro);
 
-    /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        /** @var OpenHolidaysSubdivisionAdapter $adapter */
+        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
 
-    $createData = $adapter->toCreateData(
-        $openHolidaysData,
-        countryId: 1,
-        countryLanguages: ['pt']
-    );
+        $createData = $adapter->toCreateData(
+            $openHolidaysData,
+            countryId: Str::uuid7()->toString(),
+            countryLanguages: ['pt']
+        );
 
-    expect($createData->code)
-        ->toBe('PT-AV')
-        ->and($createData->isoCode)
-        ->toBe('PT-AV');
-});
+        expect($createData->code)
+            ->toBe('PT-AV')
+            ->and($createData->isoCode)
+            ->toBe('PT-AV');
+    });
 
 test('throws exception when countryId is null', function (): void {
     /** @var array<string, mixed> $subdivision */
@@ -167,53 +188,61 @@ test('throws exception when countryId is null', function (): void {
     );
 })->throws(InvalidArgumentException::class, 'countryId is required');
 
-test('handles empty category array with fallback type', function (): void {
-    /** @var array<string, mixed> $subdivisionWithEmptyCategory */
-    $subdivisionWithEmptyCategory = [
-        'code' => 'PT-LI',
-        'isoCode' => 'PT-10',
-        'shortName' => 'LI',
-        'category' => [],
-        'name' => [['language' => 'PT', 'text' => 'Lisboa']],
-    ];
+test('handles empty category array with fallback type',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var array<string, mixed> $subdivisionWithEmptyCategory */
+        $subdivisionWithEmptyCategory = [
+            'code' => 'PT-LI',
+            'isoCode' => 'PT-10',
+            'shortName' => 'LI',
+            'category' => [],
+            'name' => [['language' => 'PT', 'text' => 'Lisboa']],
+        ];
 
-    $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyCategory);
+        $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyCategory);
 
-    /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        /** @var OpenHolidaysSubdivisionAdapter $adapter */
+        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
 
-    $createData = $adapter->toCreateData(
-        $openHolidaysData,
-        countryId: 1,
-        countryLanguages: ['pt']
-    );
+        $createData = $adapter->toCreateData(
+            $openHolidaysData,
+            countryId: Str::uuid7()->toString(),
+            countryLanguages: ['pt']
+        );
 
-    expect($createData->type)
-        ->toBe(CountrySubdivisionType::District);
-});
+        expect($createData->type)
+            ->toBe(CountrySubdivisionType::District);
+    });
 
-test('inherits country languages when subdivision languages is empty array', function (): void {
-    /** @var array<string, mixed> $subdivisionWithEmptyLanguages */
-    $subdivisionWithEmptyLanguages = [
-        'code' => 'PT-LI',
-        'isoCode' => 'PT-10',
-        'shortName' => 'LI',
-        'category' => [['language' => 'PT', 'text' => 'distrito']],
-        'name' => [['language' => 'PT', 'text' => 'Lisboa']],
-        'officialLanguages' => [],
-    ];
+test('inherits country languages when subdivision languages is empty array',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var array<string, mixed> $subdivisionWithEmptyLanguages */
+        $subdivisionWithEmptyLanguages = [
+            'code' => 'PT-LI',
+            'isoCode' => 'PT-10',
+            'shortName' => 'LI',
+            'category' => [['language' => 'PT', 'text' => 'distrito']],
+            'name' => [['language' => 'PT', 'text' => 'Lisboa']],
+            'officialLanguages' => [],
+        ];
 
-    $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyLanguages);
+        $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyLanguages);
 
-    /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        /** @var OpenHolidaysSubdivisionAdapter $adapter */
+        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
 
-    $createData = $adapter->toCreateData(
-        $openHolidaysData,
-        countryId: 1,
-        countryLanguages: ['pt', 'en']
-    );
+        $createData = $adapter->toCreateData(
+            $openHolidaysData,
+            countryId: Str::uuid7()->toString(),
+            countryLanguages: ['pt', 'en']
+        );
 
-    expect($createData->officialLanguages)
-        ->toBe(['pt', 'en']);
-});
+        expect($createData->officialLanguages)
+            ->toBe(['pt', 'en']);
+    });

@@ -13,18 +13,18 @@ use App\Models\VacationBalance;
 
 test('updates time off request status to approved', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Employee $employee */
     $employee = Employee::factory()
         ->for($organization)
-        ->createQuietly();
+        ->create();
 
     /** @var TimeOffRequest $timeOffRequest */
     $timeOffRequest = TimeOffRequest::factory()
         ->for($organization)
         ->for($employee)
-        ->createQuietly([
+        ->create([
             'type' => TimeOffType::PersonalDay,
             'status' => RequestStatus::Pending,
         ]);
@@ -33,7 +33,7 @@ test('updates time off request status to approved', function (): void {
     $approval = Approval::factory()
         ->pending()
         ->for($organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -41,7 +41,7 @@ test('updates time off request status to approved', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($organization)
-        ->createQuietly();
+        ->create();
 
     $action = app(ApproveRequest::class);
     $action->handle($approval, $approver);
@@ -52,15 +52,15 @@ test('updates time off request status to approved', function (): void {
 
 test('deducts vacation balance when approving vacation request', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Employee $employee */
     $employee = Employee::factory()
         ->for($organization)
-        ->createQuietly();
+        ->create();
 
     /** @var VacationBalance $balance */
-    $balance = VacationBalance::factory()->createQuietly([
+    $balance = VacationBalance::factory()->create([
         'organization_id' => $organization->id,
         'employee_id' => $employee->id,
         'year' => now()->year,
@@ -73,7 +73,7 @@ test('deducts vacation balance when approving vacation request', function (): vo
     $timeOffRequest = TimeOffRequest::factory()
         ->for($organization)
         ->for($employee)
-        ->createQuietly([
+        ->create([
             'type' => TimeOffType::Vacation,
             'status' => RequestStatus::Pending,
             'start_date' => now()->addDay(),
@@ -85,7 +85,7 @@ test('deducts vacation balance when approving vacation request', function (): vo
     $approval = Approval::factory()
         ->pending()
         ->for($organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -93,7 +93,7 @@ test('deducts vacation balance when approving vacation request', function (): vo
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($organization)
-        ->createQuietly();
+        ->create();
 
     $action = app(ApproveRequest::class);
     $action->handle($approval, $approver);
@@ -106,13 +106,13 @@ test('deducts vacation balance when approving vacation request', function (): vo
 
 test('approves pending request', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -120,7 +120,7 @@ test('approves pending request', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($timeOffRequest->organization)
-        ->createQuietly();
+        ->create();
 
     $action = app(ApproveRequest::class);
     $result = $action->handle($approval, $approver);
@@ -135,13 +135,13 @@ test('approves pending request', function (): void {
 
 test('sets approved_at timestamp', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -149,7 +149,7 @@ test('sets approved_at timestamp', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($timeOffRequest->organization)
-        ->createQuietly();
+        ->create();
 
     $action = app(ApproveRequest::class);
     $result = $action->handle($approval, $approver);
@@ -160,13 +160,13 @@ test('sets approved_at timestamp', function (): void {
 
 test('records approver employee', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -174,7 +174,7 @@ test('records approver employee', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($timeOffRequest->organization)
-        ->createQuietly();
+        ->create();
 
     $action = app(ApproveRequest::class);
     $result = $action->handle($approval, $approver);

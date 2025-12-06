@@ -22,8 +22,10 @@ final class CurrentEmployee implements ContextualAttribute
      */
     public static function resolve(self $attribute, Container $container): ?Employee
     {
+
         /** @var User|null $user */
-        $user = $container->make(Factory::class)->user();
+        $user = $container->make(Factory::class)
+            ->user();
 
         return $user?->employee;
 

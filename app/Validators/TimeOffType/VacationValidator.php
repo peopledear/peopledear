@@ -7,6 +7,7 @@ namespace App\Validators\TimeOffType;
 use App\Contracts\TimeOffTypeValidator;
 use App\Models\VacationBalance;
 use App\Support\ValidationResult;
+use Illuminate\Support\Facades\Date;
 
 final readonly class VacationValidator implements TimeOffTypeValidator
 {
@@ -19,13 +20,13 @@ final readonly class VacationValidator implements TimeOffTypeValidator
 
         /** @var string $startDateValue */
         $startDateValue = $data['start_date'];
-        $startDate = \Illuminate\Support\Facades\Date::parse($startDateValue);
+        $startDate = Date::parse($startDateValue);
 
         $endDate = null;
         if (isset($data['end_date'])) {
             /** @var string $endDateValue */
             $endDateValue = $data['end_date'];
-            $endDate = \Illuminate\Support\Facades\Date::parse($endDateValue);
+            $endDate = Date::parse($endDateValue);
         }
 
         if ($endDate !== null && $endDate->startOfDay()->lt($startDate->startOfDay())) {
@@ -34,7 +35,7 @@ final readonly class VacationValidator implements TimeOffTypeValidator
 
         if ($errors === []) {
             $requestedDays = $this->calculateRequestedDays($data);
-            /** @var int $employeeId */
+            /** @var string $employeeId */
             $employeeId = $data['employee_id'];
             $availableBalance = $this->getAvailableBalance($employeeId);
 
@@ -67,13 +68,13 @@ final readonly class VacationValidator implements TimeOffTypeValidator
 
         /** @var string $startDateValue */
         $startDateValue = $data['start_date'];
-        $startDate = \Illuminate\Support\Facades\Date::parse($startDateValue);
+        $startDate = Date::parse($startDateValue);
 
         $endDate = $startDate;
         if (isset($data['end_date'])) {
             /** @var string $endDateValue */
             $endDateValue = $data['end_date'];
-            $endDate = \Illuminate\Support\Facades\Date::parse($endDateValue);
+            $endDate = Date::parse($endDateValue);
         }
 
         $days = (int) $startDate->startOfDay()->diffInDays($endDate->startOfDay()) + 1;
@@ -81,7 +82,7 @@ final readonly class VacationValidator implements TimeOffTypeValidator
         return $days * 100; // Convert to integer format
     }
 
-    private function getAvailableBalance(int $employeeId): int
+    private function getAvailableBalance(string $employeeId): int
     {
         /** @var VacationBalance|null $balance */
         $balance = VacationBalance::query()

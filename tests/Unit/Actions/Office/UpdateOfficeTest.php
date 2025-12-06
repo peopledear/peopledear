@@ -21,10 +21,10 @@ test('updates office with all fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
             'name' => 'Old Name',
             'type' => OfficeType::Branch,
@@ -34,7 +34,7 @@ test('updates office with all fields',
         /** @var Address $address */
         $address = Address::factory()
             ->for($office, 'addressable')
-            ->createQuietly([
+            ->create([
                 'line1' => 'Old Street',
                 'city' => 'Old City',
                 'postal_code' => '00000',
@@ -78,10 +78,10 @@ test('updates office without updating address when not provided',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->createQuietly();
+        $organization = Organization::factory()->create();
 
         /** @var Office $office */
-        $office = Office::factory()->createQuietly([
+        $office = Office::factory()->create([
             'organization_id' => $organization->id,
             'name' => 'Old Name',
         ]);
@@ -89,7 +89,7 @@ test('updates office without updating address when not provided',
         /** @var Address $address */
         $address = Address::factory()
             ->for($office, 'addressable')
-            ->createQuietly([
+            ->create([
                 'line1' => 'Original Street',
                 'city' => 'Original City',
                 'postal_code' => '12345',

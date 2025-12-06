@@ -16,16 +16,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('vacation_balances', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')->primary();
+
             $table->timestamps();
+
             $table->foreignIdFor(Organization::class)
                 ->constrained();
+
             $table->foreignIdFor(Employee::class)
                 ->constrained();
+
             $table->smallInteger('year');
             $table->smallInteger('from_last_year');
             $table->smallInteger('accrued');
             $table->smallInteger('taken');
+
         });
     }
 

@@ -10,7 +10,7 @@ use App\Models\Organization;
 beforeEach(function (): void {
     $this->action = app(CreateOrganization::class);
     $this->country = Country::factory()
-        ->createQuietly();
+        ->create();
 });
 
 test('creates organization with provided data',
@@ -27,9 +27,11 @@ test('creates organization with provided data',
 
         expect($organization)
             ->toBeInstanceOf(Organization::class)
-            ->id->toBeInt()
-            ->name->toBe('Test Organization')
-            ->country_id->toBe($this->country->id);
+            ->id->toBeString()
+            ->name
+            ->toBe('Test Organization')
+            ->country_id
+            ->toBe($this->country->id);
 
         /** @var Organization $persistedOrganization */
         $persistedOrganization = Organization::query()
@@ -77,9 +79,12 @@ test('returns refreshed organization instance',
 
         $organization = $this->action->handle($data);
 
-        // Verify the organization is properly persisted and refreshed
-        expect($organization->exists)->toBeTrue()
-            ->and($organization->id)->toBeInt()
-            ->and($organization->name)->toBe('Test Organization')
-            ->and($organization->country_id)->toBe($this->country->id);
+        expect($organization->exists)
+            ->toBeTrue()
+            ->and($organization->id)
+            ->toBeString()
+            ->and($organization->name)
+            ->toBe('Test Organization')
+            ->and($organization->country_id)
+            ->toBe($this->country->id);
     });

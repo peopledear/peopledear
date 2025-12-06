@@ -11,7 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('countries', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('iso_code')->unique();
             $table->json('name');
             $table->json('official_languages');

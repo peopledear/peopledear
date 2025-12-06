@@ -7,19 +7,22 @@ namespace App\Data\PeopleDear\TimeOffRequest;
 use App\Enums\PeopleDear\RequestStatus;
 use App\Enums\PeopleDear\TimeOffType;
 use Carbon\CarbonImmutable;
+use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 use Spatie\LaravelData\Optional;
 
 /**
  * @method array<string, mixed> toArray()
  */
+#[MapName(SnakeCaseMapper::class)]
 final class UpdateTimeOffRequestData extends Data
 {
     public function __construct(
         public readonly TimeOffType|Optional $type,
         public readonly RequestStatus|Optional $status,
-        public readonly CarbonImmutable|Optional $start_date,
-        public readonly CarbonImmutable|Optional|null $end_date,
-        public readonly bool|Optional $is_half_day,
+        public readonly CarbonImmutable|Optional $startDate,
+        public readonly CarbonImmutable|Optional|null $endDate,
+        public readonly bool|Optional $isHalfDay,
     ) {}
 }

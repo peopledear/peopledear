@@ -10,6 +10,7 @@ use App\Models\Scopes\OrganizationScope;
 use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,11 +18,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
- * @property-read int $id
- * @property-read int $organization_id
- * @property-read int|null $office_id
- * @property-read int|null $user_id
- * @property-read int|null $manager_id
+ * @property-read string $id
+ * @property-read string $organization_id
+ * @property-read string|null $office_id
+ * @property-read string|null $user_id
+ * @property-read string|null $manager_id
  * @property-read string $name
  * @property-read string|null $email
  * @property-read string|null $phone
@@ -45,6 +46,28 @@ final class Employee extends Model
     /** @use HasFactory<EmployeeFactory> */
     use HasFactory;
 
+    use HasUuids;
+
+    public function casts(): array
+    {
+        return [
+            'id' => 'string',
+            'organization_id' => 'string',
+            'office_id' => 'string',
+            'user_id' => 'string',
+            'manager_id' => 'string',
+            'name' => 'string',
+            'email' => 'string',
+            'phone' => 'string',
+            'employee_number' => 'string',
+            'job_title' => 'string',
+            'hire_date' => 'date',
+            'employment_status' => EmploymentStatus::class,
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
+
     /** @return BelongsTo<Office, $this> */
     public function office(): BelongsTo
     {
@@ -67,26 +90,6 @@ final class Employee extends Model
     public function directReports(): HasMany
     {
         return $this->hasMany(self::class, 'manager_id');
-    }
-
-    public function casts(): array
-    {
-        return [
-            'id' => 'integer',
-            'organization_id' => 'integer',
-            'office_id' => 'integer',
-            'user_id' => 'integer',
-            'manager_id' => 'integer',
-            'name' => 'string',
-            'email' => 'string',
-            'phone' => 'string',
-            'employee_number' => 'string',
-            'job_title' => 'string',
-            'hire_date' => 'date',
-            'employment_status' => EmploymentStatus::class,
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
     }
 
     /**

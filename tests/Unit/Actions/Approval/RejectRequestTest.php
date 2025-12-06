@@ -11,13 +11,13 @@ use App\Models\TimeOffRequest;
 
 test('rejects pending request', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -25,7 +25,7 @@ test('rejects pending request', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($timeOffRequest->organization)
-        ->createQuietly();
+        ->create();
 
     $data = RejectRequestData::from([
         'rejection_reason' => 'Team is understaffed during this period',
@@ -46,13 +46,13 @@ test('rejects pending request', function (): void {
 
 test('sets rejected_at timestamp', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -60,7 +60,7 @@ test('sets rejected_at timestamp', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($timeOffRequest->organization)
-        ->createQuietly();
+        ->create();
 
     $data = RejectRequestData::from([
         'rejection_reason' => 'Not approved',
@@ -75,13 +75,13 @@ test('sets rejected_at timestamp', function (): void {
 
 test('records rejection reason', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -89,7 +89,7 @@ test('records rejection reason', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($timeOffRequest->organization)
-        ->createQuietly();
+        ->create();
 
     $reason = 'Project deadline next week, please reschedule';
 
@@ -106,13 +106,13 @@ test('records rejection reason', function (): void {
 
 test('records approver employee on rejection', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var Approval $approval */
     $approval = Approval::factory()
         ->pending()
         ->for($timeOffRequest->organization)
-        ->createQuietly([
+        ->create([
             'approvable_type' => TimeOffRequest::class,
             'approvable_id' => $timeOffRequest->id,
         ]);
@@ -120,7 +120,7 @@ test('records approver employee on rejection', function (): void {
     /** @var Employee $approver */
     $approver = Employee::factory()
         ->for($timeOffRequest->organization)
-        ->createQuietly();
+        ->create();
 
     $data = RejectRequestData::from([
         'rejection_reason' => 'Denied',

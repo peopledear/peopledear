@@ -21,7 +21,7 @@ test('it closes periods',
     function (): void {
 
         $organization = Organization::factory()
-            ->createQuietly();
+            ->create();
 
         $this->action->handle(2024, $organization);
         $this->action->handle(2025, $organization);
@@ -46,7 +46,7 @@ test('throws and exception when period already exists',
     function (): void {
 
         $organization = Organization::factory()
-            ->createQuietly();
+            ->create();
 
         $year = 2023;
 
@@ -63,7 +63,7 @@ test('it creates a period for the given year',
     function (): void {
 
         $organization = Organization::factory()
-            ->createQuietly();
+            ->create();
         $year = 2023;
 
         $this->action->handle($year, $organization);

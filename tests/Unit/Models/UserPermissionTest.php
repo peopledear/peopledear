@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 
 test('user can be assigned a permission directly', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Permission $permission */
     $permission = Permission::query()
         ->where('name', 'employees.view')
@@ -22,7 +22,7 @@ test('user can be assigned a permission directly', function (): void {
 
 test('user inherits permissions from role', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'employee')
@@ -41,7 +41,7 @@ test('user inherits permissions from role', function (): void {
 
 test('user can check if they have any of multiple permissions', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'employee')
@@ -58,7 +58,7 @@ test('user can check if they have any of multiple permissions', function (): voi
 
 test('user can check if they have all of multiple permissions', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'employee')
@@ -75,7 +75,7 @@ test('user can check if they have all of multiple permissions', function (): voi
 
 test('direct permissions override role permissions', function (): void {
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
     /** @var Role $role */
     $role = Role::query()
         ->where('name', 'employee')

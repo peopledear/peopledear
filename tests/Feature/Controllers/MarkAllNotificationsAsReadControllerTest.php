@@ -9,15 +9,15 @@ use App\Notifications\GeneralNotification;
 use Illuminate\Support\Facades\Session;
 
 test('user can mark all notifications as read', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 
@@ -35,15 +35,15 @@ test('user can mark all notifications as read', function (): void {
 });
 
 test('mark all as read with no notifications does not error', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     $this->actingAs($user)
         ->post(route('notifications.mark-all-read'))
@@ -53,23 +53,23 @@ test('mark all as read with no notifications does not error', function (): void 
 });
 
 test('mark all as read only affects current users notifications', function (): void {
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var User $user */
-    $user = User::factory()->createQuietly();
+    $user = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($user)
-        ->createQuietly();
+        ->create();
 
     /** @var User $otherUser */
-    $otherUser = User::factory()->createQuietly();
+    $otherUser = User::factory()->create();
 
     Employee::factory()
         ->for($organization)
         ->for($otherUser)
-        ->createQuietly();
+        ->create();
 
     Session::put('current_organization', $organization->id);
 

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 test('has a periods relationship', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     expect($organization->periods())
         ->toBeInstanceOf(HasMany::class);
@@ -20,7 +20,7 @@ test('has a periods relationship', function (): void {
 
 test('organization has correct fillable attributes', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Test Company',
         'vat_number' => '1234567890',
         'ssn' => '12-3456789',
@@ -39,7 +39,7 @@ test('organization has correct fillable attributes', function (): void {
 
 test('organization model has correct casts', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     $casts = $organization->getCasts();
 
@@ -53,7 +53,7 @@ test('organization model has correct casts', function (): void {
 
 test('organization can be created with only required fields', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Minimal Org',
         'vat_number' => null,
         'ssn' => null,
@@ -72,23 +72,23 @@ test('organization can be created with only required fields', function (): void 
 
 test('organization has offices relationship', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     expect($organization->offices())->toBeInstanceOf(HasMany::class);
 });
 
 test('organization offices relationship is properly loaded', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Office $office1 */
-    $office1 = Office::factory()->createQuietly([
+    $office1 = Office::factory()->create([
         'organization_id' => $organization->id,
         'name' => 'Office 1',
     ]);
 
     /** @var Office $office2 */
-    $office2 = Office::factory()->createQuietly([
+    $office2 = Office::factory()->create([
         'organization_id' => $organization->id,
         'name' => 'Office 2',
     ]);
@@ -104,23 +104,23 @@ test('organization offices relationship is properly loaded', function (): void {
 
 test('organization has holidays relationship', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     expect($organization->holidays())->toBeInstanceOf(HasMany::class);
 });
 
 test('organization holidays relationship is properly loaded', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var Holiday $holiday1 */
-    $holiday1 = Holiday::factory()->createQuietly([
+    $holiday1 = Holiday::factory()->create([
         'organization_id' => $organization->id,
         'name' => ['en' => 'New Year'],
     ]);
 
     /** @var Holiday $holiday2 */
-    $holiday2 = Holiday::factory()->createQuietly([
+    $holiday2 = Holiday::factory()->create([
         'organization_id' => $organization->id,
         'name' => ['en' => 'Christmas'],
     ]);
@@ -134,21 +134,21 @@ test('organization holidays relationship is properly loaded', function (): void 
 
 test('organization has country relationship', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     expect($organization->country())->toBeInstanceOf(BelongsTo::class);
 });
 
 test('organization country relationship is properly loaded', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly([
+    $country = Country::factory()->create([
         'iso_code' => 'US',
         'name' => ['en' => 'United States'],
         'official_languages' => ['en'],
     ]);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'country_id' => $country->id,
     ]);
 
@@ -162,7 +162,7 @@ test('organization country relationship is properly loaded', function (): void {
 
 test('organization can exist without country', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'country_id' => null,
     ]);
 
@@ -174,10 +174,10 @@ test('organization can exist without country', function (): void {
 
 test('has location configured returns true when country is set', function (): void {
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'country_id' => $country->id,
     ]);
 
@@ -186,7 +186,7 @@ test('has location configured returns true when country is set', function (): vo
 
 test('has location configured returns false when country is null', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'country_id' => null,
     ]);
 
@@ -196,7 +196,7 @@ test('has location configured returns false when country is null', function (): 
 test('to array', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()
-        ->createQuietly()
+        ->create()
         ->refresh();
 
     expect(array_keys($organization->toArray()))
@@ -204,10 +204,10 @@ test('to array', function (): void {
             'id',
             'created_at',
             'updated_at',
+            'country_id',
             'name',
             'vat_number',
             'ssn',
             'phone',
-            'country_id',
         ]);
 });

@@ -48,7 +48,7 @@ final readonly class CreateRootCountrySubdivision
     /**
      * @param  Collection<int, CreateCountrySubdivisionData>  $children
      */
-    private function createChildren(Collection $children, int $parentId, int $countryId): void
+    private function createChildren(Collection $children, string $parentId, string $countryId): void
     {
         foreach ($children as $childData) {
             $grandchildren = $childData->children;

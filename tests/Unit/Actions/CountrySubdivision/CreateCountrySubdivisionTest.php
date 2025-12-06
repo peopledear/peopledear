@@ -13,7 +13,7 @@ beforeEach(
      * @throws Throwable
      */
     function (): void {
-        $this->country = Country::factory()->createQuietly();
+        $this->country = Country::factory()->create();
 
         $this->action = app(CreateCountrySubdivision::class);
     });
@@ -52,7 +52,7 @@ test('upserts existing subdivision when iso_code already exists',
      */
     function (): void {
         /** @var CountrySubdivision $existing */
-        $existing = CountrySubdivision::factory()->createQuietly([
+        $existing = CountrySubdivision::factory()->create([
             'country_id' => $this->country->id,
             'iso_code' => 'PT-11',
             'name' => ['EN' => 'Old Name'],
@@ -105,7 +105,7 @@ test('creates a single country subdivision',
         expect($subdivision)
             ->toBeInstanceOf(CountrySubdivision::class)
             ->and($subdivision->id)
-            ->toBeInt()
+            ->toBeString()
             ->and($subdivision->country_id)
             ->toBe($this->country->id)
             ->and($subdivision->iso_code)
@@ -122,7 +122,7 @@ test('creates subdivision with parent',
      */
     function (): void {
         /** @var CountrySubdivision $parent */
-        $parent = CountrySubdivision::factory()->createQuietly([
+        $parent = CountrySubdivision::factory()->create([
             'country_id' => $this->country->id,
             'iso_code' => 'US-CA',
         ]);

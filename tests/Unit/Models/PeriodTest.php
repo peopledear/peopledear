@@ -8,7 +8,7 @@ use App\Models\Period;
 test('period model has a status enum cast', function (): void {
 
     $period = Period::factory()
-        ->createQuietly()
+        ->create()
         ->fresh();
 
     expect($period->status)
@@ -18,7 +18,7 @@ test('period model has a status enum cast', function (): void {
 test('period model can be created', function (): void {
 
     $period = Period::factory()
-        ->createQuietly();
+        ->create();
 
     $now = now();
 
@@ -30,7 +30,7 @@ test('period model can be created', function (): void {
 
 test('to array', function (): void {
     $period = Period::factory()
-        ->createQuietly()
+        ->create()
         ->fresh();
 
     expect(array_keys($period->toArray()))

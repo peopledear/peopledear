@@ -15,13 +15,14 @@ use App\Models\Scopes\OrganizationScope;
 use Carbon\Carbon;
 use Database\Factories\TimeOffRequestFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property-read int $id
- * @property-read int $organization_id
- * @property-read int $employee_id
+ * @property-read string $id
+ * @property-read string $organization_id
+ * @property-read string $employee_id
  * @property-read TimeOffType $type
  * @property-read RequestStatus $status
  * @property-read Carbon $start_date
@@ -44,15 +45,17 @@ final class TimeOffRequest extends Model implements Approvable
     /** @use HasFactory<TimeOffRequestFactory> */
     use HasFactory;
 
+    use HasUuids;
+
     /**
      * @return array<string, string>
      */
     public function casts(): array
     {
         return [
-            'id' => 'integer',
-            'organization_id' => 'integer',
-            'employee_id' => 'integer',
+            'id' => 'string',
+            'organization_id' => 'string',
+            'employee_id' => 'string',
             'type' => TimeOffType::class,
             'status' => RequestStatus::class,
             'start_date' => 'date',

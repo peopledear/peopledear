@@ -10,14 +10,15 @@ use App\Models\Scopes\OrganizationScope;
 use Database\Factories\VacationBalanceFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
- * @property-read int $id
- * @property-read int $organization_id
- * @property-read int $employee_id
+ * @property-read string $id
+ * @property-read string $organization_id
+ * @property-read string $employee_id
  * @property-read int $year
  * @property-read int $from_last_year
  * @property-read int $accrued
@@ -36,6 +37,8 @@ final class VacationBalance extends Model
 
     /** @use HasFactory<VacationBalanceFactory> */
     use HasFactory;
+
+    use HasUuids;
 
     /**
      * @return Attribute<int, never>

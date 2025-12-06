@@ -7,15 +7,16 @@ namespace App\Models;
 use App\Enums\PeopleDear\CountrySubdivisionType;
 use Database\Factories\CountrySubdivisionFactory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read int $id
- * @property-read int $country_id
- * @property-read int|null $country_subdivision_id
+ * @property-read string $id
+ * @property-read string $country_id
+ * @property-read string|null $country_subdivision_id
  * @property-read array<string, string> $name
  * @property-read string $code
  * @property-read string $iso_code
@@ -28,8 +29,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 final class CountrySubdivision extends Model
 {
-    /** @use HasFactory<CountrySubdivisionFactory> */
+    /** @use HasFactory<CountrySubdivisionFactory   > */
     use HasFactory;
+
+    use HasUuids;
 
     public $timestamps = false;
 
@@ -57,9 +60,9 @@ final class CountrySubdivision extends Model
     public function casts(): array
     {
         return [
-            'id' => 'integer',
-            'country_id' => 'integer',
-            'country_subdivision_id' => 'integer',
+            'id' => 'string',
+            'country_id' => 'string',
+            'country_subdivision_id' => 'string',
             'type' => CountrySubdivisionType::class,
             'name' => 'array',
             'official_languages' => 'array',

@@ -24,10 +24,10 @@ test('builder returns country query builder', function (): void {
 
 test('can retrieve all countries using builder', function (): void {
     /** @var Country $country1 */
-    $country1 = Country::factory()->createQuietly();
+    $country1 = Country::factory()->create();
 
     /** @var Country $country2 */
-    $country2 = Country::factory()->createQuietly();
+    $country2 = Country::factory()->create();
 
     $countries = $this->query->builder()->get();
 
@@ -39,13 +39,13 @@ test('can retrieve all countries using builder', function (): void {
 
 test('can order countries using builder', function (): void {
     /** @var Country $country1 */
-    $country1 = Country::factory()->createQuietly(['iso_code' => 'ZZ']);
+    $country1 = Country::factory()->create(['iso_code' => 'ZZ']);
 
     /** @var Country $country2 */
-    $country2 = Country::factory()->createQuietly(['iso_code' => 'AA']);
+    $country2 = Country::factory()->create(['iso_code' => 'AA']);
 
     /** @var Country $country3 */
-    $country3 = Country::factory()->createQuietly(['iso_code' => 'MM']);
+    $country3 = Country::factory()->create(['iso_code' => 'MM']);
 
     $countries = $this->query->builder()
         ->orderBy('iso_code')

@@ -13,19 +13,19 @@ use App\Models\User;
 
 beforeEach(function (): void {
     $this->organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     $this->period = Period::factory()
         ->for($this->organization)
         ->active()
         ->create();
 
-    $this->user = User::factory()->createQuietly();
+    $this->user = User::factory()->create();
 
     $this->employee = Employee::factory()
         ->for($this->organization)
         ->for($this->user)
-        ->createQuietly();
+        ->create();
 
     $this->user->assignRole(UserRole::Employee);
 });
@@ -56,7 +56,7 @@ test('employee sees paginated time off requests with 20 per page', function (): 
         ->for($this->organization)
         ->for($this->period)
         ->count(25)
-        ->createQuietly();
+        ->create();
 
     $response = $this->actingAs($this->user)
         ->get(route('employee.time-offs.index'));
@@ -87,14 +87,14 @@ test('requests are ordered by created_at desc', function (): void {
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['created_at' => now()->subDays(2)]);
+        ->create(['created_at' => now()->subDays(2)]);
 
     /** @var TimeOffRequest $newRequest */
     $newRequest = TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['created_at' => now()]);
+        ->create(['created_at' => now()]);
 
     $response = $this->actingAs($this->user)
         ->get(route('employee.time-offs.index'));
@@ -112,13 +112,13 @@ test('filtering by status returns only matching requests', function (): void {
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['status' => RequestStatus::Pending]);
+        ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['status' => RequestStatus::Approved]);
+        ->create(['status' => RequestStatus::Approved]);
 
     $response = $this->actingAs($this->user)
         ->get(route('employee.time-offs.index', ['status' => RequestStatus::Pending->value]));
@@ -136,13 +136,13 @@ test('clearing status filter returns all requests', function (): void {
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['status' => RequestStatus::Pending]);
+        ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['status' => RequestStatus::Approved]);
+        ->create(['status' => RequestStatus::Approved]);
 
     $response = $this->actingAs($this->user)
         ->get(route('employee.time-offs.index'));
@@ -170,13 +170,13 @@ test('filtering by type returns only matching requests', function (): void {
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['type' => TimeOffType::Vacation]);
+        ->create(['type' => TimeOffType::Vacation]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly(['type' => TimeOffType::SickLeave]);
+        ->create(['type' => TimeOffType::SickLeave]);
 
     $response = $this->actingAs($this->user)
         ->get(route('employee.time-offs.index', ['type' => TimeOffType::Vacation->value]));
@@ -194,7 +194,7 @@ test('combined status and type filters return correct results', function (): voi
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly([
+        ->create([
             'status' => RequestStatus::Pending,
             'type' => TimeOffType::Vacation,
         ]);
@@ -203,7 +203,7 @@ test('combined status and type filters return correct results', function (): voi
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly([
+        ->create([
             'status' => RequestStatus::Approved,
             'type' => TimeOffType::Vacation,
         ]);
@@ -212,7 +212,7 @@ test('combined status and type filters return correct results', function (): voi
         ->for($this->employee)
         ->for($this->organization)
         ->for($this->period)
-        ->createQuietly([
+        ->create([
             'status' => RequestStatus::Pending,
             'type' => TimeOffType::SickLeave,
         ]);

@@ -10,14 +10,15 @@ use App\Models\Concerns\HasAddress;
 use App\Models\Scopes\OrganizationScope;
 use Database\Factories\OfficeFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * @property-read int $id
- * @property-read int $organization_id
+ * @property-read string $id
+ * @property-read string $organization_id
  * @property-read string $name
  * @property-read OfficeType $type
  * @property-read string|null $phone
@@ -34,6 +35,8 @@ final class Office extends Model implements Addressable
     /** @use HasFactory<OfficeFactory> */
     use HasFactory;
 
+    use HasUuids;
+
     /** @return BelongsTo<Organization, $this> */
     public function organization(): BelongsTo
     {
@@ -43,8 +46,8 @@ final class Office extends Model implements Addressable
     public function casts(): array
     {
         return [
-            'id' => 'integer',
-            'organization_id' => 'integer',
+            'id' => 'string',
+            'organization_id' => 'string',
             'name' => 'string',
             'type' => OfficeType::class,
             'phone' => 'string',

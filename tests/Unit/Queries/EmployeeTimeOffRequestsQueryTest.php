@@ -11,14 +11,14 @@ use App\Models\User;
 use App\Queries\EmployeeTimeOffRequestsQuery;
 
 beforeEach(function (): void {
-    $this->organization = Organization::factory()->createQuietly();
+    $this->organization = Organization::factory()->create();
 
-    $this->user = User::factory()->createQuietly();
+    $this->user = User::factory()->create();
 
     $this->employee = Employee::factory()
         ->for($this->organization)
         ->for($this->user)
-        ->createQuietly();
+        ->create();
 
     $this->actingAs($this->user);
 
@@ -30,13 +30,13 @@ test('returns time off requests for current user ordered by created_at desc', fu
     $oldRequest = TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly(['created_at' => now()->subDays(2)]);
+        ->create(['created_at' => now()->subDays(2)]);
 
     /** @var TimeOffRequest $newRequest */
     $newRequest = TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly(['created_at' => now()]);
+        ->create(['created_at' => now()]);
 
     $results = $this->query->builder()->get();
 
@@ -47,23 +47,23 @@ test('returns time off requests for current user ordered by created_at desc', fu
 
 test('does not return requests from other employees', function (): void {
     /** @var User $otherUser */
-    $otherUser = User::factory()->createQuietly();
+    $otherUser = User::factory()->create();
 
     /** @var Employee $otherEmployee */
     $otherEmployee = Employee::factory()
         ->for($this->organization)
         ->for($otherUser)
-        ->createQuietly();
+        ->create();
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly();
+        ->create();
 
     TimeOffRequest::factory()
         ->for($otherEmployee)
         ->for($this->organization)
-        ->createQuietly();
+        ->create();
 
     $results = $this->query->builder()->get();
 
@@ -74,12 +74,12 @@ test('withStatus filters by RequestStatus enum value', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly(['status' => RequestStatus::Pending]);
+        ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly(['status' => RequestStatus::Approved]);
+        ->create(['status' => RequestStatus::Approved]);
 
     $results = $this->query
         ->withStatus(RequestStatus::Pending->value)
@@ -100,12 +100,12 @@ test('withType filters by TimeOffType enum value', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly(['type' => TimeOffType::Vacation]);
+        ->create(['type' => TimeOffType::Vacation]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly(['type' => TimeOffType::SickLeave]);
+        ->create(['type' => TimeOffType::SickLeave]);
 
     $results = $this->query
         ->withType(TimeOffType::Vacation->value)
@@ -126,7 +126,7 @@ test('combined status and type filters return correct results', function (): voi
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'status' => RequestStatus::Pending,
             'type' => TimeOffType::Vacation,
         ]);
@@ -134,7 +134,7 @@ test('combined status and type filters return correct results', function (): voi
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'status' => RequestStatus::Approved,
             'type' => TimeOffType::Vacation,
         ]);
@@ -142,7 +142,7 @@ test('combined status and type filters return correct results', function (): voi
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
-        ->createQuietly([
+        ->create([
             'status' => RequestStatus::Pending,
             'type' => TimeOffType::SickLeave,
         ]);
@@ -163,7 +163,7 @@ test('null status does not apply filter', function (): void {
         ->for($this->employee)
         ->for($this->organization)
         ->count(3)
-        ->createQuietly();
+        ->create();
 
     $results = $this->query
         ->withStatus(null)
@@ -178,7 +178,7 @@ test('null type does not apply filter', function (): void {
         ->for($this->employee)
         ->for($this->organization)
         ->count(3)
-        ->createQuietly();
+        ->create();
 
     $results = $this->query
         ->withType(null)

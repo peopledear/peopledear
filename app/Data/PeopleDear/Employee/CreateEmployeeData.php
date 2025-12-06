@@ -21,7 +21,7 @@ final class CreateEmployeeData extends Data
         public readonly ?string $phone,
         public readonly ?string $job_title,
         public readonly ?CarbonImmutable $hire_date,
-        public readonly ?int $office_id,
-        public readonly ?int $user_id,
+        public readonly ?string $office_id,
+        public readonly ?string $user_id,
     ) {}
 }

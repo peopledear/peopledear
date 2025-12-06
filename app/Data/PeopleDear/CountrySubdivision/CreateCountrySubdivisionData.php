@@ -18,12 +18,12 @@ final class CreateCountrySubdivisionData extends Data
 {
     /**
      * @param  array<string, string>  $name
-     * @param  array<int, string>  $officialLanguages
+     * @param  string[]  $officialLanguages
      * @param  Collection<int, CreateCountrySubdivisionData>|null  $children
      */
     public function __construct(
-        public readonly int $countryId,
-        public readonly ?int $countrySubdivisionId,
+        public readonly string $countryId,
+        public readonly ?string $countrySubdivisionId,
         public readonly array $name,
         public readonly string $code,
         public readonly string $isoCode,

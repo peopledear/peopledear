@@ -11,22 +11,22 @@ use Illuminate\Support\Facades\Session;
 beforeEach(function (): void {
 
     $this->organization = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     Session::put(SessionKey::CurrentOrganization->value, $this->organization->id);
 
     $this->activePeriod = Period::factory()
         ->for($this->organization)
         ->active()
-        ->createQuietly();
+        ->create();
 
     $this->organization2 = Organization::factory()
-        ->createQuietly();
+        ->create();
 
     $this->activePeriod2 = Period::factory()
         ->for($this->organization2)
         ->active()
-        ->createQuietly();
+        ->create();
 
     $this->query = app(PeriodQuery::class);
 

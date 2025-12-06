@@ -15,10 +15,10 @@ it('people manager can access organization settings', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -38,10 +38,10 @@ it('owner can access organization settings', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($owner);
 
@@ -61,10 +61,10 @@ it('employee cannot access organization settings', function (): void {
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($employee);
 
@@ -81,11 +81,11 @@ it('people manager can update organization', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Old Company Name',
         'vat_number' => 'OLD123',
         'ssn' => 'OLD-SSN',
@@ -124,11 +124,11 @@ it('owner can update organization', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Old Company Name',
     ]);
 
@@ -157,11 +157,11 @@ it('employee cannot update organization', function (): void {
         ?->fresh();
 
     /** @var User $employee */
-    $employee = User::factory()->createQuietly();
+    $employee = User::factory()->create();
     $employee->assignRole($employeeRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly([
+    $organization = Organization::factory()->create([
         'name' => 'Original Name',
     ]);
 
@@ -187,10 +187,10 @@ it('requires organization name', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -213,10 +213,10 @@ it('validates organization name max length', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
-    Organization::factory()->createQuietly();
+    Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -239,11 +239,11 @@ it('allows optional vat_number, ssn, and phone', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     $this->actingAs($peopleManager);
 
@@ -279,7 +279,7 @@ it('requires country_id when creating organization', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -302,7 +302,7 @@ it('validates country_id exists when creating organization', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);
@@ -320,7 +320,7 @@ it('people manager can create organization with country', function (): void {
     Organization::query()->delete();
 
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var Role $peopleManagerRole */
     $peopleManagerRole = Role::query()
@@ -329,7 +329,7 @@ it('people manager can create organization with country', function (): void {
         ?->fresh();
 
     /** @var User $peopleManager */
-    $peopleManager = User::factory()->createQuietly();
+    $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
 
     $this->actingAs($peopleManager);
@@ -356,7 +356,7 @@ it('owner can create organization with country', function (): void {
     Organization::query()->delete();
 
     /** @var Country $country */
-    $country = Country::factory()->createQuietly();
+    $country = Country::factory()->create();
 
     /** @var Role $ownerRole */
     $ownerRole = Role::query()
@@ -365,7 +365,7 @@ it('owner can create organization with country', function (): void {
         ?->fresh();
 
     /** @var User $owner */
-    $owner = User::factory()->createQuietly();
+    $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
 
     $this->actingAs($owner);

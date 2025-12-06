@@ -13,7 +13,7 @@ beforeEach(function (): void {
 
 test('deletes time off', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->create();
 
     $timeOffId = $timeOff->id;
 
@@ -27,10 +27,10 @@ test('deletes time off', function (): void {
 
 test('deletes time off but organization still exists', function (): void {
     /** @var Organization $organization */
-    $organization = Organization::factory()->createQuietly();
+    $organization = Organization::factory()->create();
 
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'organization_id' => $organization->id,
     ]);
 
@@ -53,10 +53,10 @@ test('deletes time off but organization still exists', function (): void {
 
 test('deletes time off but employee still exists', function (): void {
     /** @var Employee $employee */
-    $employee = Employee::factory()->createQuietly();
+    $employee = Employee::factory()->create();
 
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->createQuietly([
+    $timeOff = TimeOffRequest::factory()->create([
         'employee_id' => $employee->id,
     ]);
 
@@ -79,7 +79,7 @@ test('deletes time off but employee still exists', function (): void {
 
 test('deletes pending time off', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->pending()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->pending()->create();
 
     $timeOffId = $timeOff->id;
 
@@ -93,7 +93,7 @@ test('deletes pending time off', function (): void {
 
 test('deletes approved time off', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->approved()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->approved()->create();
 
     $timeOffId = $timeOff->id;
 
@@ -107,7 +107,7 @@ test('deletes approved time off', function (): void {
 
 test('deletes rejected time off', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->rejected()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->rejected()->create();
 
     $timeOffId = $timeOff->id;
 
@@ -121,7 +121,7 @@ test('deletes rejected time off', function (): void {
 
 test('deletes cancelled time off', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->cancelled()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->cancelled()->create();
 
     $timeOffId = $timeOff->id;
 
@@ -135,7 +135,7 @@ test('deletes cancelled time off', function (): void {
 
 test('deletes half day time off', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->halfDay()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->halfDay()->create();
 
     $timeOffId = $timeOff->id;
 
@@ -149,7 +149,7 @@ test('deletes half day time off', function (): void {
 
 test('deletes multi day time off', function (): void {
     /** @var TimeOffRequest $timeOff */
-    $timeOff = TimeOffRequest::factory()->multiDay()->createQuietly();
+    $timeOff = TimeOffRequest::factory()->multiDay()->create();
 
     $timeOffId = $timeOff->id;
 

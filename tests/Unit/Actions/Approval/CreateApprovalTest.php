@@ -8,7 +8,7 @@ use App\Models\TimeOffRequest;
 
 test('creates pending approval by default', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     $action = app(CreateApproval::class);
     $approval = $action->handle($timeOffRequest, $timeOffRequest->organization_id);
@@ -22,7 +22,7 @@ test('creates pending approval by default', function (): void {
 
 test('creates approved approval with timestamp', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     $action = app(CreateApproval::class);
     $approval = $action->handle($timeOffRequest, $timeOffRequest->organization_id, RequestStatus::Approved);
@@ -33,10 +33,10 @@ test('creates approved approval with timestamp', function (): void {
 
 test('creates approval for different organization', function (): void {
     /** @var TimeOffRequest $timeOffRequest */
-    $timeOffRequest = TimeOffRequest::factory()->createQuietly();
+    $timeOffRequest = TimeOffRequest::factory()->create();
 
     /** @var App\Models\Organization $otherOrganization */
-    $otherOrganization = App\Models\Organization::factory()->createQuietly();
+    $otherOrganization = App\Models\Organization::factory()->create();
 
     $action = app(CreateApproval::class);
     $approval = $action->handle($timeOffRequest, $otherOrganization->id);

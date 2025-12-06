@@ -13,11 +13,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('country_subdivisions', function (Blueprint $table): void {
-            $table->id();
-            $table->foreignIdFor(Country::class)->constrained();
+            $table->uuid('id')
+                ->primary();
+
+            $table->foreignIdFor(Country::class)
+                ->constrained();
+
             $table->foreignIdFor(CountrySubdivision::class)
                 ->nullable()
                 ->constrained();
+
             $table->jsonb('name');
             $table->string('code');
             $table->string('iso_code')->unique();

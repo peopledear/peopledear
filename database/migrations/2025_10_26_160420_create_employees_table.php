@@ -17,17 +17,32 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')
+                ->primary();
             $table->timestamps();
-            $table->foreignIdFor(Organization::class)->constrained();
-            $table->foreignIdFor(Office::class)->nullable()->constrained();
-            $table->foreignIdFor(User::class)->nullable()->constrained();
+
+            $table->foreignIdFor(Organization::class)
+                ->constrained();
+
+            $table->foreignIdFor(Office::class)
+                ->nullable()
+                ->constrained();
+
+            $table->foreignIdFor(User::class)
+                ->nullable()
+                ->constrained();
+
             $table->string('name');
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('employee_number')->unique();
-            $table->string('job_title')->nullable();
-            $table->date('hire_date')->nullable();
+            $table->string('email')
+                ->nullable();
+            $table->string('phone')
+                ->nullable();
+            $table->string('employee_number')
+                ->unique();
+            $table->string('job_title')
+                ->nullable();
+            $table->date('hire_date')
+                ->nullable();
             $table->integer('employment_status');
         });
     }

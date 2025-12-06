@@ -11,7 +11,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreTimeOffRequest extends FormRequest
+final class CreateTimeOffRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,6 +31,7 @@ final class StoreTimeOffRequest extends FormRequest
         return [
             'employee_id' => ['required', 'integer', 'exists:employees,id'],
             'organization_id' => ['required', 'integer', 'exists:organizations,id'],
+            'period_id' => ['required', 'string', 'exists:periods,id'],
             'type' => ['required', Rule::enum(TimeOffType::class)],
             'start_date' => ['required', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],

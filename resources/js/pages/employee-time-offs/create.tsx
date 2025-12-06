@@ -19,7 +19,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import AppLayout from "@/layouts/app-layout";
-import { Employee, SharedData } from "@/types";
+import { Employee, Period, SharedData } from "@/types";
 import EmployeeOverviewController from "@/wayfinder/actions/App/Http/Controllers/EmployeeOverviewController";
 import EmployeeTimeOffController from "@/wayfinder/actions/App/Http/Controllers/EmployeeTimeOffController";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
@@ -28,11 +28,13 @@ import React from "react";
 import type { DateRange } from "react-day-picker";
 
 interface CreateTimeOffProps {
+    period: Period;
     employee: Employee;
     types: Record<number, string>;
 }
 
 export default function CreateTimeOffPage({
+    period,
     types,
     employee,
 }: CreateTimeOffProps) {
@@ -47,6 +49,7 @@ export default function CreateTimeOffPage({
     const [dialogOpen, setDialogOpen] = React.useState(false);
 
     const { data, setData, post, processing, errors } = useForm({
+        period_id: period.id,
         type: "",
         is_half_day: false,
         start_date: undefined as Date | undefined,

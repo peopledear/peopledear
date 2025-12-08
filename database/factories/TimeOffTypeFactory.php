@@ -37,6 +37,11 @@ final class TimeOffTypeFactory extends Factory
             'requires_justification' => fake()->boolean(10),
             'requires_justification_document' => fake()->boolean(10),
             'balance_mode' => fake()->randomElement(TimeOffBalanceMode::cases()),
+            'balance_config' => [
+                'accrual_days_per_year' => fake()->numberBetween(20, 30),
+                'carry_over_type' => 1,
+                'carry_over_days_limit' => 5,
+            ],
         ];
     }
 

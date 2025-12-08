@@ -2,10 +2,50 @@
 
 declare(strict_types=1);
 
+use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
+use App\Enums\PeopleDear\CarryOverType;
 use App\Enums\PeopleDear\TimeOffUnit;
 use App\Models\TimeOffType;
 use Illuminate\Support\Arr;
 use Spatie\Permission\Models\Role;
+
+test('time off type can be created with balance config data', function (): void {
+
+    $timeOffType = TimeOffType::factory()
+        ->withFallbackApprovalRole()
+        ->create([
+            'balance_config' => new TimeOffTypeBalanceConfigData(
+                accrualDaysPerYear: 22,
+                carryOverType: CarryOverType::Limited,
+                carryOverDaysLimit: 5,
+            ),
+        ])
+        ->fresh();
+
+    expect($timeOffType)
+        ->toBeInstanceOf(TimeOffType::class)
+        ->and($timeOffType->balance_config)
+        ->toBeInstanceOf(TimeOffTypeBalanceConfigData::class)
+        ->and($timeOffType->balance_config->carryOverType)
+        ->toBe(CarryOverType::Limited)
+        ->and($timeOffType->balance_config->accrualDaysPerYear)
+        ->toBe(22)
+        ->and($timeOffType->balance_config->carryOverDaysLimit)
+        ->toBe(5);
+
+});
+
+test('balance config casts to a balance config data object', function (): void {
+
+    $timeOffType = TimeOffType::factory()
+        ->withFallbackApprovalRole()
+        ->create()
+        ->fresh();
+
+    expect($timeOffType->balance_config)
+        ->toBeInstanceOf(TimeOffTypeBalanceConfigData::class);
+
+});
 
 test('fall back approval role relationship', function (): void {
 
@@ -69,6 +109,7 @@ test('to array', function (): void {
             'requires_justification',
             'requires_justification_document',
             'balance_mode',
+            'balance_config',
         ]);
 
 });

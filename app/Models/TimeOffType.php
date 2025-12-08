@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Casts\AsArrayOfTimeOffUnit;
+use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
 use App\Enums\PeopleDear\TimeOffBalanceMode;
 use App\Enums\PeopleDear\TimeOffUnit;
 use App\Enums\Support\TimeOffIcon;
@@ -34,6 +35,7 @@ use Spatie\Permission\Models\Role;
  * @property bool $requires_justification
  * @property bool $requires_justification_document
  * @property TimeOffBalanceMode $balance_mode
+ * @property-read TimeOffTypeBalanceConfigData $balance_config
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon|null $deleted_at
@@ -45,6 +47,7 @@ final class TimeOffType extends Model
 
     /** @use HasFactory<TimeOffTypeFactory> */
     use HasFactory;
+
     use HasUuids;
 
     /**
@@ -70,6 +73,7 @@ final class TimeOffType extends Model
             'requires_justification' => 'boolean',
             'requires_justification_document' => 'boolean',
             'balance_mode' => TimeOffBalanceMode::class,
+            'balance_config' => TimeOffTypeBalanceConfigData::class,
         ];
     }
 

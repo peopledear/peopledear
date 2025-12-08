@@ -40,6 +40,7 @@ return new class extends Migration
             $table->boolean('requires_justification');
             $table->boolean('requires_justification_document');
             $table->unsignedSmallInteger('balance_mode');
+            $table->jsonb('balance_config');
 
         });
     }

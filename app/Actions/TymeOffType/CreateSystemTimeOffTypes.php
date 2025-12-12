@@ -29,7 +29,7 @@ final readonly class CreateSystemTimeOffTypes
     public function handle(Organization $organization): void
     {
 
-        DB::transaction(function () use ($organization) {
+        DB::transaction(function () use ($organization): void {
 
             $peopleManagerRole = $this->roleQuery
                 ->withRole(SystemRole::PeopleManager)

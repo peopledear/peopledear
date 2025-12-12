@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -84,5 +85,13 @@ final class TimeOffType extends Model
     public function fallbackApprovalRole(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'fallback_approval_role_id');
+    }
+
+    /**
+     * @return HasMany<TimeOffRequest, $this>
+     */
+    public function timeOffRequests(): HasMany
+    {
+        return $this->hasMany(TimeOffRequest::class);
     }
 }

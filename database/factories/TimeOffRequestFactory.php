@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\TimeOffType;
 use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Period;
 use App\Models\TimeOffRequest;
+use App\Models\TimeOffType;
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -30,7 +30,7 @@ final class TimeOffRequestFactory extends Factory
             'organization_id' => Organization::factory(),
             'period_id' => Period::factory(),
             'employee_id' => Employee::factory(),
-            'type' => fake()->randomElement(TimeOffType::cases()),
+            'time_off_type_id' => TimeOffType::factory(),
             'status' => fake()->randomElement(RequestStatus::cases()),
             'start_date' => $startDate,
             'end_date' => fake()->optional(0.7)->dateTimeBetween($startDate, $startDate->add(DateInterval::createFromDateString('15 days'))),

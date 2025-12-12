@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Contracts\Approvable;
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\TimeOffType;
 use App\Models\Concerns\BelongsToEmployee;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Concerns\BelongsToPeriod;
@@ -18,12 +17,13 @@ use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read string $id
  * @property-read string $organization_id
  * @property-read string $employee_id
- * @property-read TimeOffType $type
+ * @property-read string $time_off_type_id
  * @property-read RequestStatus $status
  * @property-read Carbon $start_date
  * @property-read Carbon|null $end_date
@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read Organization $organization
  * @property-read Employee $employee
  * @property-read Approval|null $approval
+ * @property-read TimeOffType $type
  */
 #[ScopedBy([OrganizationScope::class])]
 final class TimeOffRequest extends Model implements Approvable
@@ -56,7 +57,7 @@ final class TimeOffRequest extends Model implements Approvable
             'id' => 'string',
             'organization_id' => 'string',
             'employee_id' => 'string',
-            'type' => TimeOffType::class,
+            'time_off_type_id' => 'string',
             'status' => RequestStatus::class,
             'start_date' => 'date',
             'end_date' => 'date',
@@ -64,5 +65,13 @@ final class TimeOffRequest extends Model implements Approvable
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @return BelongsTo<TimeOffType, $this>
+     */
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(TimeOffType::class, 'time_off_type_id');
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Attributes;
 
+use App\Enums\Support\SessionKey;
 use App\Models\Organization;
 use Attribute;
 use Illuminate\Contracts\Container\Container;
@@ -18,9 +19,9 @@ final class CurrentOrganization implements ContextualAttribute
      */
     public static function resolve(self $attribute, Container $container): ?Organization
     {
-        $organizationId = Session::get('current_organization');
+        $organizationId = Session::get(SessionKey::CurrentOrganization->value);
 
-        if (! $organizationId) {
+        if (!$organizationId) {
             return null;
         }
 

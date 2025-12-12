@@ -71,6 +71,12 @@ final class Organization extends Model
         return $this->hasMany(Period::class);
     }
 
+    /** @return HasMany<TimeOffType, $this> */
+    public function timeOffTypes(): HasMany
+    {
+        return $this->hasMany(TimeOffType::class);
+    }
+
     public function hasLocationConfigured(): bool
     {
         return $this->country_id !== null;

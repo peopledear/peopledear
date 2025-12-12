@@ -8,8 +8,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -40,7 +39,8 @@ return new class extends Migration
             $table->boolean('requires_justification');
             $table->boolean('requires_justification_document');
             $table->unsignedSmallInteger('balance_mode');
-            $table->jsonb('balance_config');
+            $table->jsonb('balance_config')
+                ->nullable();
 
         });
     }

@@ -7,37 +7,32 @@ namespace App\Data\PeopleDear\TimeOffType;
 use App\Enums\PeopleDear\TimeOffBalanceMode;
 use App\Enums\PeopleDear\TimeOffUnit;
 use App\Enums\Support\TimeOffIcon;
-use Carbon\Carbon;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\EnumCast;
+use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 use Spatie\LaravelData\Optional;
 
-final class TimeOffTypeData extends Data
+/**
+ * @method array<string, mixed> toArray()
+ */
+#[MapName(SnakeCaseMapper::class)]
+final class CreateTimeOffTypeData extends Data
 {
-    /**
-     * @param  array<int, TimeOffUnit>  $allowedUnits
-     */
     public function __construct(
-        public readonly string $id,
-        public readonly string $organizationId,
-        public readonly Optional|int $fallbackApprovalRoleId,
         public readonly string $name,
-        public readonly Optional|string $description,
         public readonly bool $isSystem,
+        /** @var array<int, TimeOffUnit> */
         public readonly array $allowedUnits,
-        #[WithCast(EnumCast::class, TimeOffIcon::class)]
         public readonly TimeOffIcon $icon,
         public readonly string $color,
         public readonly bool $isActive,
         public readonly bool $requiresApproval,
         public readonly bool $requiresJustification,
         public readonly bool $requiresJustificationDocument,
-        #[WithCast(EnumCast::class, TimeOffBalanceMode::class)]
         public readonly TimeOffBalanceMode $balanceMode,
-        public readonly ?TimeOffTypeBalanceConfigData $balanceConfig,
-        public readonly Carbon $createdAt,
-        public readonly Carbon $updatedAt,
+        public readonly null|TimeOffTypeBalanceConfigData|Optional $balanceConfig,
+        public readonly ?string $description = null,
+        public readonly ?int $fallbackApprovalRoleId = null,
     ) {}
 
 }

@@ -39,6 +39,7 @@ use Spatie\Permission\Models\Role;
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon|null $deleted_at
+ * @property-read ?Role $fallbackApprovalRole
  */
 #[ScopedBy(OrganizationScope::class)]
 final class TimeOffType extends Model

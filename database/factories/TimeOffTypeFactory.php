@@ -48,7 +48,7 @@ final class TimeOffTypeFactory extends Factory
     public function withFallbackApprovalRole(): self
     {
 
-        $role = Role::findByName(\App\Enums\PeopleDear\Role::Owner->value);
+        $role = Role::findByName(\App\Enums\PeopleDear\SystemRole::Owner->value);
 
         return $this->state(fn (array $attributes): array => [
             'fallback_approval_role_id' => $role->id,

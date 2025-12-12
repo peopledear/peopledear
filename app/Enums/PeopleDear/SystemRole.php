@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums\PeopleDear;
 
-enum Role: string
+enum SystemRole: string
 {
     case Employee = 'employee';
     case Manager = 'manager';

@@ -98,10 +98,20 @@ export enum TimeOffTypeEnum {
 }
 
 export interface TimeOffType {
-    type: TimeOffTypeEnum;
-    label: string;
-    color: string;
+    id: string;
+    created_at: string;
+    updated_at: string;
+    organizationId: string;
+    organization: Organization;
+    fallbackApprovalRoleId: number;
+    name: string;
+    description: string;
+    isSystem: boolean;
+    allowedUnits: string[];
     icon: string;
+    color: string;
+    isActive: boolean;
+    requiresApproval: boolean;
 }
 
 export type EnumOptions = Record<number, string>;

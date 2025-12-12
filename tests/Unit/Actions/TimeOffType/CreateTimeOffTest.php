@@ -51,7 +51,6 @@ test('create a time off with nullable balance config',
             $this->organization,
             $sickLeaveData
         );
-        
 
         expect($sickLeaveTimeOffType)
             ->toBeInstanceOf(TimeOffType::class)

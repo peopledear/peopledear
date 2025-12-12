@@ -11,14 +11,13 @@ use App\Models\TimeOffType;
 final class CreateTimeOffType
 {
     public function handle(
-        Organization          $organization,
+        Organization $organization,
         CreateTimeOffTypeData $createTimeOffTypeData
-    ): TimeOffType
-    {
+    ): TimeOffType {
         return TimeOffType::query()
             ->create([
                 ...$createTimeOffTypeData->toArray(),
-                'organization_id' => $organization->id
+                'organization_id' => $organization->id,
             ]);
     }
 }

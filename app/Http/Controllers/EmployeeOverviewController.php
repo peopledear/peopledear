@@ -12,7 +12,6 @@ use App\Enums\PeopleDear\TimeOffType;
 use App\Models\Employee;
 use App\Queries\CurrentVacationBalanceQuery;
 use App\Queries\LatestUserTimeOffRequestsQuery;
-use App\Queries\RoleQuery;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,8 +21,7 @@ final class EmployeeOverviewController
     public function index(
         #[CurrentEmployee] Employee $employee,
         LatestUserTimeOffRequestsQuery $latestUserTimeOffRequestsQuery,
-        CurrentVacationBalanceQuery $currentVacationBalanceQuery,
-        RoleQuery $roleQuery
+        CurrentVacationBalanceQuery $currentVacationBalanceQuery
     ): Response {
 
         $timeOffRequests = $latestUserTimeOffRequestsQuery

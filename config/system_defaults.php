@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
 use App\Enums\PeopleDear\CarryOverType;
 use App\Enums\PeopleDear\TimeOffBalanceMode;
@@ -46,5 +48,5 @@ return [
             'balance_mode' => TimeOffBalanceMode::None,
             'description' => 'Sick leave for employees',
         ],
-    ]
+    ],
 ];

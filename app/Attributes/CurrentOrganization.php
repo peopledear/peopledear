@@ -21,7 +21,7 @@ final class CurrentOrganization implements ContextualAttribute
     {
         $organizationId = Session::get(SessionKey::CurrentOrganization->value);
 
-        if (!$organizationId) {
+        if (! $organizationId) {
             return null;
         }
 

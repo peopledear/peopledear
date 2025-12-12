@@ -19,7 +19,7 @@ final class RoleQuery
     {
         $query = Role::query();
 
-        if ($this->role) {
+        if ($this->role instanceof SystemRole) {
             $query->where('name', $this->role);
         }
 

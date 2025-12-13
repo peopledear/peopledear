@@ -9,7 +9,7 @@ use Spatie\LaravelData\Data;
 final class RequestStatusData extends Data
 {
     public function __construct(
-        public readonly int $status,
+        public readonly int $value,
         public readonly string $label,
         public readonly string $icon,
         public readonly string $color,

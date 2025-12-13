@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Period;
 use App\Models\TimeOffRequest;
+use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
@@ -33,10 +34,14 @@ final class TimeOffRequestSeeder extends Seeder
                 ->where('status', PeriodStatus::Active)
                 ->first();
 
+            /** @var TimeOffType $vacationTimeOffType */
+            $vacationTimeOffType = $organization->timeOffTypes()->first();
+
             TimeOffRequest::factory()
                 ->for($employee)
                 ->for($organization)
                 ->for($activePeriod)
+                ->for($vacationTimeOffType, 'type')
                 ->count(3)
                 ->createQuietly();
 

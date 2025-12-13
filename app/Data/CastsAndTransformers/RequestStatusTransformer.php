@@ -18,7 +18,7 @@ final class RequestStatusTransformer implements Transformer
     public function transform(DataProperty $property, mixed $value, TransformationContext $context): RequestStatusData
     {
         return new RequestStatusData(
-            status: $value->value,
+            value: $value->value,
             label: $value->label(),
             icon: $value->icon()->value,
             color: $value->color(),

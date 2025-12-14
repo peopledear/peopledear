@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\TimeOffRequest;
 
-use App\Enums\PeopleDear\TimeOffType;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -22,7 +21,7 @@ final class CreateTimeOffRequestData extends Data
         public readonly string $organizationId,
         public readonly string $employeeId,
         public readonly string $periodId,
-        public readonly TimeOffType $type,
+        public readonly string $timeOffTypeId,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.v\Z')]
         public readonly CarbonImmutable $startDate,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.v\Z')]

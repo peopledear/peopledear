@@ -19,7 +19,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import AppLayout from "@/layouts/app-layout";
-import { Employee, Period, SharedData } from "@/types";
+import { Employee, Period, SharedData, TimeOffType } from "@/types";
+import { TimeOffUnitEnum } from "@/types/enums";
 import EmployeeOverviewController from "@/wayfinder/actions/App/Http/Controllers/EmployeeOverviewController";
 import EmployeeTimeOffController from "@/wayfinder/actions/App/Http/Controllers/EmployeeTimeOffController";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
@@ -30,13 +31,13 @@ import type { DateRange } from "react-day-picker";
 interface CreateTimeOffProps {
     period: Period;
     employee: Employee;
-    types: Record<number, string>;
+    timeOffTypes: TimeOffType[];
 }
 
 export default function CreateTimeOffPage({
     period,
-    types,
     employee,
+    timeOffTypes,
 }: CreateTimeOffProps) {
     const page = usePage<SharedData>();
     const { previousPath } = page.props;
@@ -46,11 +47,14 @@ export default function CreateTimeOffPage({
             ? EmployeeOverviewController.index().url
             : previousPath;
 
-    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
+    const [selectedTimeOffType, setSelectedTimeOffType] = React.useState<
+        TimeOffType | undefined
+    >();
 
     const { data, setData, post, processing, errors } = useForm({
         period_id: period.id,
-        type: "",
+        time_off_type_id: undefined as string | undefined,
         is_half_day: false,
         start_date: undefined as Date | undefined,
         end_date: undefined as Date | undefined,
@@ -133,31 +137,42 @@ export default function CreateTimeOffPage({
 
                                     <Select
                                         name="type"
-                                        value={data.type}
-                                        onValueChange={(value) =>
-                                            setData("type", value)
-                                        }
+                                        value={data.time_off_type_id}
+                                        onValueChange={(value: string) => {
+                                            setData("time_off_type_id", value);
+                                            setSelectedTimeOffType(
+                                                timeOffTypes.find(
+                                                    (type: TimeOffType) =>
+                                                        type.id === value,
+                                                ),
+                                            );
+                                        }}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Choose time off type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {Object.entries(types).map(
-                                                ([value, label]) => (
+                                            {timeOffTypes.map(
+                                                (timeOffType: TimeOffType) => (
                                                     <SelectItem
-                                                        key={value}
-                                                        value={value}
+                                                        key={timeOffType.id}
+                                                        value={timeOffType.id}
                                                     >
-                                                        {label}
+                                                        {timeOffType.name}
                                                     </SelectItem>
                                                 ),
                                             )}
                                         </SelectContent>
                                     </Select>
-                                    <InputError message={errors.type} />
+                                    <InputError
+                                        message={errors.time_off_type_id}
+                                    />
                                 </Field>
 
-                                {data.type === "1" && (
+                                {selectedTimeOffType?.allowedUnits.find(
+                                    (timeOffUnit: number) =>
+                                        timeOffUnit === TimeOffUnitEnum.HalfDay,
+                                ) && (
                                     <Field>
                                         <div className="flex items-start gap-3">
                                             <Checkbox

@@ -4,38 +4,41 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use App\Enums\PeopleDear\PeriodStatus;
-use App\Models\Period;
+use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
-final class PeriodQuery
+final class TimeOffTypeQuery
 {
     private Builder $builder;
 
     public function __invoke(): self
     {
-        $this->builder = Period::query();
+        $this->builder = TimeOffType::query();
 
         return $this;
     }
 
     /**
-     * @return Builder<Period>
+     * @return Builder<TimeOffType>
      */
     public function make(): Builder
     {
         return $this->builder;
     }
 
-    public function first(): ?Period
+    /**
+     * @return Collection<TimeOffType>
+     */
+    public function get(): Collection
     {
-        return $this->builder->first();
+        return $this->builder->get();
     }
 
     public function active(): self
     {
         $this->builder
-            ->where('status', PeriodStatus::Active);
+            ->where('is_active', true);
 
         return $this;
     }

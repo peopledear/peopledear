@@ -76,6 +76,13 @@ export interface Organization {
     phone?: string;
 }
 
+export enum TimeOffUnitEnum {
+    Day = 1,
+    HalfDay = 2,
+    Hour = 3,
+    Minute = 4,
+}
+
 export enum RequestStatusEnum {
     Pending = 1,
     Approved = 2,
@@ -107,7 +114,7 @@ export interface TimeOffType {
     name: string;
     description: string;
     isSystem: boolean;
-    allowedUnits: string[];
+    allowedUnits: number[];
     icon: string;
     color: string;
     isActive: boolean;

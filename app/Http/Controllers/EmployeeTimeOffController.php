@@ -8,16 +8,18 @@ use App\Actions\TimeOffRequest\CreateTimeOffRequest as CreateTimeOffRequestActio
 use App\Attributes\CurrentEmployee;
 use App\Data\PeopleDear\TimeOffRequest\CreateTimeOffRequestData;
 use App\Data\PeopleDear\TimeOffRequest\TimeOffRequestData;
+use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\TimeOffType;
 use App\Http\Requests\CreateTimeOffRequest;
 use App\Models\Employee;
 use App\Models\Period;
 use App\Queries\CurrentEmployeeQuery;
 use App\Queries\EmployeeTimeOffRequestsQuery;
 use App\Queries\PeriodQuery;
+use App\Queries\TimeOffTypeQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -46,7 +48,6 @@ final class EmployeeTimeOffController
 
         return Inertia::render('employee-time-offs/index', [
             'timeOffRequests' => TimeOffRequestData::collect($timeOffRequests),
-            'types' => TimeOffType::options(),
             'statuses' => RequestStatus::options(),
             'filters' => [
                 'status' => $status,
@@ -55,13 +56,25 @@ final class EmployeeTimeOffController
         ]);
     }
 
-    public function create(CurrentEmployeeQuery $currentEmployeeQuery, PeriodQuery $periodQuery): Response
-    {
+    public function create(
+        CurrentEmployeeQuery $currentEmployeeQuery,
+        PeriodQuery $periodQuery,
+        TimeOffTypeQuery $timeOffTypeQuery,
+    ): Response {
         /** @var Period $period */
-        $period = $periodQuery->active()->first();
+        $period = $periodQuery()
+            ->active()
+            ->first();
+
+        $timeOffTypes = $timeOffTypeQuery()
+            ->active()
+            ->get();
 
         return Inertia::render('employee-time-offs/create', [
-            'types' => TimeOffType::options(),
+            'timeOffTypes' => TimeOffTypeData::collect(
+                $timeOffTypes,
+                Collection::class
+            ),
             'period' => $period,
             'employee' => $currentEmployeeQuery->builder()
                 ->with('organization')
@@ -75,15 +88,20 @@ final class EmployeeTimeOffController
     public function store(
         CreateTimeOffRequest $request,
         CreateTimeOffRequestAction $createTimeOff,
-        PeriodQuery $periodQuery,
+        TimeOffTypeQuery $timeOffTypeQuery,
         #[CurrentEmployee] Employee $employee,
     ): RedirectResponse {
+
+        $timeOffType = $timeOffTypeQuery()
+            ->make()
+            ->find($request->string('time_off_type_id'));
 
         $createTimeOff->handle(
             CreateTimeOffRequestData::from([
                 ...$request->validated(),
             ]),
-            $employee
+            $employee,
+            $timeOffType,
         );
 
         return to_route('employee.overview')

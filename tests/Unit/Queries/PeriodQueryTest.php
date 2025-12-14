@@ -10,40 +10,54 @@ use Illuminate\Support\Facades\Session;
 
 beforeEach(function (): void {
 
-    $this->organization = Organization::factory()
-        ->create();
+    /** @var Organization $organization */
+    $organization = Organization::factory()
+        ->createQuietly();
+
+    $this->organization = $organization;
 
     Session::put(SessionKey::CurrentOrganization->value, $this->organization->id);
 
-    $this->activePeriod = Period::factory()
+    /** @var Period $activePeriod */
+    $activePeriod = Period::factory()
         ->for($this->organization)
         ->active()
-        ->create();
+        ->createQuietly();
 
-    $this->organization2 = Organization::factory()
-        ->create();
+    $this->activePeriod = $activePeriod;
 
-    $this->activePeriod2 = Period::factory()
+    /** @var Organization $organization2 */
+    $organization2 = Organization::factory()
+        ->createQuietly();
+
+    $this->organization2 = $organization2;
+
+    /** @var Period $activePeriod2 */
+    $activePeriod2 = Period::factory()
         ->for($this->organization2)
         ->active()
-        ->create();
+        ->createQuietly();
+
+    $this->activePeriod2 = $activePeriod2;
 
     $this->query = app(PeriodQuery::class);
 
 });
 
-test('period is active', function (): void {
+test('returns only active periods for current organization', function (): void {
 
-    $result = $this->query->active()->first();
+    /** @var PeriodQuery $query */
+    $query = $this->query;
 
-    $periods = $this->query->builder()->get();
+    /** @var Period $result */
+    $result = $query()->active()->first();
 
-    expect($result)->toBeInstanceOf(Period::class)
-        ->and($result->id)
-        ->toBe($this->activePeriod->id)
-        ->and($result->id)
-        ->not
-        ->toBe($this->activePeriod2->id)
+    $periods = $query()->active()->make()->get();
+
+    expect($result)
+        ->toBeInstanceOf(Period::class)
+        ->id->toBe($this->activePeriod->id)
+        ->id->not->toBe($this->activePeriod2->id)
         ->and($periods)
         ->toHaveCount(1);
 

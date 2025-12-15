@@ -27,7 +27,7 @@ export function AppContent({
                     className="mx-auto w-full max-w-[1920px] px-4 pt-4 pb-20 sm:px-6 sm:pt-10"
                     data-slot="main-content"
                 >
-                    <div className="flex w-full flex-col md:items-start justify-center gap-x-6 gap-y-4 lg:flex-row">
+                    <div className="flex w-full flex-col justify-center gap-x-6 gap-y-4 md:items-start lg:flex-row">
                         {children}
                     </div>
                 </div>

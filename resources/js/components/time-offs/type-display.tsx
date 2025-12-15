@@ -15,7 +15,7 @@ export default function TimeOffTypeDisplay({
             <TimeOffIcon timeOffType={type} />
 
             <div className="flex flex-col">
-                <span className="font-medium">{type.label}</span>
+                <span className="font-medium">{type.name}</span>
                 {subtitle && (
                     <span className="text-muted-foreground text-sm">
                         {subtitle}

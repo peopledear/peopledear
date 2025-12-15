@@ -1,6 +1,13 @@
 import Organization from "@/wayfinder/routes/org/settings/organization";
 import { InertiaLinkProps } from "@inertiajs/react";
 import { LucideIcon } from "lucide-react";
+import {
+    RequestStatusEnum,
+    TimeOffTypeEnum,
+    TimeOffUnitEnum,
+} from "./enums";
+
+export { RequestStatusEnum, TimeOffTypeEnum, TimeOffUnitEnum };
 
 export interface Auth {
     user: User;
@@ -76,32 +83,11 @@ export interface Organization {
     phone?: string;
 }
 
-export enum TimeOffUnitEnum {
-    Day = 1,
-    HalfDay = 2,
-    Hour = 3,
-    Minute = 4,
-}
-
-export enum RequestStatusEnum {
-    Pending = 1,
-    Approved = 2,
-    Rejected = 3,
-    Cancelled = 4,
-}
-
 export interface RequestStatus {
     status: RequestStatusEnum;
     label: string;
     color: string;
     icon: string;
-}
-
-export enum TimeOffTypeEnum {
-    Holiday = 1,
-    SickLeave = 2,
-    PersonalDay = 3,
-    Bereavement = 4,
 }
 
 export interface TimeOffType {

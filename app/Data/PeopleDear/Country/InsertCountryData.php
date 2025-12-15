@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\Country;
 
-use App\Transformers\ArrayableToJsonTransformer;
+use App\Data\CastsAndTransformers\ArrayableToJsonTransformer;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Transformers\ArrayableToJsonTransformer;
+use App\Data\CastsAndTransformers\ArrayableToJsonTransformer;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 

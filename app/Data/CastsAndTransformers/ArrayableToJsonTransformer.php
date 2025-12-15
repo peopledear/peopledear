@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Transformers;
+namespace App\Data\CastsAndTransformers;
 
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\CountrySubdivision;
 
+use App\Data\CastsAndTransformers\ArrayableToJsonTransformer;
 use App\Enums\PeopleDear\CountrySubdivisionType;
-use App\Transformers\ArrayableToJsonTransformer;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;

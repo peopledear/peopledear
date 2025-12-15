@@ -20,6 +20,19 @@ beforeEach(function (): void {
     $this->user->assignRole($peopleManagerRole);
 });
 
+test('renders the create page', function (): void {
+    TimeOffType::factory()
+        ->for($this->organization)
+        ->count(3)
+        ->create();
+
+    $response = $this->actingAs($this->user)
+        ->get(route('org.time-off-types.create'));
+
+    $response->assertOk();
+
+});
+
 test('people manager can view time off types index', function (): void {
     TimeOffType::factory()
         ->for($this->organization)

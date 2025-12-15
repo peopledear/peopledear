@@ -94,8 +94,16 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                 ->middleware('can:organizations.edit')
                 ->name('offices.destroy');
 
-            Route::get('time-off-types', [OrganizationTimeOffTypesController::class, 'index'])
-                ->name('time-off-types.index');
+            Route::prefix('time-off-types')
+                ->as('time-off-types.')->group(function (): void {
+
+                    Route::get('/', [OrganizationTimeOffTypesController::class, 'index'])
+                        ->name('index');
+
+                    Route::get('create', [OrganizationTimeOffTypesController::class, 'create'])
+                        ->name('create');
+
+                });
 
         });
 

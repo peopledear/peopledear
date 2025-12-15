@@ -25,4 +25,9 @@ final class OrganizationTimeOffTypesController
             'timeOffTypes' => TimeOffTypeData::collect($timeOffTypes, Collection::class),
         ]);
     }
+
+    public function create(): Response
+    {
+        return Inertia::render('org-time-off-types/create');
+    }
 }

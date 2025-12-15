@@ -11,8 +11,11 @@ import AdminLayout from "@/layouts/org-layout";
 import OrgSettingsLayout from "@/layouts/settings/org-layout";
 import { cn } from "@/lib/utils";
 import { TimeOffType } from "@/types";
-import { Head } from "@inertiajs/react";
-import { Circle, CircleCheck } from "lucide-react";
+import { Head, Link } from "@inertiajs/react";
+import { Circle, CircleCheck, PlusIcon } from "lucide-react";
+import OrganizationTimeOffTypesController
+    from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
+import { Button } from "@/components/ui/button";
 
 interface TimeOffTypesPageProps {
     timeOffTypes: TimeOffType[];
@@ -31,9 +34,21 @@ export default function TimeOffTypesPage({
                     <CardHeader>
                         <CardTitle>Time Off Types</CardTitle>
                         <CardDescription>
-                            Manage Time Off Types of your organization, edit
-                            system types and bring your own organization time
-                            off types.
+                            <div className="flex flex-col md:flex-row items-start justify-between space-y-4 md:space-x-6">
+                                <div>
+                                    Manage Time Off Types of your organization,
+                                    edit system types and bring your own
+                                    organization time off types.
+                                </div>
+                                <div>
+                                    <Link href={OrganizationTimeOffTypesController.create()}>
+                                        <Button variant="outline" className="md:-mt-2">
+                                            <PlusIcon className="size-4" />
+                                            Create Time Off Type
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </div>
                         </CardDescription>
                     </CardHeader>
                     <CardContent>

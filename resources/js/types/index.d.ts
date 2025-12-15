@@ -1,11 +1,7 @@
 import Organization from "@/wayfinder/routes/org/settings/organization";
 import { InertiaLinkProps } from "@inertiajs/react";
 import { LucideIcon } from "lucide-react";
-import {
-    RequestStatusEnum,
-    TimeOffTypeEnum,
-    TimeOffUnitEnum,
-} from "./enums";
+import { RequestStatusEnum, TimeOffTypeEnum, TimeOffUnitEnum } from "./enums";
 
 export { RequestStatusEnum, TimeOffTypeEnum, TimeOffUnitEnum };
 

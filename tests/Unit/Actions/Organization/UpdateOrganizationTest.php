@@ -7,7 +7,7 @@ use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(UpdateOrganization::class);
+    $this->action = resolve(UpdateOrganization::class);
 });
 
 test('updates organization with all fields',

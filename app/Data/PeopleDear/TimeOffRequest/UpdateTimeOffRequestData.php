@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Data\PeopleDear\TimeOffRequest;
 
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\TimeOffType;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
@@ -19,7 +18,7 @@ use Spatie\LaravelData\Optional;
 final class UpdateTimeOffRequestData extends Data
 {
     public function __construct(
-        public readonly TimeOffType|Optional $type,
+        public readonly string|Optional $timeOffTypeId,
         public readonly RequestStatus|Optional $status,
         public readonly CarbonImmutable|Optional $startDate,
         public readonly CarbonImmutable|Optional|null $endDate,

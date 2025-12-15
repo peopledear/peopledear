@@ -19,7 +19,7 @@ test('renders organization employees index',
 
         $organization = Organization::factory()->create();
 
-        app(SetCurrentOrganization::class)
+        resolve(SetCurrentOrganization::class)
             ->handle($organization);
 
         $employees = Employee::factory()

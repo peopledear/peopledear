@@ -11,7 +11,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(UpdateOffice::class);
+    $this->action = resolve(UpdateOffice::class);
 });
 
 test('updates office with all fields',

@@ -10,11 +10,17 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class PeriodQuery
 {
+    /** @var Builder<Period> */
     private Builder $builder;
 
-    public function __invoke(): self
+    public function __invoke(?string $id = null): self
     {
         $this->builder = Period::query();
+
+        if ($id) {
+            $this->builder
+                ->where('id', $id);
+        }
 
         return $this;
     }

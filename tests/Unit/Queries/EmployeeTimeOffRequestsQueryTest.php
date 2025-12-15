@@ -3,15 +3,25 @@
 declare(strict_types=1);
 
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\TimeOffType;
 use App\Models\Employee;
 use App\Models\Organization;
+use App\Models\Period;
 use App\Models\TimeOffRequest;
+use App\Models\TimeOffType;
 use App\Models\User;
 use App\Queries\EmployeeTimeOffRequestsQuery;
 
 beforeEach(function (): void {
     $this->organization = Organization::factory()->create();
+
+    $this->period = Period::factory()
+        ->for($this->organization)
+        ->active()
+        ->create();
+
+    $this->timeOffType = TimeOffType::factory()
+        ->for($this->organization)
+        ->create();
 
     $this->user = User::factory()->create();
 
@@ -22,7 +32,7 @@ beforeEach(function (): void {
 
     $this->actingAs($this->user);
 
-    $this->query = app(EmployeeTimeOffRequestsQuery::class);
+    $this->query = resolve(EmployeeTimeOffRequestsQuery::class);
 });
 
 test('returns time off requests for current user ordered by created_at desc', function (): void {
@@ -30,12 +40,16 @@ test('returns time off requests for current user ordered by created_at desc', fu
     $oldRequest = TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->create(['created_at' => now()->subDays(2)]);
 
     /** @var TimeOffRequest $newRequest */
     $newRequest = TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->create(['created_at' => now()]);
 
     $results = $this->query->builder()->get();
@@ -58,11 +72,15 @@ test('does not return requests from other employees', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->create();
 
     TimeOffRequest::factory()
         ->for($otherEmployee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->create();
 
     $results = $this->query->builder()->get();
@@ -74,11 +92,15 @@ test('withStatus filters by RequestStatus enum value', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Approved]);
 
     $results = $this->query
@@ -96,72 +118,18 @@ test('withStatus returns self for chaining', function (): void {
     expect($result)->toBe($this->query);
 });
 
-test('withType filters by TimeOffType enum value', function (): void {
-    TimeOffRequest::factory()
-        ->for($this->employee)
-        ->for($this->organization)
-        ->create(['type' => TimeOffType::Vacation]);
-
-    TimeOffRequest::factory()
-        ->for($this->employee)
-        ->for($this->organization)
-        ->create(['type' => TimeOffType::SickLeave]);
-
-    $results = $this->query
-        ->withType(TimeOffType::Vacation->value)
-        ->builder()
-        ->get();
-
-    expect($results)->toHaveCount(1)
-        ->and($results->first()->type)->toBe(TimeOffType::Vacation);
-});
-
 test('withType returns self for chaining', function (): void {
-    $result = $this->query->withType(TimeOffType::Vacation->value);
+    $result = $this->query->withType($this->timeOffType->id);
 
     expect($result)->toBe($this->query);
-});
-
-test('combined status and type filters return correct results', function (): void {
-    TimeOffRequest::factory()
-        ->for($this->employee)
-        ->for($this->organization)
-        ->create([
-            'status' => RequestStatus::Pending,
-            'type' => TimeOffType::Vacation,
-        ]);
-
-    TimeOffRequest::factory()
-        ->for($this->employee)
-        ->for($this->organization)
-        ->create([
-            'status' => RequestStatus::Approved,
-            'type' => TimeOffType::Vacation,
-        ]);
-
-    TimeOffRequest::factory()
-        ->for($this->employee)
-        ->for($this->organization)
-        ->create([
-            'status' => RequestStatus::Pending,
-            'type' => TimeOffType::SickLeave,
-        ]);
-
-    $results = $this->query
-        ->withStatus(RequestStatus::Pending->value)
-        ->withType(TimeOffType::Vacation->value)
-        ->builder()
-        ->get();
-
-    expect($results)->toHaveCount(1)
-        ->and($results->first()->status)->toBe(RequestStatus::Pending)
-        ->and($results->first()->type)->toBe(TimeOffType::Vacation);
 });
 
 test('null status does not apply filter', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->count(3)
         ->create();
 
@@ -177,6 +145,8 @@ test('null type does not apply filter', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
         ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
         ->count(3)
         ->create();
 
@@ -186,4 +156,33 @@ test('null type does not apply filter', function (): void {
         ->get();
 
     expect($results)->toHaveCount(3);
+});
+
+test('withType filters by time off type id', function (): void {
+    /** @var TimeOffType $otherTimeOffType */
+    $otherTimeOffType = TimeOffType::factory()
+        ->for($this->organization)
+        ->create();
+
+    TimeOffRequest::factory()
+        ->for($this->employee)
+        ->for($this->organization)
+        ->for($this->period)
+        ->for($this->timeOffType, 'type')
+        ->create();
+
+    TimeOffRequest::factory()
+        ->for($this->employee)
+        ->for($this->organization)
+        ->for($this->period)
+        ->for($otherTimeOffType, 'type')
+        ->create();
+
+    $results = $this->query
+        ->withType($this->timeOffType->id)
+        ->builder()
+        ->get();
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first()->time_off_type_id)->toBe($this->timeOffType->id);
 });

@@ -10,7 +10,7 @@ use Illuminate\Database\UniqueConstraintViolationException;
 
 beforeEach(function (): void {
 
-    $this->action = app(CreatePeriod::class);
+    $this->action = resolve(CreatePeriod::class);
 
 });
 

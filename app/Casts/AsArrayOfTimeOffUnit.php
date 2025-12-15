@@ -28,7 +28,7 @@ final class AsArrayOfTimeOffUnit implements CastsAttributes
         /** @var array<int, int> $decoded */
         $decoded = json_decode($value, true);
 
-        return array_map(fn (int $item): TimeOffUnit => TimeOffUnit::from($item), $decoded);
+        return array_map(TimeOffUnit::from(...), $decoded);
 
     }
 

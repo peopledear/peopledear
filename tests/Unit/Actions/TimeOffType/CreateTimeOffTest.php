@@ -18,7 +18,7 @@ beforeEach(function (): void {
     $this->organization = Organization::factory()
         ->create();
 
-    $this->action = app(CreateTimeOffType::class);
+    $this->action = resolve(CreateTimeOffType::class);
 
 });
 

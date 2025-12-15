@@ -13,7 +13,7 @@ beforeEach(function (): void {
     $this->organization = Organization::factory()
         ->createQuietly();
 
-    $this->action = app(CreateSystemTimeOffTypes::class);
+    $this->action = resolve(CreateSystemTimeOffTypes::class);
     $this->peopleManagerRole = Role::findByName(SystemRole::PeopleManager->value);
 });
 

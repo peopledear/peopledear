@@ -13,7 +13,7 @@ final class EmployeeTimeOffRequestsQuery
 {
     private ?int $status = null;
 
-    private ?int $type = null;
+    private ?string $timeOffTypeId = null;
 
     public function __construct(
         #[CurrentEmployee] private readonly ?Employee $employee,
@@ -32,8 +32,8 @@ final class EmployeeTimeOffRequestsQuery
             $query->where('status', $this->status);
         }
 
-        if ($this->type !== null) {
-            $query->where('type', $this->type);
+        if ($this->timeOffTypeId !== null) {
+            $query->where('time_off_type_id', $this->timeOffTypeId);
         }
 
         return $query;
@@ -46,9 +46,9 @@ final class EmployeeTimeOffRequestsQuery
         return $this;
     }
 
-    public function withType(?int $type): self
+    public function withType(?string $timeOffTypeId): self
     {
-        $this->type = $type;
+        $this->timeOffTypeId = $timeOffTypeId;
 
         return $this;
     }

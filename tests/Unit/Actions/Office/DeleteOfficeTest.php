@@ -8,7 +8,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(DeleteOffice::class);
+    $this->action = resolve(DeleteOffice::class);
 });
 
 test('deletes office and its address',

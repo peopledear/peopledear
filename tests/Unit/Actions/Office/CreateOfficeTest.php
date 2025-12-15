@@ -11,7 +11,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(CreateOffice::class);
+    $this->action = resolve(CreateOffice::class);
 });
 
 test('creates office with address',

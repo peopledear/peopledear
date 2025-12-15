@@ -9,7 +9,7 @@ use App\Models\Period;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
 beforeEach(function (): void {
-    $this->action = app(ClosePeriods::class);
+    $this->action = resolve(ClosePeriods::class);
 });
 
 test('closes periods',

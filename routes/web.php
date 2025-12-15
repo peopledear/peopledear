@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\ApprovalQueueController;
 use App\Http\Controllers\DeleteNotificationController;
 use App\Http\Controllers\DropdownNotificationController;
 use App\Http\Controllers\EmployeeOverviewController;
@@ -66,16 +65,6 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                 ->group(function (): void {
                     Route::get('/', [OrganizationEmployeeController::class, 'index'])
                         ->name('index');
-                });
-
-            Route::as('approvals.')->prefix('approvals')
-                ->group(function (): void {
-                    Route::get('/', [ApprovalQueueController::class, 'index'])
-                        ->name('index');
-                    Route::post('/{approval}/approve', [ApprovalQueueController::class, 'approve'])
-                        ->name('approve');
-                    Route::post('/{approval}/reject', [ApprovalQueueController::class, 'reject'])
-                        ->name('reject');
                 });
 
             Route::get('create', [OrganizationController::class, 'create'])

@@ -15,17 +15,18 @@ final class TimeOffRequestQuery
     /** @var Builder<TimeOffRequest> */
     private Builder $builder;
 
-    public function __invoke(?string $employeeId = null): self
+    public function __invoke(?string $id = null): self
     {
         $this->builder = TimeOffRequest::query();
 
-        if ($employeeId) {
-            $this->ofEmployee($employeeId);
+        if ($id) {
+            $this->builder->where('id', $id);
         }
 
         return $this;
     }
 
+    /** @return Builder<TimeOffRequest> */
     public function make(): Builder
     {
         return $this->builder;
@@ -42,6 +43,9 @@ final class TimeOffRequestQuery
         return $this->builder->first();
     }
 
+    /**
+     * @return LengthAwarePaginator<int, TimeOffRequest>
+     */
     public function paginate(int $perPage = 15): LengthAwarePaginator
     {
         return $this->builder->paginate($perPage);
@@ -53,7 +57,7 @@ final class TimeOffRequestQuery
     public function withRelations(array $relations = []): self
     {
 
-        if (empty($relations)) {
+        if ($relations === []) {
             $relations = ['employee', 'organization', 'period', 'type'];
         }
 
@@ -81,6 +85,13 @@ final class TimeOffRequestQuery
     public function ofStatus(RequestStatus $status): self
     {
         $this->builder->where('status', $status->value);
+
+        return $this;
+    }
+
+    public function ofType(string $timeOffTypeId): self
+    {
+        $this->builder->where('time_off_type_id', $timeOffTypeId);
 
         return $this;
     }

@@ -50,7 +50,7 @@ beforeEach(
         ]);
 
         /** @var UpsertCountrySubdivisions $this action */
-        $this->action = app(UpsertCountrySubdivisions::class);
+        $this->action = resolve(UpsertCountrySubdivisions::class);
         $this->collectionOfInsertSubdivision = $this->subdivisions->map(fn (array $subdivision): InsertCountrySubdivisionData => InsertCountrySubdivisionData::from($subdivision));
     });
 

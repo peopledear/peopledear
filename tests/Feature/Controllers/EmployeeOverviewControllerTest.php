@@ -36,7 +36,5 @@ test('renders the employee overview page', function (): void {
             ->has('employee')
             ->has('vacationBalance')
             ->has('timeOffRequests')
-            ->has('types')
-            ->has('statuses')
         );
 });

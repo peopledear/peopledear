@@ -10,11 +10,19 @@ use Illuminate\Database\Eloquent\Collection;
 
 final class TimeOffTypeQuery
 {
+    /**
+     * @var Builder<TimeOffType>
+     */
     private Builder $builder;
 
-    public function __invoke(): self
+    public function __invoke(?string $id = null): self
     {
         $this->builder = TimeOffType::query();
+
+        if ($id) {
+            $this->builder
+                ->where('id', $id);
+        }
 
         return $this;
     }
@@ -27,8 +35,13 @@ final class TimeOffTypeQuery
         return $this->builder;
     }
 
+    public function first(): ?TimeOffType
+    {
+        return $this->builder->first();
+    }
+
     /**
-     * @return Collection<TimeOffType>
+     * @return Collection<int, TimeOffType>
      */
     public function get(): Collection
     {

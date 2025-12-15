@@ -27,7 +27,7 @@ test('query returns notifications for user', function (): void {
     $this->actingAs($user);
 
     /** @var UserNotificationsQuery $query */
-    $query = app(UserNotificationsQuery::class);
+    $query = resolve(UserNotificationsQuery::class);
     $notifications = $query->builder()->get();
 
     expect($notifications)->toHaveCount(1)
@@ -53,7 +53,7 @@ test('query returns unread count', function (): void {
     $this->actingAs($user);
 
     /** @var UserNotificationsQuery $query */
-    $query = app(UserNotificationsQuery::class);
+    $query = resolve(UserNotificationsQuery::class);
 
     expect($query->unreadCount())->toBe(2);
 });
@@ -83,7 +83,7 @@ test('query orders unread notifications first', function (): void {
     $this->actingAs($user);
 
     /** @var UserNotificationsQuery $query */
-    $query = app(UserNotificationsQuery::class);
+    $query = resolve(UserNotificationsQuery::class);
     $notifications = $query->builder()->get();
 
     // Unread (Second) should come before read (First)
@@ -105,7 +105,7 @@ test('unread count returns zero for no notifications', function (): void {
     $this->actingAs($user);
 
     /** @var UserNotificationsQuery $query */
-    $query = app(UserNotificationsQuery::class);
+    $query = resolve(UserNotificationsQuery::class);
 
     expect($query->unreadCount())->toBe(0);
 });
@@ -132,7 +132,7 @@ test('unread count excludes read notifications', function (): void {
     $this->actingAs($user);
 
     /** @var UserNotificationsQuery $query */
-    $query = app(UserNotificationsQuery::class);
+    $query = resolve(UserNotificationsQuery::class);
 
     expect($query->unreadCount())->toBe(1);
 });

@@ -12,7 +12,7 @@ use App\Models\User;
 use Carbon\CarbonImmutable;
 
 beforeEach(function (): void {
-    $this->action = app(CreateEmployee::class);
+    $this->action = resolve(CreateEmployee::class);
 });
 
 test('creates employee with all fields',

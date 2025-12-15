@@ -8,7 +8,7 @@ use App\Models\Country;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(CreateOrganization::class);
+    $this->action = resolve(CreateOrganization::class);
     $this->country = Country::factory()
         ->create();
 });

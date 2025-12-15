@@ -13,7 +13,7 @@ beforeEach(function (): void {
     $contents = file_get_contents(database_path('data/countries.json'));
     $this->countries = collect(json_decode($contents, true));
     /** @var UpsertCountries $this action */
-    $this->action = app(UpsertCountries::class);
+    $this->action = resolve(UpsertCountries::class);
     $this->collectionOfInsertCountry = $this->countries->map(fn (array $country): InsertCountryData => InsertCountryData::from($country));
 });
 

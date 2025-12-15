@@ -9,7 +9,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 beforeEach(function (): void {
-    $this->action = app(SetCurrentOrganization::class);
+    $this->action = resolve(SetCurrentOrganization::class);
 });
 
 test('organization id is stored in the session',

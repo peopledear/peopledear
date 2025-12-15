@@ -15,7 +15,7 @@ beforeEach(
     function (): void {
         $this->country = Country::factory()->create();
 
-        $this->action = app(CreateRootCountrySubdivision::class);
+        $this->action = resolve(CreateRootCountrySubdivision::class);
     });
 
 test('creates root subdivision without children',

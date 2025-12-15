@@ -7,6 +7,7 @@ use App\Models\Period;
 
 test('period model has a status enum cast', function (): void {
 
+    /** @var Period $period */
     $period = Period::factory()
         ->create()
         ->fresh();

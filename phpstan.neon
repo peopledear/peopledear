@@ -5,6 +5,10 @@ includes:
 
 parameters:
 
+    parallel:
+        maximumNumberOfProcesses: 4
+        processTimeout: 300.0
+
     paths:
         - app
         - bootstrap/app.php
@@ -12,6 +16,12 @@ parameters:
         - database
         - public
         - routes
+
+    excludePaths:
+        - */vendor/*
+        - */storage/*
+        - */tests/*
+        - */node_modules/*
 
 
     level: max

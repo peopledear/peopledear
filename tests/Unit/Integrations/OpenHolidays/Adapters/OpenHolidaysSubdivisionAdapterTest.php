@@ -27,7 +27,7 @@ test('transforms simple subdivision correctly',
         $openHolidaysData = OpenHolidaysSubdivisionData::from($firstMunicipality);
 
         /** @var OpenHolidaysSubdivisionAdapter $adapter */
-        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
         $createData = $adapter->toCreateData(
             $openHolidaysData,
@@ -64,7 +64,7 @@ test('transforms nested children recursively',
         $openHolidaysData = OpenHolidaysSubdivisionData::from($aveiro);
 
         /** @var OpenHolidaysSubdivisionAdapter $adapter */
-        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
         $createData = $adapter->toCreateData(
             $openHolidaysData,
@@ -97,7 +97,7 @@ test('parses comma-separated official languages to array',
         $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithMultipleLanguages);
 
         /** @var OpenHolidaysSubdivisionAdapter $adapter */
-        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
         $createData = $adapter->toCreateData(
             $openHolidaysData,
@@ -127,7 +127,7 @@ test('inherits country languages when subdivision languages empty',
         $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithoutLanguages);
 
         /** @var OpenHolidaysSubdivisionAdapter $adapter */
-        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
         $createData = $adapter->toCreateData(
             $openHolidaysData,
@@ -152,7 +152,7 @@ test('preserves full ISO code in both code and isoCode fields',
         $openHolidaysData = OpenHolidaysSubdivisionData::from($aveiro);
 
         /** @var OpenHolidaysSubdivisionAdapter $adapter */
-        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
         $createData = $adapter->toCreateData(
             $openHolidaysData,
@@ -179,7 +179,7 @@ test('throws exception when countryId is null', function (): void {
     $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivision);
 
     /** @var OpenHolidaysSubdivisionAdapter $adapter */
-    $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+    $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
     $adapter->toCreateData(
         $openHolidaysData,
@@ -205,7 +205,7 @@ test('handles empty category array with fallback type',
         $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyCategory);
 
         /** @var OpenHolidaysSubdivisionAdapter $adapter */
-        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
         $createData = $adapter->toCreateData(
             $openHolidaysData,
@@ -235,7 +235,7 @@ test('inherits country languages when subdivision languages is empty array',
         $openHolidaysData = OpenHolidaysSubdivisionData::from($subdivisionWithEmptyLanguages);
 
         /** @var OpenHolidaysSubdivisionAdapter $adapter */
-        $adapter = app(OpenHolidaysSubdivisionAdapter::class);
+        $adapter = resolve(OpenHolidaysSubdivisionAdapter::class);
 
         $createData = $adapter->toCreateData(
             $openHolidaysData,

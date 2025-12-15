@@ -9,7 +9,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(CreateAddress::class);
+    $this->action = resolve(CreateAddress::class);
 });
 
 test('creates address for addressable model',

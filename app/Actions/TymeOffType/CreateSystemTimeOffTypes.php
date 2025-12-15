@@ -10,6 +10,7 @@ use App\Models\Organization;
 use App\Queries\RoleQuery;
 use Illuminate\Container\Attributes\Config;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Throwable;
 
 final readonly class CreateSystemTimeOffTypes
@@ -31,6 +32,7 @@ final readonly class CreateSystemTimeOffTypes
 
         DB::transaction(function () use ($organization): void {
 
+            /** @var Role $peopleManagerRole */
             $peopleManagerRole = $this->roleQuery
                 ->withRole(SystemRole::PeopleManager)
                 ->builder()

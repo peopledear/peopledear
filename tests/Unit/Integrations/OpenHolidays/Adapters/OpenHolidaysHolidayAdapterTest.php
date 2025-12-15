@@ -29,7 +29,7 @@ test('transforms OpenHolidays holiday response to CreateHolidayData',
         /**
          * @var OpenHolidaysHolidayAdapter $adapter
          */
-        $adapter = app(OpenHolidaysHolidayAdapter::class);
+        $adapter = resolve(OpenHolidaysHolidayAdapter::class);
 
         $createHolidayData = $adapter->toCreateData(
             $openHolidaysHolidayData,

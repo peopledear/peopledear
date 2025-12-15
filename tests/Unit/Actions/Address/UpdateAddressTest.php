@@ -9,7 +9,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(UpdateAddress::class);
+    $this->action = resolve(UpdateAddress::class);
 });
 
 test('updates address with all fields',

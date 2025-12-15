@@ -15,7 +15,7 @@ beforeEach(
     function (): void {
         $this->country = Country::factory()->create();
 
-        $this->action = app(CreateCountrySubdivision::class);
+        $this->action = resolve(CreateCountrySubdivision::class);
     });
 
 test('upserts new subdivision when iso_code does not exist',

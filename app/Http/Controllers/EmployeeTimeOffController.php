@@ -13,9 +13,10 @@ use App\Enums\PeopleDear\RequestStatus;
 use App\Http\Requests\CreateTimeOffRequest;
 use App\Models\Employee;
 use App\Models\Period;
+use App\Models\TimeOffType;
 use App\Queries\CurrentEmployeeQuery;
-use App\Queries\EmployeeTimeOffRequestsQuery;
 use App\Queries\PeriodQuery;
+use App\Queries\TimeOffRequestQuery;
 use App\Queries\TimeOffTypeQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,21 +29,32 @@ final class EmployeeTimeOffController
 {
     public function index(
         Request $request,
-        EmployeeTimeOffRequestsQuery $query,
+        #[CurrentEmployee] Employee $employee,
+        TimeOffRequestQuery $timeOffRequestQuery,
     ): Response {
         $status = $request->has('status')
             ? $request->integer('status')
             : null;
 
         $type = $request->has('type')
-            ? $request->integer('type')
+            ? $request->string('type')->toString()
             : null;
 
+        $query = $timeOffRequestQuery()
+            ->ofEmployee($employee->id)
+            ->withRelations();
+
+        if ($status !== null) {
+            $query->ofStatus(RequestStatus::from($status));
+        }
+
+        if ($type !== null) {
+            $query->ofType($type);
+        }
+
         $timeOffRequests = $query
-            ->withStatus($status)
-            ->withType($type)
-            ->builder()
-            ->with('employee', 'organization', 'period')
+            ->make()
+            ->latest()
             ->paginate(20)
             ->withQueryString();
 
@@ -92,9 +104,9 @@ final class EmployeeTimeOffController
         #[CurrentEmployee] Employee $employee,
     ): RedirectResponse {
 
-        $timeOffType = $timeOffTypeQuery()
-            ->make()
-            ->find($request->string('time_off_type_id'));
+        /** @var TimeOffType $timeOffType */
+        $timeOffType = $timeOffTypeQuery($request->string('time_off_type_id')->toString())
+            ->first();
 
         $createTimeOff->handle(
             CreateTimeOffRequestData::from([

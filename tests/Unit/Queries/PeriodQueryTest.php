@@ -40,7 +40,7 @@ beforeEach(function (): void {
 
     $this->activePeriod2 = $activePeriod2;
 
-    $this->query = app(PeriodQuery::class);
+    $this->query = resolve(PeriodQuery::class);
 
 });
 
@@ -60,5 +60,19 @@ test('returns only active periods for current organization', function (): void {
         ->id->not->toBe($this->activePeriod2->id)
         ->and($periods)
         ->toHaveCount(1);
+
+});
+
+test('filters by id when passed to invoke', function (): void {
+
+    /** @var PeriodQuery $query */
+    $query = $this->query;
+
+    /** @var Period $result */
+    $result = $query($this->activePeriod->id)->first();
+
+    expect($result)
+        ->toBeInstanceOf(Period::class)
+        ->id->toBe($this->activePeriod->id);
 
 });

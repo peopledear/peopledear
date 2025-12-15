@@ -199,19 +199,19 @@ test('eager loads custom relations when provided', function (): void {
 
 });
 
-test('accepts employee id in constructor', function (): void {
+test('accepts id in constructor', function (): void {
 
     $query = new TimeOffRequestQuery;
-    $employeeId = Str::uuid7()->toString();
+    $id = Str::uuid7()->toString();
 
-    $sql = $query($employeeId)
+    $sql = $query($id)
         ->make()
         ->toRawSql();
 
     $expectedSql = sprintf(
-        'select * from "%s" where "employee_id" = \'%s\'',
+        'select * from "%s" where "id" = \'%s\'',
         new TimeOffRequest()->getTable(),
-        $employeeId
+        $id
     );
 
     expect($sql)
@@ -236,6 +236,50 @@ test('can chain multiple scopes together', function (): void {
         new TimeOffRequest()->getTable(),
         $employeeId,
         RequestStatus::Pending->value
+    );
+
+    expect($sql)
+        ->toBe($expectedSql);
+
+});
+
+test('first returns null when no results', function (): void {
+
+    $query = new TimeOffRequestQuery;
+
+    $result = $query()->first();
+
+    expect($result)->toBeNull();
+
+});
+
+test('paginate returns paginated results', function (): void {
+
+    $query = new TimeOffRequestQuery;
+
+    $result = $query()->paginate(10);
+
+    expect($result)
+        ->toBeInstanceOf(Illuminate\Pagination\LengthAwarePaginator::class)
+        ->and($result->perPage())
+        ->toBe(10);
+
+});
+
+test('ofType scopes by time off type id', function (): void {
+
+    $query = new TimeOffRequestQuery;
+    $typeId = Str::uuid7()->toString();
+
+    $sql = $query()
+        ->ofType($typeId)
+        ->make()
+        ->toRawSql();
+
+    $expectedSql = sprintf(
+        'select * from "%s" where "time_off_type_id" = \'%s\'',
+        new TimeOffRequest()->getTable(),
+        $typeId
     );
 
     expect($sql)

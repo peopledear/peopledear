@@ -8,7 +8,7 @@ use App\Models\Organization;
 use App\Models\TimeOffRequest;
 
 beforeEach(function (): void {
-    $this->action = app(DeleteTimeOffRequest::class);
+    $this->action = resolve(DeleteTimeOffRequest::class);
 });
 
 test('deletes time off', function (): void {

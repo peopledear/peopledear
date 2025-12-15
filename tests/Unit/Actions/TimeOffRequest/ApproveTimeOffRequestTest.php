@@ -12,7 +12,7 @@ test('approves time off request', function (): void {
         ->pending()
         ->create();
 
-    $action = app(ApproveTimeOffRequest::class);
+    $action = resolve(ApproveTimeOffRequest::class);
     $result = $action->handle($timeOffRequest);
 
     expect($result->status)
@@ -25,7 +25,7 @@ test('returns refreshed model', function (): void {
         ->pending()
         ->create();
 
-    $action = app(ApproveTimeOffRequest::class);
+    $action = resolve(ApproveTimeOffRequest::class);
     $result = $action->handle($timeOffRequest);
 
     expect($result->id)

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Contracts\Approvable;
 use App\Enums\PeopleDear\RequestStatus;
 use App\Models\Concerns\BelongsToEmployee;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Concerns\BelongsToPeriod;
-use App\Models\Concerns\HasApproval;
 use App\Models\Scopes\OrganizationScope;
 use Carbon\Carbon;
 use Database\Factories\TimeOffRequestFactory;
@@ -32,16 +30,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Carbon $updated_at
  * @property-read Organization $organization
  * @property-read Employee $employee
- * @property-read Approval|null $approval
  * @property-read TimeOffType $type
  */
 #[ScopedBy([OrganizationScope::class])]
-final class TimeOffRequest extends Model implements Approvable
+final class TimeOffRequest extends Model
 {
     use BelongsToEmployee;
     use BelongsToOrganization;
     use BelongsToPeriod;
-    use HasApproval;
 
     /** @use HasFactory<TimeOffRequestFactory> */
     use HasFactory;

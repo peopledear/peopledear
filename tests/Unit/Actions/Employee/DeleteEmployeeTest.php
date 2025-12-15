@@ -7,7 +7,7 @@ use App\Models\Employee;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(DeleteEmployee::class);
+    $this->action = resolve(DeleteEmployee::class);
 });
 
 test('deletes employee',

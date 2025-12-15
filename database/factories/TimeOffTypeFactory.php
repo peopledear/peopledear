@@ -62,6 +62,13 @@ final class TimeOffTypeFactory extends Factory
         ]);
     }
 
+    public function dontRequireApproval(): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'requires_approval' => false,
+        ]);
+    }
+
     public function requiresApproval(): self
     {
         return $this->state(fn (array $attributes): array => [

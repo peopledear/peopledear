@@ -8,7 +8,7 @@ use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
-    $this->action = app(DeleteAddress::class);
+    $this->action = resolve(DeleteAddress::class);
 });
 
 test('deletes address of addressable model',

@@ -113,3 +113,13 @@ test('to array', function (): void {
         ]);
 
 });
+
+test('time off requests relationship', function (): void {
+    $timeOffType = TimeOffType::factory()
+        ->withFallbackApprovalRole()
+        ->create()
+        ->fresh();
+
+    expect($timeOffType->timeOffRequests())
+        ->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\HasMany::class);
+});

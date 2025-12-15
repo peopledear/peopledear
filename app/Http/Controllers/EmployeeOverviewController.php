@@ -7,8 +7,6 @@ namespace App\Http\Controllers;
 use App\Attributes\CurrentEmployee;
 use App\Data\PeopleDear\TimeOffRequest\TimeOffRequestData;
 use App\Data\PeopleDear\VacationBalance\VacationBalanceData;
-use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\TimeOffType;
 use App\Models\Employee;
 use App\Queries\CurrentVacationBalanceQuery;
 use App\Queries\TimeOffRequestQuery;
@@ -43,8 +41,6 @@ final class EmployeeOverviewController
                     $timeOffRequests,
                     Collection::class
                 ),
-                'types' => TimeOffType::options(),
-                'statuses' => RequestStatus::options(),
             ]);
     }
 }

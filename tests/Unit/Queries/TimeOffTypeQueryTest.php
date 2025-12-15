@@ -63,7 +63,7 @@ test('returns only active time off types for current organization', function ():
         ->createQuietly(['is_active' => true]);
 
     /** @var TimeOffTypeQuery $query */
-    $query = app(TimeOffTypeQuery::class);
+    $query = resolve(TimeOffTypeQuery::class);
 
     $results = $query()->active()->make()->get();
 
@@ -92,7 +92,7 @@ test('returns all time off types for current organization when not filtering by 
         ->createQuietly(['is_active' => false]);
 
     /** @var TimeOffTypeQuery $query */
-    $query = app(TimeOffTypeQuery::class);
+    $query = resolve(TimeOffTypeQuery::class);
 
     $results = $query()->make()->get();
 

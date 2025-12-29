@@ -177,13 +177,6 @@ export default function TimeOffTypeForm({
                                         onChange={setSelectedIcon}
                                         error={errors.icon}
                                     />
-
-                                    <FieldColorPicker
-                                        label="Color"
-                                        value={selectedColor}
-                                        onChange={setSelectedColor}
-                                        error={errors.color}
-                                    />
                                 </FieldGroup>
                             </Fieldset>
 
@@ -221,76 +214,96 @@ export default function TimeOffTypeForm({
                                     </p>
                                 </Transition>
                             </div>
+
+                            <Dialog
+                                open={openAdvancedSettings}
+                                onOpenChange={setOpenAdvancedSettings}
+                            >
+                                <DialogContent
+                                    className="sm:max-w-131.25"
+                                    showCloseButton={false}
+                                >
+                                    <div className="flex items-center justify-between gap-x-6 pb-4">
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Advanced settings
+                                            </DialogTitle>
+                                        </DialogHeader>
+                                        <div>
+                                            <DialogClose>
+                                                <Button
+                                                    variant="ghost"
+                                                    className="size-8"
+                                                >
+                                                    <XIcon className="size-4" />
+                                                </Button>
+                                            </DialogClose>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col gap-y-4">
+                                        <FieldColorPicker
+                                            label="Color"
+                                            value={selectedColor}
+                                            onChange={setSelectedColor}
+                                            error={errors.color}
+                                        />
+
+                                        <FieldSwitch
+                                            orientation="horizontal"
+                                            description="If enabled, employees will be able to request time offs of this type, also employees balances will calculated and generated."
+                                            label="Active"
+                                            defaultChecked={isActive}
+                                            onChange={setIsActive}
+                                        />
+
+                                        <FieldSwitch
+                                            orientation="horizontal"
+                                            label="Requires Approval"
+                                            description="If enabled, time off requests of this type will require approval from a manager or administrator."
+                                            defaultChecked={requiresApproval}
+                                            onChange={setRequiresApproval}
+                                        />
+
+                                        <FieldSwitch
+                                            orientation="horizontal"
+                                            label="Requires Justification"
+                                            description="If enabled, employees will need to provide a justification when requesting time offs of this type."
+                                            defaultChecked={
+                                                requiresJustification
+                                            }
+                                            onChange={setRequiresJustification}
+                                        />
+
+                                        <FieldSwitch
+                                            orientation="horizontal"
+                                            label="Requires Documentation"
+                                            description="If enabled, employees will need to provide supporting documents when requesting time offs of this type."
+                                            defaultChecked={
+                                                requiresJustificationDocument
+                                            }
+                                            onChange={
+                                                setRequiresJustificationDocument
+                                            }
+                                        />
+                                    </div>
+                                    <DialogFooter className="mt-8">
+                                        <Button
+                                            className="w-full"
+                                            type="button"
+                                            size="sm"
+                                            onClick={() =>
+                                                setOpenAdvancedSettings(false)
+                                            }
+                                        >
+                                            Save settings
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
                         </>
                     )}
                 </Form>
-
-                <Dialog
-                    open={openAdvancedSettings}
-                    onOpenChange={setOpenAdvancedSettings}
-                >
-                    <DialogContent
-                        className="sm:max-w-131.25"
-                        showCloseButton={false}
-                    >
-                        <div className="flex items-center justify-between gap-x-6 pb-4">
-                            <DialogHeader>
-                                <DialogTitle>Advanced settings</DialogTitle>
-                            </DialogHeader>
-                            <div>
-                                <DialogClose>
-                                    <Button variant="ghost" className="size-8">
-                                        <XIcon className="size-4" />
-                                    </Button>
-                                </DialogClose>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-y-4">
-                            <FieldSwitch
-                                orientation="horizontal"
-                                description="If enabled, employees will be able to request time offs of this type, also employees balances will calculated and generated."
-                                label="Active"
-                                defaultChecked={isActive}
-                                onChange={setIsActive}
-                            />
-
-                            <FieldSwitch
-                                orientation="horizontal"
-                                label="Requires Approval"
-                                description="If enabled, time off requests of this type will require approval from a manager or administrator."
-                                defaultChecked={requiresApproval}
-                                onChange={setRequiresApproval}
-                            />
-
-                            <FieldSwitch
-                                orientation="horizontal"
-                                label="Requires Justification"
-                                description="If enabled, employees will need to provide a justification when requesting time offs of this type."
-                                defaultChecked={requiresJustification}
-                                onChange={setRequiresJustification}
-                            />
-
-                            <FieldSwitch
-                                orientation="horizontal"
-                                label="Requires Documentation"
-                                description="If enabled, employees will need to provide supporting documents when requesting time offs of this type."
-                                defaultChecked={requiresJustificationDocument}
-                                onChange={setRequiresJustificationDocument}
-                            />
-                        </div>
-                        <DialogFooter className="mt-8">
-                            <Button
-                                className="w-full"
-                                type="button"
-                                size="sm"
-                                onClick={() => setOpenAdvancedSettings(false)}
-                            >
-                                Save settings
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
             </CardContent>
         </Card>
     );

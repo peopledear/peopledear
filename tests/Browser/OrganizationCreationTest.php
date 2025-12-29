@@ -22,6 +22,7 @@ test('owner can create organization via modal', function (): void {
     /** @var User $owner */
     $owner = User::factory()->create();
     $owner->assignRole($ownerRole);
+    $owner->refresh(); // Ensure role assignment is persisted
 
     $this->actingAs($owner);
 
@@ -32,6 +33,7 @@ test('owner can create organization via modal', function (): void {
         ->click('#country_id')
         ->click(sprintf("[data-slot='select-item']:has-text('%s')", $country->name['EN']))
         ->click('Create organization')
+        ->wait(2) // Give time for form submission and redirect in CI
         ->assertNoJavascriptErrors();
 
     /** @var Organization|null $organization */
@@ -58,6 +60,7 @@ test('people manager can create organization', function (): void {
     /** @var User $peopleManager */
     $peopleManager = User::factory()->create();
     $peopleManager->assignRole($peopleManagerRole);
+    $peopleManager->refresh(); // Ensure role assignment is persisted
 
     $this->actingAs($peopleManager);
 
@@ -68,6 +71,7 @@ test('people manager can create organization', function (): void {
         ->click('#country_id')
         ->click(sprintf("[data-slot='select-item']:has-text('%s')", $country->name['EN']))
         ->click('Create organization')
+        ->wait(2) // Give time for form submission and redirect in CI
         ->assertNoJavascriptErrors();
 
     /** @var Organization|null $organization */

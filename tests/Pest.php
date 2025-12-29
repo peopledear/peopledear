@@ -18,6 +18,9 @@ pest()->extend(Tests\TestCase::class)
     })
     ->in('Browser', 'Feature', 'Unit', 'Integration');
 
+// Browser testing timeout configuration
+pest()->browser()->timeout(20000); // 20 seconds for browser tests
+
 expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 function something(): void {}

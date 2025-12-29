@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
 
+pest()->browser()->timeout(20000);
+
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->beforeEach(function (): void {
@@ -17,9 +19,6 @@ pest()->extend(Tests\TestCase::class)
         $this->freezeTime();
     })
     ->in('Browser', 'Feature', 'Unit', 'Integration');
-
-// Browser testing timeout configuration
-pest()->browser()->timeout(20000); // 20 seconds for browser tests
 
 expect()->extend('toBeOne', fn () => $this->toBe(1));
 

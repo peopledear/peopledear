@@ -164,6 +164,7 @@ export default function TimeOffTypeForm({
                                         name="balance_mode"
                                         placeholder="Select the Balance Type"
                                         label="Balance Type"
+                                        description="Choose how employee time off balances are managed and calculated."
                                         groupLabel="Balance Types"
                                         options={balanceTypes}
                                         error={errors.balance_type}
@@ -172,6 +173,7 @@ export default function TimeOffTypeForm({
                                     <FieldIconPicker
                                         orientation="vertical"
                                         label="Icon"
+                                        description="Select a visual icon to represent this time off type in the application."
                                         icons={icons}
                                         value={selectedIcon}
                                         onChange={setSelectedIcon}

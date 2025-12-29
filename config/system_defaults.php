@@ -19,7 +19,7 @@ return [
             ],
             'icon' => Icon::LucidePlaneTakeoff,
             'color' => '#00FF00',
-            'is_active' => true,
+
             'requires_approval' => true,
             'requires_justification' => false,
             'requires_justification_document' => false,
@@ -41,7 +41,7 @@ return [
             ],
             'icon' => Icon::LucideHeartPulse,
             'color' => '#FF0000',
-            'is_active' => true,
+
             'requires_approval' => false,
             'requires_justification' => true,
             'requires_justification_document' => true,

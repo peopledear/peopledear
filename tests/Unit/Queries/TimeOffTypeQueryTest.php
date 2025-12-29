@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\Support\SessionKey;
+use App\Enums\TimeOffTypeStatus;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use App\Queries\TimeOffTypeQuery;
@@ -31,7 +32,7 @@ test('scopes by active status', function (): void {
         ->toRawSql();
 
     expect($sql)
-        ->toContain('"is_active" = 1');
+        ->toContain('"status" = 2'); // TimeOffTypeStatus::Active has value 2
 
 });
 
@@ -46,12 +47,14 @@ test('returns only active time off types for current organization', function ():
     /** @var TimeOffType $activeType */
     $activeType = TimeOffType::factory()
         ->for($organization)
-        ->createQuietly(['is_active' => true]);
+        ->active()
+        ->createQuietly();
 
     /** @var TimeOffType $inactiveType */
     $inactiveType = TimeOffType::factory()
         ->for($organization)
-        ->createQuietly(['is_active' => false]);
+        ->inactive()
+        ->createQuietly();
 
     /** @var Organization $otherOrganization */
     $otherOrganization = Organization::factory()
@@ -60,7 +63,8 @@ test('returns only active time off types for current organization', function ():
     /** @var TimeOffType $otherOrgType */
     $otherOrgType = TimeOffType::factory()
         ->for($otherOrganization)
-        ->createQuietly(['is_active' => true]);
+        ->active()
+        ->createQuietly();
 
     /** @var TimeOffTypeQuery $query */
     $query = resolve(TimeOffTypeQuery::class);
@@ -84,12 +88,14 @@ test('returns all time off types for current organization when not filtering by 
     /** @var TimeOffType $activeType */
     $activeType = TimeOffType::factory()
         ->for($organization)
-        ->createQuietly(['is_active' => true]);
+        ->active()
+        ->createQuietly();
 
     /** @var TimeOffType $inactiveType */
     $inactiveType = TimeOffType::factory()
         ->for($organization)
-        ->createQuietly(['is_active' => false]);
+        ->inactive()
+        ->createQuietly();
 
     /** @var TimeOffTypeQuery $query */
     $query = resolve(TimeOffTypeQuery::class);

@@ -18,3 +18,9 @@ export enum TimeOffTypeEnum {
     PersonalDay = 3,
     Bereavement = 4,
 }
+
+export enum TimeOffTypeStatus {
+    Pending = 1,
+    Active = 2,
+    Inactive = 3,
+}

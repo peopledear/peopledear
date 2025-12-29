@@ -21,7 +21,7 @@ import {
 import AdminLayout from "@/layouts/org-layout";
 import OrgSettingsLayout from "@/layouts/settings/org-layout";
 import { cn } from "@/lib/utils";
-import { TimeOffType } from "@/types";
+import { TimeOffType, TimeOffTypeStatus } from "@/types";
 import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
 import { Head, Link } from "@inertiajs/react";
 import { Circle, CircleCheck, Ellipsis, PlusIcon } from "lucide-react";
@@ -111,24 +111,33 @@ export default function TimeOffTypesPage({
                                             </div>
 
                                             <div>
-                                                {timeOffType.isActive && (
-                                                    <Badge
-                                                        variant={
-                                                            timeOffType.isActive
-                                                                ? "outline"
-                                                                : "destructive"
-                                                        }
-                                                        className={cn(
-                                                            timeOffType.isActive
-                                                                ? "border-emerald-500 bg-emerald-500 text-emerald-500"
-                                                                : "border-red-500 bg-red-500 text-red-500",
-                                                            "rounded-md px-3 py-0.5 text-xs font-semibold dark:bg-transparent",
-                                                        )}
-                                                    >
+                                                <Badge
+                                                    variant="outline"
+                                                    className={cn(
+                                                        timeOffType.status ===
+                                                            TimeOffTypeStatus.Active
+                                                            ? "border-emerald-500 bg-emerald-500 text-emerald-500"
+                                                            : timeOffType.status ===
+                                                                TimeOffTypeStatus.Pending
+                                                              ? "border-yellow-500 bg-yellow-500 text-yellow-500"
+                                                              : "border-gray-500 bg-gray-500 text-gray-500",
+                                                        "rounded-md px-3 py-0.5 text-xs font-semibold dark:bg-transparent",
+                                                    )}
+                                                >
+                                                    {timeOffType.status ===
+                                                    TimeOffTypeStatus.Active ? (
                                                         <CircleCheck className="size-4" />
-                                                        Active
-                                                    </Badge>
-                                                )}
+                                                    ) : (
+                                                        <Circle className="size-4" />
+                                                    )}
+                                                    {timeOffType.status ===
+                                                    TimeOffTypeStatus.Active
+                                                        ? "Active"
+                                                        : timeOffType.status ===
+                                                            TimeOffTypeStatus.Pending
+                                                          ? "Pending"
+                                                          : "Inactive"}
+                                                </Badge>
                                             </div>
                                             <ItemActions>
                                                 <Button

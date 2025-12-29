@@ -8,6 +8,7 @@ use App\Data\CastsAndTransformers\AsIconDataTransformer;
 use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffTypeStatus;
 use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
@@ -32,7 +33,8 @@ final class TimeOffTypeData extends Data
         #[WithTransformer(AsIconDataTransformer::class)]
         public readonly Icon $icon,
         public readonly string $color,
-        public readonly bool $isActive,
+        #[WithCast(EnumCast::class, TimeOffTypeStatus::class)]
+        public readonly TimeOffTypeStatus $status,
         public readonly bool $requiresApproval,
         public readonly bool $requiresJustification,
         public readonly bool $requiresJustificationDocument,

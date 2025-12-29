@@ -104,7 +104,7 @@ test('to array', function (): void {
             'allowed_units',
             'icon',
             'color',
-            'is_active',
+            'status',
             'requires_approval',
             'requires_justification',
             'requires_justification_document',

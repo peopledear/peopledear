@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
+use App\Enums\TimeOffTypeStatus;
 use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -51,7 +52,7 @@ final class TimeOffTypeQuery
     public function active(): self
     {
         $this->builder
-            ->where('is_active', true);
+            ->where('status', TimeOffTypeStatus::Active);
 
         return $this;
     }

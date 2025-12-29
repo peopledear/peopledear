@@ -37,7 +37,7 @@ final class StoreTimeOffTypeRequest extends FormRequest
             'requires_approval' => ['required', 'boolean'],
             'requires_justification' => ['required', 'boolean'],
             'requires_justification_document' => ['required', 'boolean'],
-            'is_active' => ['required', 'boolean'],
+
             'balance_mode' => ['required', 'integer', Rule::in(BalanceType::cases())],
         ];
     }

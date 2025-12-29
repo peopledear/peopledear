@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffTypeStatus;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -32,7 +33,11 @@ final class TimeOffTypeFactory extends Factory
             'allowed_units' => fake()->randomElements(TimeOffUnit::cases()),
             'icon' => fake()->randomElement(Icon::cases()),
             'color' => fake()->hexColor(),
-            'is_active' => fake()->boolean(90),
+            'status' => fake()->randomElement([
+                TimeOffTypeStatus::Active,     // 70% chance
+                TimeOffTypeStatus::Pending,    // 20% chance
+                TimeOffTypeStatus::Inactive,   // 10% chance
+            ]),
             'requires_approval' => fake()->boolean(90),
             'requires_justification' => fake()->boolean(10),
             'requires_justification_document' => fake()->boolean(10),
@@ -80,6 +85,27 @@ final class TimeOffTypeFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'requires_justification' => true,
+        ]);
+    }
+
+    public function active(): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => TimeOffTypeStatus::Active,
+        ]);
+    }
+
+    public function pending(): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => TimeOffTypeStatus::Pending,
+        ]);
+    }
+
+    public function inactive(): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => TimeOffTypeStatus::Inactive,
         ]);
     }
 }

@@ -23,7 +23,6 @@ final class CreateTimeOffTypeData extends Data
         public readonly array $allowedUnits,
         public readonly Icon $icon,
         public readonly string $color,
-        public readonly bool $isActive,
         public readonly bool $requiresApproval,
         public readonly bool $requiresJustification,
         public readonly bool $requiresJustificationDocument,

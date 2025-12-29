@@ -35,7 +35,7 @@ return new class extends Migration
             $table->jsonb('allowed_units');
             $table->string('icon');
             $table->string('color');
-            $table->boolean('is_active');
+            $table->unsignedSmallInteger('status');
             $table->boolean('requires_approval');
             $table->boolean('requires_justification');
             $table->boolean('requires_justification_document');

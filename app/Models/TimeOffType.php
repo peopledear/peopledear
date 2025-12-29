@@ -9,6 +9,7 @@ use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
 use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffTypeStatus;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Scopes\OrganizationScope;
 use Carbon\Carbon;
@@ -31,7 +32,7 @@ use Spatie\Permission\Models\Role;
  * @property array<int, TimeOffUnit> $allowed_units
  * @property Icon $icon
  * @property string $color
- * @property bool $is_active
+ * @property TimeOffTypeStatus $status
  * @property bool $requires_approval
  * @property bool $requires_justification
  * @property bool $requires_justification_document
@@ -70,7 +71,7 @@ final class TimeOffType extends Model
             'allowed_units' => AsArrayOfTimeOffUnit::class,
             'icon' => Icon::class,
             'color' => 'string',
-            'is_active' => 'boolean',
+            'status' => TimeOffTypeStatus::class,
             'requires_approval' => 'boolean',
             'requires_justification' => 'boolean',
             'requires_justification_document' => 'boolean',

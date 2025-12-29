@@ -55,7 +55,6 @@ export default function TimeOffTypeForm({
     const [selectedColor, setSelectedColor] = useState<string>("#ff0000");
     const [selectedIcon, setSelectedIcon] = useState<IconType | null>(null);
 
-    const [isActive, setIsActive] = useState<boolean>(false);
     const [requiresApproval, setRequiresApproval] = useState<boolean>(false);
     const [requiresJustification, setRequiresJustification] =
         useState<boolean>(false);
@@ -72,7 +71,6 @@ export default function TimeOffTypeForm({
                         allowed_units: selectedUnits,
                         icon: selectedIcon?.value,
                         color: selectedColor,
-                        is_active: isActive,
                         requires_approval: requiresApproval,
                         requires_justification: requiresJustification,
                         requires_justification_document:
@@ -249,14 +247,6 @@ export default function TimeOffTypeForm({
                                             value={selectedColor}
                                             onChange={setSelectedColor}
                                             error={errors.color}
-                                        />
-
-                                        <FieldSwitch
-                                            orientation="horizontal"
-                                            description="If enabled, employees will be able to request time offs of this type, also employees balances will calculated and generated."
-                                            label="Active"
-                                            defaultChecked={isActive}
-                                            onChange={setIsActive}
                                         />
 
                                         <FieldSwitch

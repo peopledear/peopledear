@@ -38,7 +38,6 @@ test('creates a new time off type', function (): void {
             'requires_approval' => true,
             'requires_justification' => false,
             'requires_justification_document' => false,
-            'is_active' => true,
 
         ]);
 

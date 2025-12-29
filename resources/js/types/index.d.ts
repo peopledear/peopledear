@@ -97,10 +97,20 @@ export interface TimeOffType {
     description: string;
     isSystem: boolean;
     allowedUnits: number[];
-    icon: string;
+    icon: Icon;
     color: string;
     isActive: boolean;
     requiresApproval: boolean;
+}
+
+export interface TimeOffUnit {
+    value: number;
+    label: string;
+}
+
+export interface BalanceType {
+    value: number;
+    label: string;
 }
 
 export type EnumOptions = Record<number, string>;
@@ -111,6 +121,13 @@ export interface Period {
     start: string;
     end: string;
     year: number;
+}
+
+export interface Icon {
+    value: string;
+    icon: string;
+    name: string;
+    label: string;
 }
 
 export interface TimeOffRequest {

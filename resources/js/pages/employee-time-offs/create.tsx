@@ -104,8 +104,8 @@ export default function CreateTimeOffPage({
     return (
         <AppLayout>
             <Head title="Request new Time Off" />
-            <div className="flex w-full max-w-xl flex-col space-y-6 p-4 sm:p-0">
-                <div className="mb-10 flex cursor-pointer items-center space-x-1 text-sm">
+            <div className="mx-auto flex w-full max-w-xl flex-col space-y-6 p-4 sm:p-0">
+                <div className="mb-6 flex cursor-pointer items-center space-x-1 text-sm">
                     <Link
                         href={back}
                         className="flex items-center space-x-1 text-sm text-gray-500 hover:text-gray-700"

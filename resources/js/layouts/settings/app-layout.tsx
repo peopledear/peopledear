@@ -34,7 +34,7 @@ export default function UserSettingsLayout({ children }: PropsWithChildren) {
 
     return (
         <>
-            <div className="min-h-0 w-full shrink-0 space-y-6 sm:sticky sm:ml-auto sm:w-[192px]">
+            <div className="min-h-0 w-full shrink-0 space-y-6 xl:sticky xl:top-28 xl:ml-auto xl:w-60">
                 <h2 className="text-strong ml-3 hidden text-base/8 font-medium sm:block sm:text-xl/8">
                     Settings
                 </h2>
@@ -42,12 +42,12 @@ export default function UserSettingsLayout({ children }: PropsWithChildren) {
                     <VerticalMenu items={items} />
                 </div>
             </div>
-            <div className="mx-auto flex w-full max-w-[900px] shrink-0 flex-col">
+            <div className="mx-auto flex w-full max-w-225 shrink-0 flex-col">
                 <div className="mt-0 flex flex-col gap-y-6 sm:mt-14">
                     {children}
                 </div>
             </div>
-            <div className="mr-auto hidden w-full max-w-[192px] sm:block"></div>
+            <div className="mr-auto hidden w-full max-w-48 sm:block"></div>
         </>
     );
 }

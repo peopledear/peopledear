@@ -74,13 +74,31 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                 ->name('store');
 
             // Organization Settings...
-            Route::get('settings', [OrganizationController::class, 'edit'])
-                ->middleware('can:organizations.edit')
-                ->name('settings.organization.edit');
 
-            Route::put('settings/organization', [OrganizationController::class, 'update'])
-                ->middleware('can:organizations.edit')
-                ->name('settings.organization.update');
+            Route::prefix('settings')->as('settings.')->group(function (): void {
+                Route::get('/', [OrganizationController::class, 'edit'])
+                    ->middleware('can:organizations.edit')
+                    ->name('organization.edit');
+
+                Route::put('organization', [OrganizationController::class, 'update'])
+                    ->middleware('can:organizations.edit')
+                    ->name('organization.update');
+
+                Route::prefix('time-off-types')
+                    ->as('time-off-types.')->group(function (): void {
+
+                        Route::post('/', [OrganizationTimeOffTypesController::class, 'store'])
+                            ->name('store');
+
+                        Route::get('/', [OrganizationTimeOffTypesController::class, 'index'])
+                            ->name('index');
+
+                        Route::get('create', [OrganizationTimeOffTypesController::class, 'create'])
+                            ->name('create');
+
+                    });
+
+            });
 
             Route::post('offices', [OrganizationOfficeController::class, 'store'])
                 ->middleware('can:organizations.edit')
@@ -93,17 +111,6 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             Route::delete('offices/{office}', [OrganizationOfficeController::class, 'destroy'])
                 ->middleware('can:organizations.edit')
                 ->name('offices.destroy');
-
-            Route::prefix('time-off-types')
-                ->as('time-off-types.')->group(function (): void {
-
-                    Route::get('/', [OrganizationTimeOffTypesController::class, 'index'])
-                        ->name('index');
-
-                    Route::get('create', [OrganizationTimeOffTypesController::class, 'create'])
-                        ->name('create');
-
-                });
 
         });
 

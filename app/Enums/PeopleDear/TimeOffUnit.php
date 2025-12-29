@@ -11,4 +11,13 @@ enum TimeOffUnit: int
     case Hour = 3;
     case Minute = 4;
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::Day => 'Day',
+            self::HalfDay => 'Half Day',
+            self::Hour => 'Hour',
+            self::Minute => 'Minute',
+        };
+    }
 }

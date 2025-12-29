@@ -34,7 +34,7 @@ final class AsArrayOfTimeOffUnit implements CastsAttributes
 
     /**
      * @param  array<string, mixed>  $attributes
-     * @param  TimeOffUnit[]  $value
+     * @param  TimeOffUnit[]|int[]  $value
      *
      * @throws JsonException
      */
@@ -42,7 +42,7 @@ final class AsArrayOfTimeOffUnit implements CastsAttributes
     {
 
         /** @var array<int, int> $value */
-        $value = array_map(fn (TimeOffUnit $unit): int => $unit->value, $value);
+        $value = array_map(fn (TimeOffUnit|int $unit): int => is_int($unit) ? TimeOffUnit::from($unit)->value : $unit->value, $value);
 
         return json_encode($value, JSON_THROW_ON_ERROR);
     }

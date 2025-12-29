@@ -1,5 +1,5 @@
 import { TimeOffRequest } from "@/types";
-import TimeOffIcon from "./icon";
+import Icon from "./icon";
 
 interface TimeOffTypeDisplayProps {
     type: TimeOffRequest["type"];
@@ -12,7 +12,7 @@ export default function TimeOffTypeDisplay({
 }: TimeOffTypeDisplayProps) {
     return (
         <div className="flex items-start gap-2">
-            <TimeOffIcon timeOffType={type} />
+            <Icon name={type.icon.icon} />
 
             <div className="flex flex-col">
                 <span className="font-medium">{type.name}</span>

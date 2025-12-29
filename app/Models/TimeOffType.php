@@ -6,9 +6,9 @@ namespace App\Models;
 
 use App\Casts\AsArrayOfTimeOffUnit;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
-use App\Enums\PeopleDear\TimeOffBalanceMode;
+use App\Enums\BalanceType;
+use App\Enums\Icon;
 use App\Enums\PeopleDear\TimeOffUnit;
-use App\Enums\Support\TimeOffIcon;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Scopes\OrganizationScope;
 use Carbon\Carbon;
@@ -29,13 +29,13 @@ use Spatie\Permission\Models\Role;
  * @property string|null $description
  * @property bool $is_system
  * @property array<int, TimeOffUnit> $allowed_units
- * @property TimeOffIcon $icon
+ * @property Icon $icon
  * @property string $color
  * @property bool $is_active
  * @property bool $requires_approval
  * @property bool $requires_justification
  * @property bool $requires_justification_document
- * @property TimeOffBalanceMode $balance_mode
+ * @property BalanceType $balance_mode
  * @property-read TimeOffTypeBalanceConfigData $balance_config
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
@@ -68,13 +68,13 @@ final class TimeOffType extends Model
             'description' => 'string',
             'is_system' => 'boolean',
             'allowed_units' => AsArrayOfTimeOffUnit::class,
-            'icon' => TimeOffIcon::class,
+            'icon' => Icon::class,
             'color' => 'string',
             'is_active' => 'boolean',
             'requires_approval' => 'boolean',
             'requires_justification' => 'boolean',
             'requires_justification_document' => 'boolean',
-            'balance_mode' => TimeOffBalanceMode::class,
+            'balance_mode' => BalanceType::class,
             'balance_config' => TimeOffTypeBalanceConfigData::class,
         ];
     }

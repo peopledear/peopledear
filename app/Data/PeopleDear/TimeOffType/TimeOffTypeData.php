@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\TimeOffType;
 
-use App\Enums\PeopleDear\TimeOffBalanceMode;
+use App\Data\CastsAndTransformers\AsIconDataTransformer;
+use App\Enums\BalanceType;
+use App\Enums\Icon;
 use App\Enums\PeopleDear\TimeOffUnit;
-use App\Enums\Support\TimeOffIcon;
 use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
@@ -26,15 +28,16 @@ final class TimeOffTypeData extends Data
         public readonly Optional|string $description,
         public readonly bool $isSystem,
         public readonly array $allowedUnits,
-        #[WithCast(EnumCast::class, TimeOffIcon::class)]
-        public readonly TimeOffIcon $icon,
+        #[WithCast(EnumCast::class, Icon::class)]
+        #[WithTransformer(AsIconDataTransformer::class)]
+        public readonly Icon $icon,
         public readonly string $color,
         public readonly bool $isActive,
         public readonly bool $requiresApproval,
         public readonly bool $requiresJustification,
         public readonly bool $requiresJustificationDocument,
-        #[WithCast(EnumCast::class, TimeOffBalanceMode::class)]
-        public readonly TimeOffBalanceMode $balanceMode,
+        #[WithCast(EnumCast::class, BalanceType::class)]
+        public readonly BalanceType $balanceMode,
         public readonly ?TimeOffTypeBalanceConfigData $balanceConfig,
         public readonly Carbon $createdAt,
         public readonly Carbon $updatedAt,

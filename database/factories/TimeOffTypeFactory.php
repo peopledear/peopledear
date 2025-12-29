@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\PeopleDear\TimeOffBalanceMode;
+use App\Enums\BalanceType;
+use App\Enums\Icon;
 use App\Enums\PeopleDear\TimeOffUnit;
-use App\Enums\Support\TimeOffIcon;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -30,13 +30,13 @@ final class TimeOffTypeFactory extends Factory
             'description' => fake()->sentence(),
             'is_system' => fake()->boolean(10),
             'allowed_units' => fake()->randomElements(TimeOffUnit::cases()),
-            'icon' => fake()->randomElement(TimeOffIcon::cases()),
+            'icon' => fake()->randomElement(Icon::cases()),
             'color' => fake()->hexColor(),
             'is_active' => fake()->boolean(90),
             'requires_approval' => fake()->boolean(90),
             'requires_justification' => fake()->boolean(10),
             'requires_justification_document' => fake()->boolean(10),
-            'balance_mode' => fake()->randomElement(TimeOffBalanceMode::cases()),
+            'balance_mode' => fake()->randomElement(BalanceType::cases()),
             'balance_config' => [
                 'accrual_days_per_year' => fake()->numberBetween(20, 30),
                 'carry_over_type' => 1,

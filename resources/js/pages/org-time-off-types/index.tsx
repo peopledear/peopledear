@@ -1,4 +1,4 @@
-import TimeOffIcon from "@/components/time-offs/icon";
+import Icon from "@/components/time-offs/icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,13 +8,24 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemGroup,
+    ItemMedia,
+    ItemSeparator,
+    ItemTitle,
+} from "@/components/ui/item";
 import AdminLayout from "@/layouts/org-layout";
 import OrgSettingsLayout from "@/layouts/settings/org-layout";
 import { cn } from "@/lib/utils";
 import { TimeOffType } from "@/types";
 import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
 import { Head, Link } from "@inertiajs/react";
-import { Circle, CircleCheck, PlusIcon } from "lucide-react";
+import { Circle, CircleCheck, Ellipsis, PlusIcon } from "lucide-react";
+import { Fragment } from "react";
 
 interface TimeOffTypesPageProps {
     timeOffTypes: TimeOffType[];
@@ -29,7 +40,7 @@ export default function TimeOffTypesPage({
         <AdminLayout>
             <Head title="Time Off Types" />
             <OrgSettingsLayout>
-                <Card>
+                <Card className="pb-0.5">
                     <CardHeader>
                         <CardTitle>Time Off Types</CardTitle>
                         <CardDescription>
@@ -55,70 +66,87 @@ export default function TimeOffTypesPage({
                             </div>
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        {timeOffTypes.map((timeOffType: TimeOffType) => (
-                            <div
-                                key={timeOffType.id}
-                                className="flex items-center space-x-6 py-4"
-                            >
-                                <div>
-                                    <TimeOffIcon timeOffType={timeOffType} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="font-semibold">
-                                        {timeOffType.name}
-                                    </span>
-                                    <span className="text-muted-foreground text-sm">
-                                        {timeOffType.description}
-                                    </span>
-                                </div>
-                                <div>
-                                    <Badge
-                                        variant={
-                                            timeOffType.isSystem
-                                                ? "default"
-                                                : "destructive"
-                                        }
-                                        className={cn(
-                                            timeOffType.isSystem
-                                                ? "bg-green-500 dark:bg-green-600"
-                                                : "bg-red-500 dark:bg-red-600",
-                                            "text-white",
-                                        )}
-                                    >
-                                        {timeOffType.isSystem ? (
-                                            <CircleCheck className="size-4" />
-                                        ) : (
-                                            <Circle className="size-4" />
-                                        )}
-                                        System
-                                    </Badge>
-                                </div>
+                    <CardContent className="mx-0.5 rounded-lg border px-0">
+                        <ItemGroup>
+                            {timeOffTypes.map(
+                                (timeOffType: TimeOffType, index: number) => (
+                                    <Fragment key={timeOffType.id}>
+                                        <Item key={timeOffType.id}>
+                                            <ItemMedia>
+                                                <Icon
+                                                    name={timeOffType.icon.icon}
+                                                />
+                                            </ItemMedia>
+                                            <ItemContent className="gap-1">
+                                                <ItemTitle>
+                                                    {timeOffType.name}
+                                                </ItemTitle>
+                                                <ItemDescription>
+                                                    {timeOffType.description}
+                                                </ItemDescription>
+                                            </ItemContent>
+                                            <div>
+                                                {timeOffType.isSystem && (
+                                                    <Badge
+                                                        variant={
+                                                            timeOffType.isSystem
+                                                                ? "outline"
+                                                                : "destructive"
+                                                        }
+                                                        className={cn(
+                                                            timeOffType.isSystem
+                                                                ? "border-emerald-500 bg-emerald-500 text-emerald-500"
+                                                                : "border-red-500 bg-red-500 text-red-500",
+                                                            "rounded-md px-3 py-0.5 text-xs font-semibold dark:bg-transparent",
+                                                        )}
+                                                    >
+                                                        {timeOffType.isSystem ? (
+                                                            <CircleCheck className="size-4" />
+                                                        ) : (
+                                                            <Circle className="size-4" />
+                                                        )}
+                                                        System
+                                                    </Badge>
+                                                )}
+                                            </div>
 
-                                <div>
-                                    <Badge
-                                        variant={
-                                            timeOffType.isActive
-                                                ? "default"
-                                                : "destructive"
-                                        }
-                                        className={cn(
-                                            timeOffType.isActive
-                                                ? "bg-green-500 dark:bg-green-600"
-                                                : "bg-red-500 dark:bg-red-600",
-                                            "text-white",
+                                            <div>
+                                                {timeOffType.isActive && (
+                                                    <Badge
+                                                        variant={
+                                                            timeOffType.isActive
+                                                                ? "outline"
+                                                                : "destructive"
+                                                        }
+                                                        className={cn(
+                                                            timeOffType.isActive
+                                                                ? "border-emerald-500 bg-emerald-500 text-emerald-500"
+                                                                : "border-red-500 bg-red-500 text-red-500",
+                                                            "rounded-md px-3 py-0.5 text-xs font-semibold dark:bg-transparent",
+                                                        )}
+                                                    >
+                                                        <CircleCheck className="size-4" />
+                                                        Active
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            <ItemActions>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="size-8 rounded-md"
+                                                >
+                                                    <Ellipsis className="size-4" />
+                                                </Button>
+                                            </ItemActions>
+                                        </Item>
+                                        {index !== timeOffTypes.length - 1 && (
+                                            <ItemSeparator />
                                         )}
-                                    >
-                                        {timeOffType.isSystem ? (
-                                            <CircleCheck className="size-4" />
-                                        ) : (
-                                            <Circle className="size-4" />
-                                        )}
-                                        Active
-                                    </Badge>
-                                </div>
-                            </div>
-                        ))}
+                                    </Fragment>
+                                ),
+                            )}
+                        </ItemGroup>
                     </CardContent>
                 </Card>
             </OrgSettingsLayout>

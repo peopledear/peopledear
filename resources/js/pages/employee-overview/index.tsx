@@ -34,6 +34,8 @@ export default function EmployeeOverview({
     vacationBalance,
     timeOffRequests,
 }: EmployeeOverviewPageProps) {
+    console.log(timeOffRequests);
+
     return (
         <EmployeeLayout
             breadcrumbs={breadcrumbs}

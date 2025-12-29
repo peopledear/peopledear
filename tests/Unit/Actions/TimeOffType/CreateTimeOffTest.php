@@ -5,10 +5,10 @@ declare(strict_types=1);
 use App\Actions\TymeOffType\CreateTimeOffType;
 use App\Data\PeopleDear\TimeOffType\CreateTimeOffTypeData;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
+use App\Enums\BalanceType;
+use App\Enums\Icon;
 use App\Enums\PeopleDear\CarryOverType;
-use App\Enums\PeopleDear\TimeOffBalanceMode;
 use App\Enums\PeopleDear\TimeOffUnit;
-use App\Enums\Support\TimeOffIcon;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use Spatie\LaravelData\Optional;
@@ -30,20 +30,20 @@ test('create a time off with nullable balance config',
 
         $sickLeaveData = new CreateTimeOffTypeData(
             name: 'Sick Leave',
-            isSystem: true,
             allowedUnits: [
                 TimeOffUnit::Day,
                 TimeOffUnit::HalfDay,
                 TimeOffUnit::Hour,
             ],
-            icon: TimeOffIcon::HeartPulse,
+            icon: Icon::LucideHeartPulse,
             color: '#FF0000',
             isActive: true,
             requiresApproval: false,
             requiresJustification: true,
             requiresJustificationDocument: true,
-            balanceMode: TimeOffBalanceMode::None,
+            balanceMode: BalanceType::None,
             balanceConfig: Optional::create(),
+            isSystem: true,
             description: 'Sick leave for employees'
         );
 
@@ -69,23 +69,23 @@ test('created a time off type',
             $this->organization,
             new CreateTimeOffTypeData(
                 name: 'Vacation',
-                isSystem: true,
                 allowedUnits: [
                     TimeOffUnit::Day,
                     TimeOffUnit::HalfDay,
                 ],
-                icon: TimeOffIcon::PlaneTakeoff,
+                icon: Icon::LucidePlaneTakeoff,
                 color: '#FF5733',
                 isActive: true,
                 requiresApproval: true,
                 requiresJustification: false,
                 requiresJustificationDocument: false,
-                balanceMode: TimeOffBalanceMode::Annual,
+                balanceMode: BalanceType::Annual,
                 balanceConfig: TimeOffTypeBalanceConfigData::from([
                     'accrualDaysPerYear' => 22,
                     'carryOverType' => CarryOverType::Limited,
                     'carryOverDaysLimit' => 5,
                 ]),
+                isSystem: true,
                 description: 'Employee vacation time',
             )
         );

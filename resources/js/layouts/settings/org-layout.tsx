@@ -20,7 +20,7 @@ export default function OrgSettingsLayout({ children }: OrgLayoutProps) {
         {
             label: "Time Off Types",
             href: OrganizationTimeOffTypesController.index().url,
-            active: url.startsWith("/org/time-off-types"),
+            active: url.startsWith("/org/settings/time-off-types"),
         },
         {
             label: "Offices",
@@ -31,20 +31,20 @@ export default function OrgSettingsLayout({ children }: OrgLayoutProps) {
 
     return (
         <>
-            <div className="min-h-0 w-full shrink-0 space-y-6 sm:w-[192px] lg:sticky lg:ml-auto">
-                <h2 className="text-strong ml-3 text-base/8 font-medium lg:block lg:text-xl/8">
+            <div className="min-h-0 w-full shrink-0 space-y-6 xl:sticky xl:top-40 xl:ml-auto xl:w-60">
+                <h2 className="text-strong ml-3 text-base/8 font-medium xl:block xl:text-xl/8">
                     Settings
                 </h2>
                 <div className="flex w-full">
                     <VerticalMenu items={items} />
                 </div>
             </div>
-            <div className="mx-auto flex w-full shrink-0 flex-col lg:max-w-[900px]">
-                <div className="mt-0 flex flex-col gap-y-6 lg:mt-14">
+            <div className="mx-auto flex w-full shrink-0 flex-col xl:max-w-225">
+                <div className="mt-0 flex flex-col gap-y-6 xl:mt-14">
                     {children}
                 </div>
             </div>
-            <div className="mr-auto hidden w-full lg:block lg:max-w-[192px]"></div>
+            <div className="mr-auto hidden w-full xl:block xl:max-w-48"></div>
         </>
     );
 }

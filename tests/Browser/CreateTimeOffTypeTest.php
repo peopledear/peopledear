@@ -34,7 +34,7 @@ beforeEach(function (): void {
 test('can navigate back to the create time off type page', function (): void {
     $this->actingAs($this->user);
 
-    visit(route('org.time-off-types.create'))
+    visit(route('org.settings.time-off-types.create'))
         ->click('Back')
         ->assertSee('Time Off Types')
         ->assertSee('Create Time Off Type');
@@ -43,7 +43,7 @@ test('can navigate back to the create time off type page', function (): void {
 test('renders the create page', function (): void {
     $this->actingAs($this->user);
 
-    visit(route('org.time-off-types.create'))
+    visit(route('org.settings.time-off-types.create'))
         ->assertSee('Create Time Off Type');
 
 });

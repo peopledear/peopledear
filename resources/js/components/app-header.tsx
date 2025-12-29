@@ -85,9 +85,9 @@ export function AppHeader({
     mainNavItems = mainNavItems.filter((item) => item.show !== false);
 
     return (
-        <>
-            <header className="flex px-4 sm:px-8 md:max-w-full">
-                <div className="mx-auto flex h-16 w-full items-center md:max-w-full">
+        <div className="sticky top-0 z-30">
+            <header className="bg-background flex w-full flex-col px-4 sm:px-8 md:max-w-full">
+                <div className="top-0 z-50 mx-auto flex h-16 w-full items-center md:max-w-full">
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
                         <Sheet>
@@ -247,7 +247,8 @@ export function AppHeader({
                     </div>
                 </div>
             </header>
-            <div className="flex border-b border-transparent px-4 sm:px-12 md:max-w-full">
+
+            <div className="bg-background flex w-full border-b border-transparent px-4 sm:px-8 md:max-w-full">
                 <div className="mx-auto flex w-full items-center md:max-w-full">
                     {/* Desktop Navigation */}
                     <div className="-ml-3 hidden h-full items-center space-x-6 lg:flex">
@@ -296,6 +297,19 @@ export function AppHeader({
                     </div>
                 </div>
             </div>
+
+            <div className="pointer-events-none absolute inset-x-0 -bottom-8 z-30 hidden px-0 sm:block sm:px-2">
+                <div className="relative">
+                    <div className="bg-background absolute -top-px -left-px size-4"></div>
+                    <div className="bg-background absolute -top-px -right-px size-4"></div>
+                </div>
+                <div className="relative -mx-px -mt-px h-8">
+                    <div className="bg-weak border-weak absolute inset-x-4 top-0 h-px border-t"></div>
+                    <div className="bg-weak border-weak absolute top-0 left-0 size-4 rounded-tl-none border-t border-l sm:rounded-tl-lg"></div>
+                    <div className="bg-weak border-weak absolute top-0 right-0 size-4 rounded-tr-none border-t border-r sm:rounded-tr-lg"></div>
+                </div>
+            </div>
+
             {breadcrumbs.length > 1 && (
                 <div className="border-sidebar-border/70 flex w-full border-b">
                     <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
@@ -303,6 +317,6 @@ export function AppHeader({
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }

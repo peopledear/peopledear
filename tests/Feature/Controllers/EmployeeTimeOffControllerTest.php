@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\PeopleDear\UserRole;
+use App\Enums\UserRole;
 use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Period;

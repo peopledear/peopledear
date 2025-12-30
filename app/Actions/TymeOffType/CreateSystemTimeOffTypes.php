@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\TymeOffType;
 
 use App\Data\PeopleDear\TimeOffType\CreateTimeOffTypeData;
-use App\Enums\PeopleDear\SystemRole;
+use App\Enums\UserRole;
 use App\Models\Organization;
 use App\Queries\RoleQuery;
 use Illuminate\Container\Attributes\Config;
@@ -34,7 +34,7 @@ final readonly class CreateSystemTimeOffTypes
 
             /** @var Role $peopleManagerRole */
             $peopleManagerRole = $this->roleQuery
-                ->withRole(SystemRole::PeopleManager)
+                ->withRole(UserRole::PeopleManager)
                 ->builder()
                 ->first();
 

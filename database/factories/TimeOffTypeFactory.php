@@ -12,7 +12,6 @@ use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Spatie\Permission\Models\Role;
-
 use function fake;
 
 /**
@@ -53,7 +52,7 @@ final class TimeOffTypeFactory extends Factory
     public function withFallbackApprovalRole(): self
     {
 
-        $role = Role::findByName(\App\Enums\PeopleDear\SystemRole::Owner->value);
+        $role = Role::findByName(\App\Enums\UserRole::Owner->value);
 
         return $this->state(fn (array $attributes): array => [
             'fallback_approval_role_id' => $role->id,

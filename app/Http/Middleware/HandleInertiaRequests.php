@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Enums\PeopleDear\UserRole;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;

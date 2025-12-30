@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\TymeOffType\CreateSystemTimeOffTypes;
-use App\Enums\PeopleDear\SystemRole;
+use App\Enums\UserRole;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,7 +14,7 @@ beforeEach(function (): void {
         ->createQuietly();
 
     $this->action = resolve(CreateSystemTimeOffTypes::class);
-    $this->peopleManagerRole = Role::findByName(SystemRole::PeopleManager->value);
+    $this->peopleManagerRole = Role::findByName(UserRole::PeopleManager->value);
 });
 
 test('sick leave does not require approval and fallback role is null',

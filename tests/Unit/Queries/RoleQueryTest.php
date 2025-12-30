@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\SystemRole;
+use App\Enums\UserRole;
 use App\Queries\RoleQuery;
 use Spatie\Permission\Models\Role;
 
 test('returns the people_manager role', function (): void {
 
     $role = new RoleQuery()
-        ->withRole(SystemRole::PeopleManager)
+        ->withRole(UserRole::PeopleManager)
         ->builder()
         ->first();
 

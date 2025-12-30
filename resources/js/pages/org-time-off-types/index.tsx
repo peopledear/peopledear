@@ -18,13 +18,24 @@ import {
     ItemSeparator,
     ItemTitle,
 } from "@/components/ui/item";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 import AdminLayout from "@/layouts/org-layout";
 import OrgSettingsLayout from "@/layouts/settings/org-layout";
 import { cn } from "@/lib/utils";
 import { TimeOffType, TimeOffTypeStatus } from "@/types";
 import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
 import { Head, Link } from "@inertiajs/react";
-import { Circle, CircleCheck, Ellipsis, PlusIcon } from "lucide-react";
+import {
+    Circle,
+    CircleCheck,
+    Ellipsis,
+    PlusIcon,
+    ShieldCheck,
+} from "lucide-react";
 import { Fragment } from "react";
 
 interface TimeOffTypesPageProps {
@@ -87,26 +98,15 @@ export default function TimeOffTypesPage({
                                             </ItemContent>
                                             <div>
                                                 {timeOffType.isSystem && (
-                                                    <Badge
-                                                        variant={
-                                                            timeOffType.isSystem
-                                                                ? "outline"
-                                                                : "destructive"
-                                                        }
-                                                        className={cn(
-                                                            timeOffType.isSystem
-                                                                ? "border-emerald-500 bg-emerald-500 text-emerald-500"
-                                                                : "border-red-500 bg-red-500 text-red-500",
-                                                            "rounded-md px-3 py-0.5 text-xs font-semibold dark:bg-transparent",
-                                                        )}
-                                                    >
-                                                        {timeOffType.isSystem ? (
-                                                            <CircleCheck className="size-4" />
-                                                        ) : (
-                                                            <Circle className="size-4" />
-                                                        )}
-                                                        System
-                                                    </Badge>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <ShieldCheck className="size-4 text-teal-500" />
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            System time off
+                                                            type.
+                                                        </TooltipContent>
+                                                    </Tooltip>
                                                 )}
                                             </div>
 

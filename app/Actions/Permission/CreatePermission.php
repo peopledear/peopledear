@@ -6,7 +6,7 @@ namespace App\Actions\Permission;
 
 use App\Enums\UserPermission;
 use Spatie\Permission\Contracts\Permission as PermissionContract;
-use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Models\Permission;
 
 final readonly class CreatePermission
@@ -16,12 +16,12 @@ final readonly class CreatePermission
         $name = $permission instanceof UserPermission ? $permission->name : $permission;
 
         try {
-            return Permission::findByName($name);
-        } catch (PermissionDoesNotExist) {
             return Permission::create([
                 'name' => $name,
                 'guard_name' => $guard,
             ]);
+        } catch (PermissionAlreadyExists $e) {
+            return Permission::findByName($name, $guard);
         }
 
     }

@@ -8,10 +8,9 @@ use App\Actions\TymeOffType\CreateTimeOffType;
 use App\Attributes\CurrentOrganization;
 use App\Data\PeopleDear\TimeOffType\CreateTimeOffTypeData;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
-use App\Data\PeopleDear\TimeOffType\TimeOffUnitData;
 use App\Enums\BalanceType;
 use App\Enums\Icon;
-use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffUnit;
 use App\Http\Requests\StoreTimeOffTypeRequest;
 use App\Models\Organization;
 use App\Models\TimeOffType;
@@ -21,7 +20,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 use function back;
-use function collect;
 
 final class OrganizationTimeOffTypesController
 {
@@ -39,16 +37,9 @@ final class OrganizationTimeOffTypesController
 
     public function create(): Response
     {
-
-        $timeOffUnits = collect(TimeOffUnit::cases())
-            ->map(fn (TimeOffUnit $unit): array => [
-                'value' => $unit->value,
-                'label' => $unit->label(),
-            ]);
-
         return Inertia::render('org-time-off-types/create', [
             'balanceTypes' => BalanceType::options()->toArray(),
-            'timeOffUnits' => TimeOffUnitData::collect($timeOffUnits),
+            'timeOffUnits' => TimeOffUnit::options()->toArray(),
             'icons' => Icon::options()->toArray(),
         ]);
     }

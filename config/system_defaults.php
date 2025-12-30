@@ -6,7 +6,7 @@ use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
 use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\PeopleDear\CarryOverType;
-use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffUnit;
 
 return [
     'time_off_types' => [

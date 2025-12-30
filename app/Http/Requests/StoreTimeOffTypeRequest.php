@@ -6,7 +6,7 @@ namespace App\Http\Requests;
 
 use App\Enums\BalanceType;
 use App\Enums\Icon;
-use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffUnit;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

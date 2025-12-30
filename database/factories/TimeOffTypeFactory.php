@@ -6,8 +6,8 @@ namespace Database\Factories;
 
 use App\Enums\BalanceType;
 use App\Enums\Icon;
-use App\Enums\PeopleDear\TimeOffUnit;
 use App\Enums\TimeOffTypeStatus;
+use App\Enums\TimeOffUnit;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Factories\Factory;

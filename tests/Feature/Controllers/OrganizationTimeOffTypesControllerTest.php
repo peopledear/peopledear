@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\BalanceType;
 use App\Enums\Icon;
-use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffUnit;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use App\Models\User;

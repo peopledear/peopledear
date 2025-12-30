@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
 use App\Enums\PeopleDear\CarryOverType;
-use App\Enums\PeopleDear\TimeOffUnit;
+use App\Enums\TimeOffUnit;
 use App\Models\TimeOffType;
 use Illuminate\Support\Arr;
 use Spatie\Permission\Models\Role;

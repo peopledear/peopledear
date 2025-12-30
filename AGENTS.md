@@ -144,6 +144,60 @@ public function builder(): Builder
 - **`database-query`**: Read-only database queries
 - **`get-absolute-url`**: Generate correct URLs
 
+### MCP Servers
+
+#### Playwright MCP Server Setup
+
+The Playwright MCP server provides browser automation capabilities for testing and web interaction.
+
+**Global Installation (Recommended):**
+
+```bash
+npm install -g @playwright/mcp
+```
+
+**Configuration:**
+Create `~/opencode.json` (global config):
+
+```json
+{
+    "$schema": "https://opencode.ai/config.json",
+    "mcp": {
+        "playwright": {
+            "type": "local",
+            "command": ["npx", "@playwright/mcp@latest"],
+            "enabled": true,
+            "timeout": 30000
+        }
+    }
+}
+```
+
+**Usage in OpenCode:**
+
+```
+Navigate to https://example.com and click the login button. use playwright
+```
+
+**Alternative Local Installation:**
+
+```bash
+npm install @playwright/mcp
+```
+
+Then update your MCP configuration files (`.mcp.json`, `.cursor/mcp.json`, etc.) with:
+
+```json
+{
+    "mcpServers": {
+        "playwright": {
+            "command": "npx",
+            "args": ["@playwright/mcp@latest"]
+        }
+    }
+}
+```
+
 ### Key Dependencies
 
 - **PHP**: 8.4.13

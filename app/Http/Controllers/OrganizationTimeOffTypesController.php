@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\TymeOffType\CreateTimeOffType;
 use App\Attributes\CurrentOrganization;
-use App\Data\IconData;
 use App\Data\PeopleDear\TimeOffType\CreateTimeOffTypeData;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
 use App\Data\PeopleDear\TimeOffType\TimeOffUnitData;
@@ -46,14 +45,6 @@ final class OrganizationTimeOffTypesController
                 'value' => $unit->value,
                 'label' => $unit->label(),
             ]);
-
-        $icons = collect(Icon::cases())
-            ->map(fn (Icon $icon): IconData => IconData::from([
-                'value' => $icon->value,
-                'name' => $icon->name,
-                'icon' => $icon->icon(),
-                'label' => $icon->label(),
-            ]));
 
         return Inertia::render('org-time-off-types/create', [
             'balanceTypes' => BalanceType::options()->toArray(),

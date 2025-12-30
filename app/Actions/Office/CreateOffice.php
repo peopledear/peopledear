@@ -9,6 +9,7 @@ use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Models\Office;
 use App\Models\Organization;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 final readonly class CreateOffice
 {
@@ -17,7 +18,7 @@ final readonly class CreateOffice
     ) {}
 
     /**
-     * Create an office with address for the given organization.
+     * @throws Throwable
      */
     public function handle(CreateOfficeData $data, Organization $organization): Office
     {

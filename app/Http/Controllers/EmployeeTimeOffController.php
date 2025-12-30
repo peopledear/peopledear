@@ -10,7 +10,7 @@ use App\Data\PeopleDear\TimeOffRequest\CreateTimeOffRequestData;
 use App\Data\PeopleDear\TimeOffRequest\TimeOffRequestData;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
 use App\Enums\PeopleDear\RequestStatus;
-use App\Http\Requests\CreateTimeOffRequest;
+use App\Http\Requests\StoreTimeOffRequest;
 use App\Models\Employee;
 use App\Models\Period;
 use App\Models\TimeOffType;
@@ -98,7 +98,7 @@ final class EmployeeTimeOffController
      * @throws Throwable
      */
     public function store(
-        CreateTimeOffRequest $request,
+        StoreTimeOffRequest $request,
         CreateTimeOffRequestAction $createTimeOff,
         TimeOffTypeQuery $timeOffTypeQuery,
         #[CurrentEmployee] Employee $employee,

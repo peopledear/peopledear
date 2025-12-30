@@ -3,17 +3,13 @@
 declare(strict_types=1);
 
 use App\Enums\PeopleDear\RequestStatus;
-use App\Enums\UserRole;
 use App\Models\Employee;
-use App\Models\Organization;
 use App\Models\Period;
 use App\Models\TimeOffRequest;
 use App\Models\TimeOffType;
-use App\Models\User;
 use App\Models\VacationBalance;
 
 beforeEach(function (): void {
-    $this->organization = Organization::factory()->create();
 
     $this->period = Period::factory()
         ->for($this->organization)
@@ -32,29 +28,25 @@ beforeEach(function (): void {
         ->for($this->organization)
         ->create(['name' => 'Sick Leave']);
 
-    $this->user = User::factory()->create();
-
-    $this->employee = Employee::factory()
+    $this->userEmployee = Employee::factory()
         ->for($this->organization)
-        ->for($this->user)
+        ->for($this->employee)
         ->create();
 
-    $this->user->assignRole(UserRole::Employee);
 });
 
 test('can store a time off request', function (): void {
     VacationBalance::factory()->create([
-        'organization_id' => $this->organization->id,
-        'employee_id' => $this->employee->id,
+        'employee_id' => $this->userEmployee->id,
         'year' => 2025,
         'from_last_year' => 0,
         'accrued' => 2000,
         'taken' => 0,
     ]);
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->post(route('employee.time-offs.store'), [
-            'employee_id' => $this->employee->id,
+            'employee_id' => $this->userEmployee->id,
             'organization_id' => $this->organization->id,
             'period_id' => $this->period->id,
             'time_off_type_id' => $this->vacationType->id,
@@ -67,14 +59,14 @@ test('can store a time off request', function (): void {
         ->assertSessionHas('status', 'Time off request submitted successfully.');
 
     $this->assertDatabaseHas('time_off_requests', [
-        'employee_id' => $this->employee->id,
+        'employee_id' => $this->userEmployee->id,
         'organization_id' => $this->organization->id,
         'time_off_type_id' => $this->vacationType->id,
     ]);
 });
 
 test('validates required fields when storing time off request', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->post(route('employee.time-offs.store'), []);
 
     $response->assertSessionHasErrors([
@@ -88,16 +80,16 @@ test('validates required fields when storing time off request', function (): voi
 test('validates type is required', function (): void {
     VacationBalance::factory()->create([
         'organization_id' => $this->organization->id,
-        'employee_id' => $this->employee->id,
+        'employee_id' => $this->userEmployee->id,
         'year' => 2025,
         'from_last_year' => 0,
         'accrued' => 100,
         'taken' => 0,
     ]);
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->post(route('employee.time-offs.store'), [
-            'employee_id' => $this->employee->id,
+            'employee_id' => $this->userEmployee->id,
             'organization_id' => $this->organization->id,
             'period_id' => $this->period->id,
             'start_date' => '2025-01-15T00:00:00.000Z',
@@ -112,9 +104,9 @@ test('validates type is required', function (): void {
 });
 
 test('validates end date must be after or equal to start date', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->post(route('employee.time-offs.store'), [
-            'employee_id' => $this->employee->id,
+            'employee_id' => $this->userEmployee->id,
             'organization_id' => $this->organization->id,
             'time_off_type_id' => $this->vacationType->id,
             'start_date' => '2025-01-17',
@@ -132,7 +124,7 @@ test('unauthenticated user cannot store time off request', function (): void {
 });
 
 test('authenticated employee can access time offs page', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index'));
 
     $response->assertOk()
@@ -152,14 +144,14 @@ test('unauthenticated user is redirected to login on index page', function (): v
 
 test('employee sees paginated time off requests with 20 per page', function (): void {
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->count(25)
         ->create();
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index'));
 
     $response->assertOk()
@@ -172,7 +164,7 @@ test('employee sees paginated time off requests with 20 per page', function (): 
 });
 
 test('page displays empty state when user has no requests', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index'));
 
     $response->assertOk()
@@ -185,7 +177,7 @@ test('page displays empty state when user has no requests', function (): void {
 test('requests are ordered by created_at desc', function (): void {
     /** @var TimeOffRequest $oldRequest */
     $oldRequest = TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
@@ -193,13 +185,13 @@ test('requests are ordered by created_at desc', function (): void {
 
     /** @var TimeOffRequest $newRequest */
     $newRequest = TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['created_at' => now()]);
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index'));
 
     $response->assertOk()
@@ -212,20 +204,20 @@ test('requests are ordered by created_at desc', function (): void {
 
 test('filtering by status returns only matching requests', function (): void {
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Approved]);
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index', ['status' => RequestStatus::Pending->value]));
 
     $response->assertOk()
@@ -238,20 +230,20 @@ test('filtering by status returns only matching requests', function (): void {
 
 test('clearing status filter returns all requests', function (): void {
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Approved]);
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index'));
 
     $response->assertOk()
@@ -262,7 +254,7 @@ test('clearing status filter returns all requests', function (): void {
 });
 
 test('status filter persists in URL query params', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index', ['status' => RequestStatus::Pending->value]));
 
     $response->assertOk()
@@ -274,20 +266,20 @@ test('status filter persists in URL query params', function (): void {
 
 test('filtering by type returns only matching requests', function (): void {
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->vacationType, 'type')
         ->create();
 
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->sickLeaveType, 'type')
         ->create();
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index', ['type' => $this->vacationType->id]));
 
     $response->assertOk()
@@ -300,27 +292,27 @@ test('filtering by type returns only matching requests', function (): void {
 
 test('combined status and type filters return correct results', function (): void {
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->vacationType, 'type')
         ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->vacationType, 'type')
         ->create(['status' => RequestStatus::Approved]);
 
     TimeOffRequest::factory()
-        ->for($this->employee)
+        ->for($this->userEmployee)
         ->for($this->organization)
         ->for($this->period)
         ->for($this->sickLeaveType, 'type')
         ->create(['status' => RequestStatus::Pending]);
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index', [
             'status' => RequestStatus::Pending->value,
             'type' => $this->vacationType->id,
@@ -336,7 +328,7 @@ test('combined status and type filters return correct results', function (): voi
 });
 
 test('type filter persists in URL query params', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.index', ['type' => $this->vacationType->id]));
 
     $response->assertOk()
@@ -347,7 +339,7 @@ test('type filter persists in URL query params', function (): void {
 });
 
 test('renders the create time off request page', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.time-offs.create'));
 
     $response->assertOk()

@@ -7,12 +7,15 @@ namespace App\Models;
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -28,6 +31,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read CarbonInterface|null $two_factor_confirmed_at
  * @property-read CarbonInterface $created_at
  * @property-read CarbonInterface $updated_at
+ * @property-read Collection<int, Role> $roles
+ * @property-read Collection<int, Permission> $permissions
  */
 final class User extends Authenticatable implements MustVerifyEmail
 {

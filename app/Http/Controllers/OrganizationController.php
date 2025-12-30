@@ -7,21 +7,29 @@ namespace App\Http\Controllers;
 use App\Actions\Organization\CreateOrganization;
 use App\Actions\Organization\SetCurrentOrganization;
 use App\Actions\Organization\UpdateOrganization;
+use App\Attributes\CurrentOrganization;
 use App\Data\PeopleDear\Country\CountryData;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Data\PeopleDear\Organization\UpdateOrganizationData;
-use App\Http\Requests\CreateOrganizationRequest;
+use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organization;
 use App\Queries\CountryQuery;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class OrganizationController
 {
-    public function index(): Response
-    {
+    public function index(
+        Request $request,
+        #[CurrentOrganization] Organization $organization
+    ): Response {
+
+        Gate::authorize('view', $organization);
+
         return Inertia::render('org/index', []);
     }
 
@@ -37,7 +45,7 @@ final class OrganizationController
     }
 
     public function store(
-        CreateOrganizationRequest $request,
+        StoreOrganizationRequest $request,
         CreateOrganization $action,
         SetCurrentOrganization $setCurrentOrganization,
     ): RedirectResponse {
@@ -51,30 +59,30 @@ final class OrganizationController
             ->with('success', 'Organization created successfully');
     }
 
-    public function edit(): Response
-    {
-        /** @var Organization $organization */
-        $organization = Organization::query()
-            ->with('offices.address')
-            ->firstOrFail();
+    public function edit(
+        #[CurrentOrganization] Organization $organization
+    ): Response {
+
+        Gate::authorize('view', $organization);
 
         return Inertia::render('org-settings-general/edit', [
-            'organization' => $organization,
+            'organization' => $organization->load('offices.address'),
         ]);
     }
 
     public function update(
+        #[CurrentOrganization] Organization $organization,
         UpdateOrganizationRequest $request,
         UpdateOrganization $action
     ): RedirectResponse {
-        /** @var Organization $organization */
-        $organization = Organization::query()->firstOrFail();
 
         $data = UpdateOrganizationData::from($request->validated());
 
-        $action->handle($organization, $data);
+        $organization = $action->handle($organization, $data);
 
-        return to_route('org.settings.organization.edit')
+        return to_route('org.settings.organization.edit', [
+            'organization' => $organization->id,
+        ])
             ->with('success', 'Organization updated successfully');
     }
 }

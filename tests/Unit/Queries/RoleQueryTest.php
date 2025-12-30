@@ -2,9 +2,18 @@
 
 declare(strict_types=1);
 
+use App\Actions\Role\CreateSystemRoles;
 use App\Enums\UserRole;
 use App\Queries\RoleQuery;
 use Spatie\Permission\Models\Role;
+
+beforeEach(
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        resolve(CreateSystemRoles::class)->handle();
+    });
 
 test('selects from the correct table', function (): void {
 
@@ -75,7 +84,7 @@ test('filters directly via __invoke with string name', function (): void {
 
 test('returns the people_manager role using byRole', function (): void {
 
-    $role = (new RoleQuery())()
+    $role = new RoleQuery()()
         ->byRole(UserRole::PeopleManager)
         ->first();
 
@@ -88,7 +97,7 @@ test('returns the people_manager role using byRole', function (): void {
 
 test('returns role using byName method', function (): void {
 
-    $role = (new RoleQuery())()
+    $role = new RoleQuery()()
         ->byName('employee')
         ->first();
 
@@ -101,7 +110,7 @@ test('returns role using byName method', function (): void {
 
 test('returns role using __invoke with UserRole', function (): void {
 
-    $role = (new RoleQuery())(UserRole::Owner)
+    $role = new RoleQuery()(UserRole::Owner)
         ->first();
 
     expect($role)
@@ -113,7 +122,7 @@ test('returns role using __invoke with UserRole', function (): void {
 
 test('returns role using __invoke with string', function (): void {
 
-    $role = (new RoleQuery())('manager')
+    $role = new RoleQuery()('manager')
         ->first();
 
     expect($role)
@@ -137,7 +146,7 @@ test('returns multiple roles with get method', function (): void {
 
 test('withRole method still works for backward compatibility', function (): void {
 
-    $role = (new RoleQuery())()
+    $role = new RoleQuery()()
         ->withRole(UserRole::PeopleManager)
         ->first();
 

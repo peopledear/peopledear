@@ -16,6 +16,7 @@ use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,6 +26,8 @@ final class OrganizationTimeOffTypesController
 {
     public function index(#[CurrentOrganization] Organization $organization): Response
     {
+
+        Gate::authorize('viewAny', TimeOffType::class);
 
         $timeOffTypes = TimeOffType::query()
             ->where('organization_id', $organization->id)
@@ -37,6 +40,9 @@ final class OrganizationTimeOffTypesController
 
     public function create(): Response
     {
+
+        Gate::authorize('create', TimeOffType::class);
+
         return Inertia::render('org-time-off-types/create', [
             'balanceTypes' => BalanceType::options()->toArray(),
             'timeOffUnits' => TimeOffUnit::options()->toArray(),

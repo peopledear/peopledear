@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Attributes\CurrentOrganization;
 use App\Enums\UserRole;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -20,6 +22,10 @@ final class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
+
+    public function __construct(
+        #[CurrentOrganization] private readonly Organization $organization
+    ) {}
 
     /**
      * @see https://inertiajs.com/asset-versioning
@@ -57,6 +63,7 @@ final class HandleInertiaRequests extends Middleware
                 'user' => $user,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'organization' => $this->organization,
             'show' => [
                 'employeeLink' => $isOrgUri,
                 'orgLink' => ($user?->hasRole([

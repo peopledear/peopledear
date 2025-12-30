@@ -6,23 +6,27 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+beforeEach(function (): void {
+
+    $this->middleware = resolve(HandleInertiaRequests::class);
+
+});
+
 it('shares app name from config', function (): void {
-    $middleware = new HandleInertiaRequests();
 
     $request = Request::create('/', 'GET');
 
-    $shared = $middleware->share($request);
+    $shared = $this->middleware->share($request);
 
     expect($shared)->toHaveKey('name')
         ->and($shared['name'])->toBe(config('app.name'));
 });
 
 it('shares null user when guest', function (): void {
-    $middleware = new HandleInertiaRequests();
 
     $request = Request::create('/', 'GET');
 
-    $shared = $middleware->share($request);
+    $shared = $this->middleware->share($request);
 
     expect($shared)->toHaveKey('auth')
         ->and($shared['auth'])->toHaveKey('user')
@@ -35,12 +39,10 @@ it('shares authenticated user data', function (): void {
         'email' => 'test@example.com',
     ]);
 
-    $middleware = new HandleInertiaRequests();
-
     $request = Request::create('/', 'GET');
     $request->setUserResolver(fn () => $user);
 
-    $shared = $middleware->share($request);
+    $shared = $this->middleware->share($request);
 
     expect($shared['auth']['user'])->not->toBeNull()
         ->and($shared['auth']['user']->id)->toBe($user->id)
@@ -49,45 +51,40 @@ it('shares authenticated user data', function (): void {
 });
 
 it('defaults sidebarOpen to true when no cookie', function (): void {
-    $middleware = new HandleInertiaRequests();
 
     $request = Request::create('/', 'GET');
 
-    $shared = $middleware->share($request);
+    $shared = $this->middleware->share($request);
 
     expect($shared)->toHaveKey('sidebarOpen')
         ->and($shared['sidebarOpen'])->toBeTrue();
 });
 
 it('sets sidebarOpen to true when cookie is true', function (): void {
-    $middleware = new HandleInertiaRequests();
 
     $request = Request::create('/', 'GET');
     $request->cookies->set('sidebar_state', 'true');
 
-    $shared = $middleware->share($request);
+    $shared = $this->middleware->share($request);
 
     expect($shared['sidebarOpen'])->toBeTrue();
 });
 
 it('sets sidebarOpen to false when cookie is false', function (): void {
-    $middleware = new HandleInertiaRequests();
 
     $request = Request::create('/', 'GET');
     $request->cookies->set('sidebar_state', 'false');
 
-    $shared = $middleware->share($request);
+    $shared = $this->middleware->share($request);
 
     expect($shared['sidebarOpen'])->toBeFalse();
 });
 
 it('includes parent shared data', function (): void {
-    $middleware = new HandleInertiaRequests();
 
     $request = Request::create('/', 'GET');
 
-    $shared = $middleware->share($request);
+    $shared = $this->middleware->share($request);
 
-    // Parent Inertia middleware shares 'errors' by default
     expect($shared)->toHaveKey('errors');
 });

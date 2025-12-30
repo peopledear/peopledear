@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Actions\TymeOffType\CreateSystemTimeOffTypes;
 use App\Enums\PeopleDear\OfficeType;
 use App\Models\Office;
 use App\Models\Organization;
@@ -12,10 +11,6 @@ use Illuminate\Database\Seeder;
 
 final class OrganizationSeeder extends Seeder
 {
-    public function __construct(
-        private readonly CreateSystemTimeOffTypes $createSystemTimeOffTypes
-    ) {}
-
     /**
      * Run the database seeds.
      */
@@ -28,10 +23,6 @@ final class OrganizationSeeder extends Seeder
             'ssn' => 'SSN987654321',
             'phone' => '+1-555-0100',
         ]);
-
-        $this->createSystemTimeOffTypes->handle(
-            $organization
-        );
 
         /** @var Office $headquarters */
         $headquarters = Office::factory()
@@ -51,15 +42,11 @@ final class OrganizationSeeder extends Seeder
             'country' => 'United States',
         ]);
 
-        $organization2 = Organization::factory()->create([
+        Organization::factory()->create([
             'name' => 'PeopleDear The Scond.',
             'vat_number' => 'VAT123456779',
             'ssn' => 'SSN987654421',
             'phone' => '+1-555-0100',
         ]);
-
-        $this->createSystemTimeOffTypes->handle(
-            $organization2
-        );
     }
 }

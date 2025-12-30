@@ -29,8 +29,16 @@ enum UserRole: string
         return match ($this) {
             self::Employee, self::Manager => [
                 UserPermission::ProfileEdit,
+                UserPermission::TimeOffRequestCreate,
+                UserPermission::TimeOffRequestView,
+                UserPermission::TimeOffRequestEdit,
+                UserPermission::TimeOffRequestDelete,
             ],
-            self::Owner => [UserPermission::TimeOffTypeView],
+            self::Owner => [
+                ...self::PeopleManager->permissions(),
+                UserPermission::OrganizationCreate,
+                UserPermission::OrganizationDelete,
+            ],
             self::PeopleManager => [
                 UserPermission::TimeOffTypeManage,
                 UserPermission::TimeOffTypeView,
@@ -39,6 +47,13 @@ enum UserRole: string
                 UserPermission::TimeOffTypeDelete,
                 UserPermission::TimeOffTypeActivate,
                 UserPermission::TimeOffTypeDeactivate,
+                UserPermission::TimeOffRequestManage,
+                UserPermission::OfficeManage,
+                UserPermission::OfficeCreate,
+                UserPermission::OfficeEdit,
+                UserPermission::OfficeDelete,
+                UserPermission::OrganizationView,
+                UserPermission::OrganizationEdit,
             ],
         };
     }

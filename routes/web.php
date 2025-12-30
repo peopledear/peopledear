@@ -23,7 +23,8 @@ use App\Http\Controllers\UserTwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('welcome', []))->name('home');
+Route::get('/', fn () => Inertia::render('welcome', []))
+    ->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
 
@@ -35,30 +36,30 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         Route::get('/overview', [EmployeeOverviewController::class, 'index'])
             ->name('overview');
 
-        Route::as('time-offs.')->prefix('time-offs')->group(function (): void {
+        Route::as('time-offs.')
+            ->prefix('time-offs')
+            ->group(function (): void {
 
-            Route::get('/', [EmployeeTimeOffController::class, 'index'])
-                ->name('index');
+                Route::get('/', [EmployeeTimeOffController::class, 'index'])
+                    ->name('index');
 
-            Route::get('/create', [EmployeeTimeOffController::class, 'create'])
-                ->name('create');
+                Route::get('/create', [EmployeeTimeOffController::class, 'create'])
+                    ->name('create');
 
-            Route::post('/store', [EmployeeTimeOffController::class, 'store'])
-                ->name('store');
+                Route::post('/store', [EmployeeTimeOffController::class, 'store'])
+                    ->name('store');
 
-        });
+            });
 
     });
 
     Route::get('organization-required', fn () => Inertia::render('organization-required', []))
         ->name('organization-required');
 
-    Route::middleware(['role:people_manager|owner|manager'])
-        ->prefix('org')
+    Route::prefix('org')
         ->as('org.')->group(function (): void {
 
             Route::get('/', [OrganizationController::class, 'index'])
-                ->middleware('can:employees.view')
                 ->name('overview');
 
             Route::as('employees.')->prefix('employees')
@@ -76,12 +77,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             // Organization Settings...
 
             Route::prefix('settings')->as('settings.')->group(function (): void {
-                Route::get('/', [OrganizationController::class, 'edit'])
-                    ->middleware('can:organizations.edit')
+                Route::get('/{organization}/edit', [OrganizationController::class, 'edit'])
                     ->name('organization.edit');
 
-                Route::put('organization', [OrganizationController::class, 'update'])
-                    ->middleware('can:organizations.edit')
+                Route::put('organization/{organization}', [OrganizationController::class, 'update'])
                     ->name('organization.update');
 
                 Route::prefix('time-off-types')
@@ -101,15 +100,12 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             });
 
             Route::post('offices', [OrganizationOfficeController::class, 'store'])
-                ->middleware('can:organizations.edit')
                 ->name('offices.store');
 
             Route::put('offices/{office}', [OrganizationOfficeController::class, 'update'])
-                ->middleware('can:organizations.edit')
                 ->name('offices.update');
 
             Route::delete('offices/{office}', [OrganizationOfficeController::class, 'destroy'])
-                ->middleware('can:organizations.edit')
                 ->name('offices.destroy');
 
         });

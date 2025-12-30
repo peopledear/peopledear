@@ -5,25 +5,10 @@ declare(strict_types=1);
 use App\Enums\PeopleDear\OfficeType;
 use App\Models\Address;
 use App\Models\Office;
-use App\Models\Organization;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
 
-it('people manager can create office with address', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('people manager can create office with address', function (): void {
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'New York Office',
@@ -39,7 +24,9 @@ it('people manager can create office with address', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Office $office */
     $office = Office::query()
@@ -50,7 +37,7 @@ it('people manager can create office with address', function (): void {
     expect($office)
         ->not->toBeNull()
         ->and($office->organization_id)
-        ->toBe($organization->id)
+        ->toBe($this->organization->id)
         ->and($office->name)
         ->toBe('New York Office')
         ->and($office->type)
@@ -76,21 +63,9 @@ it('people manager can create office with address', function (): void {
         ->toBe('United States');
 });
 
-it('owner can create office with address', function (): void {
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
+test('owner can create office with address', function (): void {
 
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
-    $this->actingAs($owner);
+    $this->actingAs($this->owner);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'London Office',
@@ -106,7 +81,9 @@ it('owner can create office with address', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Office $office */
     $office = Office::query()
@@ -117,20 +94,8 @@ it('owner can create office with address', function (): void {
     expect($office)->not->toBeNull();
 });
 
-it('employee cannot create office', function (): void {
-    /** @var Role $employeeRole */
-    $employeeRole = Role::query()
-        ->where('name', 'employee')
-        ->first()
-        ?->fresh();
-
-    /** @var User $employee */
-    $employee = User::factory()->create();
-    $employee->assignRole($employeeRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($employee);
+test('employee cannot create office', function (): void {
+    $this->actingAs($this->employee);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'Unauthorized Office',
@@ -153,26 +118,15 @@ it('employee cannot create office', function (): void {
     expect($office)->toBeNull();
 });
 
-it('people manager can update office and address', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
+test('people manager can update office and address', function (): void {
 
     /** @var Office $office */
-    $office = Office::factory()->create([
-        'organization_id' => $organization->id,
-        'name' => 'Old Office Name',
-        'type' => OfficeType::Branch,
-    ]);
+    $office = Office::factory()
+        ->for($this->organization, 'organization')
+        ->create([
+            'name' => 'Old Office Name',
+            'type' => OfficeType::Branch,
+        ]);
 
     /** @var Address $address */
     $address = Address::factory()
@@ -184,7 +138,7 @@ it('people manager can update office and address', function (): void {
             'country' => 'Old Country',
         ]);
 
-    $this->actingAs($peopleManager);
+    $this->actingAs($this->peopleManager);
 
     $response = $this->put(route('org.offices.update', $office), [
         'name' => 'Updated Office Name',
@@ -200,7 +154,9 @@ it('people manager can update office and address', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Office $updatedOffice */
     $updatedOffice = $office->fresh();
@@ -229,31 +185,17 @@ it('people manager can update office and address', function (): void {
         ->toBe('New Country');
 });
 
-it('owner can update office', function (): void {
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
-
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
+test('owner can update office', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->create([
-        'organization_id' => $organization->id,
-        'name' => 'Old Name',
-    ]);
+    $office = Office::factory()
+        ->for($this->organization, 'organization')
+        ->create();
 
     Address::factory()
         ->for($office, 'addressable')
         ->create();
 
-    $this->actingAs($owner);
+    $this->actingAs($this->owner);
 
     $response = $this->put(route('org.offices.update', $office), [
         'name' => 'Owner Updated Office',
@@ -269,7 +211,9 @@ it('owner can update office', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Office $updatedOffice */
     $updatedOffice = $office->fresh();
@@ -277,31 +221,19 @@ it('owner can update office', function (): void {
     expect($updatedOffice->name)->toBe('Owner Updated Office');
 });
 
-it('employee cannot update office', function (): void {
-    /** @var Role $employeeRole */
-    $employeeRole = Role::query()
-        ->where('name', 'employee')
-        ->first()
-        ?->fresh();
-
-    /** @var User $employee */
-    $employee = User::factory()->create();
-    $employee->assignRole($employeeRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
+test('employee cannot update office', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->create([
-        'organization_id' => $organization->id,
-        'name' => 'Protected Office',
-    ]);
+    $office = Office::factory()
+        ->for($this->organization, 'organization')
+        ->create([
+            'name' => 'Protected Office',
+        ]);
 
     Address::factory()
         ->for($office, 'addressable')
         ->create();
 
-    $this->actingAs($employee);
+    $this->actingAs($this->employee);
 
     $response = $this->put(route('org.offices.update', $office), [
         'name' => 'Hacked Office',
@@ -319,33 +251,23 @@ it('employee cannot update office', function (): void {
     /** @var Office $unchangedOffice */
     $unchangedOffice = $office->fresh();
 
-    expect($unchangedOffice->name)->toBe('Protected Office');
+    expect($unchangedOffice->name)
+        ->toBe('Protected Office');
 });
 
-it('people manager can delete office', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
+test('people manager can delete office', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->create([
-        'organization_id' => $organization->id,
-    ]);
+    $office = Office::factory()
+        ->for($this->organization, 'organization')
+        ->create();
 
-    $this->actingAs($peopleManager);
+    $this->actingAs($this->peopleManager);
 
     $response = $this->delete(route('org.offices.destroy', $office));
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Office|null $deletedOffice */
     $deletedOffice = Office::query()
@@ -355,30 +277,19 @@ it('people manager can delete office', function (): void {
     expect($deletedOffice)->toBeNull();
 });
 
-it('owner can delete office', function (): void {
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
-
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
+test('owner can delete office', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->create([
-        'organization_id' => $organization->id,
-    ]);
+    $office = Office::factory()
+        ->for($this->organization, 'organization')
+        ->create();
 
-    $this->actingAs($owner);
+    $this->actingAs($this->owner);
 
     $response = $this->delete(route('org.offices.destroy', $office));
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Office|null $deletedOffice */
     $deletedOffice = Office::query()
@@ -388,28 +299,18 @@ it('owner can delete office', function (): void {
     expect($deletedOffice)->toBeNull();
 });
 
-it('employee cannot delete office', function (): void {
-    /** @var Role $employeeRole */
-    $employeeRole = Role::query()
-        ->where('name', 'employee')
-        ->first()
-        ?->fresh();
-
-    /** @var User $employee */
-    $employee = User::factory()->create();
-    $employee->assignRole($employeeRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
+test('employee cannot delete office', function (): void {
     /** @var Office $office */
-    $office = Office::factory()->create([
-        'organization_id' => $organization->id,
-    ]);
+    $office = Office::factory()
+        ->for($this->organization, 'organization')
+        ->create();
 
-    $this->actingAs($employee);
+    $this->actingAs($this->employee);
 
-    $response = $this->delete(route('org.offices.destroy', $office));
+    $response = $this->delete(route(
+        'org.offices.destroy',
+        $office
+    ));
 
     $response->assertForbidden();
 
@@ -422,20 +323,8 @@ it('employee cannot delete office', function (): void {
     expect($stillExistsOffice)->not->toBeNull();
 });
 
-it('requires office name', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+test('requires office name', function (): void {
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => '',
@@ -452,20 +341,8 @@ it('requires office name', function (): void {
         ->assertSessionHasErrors('name');
 });
 
-it('requires office type', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+test('requires office type', function (): void {
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
@@ -482,20 +359,9 @@ it('requires office type', function (): void {
         ->assertSessionHasErrors('type');
 });
 
-it('requires address line1', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('requires address line1', function (): void {
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
@@ -512,20 +378,8 @@ it('requires address line1', function (): void {
         ->assertSessionHasErrors('address.line1');
 });
 
-it('requires address city', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+test('requires address city', function (): void {
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
@@ -542,20 +396,9 @@ it('requires address city', function (): void {
         ->assertSessionHasErrors('address.city');
 });
 
-it('requires address postal_code', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('requires address postal_code', function (): void {
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
@@ -572,20 +415,8 @@ it('requires address postal_code', function (): void {
         ->assertSessionHasErrors('address.postal_code');
 });
 
-it('requires address country', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+test('requires address country', function (): void {
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'Test Office',
@@ -602,21 +433,9 @@ it('requires address country', function (): void {
         ->assertSessionHasErrors('address.country');
 });
 
-it('allows optional address fields', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('allows optional address fields', function (): void {
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.offices.store'), [
         'name' => 'Minimal Office',
@@ -632,7 +451,9 @@ it('allows optional address fields', function (): void {
         ],
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Office $office */
     $office = Office::query()
@@ -645,7 +466,6 @@ it('allows optional address fields', function (): void {
         ->and($office->phone)
         ->toBeNull();
 
-    /** @var Address $address */
     $address = $office->address;
 
     expect($address->line2)

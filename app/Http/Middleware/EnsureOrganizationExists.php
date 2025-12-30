@@ -27,6 +27,7 @@ final readonly class EnsureOrganizationExists
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         if (! $request->user()) {
             return $next($request);
         }

@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\PeopleDear\OfficeType;
+use App\Models\Office;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * @property-read Office $office
+ */
 final class UpdateOfficeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('organizations.edit') ?? false;
+
+        return $this->user()?->can('update', $this->office) ?? false;
     }
 
     /**

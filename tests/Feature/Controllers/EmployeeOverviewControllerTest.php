@@ -2,32 +2,21 @@
 
 declare(strict_types=1);
 
-use App\Enums\UserRole;
 use App\Models\Employee;
-use App\Models\Organization;
-use App\Models\User;
 use App\Models\VacationBalance;
 
 test('renders the employee overview page', function (): void {
-    $organization = Organization::factory()
-        ->create();
-
-    $user = User::factory()
-        ->create();
-
     $employee = Employee::factory()
-        ->for($organization)
-        ->for($user)
+        ->for($this->organization)
+        ->for($this->employee)
         ->create();
 
     VacationBalance::factory()
         ->for($employee)
-        ->for($organization)
+        ->for($this->organization)
         ->create();
 
-    $user->assignRole(UserRole::Employee);
-
-    $response = $this->actingAs($user)
+    $response = $this->actingAs($this->employee)
         ->get(route('employee.overview'));
 
     $response->assertOk()

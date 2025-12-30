@@ -15,6 +15,8 @@ test('handles creation of existing role',
      */
     function (): void {
 
+        $this->action->handle(UserRole::Manager);
+
         $role = $this->action->handle(UserRole::Manager);
 
         expect($role->name)

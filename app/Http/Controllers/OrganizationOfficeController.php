@@ -9,16 +9,21 @@ use App\Actions\Office\DeleteOffice;
 use App\Actions\Office\UpdateOffice;
 use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Data\PeopleDear\Office\UpdateOfficeData;
-use App\Http\Requests\CreateOfficeRequest;
+use App\Http\Requests\StoreOfficeRequest;
 use App\Http\Requests\UpdateOfficeRequest;
 use App\Models\Office;
 use App\Models\Organization;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
+use Throwable;
 
 final class OrganizationOfficeController
 {
+    /**
+     * @throws Throwable
+     */
     public function store(
-        CreateOfficeRequest $request,
+        StoreOfficeRequest $request,
         CreateOffice $action
     ): RedirectResponse {
         /** @var Organization $organization */
@@ -28,7 +33,9 @@ final class OrganizationOfficeController
 
         $action->handle($data, $organization);
 
-        return to_route('org.settings.organization.edit')
+        return to_route('org.settings.organization.edit', [
+            'organization' => $organization->id,
+        ])
             ->with('success', 'Office created successfully');
     }
 
@@ -41,7 +48,9 @@ final class OrganizationOfficeController
 
         $action->handle($office, $data);
 
-        return to_route('org.settings.organization.edit')
+        return to_route('org.settings.organization.edit', [
+            'organization' => $office->organization_id,
+        ])
             ->with('success', 'Office updated successfully');
     }
 
@@ -49,9 +58,14 @@ final class OrganizationOfficeController
         Office $office,
         DeleteOffice $action
     ): RedirectResponse {
+
+        Gate::authorize('delete', $office);
+
         $action->handle($office);
 
-        return to_route('org.settings.organization.edit')
+        return to_route('org.settings.organization.edit', [
+            'organization' => $office->organization_id,
+        ])
             ->with('success', 'Office deleted successfully');
     }
 }

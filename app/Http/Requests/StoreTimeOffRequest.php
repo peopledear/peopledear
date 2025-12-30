@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\TimeOffRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class CreateTimeOffRequest extends FormRequest
+final class StoreTimeOffRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): true
+    public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', TimeOffRequest::class) ?? false;
     }
 
     /**

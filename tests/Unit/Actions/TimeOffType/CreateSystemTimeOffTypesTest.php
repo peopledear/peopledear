@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Actions\Role\CreateSystemRoles;
 use App\Actions\TymeOffType\CreateSystemTimeOffTypes;
 use App\Enums\UserRole;
 use App\Models\Organization;
@@ -9,13 +10,18 @@ use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Role;
 
-beforeEach(function (): void {
-    $this->organization = Organization::factory()
-        ->createQuietly();
+beforeEach(
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        resolve(CreateSystemRoles::class)->handle();
+        $this->organization = Organization::factory()
+            ->createQuietly();
 
-    $this->action = resolve(CreateSystemTimeOffTypes::class);
-    $this->peopleManagerRole = Role::findByName(UserRole::PeopleManager->value);
-});
+        $this->action = resolve(CreateSystemTimeOffTypes::class);
+        $this->peopleManagerRole = Role::findByName(UserRole::PeopleManager->value);
+    });
 
 test('sick leave does not require approval and fallback role is null',
     /**

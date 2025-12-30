@@ -4,25 +4,13 @@ declare(strict_types=1);
 
 use App\Models\Country;
 use App\Models\Organization;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
 
-it('people manager can access organization settings', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('people manager can access organization settings', function (): void {
+    $this->actingAs($this->peopleManager);
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
-
-    $response = $this->get(route('org.settings.organization.edit'));
+    $response = $this->get(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
@@ -30,22 +18,12 @@ it('people manager can access organization settings', function (): void {
             ->has('organization'));
 });
 
-it('owner can access organization settings', function (): void {
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
+test('owner can access organization settings', function (): void {
+    $this->actingAs($this->owner);
 
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($owner);
-
-    $response = $this->get(route('org.settings.organization.edit'));
+    $response = $this->get(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
@@ -53,58 +31,36 @@ it('owner can access organization settings', function (): void {
             ->has('organization'));
 });
 
-it('employee cannot access organization settings', function (): void {
-    /** @var Role $employeeRole */
-    $employeeRole = Role::query()
-        ->where('name', 'employee')
-        ->first()
-        ?->fresh();
+test('employee cannot access organization settings', function (): void {
 
-    /** @var User $employee */
-    $employee = User::factory()->create();
-    $employee->assignRole($employeeRole);
+    $this->actingAs($this->employee);
 
-    Organization::factory()->create();
-
-    $this->actingAs($employee);
-
-    $response = $this->get(route('org.settings.organization.edit'));
+    $response = $this->get(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     $response->assertForbidden();
 });
 
-it('people manager can update organization', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('people manager can update organization', function (): void {
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
+    $this->actingAs($this->peopleManager);
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'name' => 'Old Company Name',
-        'vat_number' => 'OLD123',
-        'ssn' => 'OLD-SSN',
-        'phone' => '+1234567890',
-    ]);
-
-    $this->actingAs($peopleManager);
-
-    $response = $this->put(route('org.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update', [
+        'organization' => $this->organization->id,
+    ]), [
         'name' => 'Updated Company Name',
         'vat_number' => 'NEW456',
         'ssn' => 'NEW-SSN',
         'phone' => '+9876543210',
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Organization $updatedOrganization */
-    $updatedOrganization = $organization->fresh();
+    $updatedOrganization = $this->organization->fresh();
 
     expect($updatedOrganization->name)
         ->toBe('Updated Company Name')
@@ -116,85 +72,55 @@ it('people manager can update organization', function (): void {
         ->toBe('+9876543210');
 });
 
-it('owner can update organization', function (): void {
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
+test('owner can update organization', function (): void {
 
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
+    $this->actingAs($this->owner);
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'name' => 'Old Company Name',
-    ]);
-
-    $this->actingAs($owner);
-
-    $response = $this->put(route('org.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update', [
+        'organization' => $this->organization->id,
+    ]), [
         'name' => 'Owner Updated Name',
         'vat_number' => null,
         'ssn' => null,
         'phone' => null,
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Organization $updatedOrganization */
-    $updatedOrganization = $organization->fresh();
+    $updatedOrganization = $this->organization->fresh();
 
     expect($updatedOrganization->name)->toBe('Owner Updated Name');
 });
 
-it('employee cannot update organization', function (): void {
-    /** @var Role $employeeRole */
-    $employeeRole = Role::query()
-        ->where('name', 'employee')
-        ->first()
-        ?->fresh();
+test('employee cannot update organization', function (): void {
 
-    /** @var User $employee */
-    $employee = User::factory()->create();
-    $employee->assignRole($employeeRole);
+    $this->actingAs($this->employee);
+    $organizationName = $this->organization->name;
 
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'name' => 'Original Name',
-    ]);
-
-    $this->actingAs($employee);
-
-    $response = $this->put(route('org.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update', [
+        'organization' => $this->organization->id,
+    ]), [
         'name' => 'Hacked Name',
     ]);
 
     $response->assertForbidden();
 
     /** @var Organization $unchangedOrganization */
-    $unchangedOrganization = $organization->fresh();
+    $unchangedOrganization = $this->organization->fresh();
 
-    expect($unchangedOrganization->name)->toBe('Original Name');
+    expect($unchangedOrganization->name)
+        ->toBe($organizationName);
 });
 
-it('requires organization name', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('requires organization name', function (): void {
+    $this->actingAs($this->peopleManager);
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
-
-    $response = $this->put(route('org.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update', [
+        'organization' => $this->organization->id,
+    ]), [
         'name' => '',
         'vat_number' => null,
         'ssn' => null,
@@ -205,22 +131,12 @@ it('requires organization name', function (): void {
         ->assertSessionHasErrors('name');
 });
 
-it('validates organization name max length', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('validates organization name max length', function (): void {
+    $this->actingAs($this->peopleManager);
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
-
-    $response = $this->put(route('org.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update', [
+        'organization' => $this->organization->id,
+    ]), [
         'name' => str_repeat('a', 256), // 256 characters - exceeds 255 max
         'vat_number' => null,
         'ssn' => null,
@@ -231,33 +147,24 @@ it('validates organization name max length', function (): void {
         ->assertSessionHasErrors('name');
 });
 
-it('allows optional vat_number, ssn, and phone', function (): void {
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
+test('allows optional vat_number, ssn, and phone', function (): void {
+    $this->actingAs($this->peopleManager);
 
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
-    $this->actingAs($peopleManager);
-
-    $response = $this->put(route('org.settings.organization.update'), [
+    $response = $this->put(route('org.settings.organization.update', [
+        'organization' => $this->organization->id,
+    ]), [
         'name' => 'Minimal Organization',
         'vat_number' => null,
         'ssn' => null,
         'phone' => null,
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit'));
+    $response->assertRedirect(route('org.settings.organization.edit', [
+        'organization' => $this->organization->id,
+    ]));
 
     /** @var Organization $updatedOrganization */
-    $updatedOrganization = $organization->fresh();
+    $updatedOrganization = $this->organization->fresh();
 
     expect($updatedOrganization->name)
         ->toBe('Minimal Organization')
@@ -269,20 +176,9 @@ it('allows optional vat_number, ssn, and phone', function (): void {
         ->toBeNull();
 });
 
-it('requires country_id when creating organization', function (): void {
-    Organization::query()->delete();
+test('requires country_id when creating organization', function (): void {
 
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
-
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
-
-    $this->actingAs($owner);
+    $this->actingAs($this->owner);
 
     $response = $this->post(route('org.create'), [
         'name' => 'Test Organization',
@@ -292,83 +188,44 @@ it('requires country_id when creating organization', function (): void {
         ->assertSessionHasErrors('country_id');
 });
 
-it('validates country_id exists when creating organization', function (): void {
+test('validates country_id exists when creating organization', function (): void {
     Organization::query()->delete();
 
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
-
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
-
-    $this->actingAs($owner);
+    $this->actingAs($this->owner);
 
     $response = $this->post(route('org.create'), [
         'name' => 'Test Organization',
-        'country_id' => 99999, // Non-existent country ID
+        'country_id' => 99999,
     ]);
 
     $response->assertRedirect()
         ->assertSessionHasErrors('country_id');
 });
 
-it('people manager can create organization with country', function (): void {
+test('people manager cannot create organization with country', function (): void {
     Organization::query()->delete();
 
     /** @var Country $country */
     $country = Country::factory()->create();
 
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    /** @var User $peopleManager */
-    $peopleManager = User::factory()->create();
-    $peopleManager->assignRole($peopleManagerRole);
-
-    $this->actingAs($peopleManager);
+    $this->actingAs($this->peopleManager);
 
     $response = $this->post(route('org.create'), [
         'name' => 'New Organization',
         'country_id' => $country->id,
     ]);
 
-    $response->assertRedirect(route('org.overview'));
+    $response->assertForbidden();
 
-    /** @var Organization $organization */
-    $organization = Organization::query()
-        ->where('name', 'New Organization')
-        ->first();
-
-    expect($organization)
-        ->not->toBeNull()
-        ->name->toBe('New Organization')
-        ->country_id->toBe($country->id);
 });
 
-it('owner can create organization with country', function (): void {
+test('owner can create organization with country', function (): void {
     Organization::query()->delete();
 
     /** @var Country $country */
     $country = Country::factory()->create();
 
-    /** @var Role $ownerRole */
-    $ownerRole = Role::query()
-        ->where('name', 'owner')
-        ->first()
-        ?->fresh();
-
-    /** @var User $owner */
-    $owner = User::factory()->create();
-    $owner->assignRole($ownerRole);
-
-    $this->actingAs($owner);
+    $this->actingAs($this->owner);
 
     $response = $this->post(route('org.create'), [
         'name' => 'Owner Organization',

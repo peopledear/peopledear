@@ -112,10 +112,6 @@ test('middleware allows access when organization exists', function (): void {
 });
 
 test('middleware caches organization ID in session', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'name' => 'Test Organization',
-    ]);
 
     /** @var Role $ownerRole */
     $ownerRole = Role::query()
@@ -133,7 +129,8 @@ test('middleware caches organization ID in session', function (): void {
 
     $this->get('/dashboard');
 
-    expect(session(SessionKey::CurrentOrganization->value))->toBe($organization->id);
+    expect(session(SessionKey::CurrentOrganization->value))
+        ->toBe($this->organization->id);
 });
 
 test('middleware does not redirect on org create route', function (): void {

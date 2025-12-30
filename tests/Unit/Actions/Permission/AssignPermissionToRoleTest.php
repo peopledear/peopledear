@@ -19,7 +19,9 @@ test('assign permission to role',
      */
     function (): void {
 
-        $role = Role::findByName(UserRole::PeopleManager->value);
+        $role = Role::create([
+            'name' => UserRole::Manager->value,
+        ]);
         $permission = $this->createPermissonAction->handle(UserPermission::TimeOffTypeManage);
 
         $this->action->handle($role, $permission);

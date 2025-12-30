@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Actions\Role\CreateSystemRoles;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Throwable;
 
 final class UserSeeder extends Seeder
 {
@@ -16,14 +19,38 @@ final class UserSeeder extends Seeder
      * @var array<int, array{name: string, email: string, role: string}>
      */
     private const array USERS = [
-        ['name' => 'Emily Thompson', 'email' => 'employee@peopledear.test', 'role' => 'employee'],
-        ['name' => 'Michael Rodriguez', 'email' => 'manager@peopledear.test', 'role' => 'manager'],
-        ['name' => 'Sarah Chen', 'email' => 'peoplemanager@peopledear.test', 'role' => 'people_manager'],
-        ['name' => 'James Wilson', 'email' => 'owner@peopledear.test', 'role' => 'owner'],
+        [
+            'name' => 'Emily Thompson',
+            'email' => 'employee@peopledear.test',
+            'role' => UserRole::Employee->value,
+        ],
+        [
+            'name' => 'Michael Rodriguez',
+            'email' => 'manager@peopledear.test',
+            'role' => UserRole::Manager->value,
+        ],
+        [
+            'name' => 'Sarah Chen',
+            'email' => 'peoplemanager@peopledear.test',
+            'role' => UserRole::PeopleManager->value,
+        ],
+        [
+            'name' => 'James Wilson',
+            'email' => 'owner@peopledear.test',
+            'role' => UserRole::Owner->value,
+        ],
     ];
 
+    public function __construct(private readonly CreateSystemRoles $createSystemRoles) {}
+
+    /**
+     * @throws Throwable
+     */
     public function run(): void
     {
+
+        $this->createSystemRoles->handle();
+
         foreach (self::USERS as $userData) {
             /** @var Role $role */
             $role = Role::query()

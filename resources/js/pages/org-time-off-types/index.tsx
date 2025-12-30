@@ -45,8 +45,6 @@ interface TimeOffTypesPageProps {
 export default function TimeOffTypesPage({
     timeOffTypes,
 }: TimeOffTypesPageProps) {
-    console.log(timeOffTypes);
-
     return (
         <AdminLayout>
             <Head title="Time Off Types" />

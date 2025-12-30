@@ -26,10 +26,7 @@ test('user roles relationship is properly loaded', function (): void {
     /** @var User $user */
     $user = User::factory()->create();
     /** @var Role $role */
-    $role = Role::query()
-        ->where('name', 'manager')
-        ->first()
-        ?->fresh();
+    $role = Role::create(['name' => 'user']);
 
     $user->assignRole($role);
     $user->load('roles');
@@ -38,17 +35,14 @@ test('user roles relationship is properly loaded', function (): void {
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(1)
         ->first()
-        ->name->toBe('manager');
+        ->name->toBe('user');
 });
 
 test('user permissions relationship is properly loaded', function (): void {
     /** @var User $user */
     $user = User::factory()->create();
     /** @var Permission $permission */
-    $permission = Permission::query()
-        ->where('name', 'employees.view')
-        ->first()
-        ?->fresh();
+    $permission = Permission::create(['name' => 'employees.view']);
 
     $user->givePermissionTo($permission);
     $user->load('permissions');

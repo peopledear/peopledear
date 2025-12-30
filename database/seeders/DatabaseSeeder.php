@@ -12,10 +12,11 @@ final class DatabaseSeeder extends Seeder
     {
         $this->call([
             OrganizationSeeder::class,
-            PeriodSeeder::class,
             UserSeeder::class,
+            PeriodSeeder::class,
             OfficeSeeder::class,
             EmployeeSeeder::class,
+            TimeOffTypeSeeder::class,
             TimeOffRequestSeeder::class,
             VacationBalanceSeeder::class,
             NotificationSeeder::class,

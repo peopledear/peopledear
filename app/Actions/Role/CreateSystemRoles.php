@@ -9,6 +9,7 @@ use App\Actions\Permission\CreatePermission;
 use App\Enums\UserRole;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Contracts\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use Throwable;
 
 use function array_key_exists;
@@ -21,6 +22,7 @@ final class CreateSystemRoles
     private array $permissionsCache = [];
 
     public function __construct(
+        private readonly PermissionRegistrar $permissionRegistrar,
         private readonly CreateRole $createRole,
         private readonly CreatePermission $createPermission,
         private readonly AssignPermissionToRole $assignPermissionToRole,
@@ -32,6 +34,8 @@ final class CreateSystemRoles
     public function handle(): void
     {
         $roles = UserRole::cases();
+
+        $this->permissionRegistrar->forgetCachedPermissions();
 
         DB::transaction(function () use ($roles): void {
 

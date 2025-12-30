@@ -5,30 +5,17 @@ declare(strict_types=1);
 use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\TimeOffUnit;
-use App\Models\Organization;
 use App\Models\TimeOffType;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
 
-beforeEach(function (): void {
-    $this->organization = Organization::factory()
-        ->createQuietly();
-
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
-        ->first()
-        ?->fresh();
-
-    $this->user = User::factory()
-        ->create();
-    $this->user->assignRole($peopleManagerRole);
-
-});
+beforeEach(
+    /**
+     * @throws Throwable
+     */
+    function (): void {});
 
 test('creates a new time off type', function (): void {
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->peopleManager)
         ->post(route('org.settings.time-off-types.store'), [
             'name' => 'Work From Home',
             'icon' => Icon::LucideHome->value,
@@ -58,7 +45,7 @@ test('renders the create page', function (): void {
         ->count(3)
         ->create();
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->peopleManager)
         ->get(route('org.settings.time-off-types.create'));
 
     $response->assertOk();
@@ -71,7 +58,7 @@ test('people manager can view time off types index', function (): void {
         ->count(3)
         ->create();
 
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->peopleManager)
         ->get(route('org.settings.time-off-types.index'));
 
     $response->assertOk()
@@ -88,7 +75,7 @@ test('unauthenticated user is redirected to login', function (): void {
 });
 
 test('returns empty collection when no time off types exist', function (): void {
-    $response = $this->actingAs($this->user)
+    $response = $this->actingAs($this->peopleManager)
         ->get(route('org.settings.time-off-types.index'));
 
     $response->assertOk()

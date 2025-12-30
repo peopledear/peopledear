@@ -18,7 +18,19 @@ pest()->extend(Tests\TestCase::class)
 
         $this->freezeTime();
     })
-    ->in('Browser', 'Feature', 'Unit', 'Integration');
+    ->in('Unit', 'Integration');
+
+pest()->extend(Tests\WithUsersTestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->beforeEach(function (): void {
+        Str::createRandomStringsNormally();
+        Str::createUuidsNormally();
+        Http::preventStrayRequests();
+        Sleep::fake();
+
+        $this->freezeTime();
+    })
+    ->in('Browser', 'Feature');
 
 expect()->extend('toBeOne', fn () => $this->toBe(1));
 

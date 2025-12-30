@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\Organization;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property-read Organization $organization
+ */
 final class UpdateOrganizationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('organizations.edit') ?? false;
+        return $this->user()?->can('update', $this->organization) ?? false;
     }
 
     /**

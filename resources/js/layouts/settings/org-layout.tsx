@@ -9,12 +9,12 @@ interface OrgLayoutProps {
 }
 
 export default function OrgSettingsLayout({ children }: OrgLayoutProps) {
-    const { url, component } = usePage();
+    const { url, component, props } = usePage();
 
     const items: NavItem[] = [
         {
             label: "General",
-            href: generalEdit().url,
+            href: generalEdit(props.organization?.id ?? "").url,
             active: component === "org-settings-general/edit",
         },
         {

@@ -9,16 +9,21 @@ use App\Models\Organization;
 
 final readonly class CreateOrganization
 {
-    /**
-     * Create a new organization with the provided data.
-     */
+    public function __construct(
+        private MakeOrganizationSlug $makeOrganizationSlug,
+    ) {}
+
     public function handle(CreateOrganizationData $data): Organization
     {
+
+        $data->additional([
+            'slug' => $this->makeOrganizationSlug
+                ->handle($data->name),
+        ]);
+
         $organization = Organization::query()
-            ->create([
-                'name' => $data->name,
-                'country_id' => $data->countryId,
-            ]);
+            ->create(
+                $data->toArray());
 
         return $organization->refresh();
     }

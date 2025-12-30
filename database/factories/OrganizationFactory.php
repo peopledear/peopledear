@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Models\Organization;
 use App\Models\Period;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Organization>
@@ -21,7 +22,8 @@ final class OrganizationFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->company(),
+            'name' => $name = fake()->unique()->company(),
+            'slug' => Str::slug($name),
             'vat_number' => fake()->numerify('##########'),
             'ssn' => fake()->numerify('##-#######'),
             'phone' => fake()->phoneNumber(),

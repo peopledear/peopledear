@@ -22,6 +22,10 @@ return new class extends Migration
                 ->constrained();
 
             $table->string('name');
+
+            $table->string('slug')
+                ->unique();
+
             $table->string('vat_number')
                 ->nullable();
             $table->string('ssn')

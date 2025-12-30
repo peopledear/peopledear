@@ -206,6 +206,7 @@ test('to array', function (): void {
             'updated_at',
             'country_id',
             'name',
+            'slug',
             'vat_number',
             'ssn',
             'phone',

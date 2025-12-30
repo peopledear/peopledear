@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property-read string $id
  * @property-read string $name
+ * @property-read string $slug
  * @property-read string|null $vat_number
  * @property-read string|null $ssn
  * @property-read string|null $phone
@@ -38,6 +39,7 @@ final class Organization extends Model
         return [
             'id' => 'string',
             'name' => 'string',
+            'slug' => 'string',
             'vat_number' => 'string',
             'ssn' => 'string',
             'phone' => 'string',

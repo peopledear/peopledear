@@ -1,4 +1,5 @@
 import { NavItem, VerticalMenu } from "@/components/vertical-menu";
+import { SharedData } from "@/types";
 import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
 import { edit as generalEdit } from "@/wayfinder/routes/org/settings/organization";
 import { usePage } from "@inertiajs/react";
@@ -9,7 +10,7 @@ interface OrgLayoutProps {
 }
 
 export default function OrgSettingsLayout({ children }: OrgLayoutProps) {
-    const { url, component, props } = usePage();
+    const { url, component, props } = usePage<SharedData>();
 
     const items: NavItem[] = [
         {

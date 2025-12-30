@@ -1,5 +1,5 @@
 import { AppHeader } from "@/components/app-header";
-import { type BreadcrumbItem, type NavItem } from "@/types";
+import { type BreadcrumbItem, type NavItem, SharedData } from "@/types";
 import { dashboard } from "@/wayfinder/routes";
 import { overview } from "@/wayfinder/routes/org";
 import { index } from "@/wayfinder/routes/org/employees";
@@ -19,7 +19,7 @@ interface AdminHeaderProps {
 }
 
 export function OrgHeader({ breadcrumbs = [] }: AdminHeaderProps) {
-    const { organization } = usePage().props;
+    const { organization } = usePage<SharedData>().props;
 
     const mainNavItems: NavItem[] = [
         {

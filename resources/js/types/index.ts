@@ -42,6 +42,7 @@ export interface SharedData {
     name: string;
     auth: Auth;
     sidebarOpen: boolean;
+    organization?: Organization;
     show: {
         employeeLink: boolean;
         orgLink?: boolean;

@@ -21,7 +21,7 @@ final readonly class CreateRole
                 'name' => $name,
                 'guard_name' => $guard,
             ]);
-        } catch (RoleAlreadyExists $e) {
+        } catch (RoleAlreadyExists) {
             return Role::findByName($name, $guard);
         }
 

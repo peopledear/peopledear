@@ -20,7 +20,7 @@ final readonly class CreatePermission
                 'name' => $name,
                 'guard_name' => $guard,
             ]);
-        } catch (PermissionAlreadyExists $e) {
+        } catch (PermissionAlreadyExists) {
             return Permission::findByName($name, $guard);
         }
 

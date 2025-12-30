@@ -6,7 +6,7 @@ use App\Actions\Role\CreateRole;
 use App\Enums\UserRole;
 
 beforeEach(function (): void {
-    $this->action = app(CreateRole::class);
+    $this->action = resolve(CreateRole::class);
 });
 
 test('handles creation of existing role',

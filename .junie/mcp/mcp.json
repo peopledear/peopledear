@@ -2,10 +2,7 @@
     "mcpServers": {
         "laravel-boost": {
             "command": "php",
-            "args": [
-                "artisan",
-                "boost:mcp"
-            ],
+            "args": ["artisan", "boost:mcp"],
             "alwaysAllow": [
                 "application-info",
                 "browser-logs",
@@ -23,6 +20,10 @@
                 "report-feedback",
                 "search-docs"
             ]
+        },
+        "playwright": {
+            "command": "npx",
+            "args": ["@playwright/mcp@latest"]
         }
     }
 }

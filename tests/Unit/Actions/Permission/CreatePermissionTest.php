@@ -10,6 +10,25 @@ beforeEach(function (): void {
 
 });
 
+test('returns existing permission if already exists',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+
+        $firstPermission = $this->action->handle(
+            permission: 'time-off-type:manage',
+        );
+
+        $secondPermission = $this->action->handle(
+            permission: 'time-off-type:manage',
+        );
+
+        expect($firstPermission->id)
+            ->toBe($secondPermission->id);
+
+    });
+
 test('creates a permission',
     /**
      * @throws Throwable
@@ -17,7 +36,7 @@ test('creates a permission',
     function (): void {
 
         $permission = $this->action->handle(
-            permissionName: 'time-off-type:manage',
+            permission: 'time-off-type:manage',
         );
 
         expect($permission->name)

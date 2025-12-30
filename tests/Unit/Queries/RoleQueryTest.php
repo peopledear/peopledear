@@ -15,7 +15,7 @@ test('selects from the correct table', function (): void {
         ->toRawSql();
 
     expect($sql)
-        ->toContain(sprintf('from "%s"', (new Role())->getTable()));
+        ->toContain(sprintf('from "%s"', new Role()->getTable()));
 
 });
 

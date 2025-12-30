@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Enums\UserRole;
+use Deprecated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Role;
@@ -66,9 +67,7 @@ final class RoleQuery
         return $this;
     }
 
-    /**
-     * @deprecated Use byRole() instead
-     */
+    #[Deprecated(message: 'Use byRole() instead')]
     public function withRole(UserRole $role): self
     {
         return $this->byRole($role);

@@ -20,4 +20,26 @@ enum UserRole: string
             self::PeopleManager => 'People Manager with specific HR access',
         };
     }
+
+    /**
+     * @return array<UserPermission>
+     */
+    public function permissions(): array
+    {
+        return match ($this) {
+            self::Employee, self::Manager => [
+                UserPermission::ProfileEdit,
+            ],
+            self::Owner => [UserPermission::TimeOffTypeView],
+            self::PeopleManager => [
+                UserPermission::TimeOffTypeManage,
+                UserPermission::TimeOffTypeView,
+                UserPermission::TimeOffTypeCreate,
+                UserPermission::TimeOffTypeEdit,
+                UserPermission::TimeOffTypeDelete,
+                UserPermission::TimeOffTypeActivate,
+                UserPermission::TimeOffTypeDeactivate,
+            ],
+        };
+    }
 }

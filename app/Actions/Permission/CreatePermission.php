@@ -13,7 +13,7 @@ final readonly class CreatePermission
 {
     public function handle(string|UserPermission $permission, string $guard = 'web'): PermissionContract
     {
-        $name = $permission instanceof UserPermission ? $permission->name : $permission;
+        $name = $permission instanceof UserPermission ? $permission->value : $permission;
 
         try {
             return Permission::create([

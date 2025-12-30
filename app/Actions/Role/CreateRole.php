@@ -11,10 +11,10 @@ use Spatie\Permission\Models\Role;
 
 final readonly class CreateRole
 {
-    public function handle(string|UserRole $userRole, string $guard = 'web'): RoleContract
+    public function handle(string|UserRole $roleName, string $guard = 'web'): RoleContract
     {
 
-        $name = $userRole instanceof UserRole ? $userRole->value : $userRole;
+        $name = $roleName instanceof UserRole ? $roleName->value : $roleName;
 
         try {
             return Role::create([

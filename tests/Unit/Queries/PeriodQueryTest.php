@@ -52,7 +52,7 @@ test('returns only active periods for current organization', function (): void {
     /** @var Period $result */
     $result = $query()->active()->first();
 
-    $periods = $query()->active()->make()->get();
+    $periods = $query()->active()->builder()->get();
 
     expect($result)
         ->toBeInstanceOf(Period::class)

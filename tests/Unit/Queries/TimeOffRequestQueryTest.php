@@ -12,7 +12,7 @@ test('selects from the correct table', function (): void {
     $query = new TimeOffRequestQuery;
 
     $sql = $query()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -31,7 +31,7 @@ test('time off request query builder can scope by employee and latest', function
     $sql = $query()
         ->ofEmployee($employeeId = Str::uuid7()->toString())
         ->latest()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -51,7 +51,7 @@ test('scopes by single status using ofStatus', function (): void {
 
     $sql = $query()
         ->ofStatus(RequestStatus::Pending)
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -71,7 +71,7 @@ test('scopes by multiple statuses using statusIn', function (): void {
 
     $sql = $query()
         ->statusIn([RequestStatus::Pending, RequestStatus::Approved])
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -92,7 +92,7 @@ test('scopes by pending approval status', function (): void {
 
     $sql = $query()
         ->pendingApproval()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -112,7 +112,7 @@ test('scopes by approved status', function (): void {
 
     $sql = $query()
         ->approved()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -132,7 +132,7 @@ test('scopes by rejected status', function (): void {
 
     $sql = $query()
         ->rejected()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -152,7 +152,7 @@ test('scopes by cancelled status', function (): void {
 
     $sql = $query()
         ->cancelled()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -172,7 +172,7 @@ test('eager loads default relations when none provided', function (): void {
 
     $builder = $query()
         ->withRelations()
-        ->make();
+        ->builder();
 
     $eagerLoads = array_keys($builder->getEagerLoads());
 
@@ -190,7 +190,7 @@ test('eager loads custom relations when provided', function (): void {
 
     $builder = $query()
         ->withRelations(['employee', 'type'])
-        ->make();
+        ->builder();
 
     $eagerLoads = array_keys($builder->getEagerLoads());
 
@@ -205,7 +205,7 @@ test('accepts id in constructor', function (): void {
     $id = Str::uuid7()->toString();
 
     $sql = $query($id)
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -228,7 +228,7 @@ test('can chain multiple scopes together', function (): void {
         ->ofEmployee($employeeId)
         ->pendingApproval()
         ->latest(10)
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(
@@ -273,7 +273,7 @@ test('ofType scopes by time off type id', function (): void {
 
     $sql = $query()
         ->ofType($typeId)
-        ->make()
+        ->builder()
         ->toRawSql();
 
     $expectedSql = sprintf(

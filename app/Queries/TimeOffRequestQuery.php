@@ -27,7 +27,7 @@ final class TimeOffRequestQuery
     }
 
     /** @return Builder<TimeOffRequest> */
-    public function make(): Builder
+    public function builder(): Builder
     {
         return $this->builder;
     }

@@ -14,7 +14,7 @@ test('selects from the correct table', function (): void {
     $query = new TimeOffTypeQuery;
 
     $sql = $query()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     expect($sql)
@@ -28,7 +28,7 @@ test('scopes by active status', function (): void {
 
     $sql = $query()
         ->active()
-        ->make()
+        ->builder()
         ->toRawSql();
 
     expect($sql)
@@ -69,7 +69,7 @@ test('returns only active time off types for current organization', function ():
     /** @var TimeOffTypeQuery $query */
     $query = resolve(TimeOffTypeQuery::class);
 
-    $results = $query()->active()->make()->get();
+    $results = $query()->active()->builder()->get();
 
     expect($results)
         ->toHaveCount(1)
@@ -100,7 +100,7 @@ test('returns all time off types for current organization when not filtering by 
     /** @var TimeOffTypeQuery $query */
     $query = resolve(TimeOffTypeQuery::class);
 
-    $results = $query()->make()->get();
+    $results = $query()->builder()->get();
 
     expect($results)
         ->toHaveCount(2);

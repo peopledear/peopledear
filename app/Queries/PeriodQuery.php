@@ -28,7 +28,7 @@ final class PeriodQuery
     /**
      * @return Builder<Period>
      */
-    public function make(): Builder
+    public function builder(): Builder
     {
         return $this->builder;
     }

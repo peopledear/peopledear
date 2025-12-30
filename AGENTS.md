@@ -101,6 +101,25 @@ This file contains essential information for agentic coding agents working in th
 - **Casts**: Use public `casts()` method, not `$casts` property
 - **Lean models**: Keep models lean, business logic in Actions
 
+### Query Pattern
+
+- **Location**: `app/Queries/`
+- **Method**: All Query classes must use `builder()` method to return Eloquent Builder
+- **Pattern**:
+
+```php
+/**
+ * @return Builder<Model>
+ */
+public function builder(): Builder
+{
+    return $this->builder; // or Model::query()
+}
+```
+
+- **Consistency**: Never use `make()` - always use `builder()` for Builder access
+- **Invokable**: Preferred pattern is invokable classes with `__invoke()` method for initialization
+
 ## Git Workflow
 
 ### Branching

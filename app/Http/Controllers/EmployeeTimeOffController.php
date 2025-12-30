@@ -53,7 +53,7 @@ final class EmployeeTimeOffController
         }
 
         $timeOffRequests = $query
-            ->make()
+            ->builder()
             ->latest()
             ->paginate(20)
             ->withQueryString();

@@ -33,9 +33,7 @@ final readonly class CreateSystemTimeOffTypes
         DB::transaction(function () use ($organization): void {
 
             /** @var Role $peopleManagerRole */
-            $peopleManagerRole = $this->roleQuery
-                ->withRole(UserRole::PeopleManager)
-                ->builder()
+            $peopleManagerRole = ($this->roleQuery)(UserRole::PeopleManager)
                 ->first();
 
             foreach ($this->timeOffTypes as $timeOffType) {

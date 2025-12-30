@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+use App\Data\IconData;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+use function collect;
 use function implode;
 
 enum Icon: string
@@ -84,6 +87,22 @@ enum Icon: string
     case LucideDumbbell = 'LucideDumbbell';
     case LucideHeartHandshake = 'LucideHeartHandshake';
     case LucideLeaf = 'LucideLeaf';
+
+    /**
+     * @return Collection<int, IconData>
+     */
+    public static function options(): Collection
+    {
+        /** @var Collection<int, IconData> $ */
+        return collect(self::cases())
+            ->sortBy(fn (Icon $icon): string => $icon->value)
+            ->map(fn (Icon $icon): IconData => IconData::from([
+                'value' => $icon->value,
+                'name' => $icon->name,
+                'icon' => $icon->icon(),
+                'label' => $icon->label(),
+            ]))->flatten();
+    }
 
     public function icon(): string
     {

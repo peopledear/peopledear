@@ -2,7 +2,22 @@
 
 declare(strict_types=1);
 
+use App\Data\IconData;
 use App\Enums\Icon;
+use Illuminate\Support\Collection;
+
+test('options return a collection of icon data', function (): void {
+
+    $options = Icon::options();
+
+    dd($options->flatten());
+
+    expect($options)
+        ->toBeInstanceOf(Collection::class)
+        ->and($options->first())
+        ->toBeInstanceOf(IconData::class);
+
+});
 
 test('all cases have string values matching their names', function (): void {
     foreach (Icon::cases() as $case) {

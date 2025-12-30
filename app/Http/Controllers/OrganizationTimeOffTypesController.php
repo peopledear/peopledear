@@ -58,9 +58,7 @@ final class OrganizationTimeOffTypesController
         return Inertia::render('org-time-off-types/create', [
             'balanceTypes' => BalanceType::options()->toArray(),
             'timeOffUnits' => TimeOffUnitData::collect($timeOffUnits),
-            'icons' => IconData::collect($icons, Collection::class)
-                ->sortBy(fn (IconData $icon): string => $icon->value)
-                ->flatten(),
+            'icons' => Icon::options()->toArray(),
         ]);
     }
 

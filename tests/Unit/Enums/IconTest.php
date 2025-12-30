@@ -10,8 +10,6 @@ test('options return a collection of icon data', function (): void {
 
     $options = Icon::options();
 
-    dd($options->flatten());
-
     expect($options)
         ->toBeInstanceOf(Collection::class)
         ->and($options->first())

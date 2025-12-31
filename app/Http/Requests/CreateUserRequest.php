@@ -33,10 +33,19 @@ final class CreateUserRequest extends FormRequest
             'password' => [
                 'required',
                 'confirmed',
-                app()->environment('local')
-                    ? ''
-                    : Password::defaults(),
+                ...$this->getPasswordRule(),
             ],
         ];
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    private function getPasswordRule(): array
+    {
+
+        return app()->environment('local')
+            ? []
+            : [Password::defaults()];
     }
 }

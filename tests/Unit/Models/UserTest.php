@@ -2,11 +2,27 @@
 
 declare(strict_types=1);
 
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+
+test('user has organizations relationship', function (): void {
+    /** @var User $user */
+    $user = User::factory()
+        ->create();
+    $organization = Organization::factory()
+        ->create();
+
+    $user->organizations()->attach($organization);
+
+    expect($user->organizations())
+        ->toBeInstanceOf(BelongsToMany::class)
+        ->and($user->organizations->first()->id)
+        ->toBe($organization->id);
+});
 
 test('user has roles relationship', function (): void {
     /** @var User $user */

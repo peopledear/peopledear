@@ -6,9 +6,34 @@ use App\Models\Country;
 use App\Models\Holiday;
 use App\Models\Office;
 use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
+test('user can be assigned to an organization', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->create();
+
+    /** @var User $user */
+    $user = User::factory()->create();
+
+    $organization->users()->attach($user);
+
+    expect($organization->users)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(1)
+        ->first()
+        ->id->toBe($user->id);
+});
+
+test('has a users relationship', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->create();
+
+    expect($organization->users())
+        ->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+});
 
 test('has a periods relationship', function (): void {
     /** @var Organization $organization */

@@ -12,7 +12,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreTimeOffTypeRequest extends FormRequest
+final class CreateTimeOffTypeRequest extends FormRequest
 {
     public function authorize(): bool
     {

@@ -8,7 +8,7 @@ use App\Models\TimeOffRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class StoreTimeOffRequest extends FormRequest
+final class CreateTimeOffRequest extends FormRequest
 {
     public function authorize(): bool
     {

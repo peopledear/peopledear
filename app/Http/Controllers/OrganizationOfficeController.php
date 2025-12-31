@@ -9,7 +9,7 @@ use App\Actions\Office\DeleteOffice;
 use App\Actions\Office\UpdateOffice;
 use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Data\PeopleDear\Office\UpdateOfficeData;
-use App\Http\Requests\StoreOfficeRequest;
+use App\Http\Requests\CreateOfficeRequest;
 use App\Http\Requests\UpdateOfficeRequest;
 use App\Models\Office;
 use App\Models\Organization;
@@ -23,7 +23,7 @@ final class OrganizationOfficeController
      * @throws Throwable
      */
     public function store(
-        StoreOfficeRequest $request,
+        CreateOfficeRequest $request,
         CreateOffice $action
     ): RedirectResponse {
         /** @var Organization $organization */

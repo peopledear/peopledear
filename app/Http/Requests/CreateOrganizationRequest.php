@@ -8,7 +8,7 @@ use App\Models\Organization;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class StoreOrganizationRequest extends FormRequest
+final class CreateOrganizationRequest extends FormRequest
 {
     public function authorize(): bool
     {

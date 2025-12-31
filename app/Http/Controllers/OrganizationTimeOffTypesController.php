@@ -11,7 +11,7 @@ use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
 use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\TimeOffUnit;
-use App\Http\Requests\StoreTimeOffTypeRequest;
+use App\Http\Requests\CreateTimeOffTypeRequest;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Http\RedirectResponse;
@@ -51,7 +51,7 @@ final class OrganizationTimeOffTypesController
     }
 
     public function store(
-        StoreTimeOffTypeRequest $request,
+        CreateTimeOffTypeRequest $request,
         CreateTimeOffType $action,
         #[CurrentOrganization] Organization $organization
     ): RedirectResponse {

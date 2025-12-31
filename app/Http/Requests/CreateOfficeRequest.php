@@ -10,7 +10,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreOfficeRequest extends FormRequest
+final class CreateOfficeRequest extends FormRequest
 {
     public function authorize(): bool
     {

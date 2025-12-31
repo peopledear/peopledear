@@ -10,6 +10,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
+use function app;
+
 final class CreateUserRequest extends FormRequest
 {
     /**
@@ -31,7 +33,9 @@ final class CreateUserRequest extends FormRequest
             'password' => [
                 'required',
                 'confirmed',
-                Password::defaults(),
+                app()->environment('local')
+                    ? ''
+                    : Password::defaults(),
             ],
         ];
     }

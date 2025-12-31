@@ -11,7 +11,7 @@ use App\Attributes\CurrentOrganization;
 use App\Data\PeopleDear\Country\CountryData;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Data\PeopleDear\Organization\UpdateOrganizationData;
-use App\Http\Requests\StoreOrganizationRequest;
+use App\Http\Requests\CreateOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organization;
 use App\Queries\CountryQuery;
@@ -45,7 +45,7 @@ final class OrganizationController
     }
 
     public function store(
-        StoreOrganizationRequest $request,
+        CreateOrganizationRequest $request,
         CreateOrganization $action,
         SetCurrentOrganization $setCurrentOrganization,
     ): RedirectResponse {

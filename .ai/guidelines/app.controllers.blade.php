@@ -102,7 +102,7 @@ use App\Actions\Office\DeleteOffice;
 use App\Actions\Office\UpdateOffice;
 use App\Data\PeopleDear\Office\CreateOfficeData;
 use App\Data\PeopleDear\Office\UpdateOfficeData;
-use App\Http\Requests\StoreOfficeRequest;
+use App\Http\Requests\CreateOfficeRequest;
 use App\Http\Requests\UpdateOfficeRequest;
 use App\Models\Office;
 use App\Models\User;
@@ -113,7 +113,7 @@ use Illuminate\Http\RedirectResponse;
 final class OfficeController
 {
     public function store(
-        StoreOfficeRequest  $request,
+        CreateOfficeRequest $request,
         CreateOffice        $action,
         #[CurrentUser] User $user
     ): RedirectResponse
@@ -165,7 +165,7 @@ final class OfficeController
 ✅ **CORRECT - Method-level injection:**
 ```php
 public function store(
-    StoreOfficeRequest  $request,
+    CreateOfficeRequest $request,
     CreateOffice        $action,  // ✅ Injected here
     #[CurrentUser] User $user
 ): RedirectResponse
@@ -184,7 +184,7 @@ public function __construct(
 {
 }
 
-public function store(StoreOfficeRequest $request): RedirectResponse
+public function store(CreateOfficeRequest $request): RedirectResponse
 {
     $this->createOffice->handle(...);  // ❌ Wrong pattern
 }
@@ -198,7 +198,7 @@ public function store(StoreOfficeRequest $request): RedirectResponse
 ```php
 
 public function store(
-    StoreOfficeRequest  $request,
+    CreateOfficeRequest $request,
     #[CurrentUser] User $user  // ✅ Clean and explicit
 ): RedirectResponse
 {
@@ -211,8 +211,8 @@ public function store(
 ❌ **Don't inject Request just to get user:**
 ```php
 public function store(
-    StoreOfficeRequest $request,
-    Request            $httpRequest  // ❌ Unnecessary
+    CreateOfficeRequest $request,
+    Request             $httpRequest  // ❌ Unnecessary
 ): RedirectResponse
 {
     $user = $httpRequest->user();  // ❌ Verbose

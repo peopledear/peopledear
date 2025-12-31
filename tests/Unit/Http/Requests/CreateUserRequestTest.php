@@ -20,8 +20,12 @@ test('password validation rules in local environment',
         $request = new CreateUserRequest;
         $rules = $request->rules();
 
-        expect($rules['password'][0])->toBe('required')
-            ->and($rules['password'][1])->toBe('confirmed')
+        expect($rules)
+            ->not->toContain(Password::defaults())
+            ->and($rules['password'][0])
+            ->toBe('required')
+            ->and($rules['password'][1])
+            ->toBe('confirmed')
             ->and(array_key_exists(2, $rules))
             ->toBeFalse();
     });

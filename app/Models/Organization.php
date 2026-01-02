@@ -45,6 +45,7 @@ final class Organization extends Model implements Tenant
             'id' => 'string',
             'name' => 'string',
             'identifier' => 'string',
+            'resource_key' => 'string',
             'vat_number' => 'string',
             'ssn' => 'string',
             'phone' => 'string',

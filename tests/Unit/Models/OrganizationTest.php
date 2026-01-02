@@ -232,6 +232,7 @@ test('to array', function (): void {
             'country_id',
             'name',
             'identifier',
+            'resource_key',
             'vat_number',
             'ssn',
             'phone',

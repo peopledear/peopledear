@@ -11,6 +11,7 @@ final readonly class CreateOrganization
 {
     public function __construct(
         private MakeOrganizationIdentifier $makeOrganizationSlug,
+        private MakeOrganizationResourceKey $makeOrganizationResourceKey,
     ) {}
 
     public function handle(CreateOrganizationData $data): Organization
@@ -19,6 +20,8 @@ final readonly class CreateOrganization
         $data->additional([
             'identifier' => $this->makeOrganizationSlug
                 ->handle($data->name),
+            'resource_key' => $this->makeOrganizationResourceKey
+                ->handle(),
         ]);
 
         $organization = Organization::query()

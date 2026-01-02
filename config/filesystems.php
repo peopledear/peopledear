@@ -62,6 +62,11 @@ return [
             'report' => false,
         ],
 
+        'tenanted' => [
+            'driver' => 'sprout',
+            'disk' => 'local',
+        ],
+
     ],
 
     /*

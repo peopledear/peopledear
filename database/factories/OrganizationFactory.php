@@ -24,6 +24,7 @@ final class OrganizationFactory extends Factory
         return [
             'name' => $name = fake()->unique()->company(),
             'identifier' => Str::slug($name),
+            'resource_key' => Str::ulid(),
             'vat_number' => fake()->numerify('##########'),
             'ssn' => fake()->numerify('##-#######'),
             'phone' => fake()->phoneNumber(),

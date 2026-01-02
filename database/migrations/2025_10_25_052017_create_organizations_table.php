@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('identifier')
                 ->unique();
 
+            $table->string('resource_key')
+                ->unique();
+
             $table->string('vat_number')
                 ->nullable();
             $table->string('ssn')

@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Sprout\Contracts\Tenant;
+use Sprout\Database\Eloquent\Concerns\IsTenant;
 
 /**
  * @property-read string $id
@@ -29,19 +31,20 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Office> $offices
  * @property-read Collection<int, Holiday> $holidays
  */
-final class Organization extends Model
+final class Organization extends Model implements Tenant
 {
     /** @use HasFactory<OrganizationFactory> */
     use HasFactory;
 
     use HasUuids;
+    use IsTenant;
 
     public function casts(): array
     {
         return [
             'id' => 'string',
             'name' => 'string',
-            'slug' => 'string',
+            'identifier' => 'string',
             'vat_number' => 'string',
             'ssn' => 'string',
             'phone' => 'string',

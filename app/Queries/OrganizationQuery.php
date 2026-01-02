@@ -28,11 +28,11 @@ final readonly class OrganizationQuery
         return $this->builder;
     }
 
-    public function withSlug(string $slug): self
+    public function identifier(string $identifier): self
     {
 
         $this->builder
-            ->where('slug', $slug);
+            ->where('identifier', $identifier);
 
         return $this;
     }

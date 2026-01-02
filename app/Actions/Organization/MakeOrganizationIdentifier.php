@@ -7,7 +7,7 @@ namespace App\Actions\Organization;
 use App\Queries\OrganizationQuery;
 use Illuminate\Support\Str;
 
-final readonly class MakeOrganizationSlug
+final readonly class MakeOrganizationIdentifier
 {
     public function __construct(
         private OrganizationQuery $organizationQuery,
@@ -17,7 +17,7 @@ final readonly class MakeOrganizationSlug
     {
 
         $exists = $this->organizationQuery
-            ->withSlug(Str::slug($name))
+            ->identifier(Str::slug($name))
             ->exists();
 
         if ($exists) {

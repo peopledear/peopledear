@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->string('name');
 
-            $table->string('slug')
+            $table->string('identifier')
                 ->unique();
 
             $table->string('vat_number')

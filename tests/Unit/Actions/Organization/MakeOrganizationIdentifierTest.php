@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Actions\Organization\MakeOrganizationSlug;
+use App\Actions\Organization\MakeOrganizationIdentifier;
 use App\Models\Organization;
 
 beforeEach(function (): void {
 
-    $this->action = resolve(MakeOrganizationSlug::class);
+    $this->action = resolve(MakeOrganizationIdentifier::class);
 
 });
 
@@ -20,7 +20,7 @@ test('makes a unique slug if slug already exists',
         Organization::factory()
             ->createQuietly([
                 'name' => $name = 'Minimal Org',
-                'slug' => Illuminate\Support\Str::slug($name),
+                'identifier' => Illuminate\Support\Str::slug($name),
             ])
             ->fresh();
 

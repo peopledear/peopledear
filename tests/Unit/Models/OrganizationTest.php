@@ -231,7 +231,7 @@ test('to array', function (): void {
             'updated_at',
             'country_id',
             'name',
-            'slug',
+            'identifier',
             'vat_number',
             'ssn',
             'phone',

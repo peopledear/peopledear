@@ -19,6 +19,7 @@ final class OrganizationSeeder extends Seeder
         /** @var Organization $organization */
         $organization = Organization::factory()->create([
             'name' => 'PeopleDear Inc.',
+            'identifier' => 'peopledear-inc',
             'vat_number' => 'VAT123456789',
             'ssn' => 'SSN987654321',
             'phone' => '+1-555-0100',
@@ -43,7 +44,8 @@ final class OrganizationSeeder extends Seeder
         ]);
 
         Organization::factory()->create([
-            'name' => 'PeopleDear The Scond.',
+            'name' => 'PeopleDear The Second.',
+            'identifier' => 'peopledear-the-second',
             'vat_number' => 'VAT123456779',
             'ssn' => 'SSN987654421',
             'phone' => '+1-555-0100',

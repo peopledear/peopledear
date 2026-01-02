@@ -23,7 +23,7 @@ final class OrganizationFactory extends Factory
     {
         return [
             'name' => $name = fake()->unique()->company(),
-            'slug' => Str::slug($name),
+            'identifier' => Str::slug($name),
             'vat_number' => fake()->numerify('##########'),
             'ssn' => fake()->numerify('##-#######'),
             'phone' => fake()->phoneNumber(),

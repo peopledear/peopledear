@@ -20,7 +20,8 @@
         "saloonphp/laravel-plugin": "^3.7",
         "saloonphp/saloon": "^3.14.2",
         "spatie/laravel-data": "^4.18",
-        "spatie/laravel-permission": "^6.24"
+        "spatie/laravel-permission": "^6.24",
+        "sprout/sprout": "^1.1"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.1.7",

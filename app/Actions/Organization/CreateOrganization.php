@@ -10,14 +10,14 @@ use App\Models\Organization;
 final readonly class CreateOrganization
 {
     public function __construct(
-        private MakeOrganizationSlug $makeOrganizationSlug,
+        private MakeOrganizationIdentifier $makeOrganizationSlug,
     ) {}
 
     public function handle(CreateOrganizationData $data): Organization
     {
 
         $data->additional([
-            'slug' => $this->makeOrganizationSlug
+            'identifier' => $this->makeOrganizationSlug
                 ->handle($data->name),
         ]);
 

@@ -1,7 +1,7 @@
 export default function AppLogo() {
     return (
         <>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
+            <div className="bg-weak ring-weak text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md ring-1">
                 {/*
                 <AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
                 */}

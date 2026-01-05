@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Organization;
+use Sprout\Database\Eloquent\Tenant;
 use Sprout\TenancyOptions;
 
 return [
@@ -21,8 +22,8 @@ return [
 
     'defaults' => [
 
-        'tenancy' => 'tenants',
-        'provider' => 'tenants',
+        'tenancy' => 'organizations',
+        'provider' => 'organizations',
         'resolver' => 'path',
 
     ],
@@ -47,6 +48,15 @@ return [
     */
 
     'tenancies' => [
+
+        'organizations' => [
+            'provider' => 'organizations',
+            'options' => [
+                TenancyOptions::hydrateTenantRelation(),
+                TenancyOptions::throwIfNotRelated(),
+                TenancyOptions::allOverrides(),
+            ],
+        ],
 
         'tenants' => [
             'provider' => 'tenants',
@@ -79,6 +89,11 @@ return [
     'providers' => [
 
         'tenants' => [
+            'driver' => 'eloquent',
+            'model' => Tenant::class,
+        ],
+
+        'organizations' => [
             'driver' => 'eloquent',
             'model' => Organization::class,
         ],

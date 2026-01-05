@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Sprout\Contracts\Tenant;
+use Sprout\Contracts\TenantHasResources;
+use Sprout\Database\Eloquent\Concerns\HasTenantResources;
 use Sprout\Database\Eloquent\Concerns\IsTenant;
 
 /**
@@ -31,11 +33,12 @@ use Sprout\Database\Eloquent\Concerns\IsTenant;
  * @property-read Collection<int, Office> $offices
  * @property-read Collection<int, Holiday> $holidays
  */
-final class Organization extends Model implements Tenant
+final class Organization extends Model implements Tenant, TenantHasResources
 {
     /** @use HasFactory<OrganizationFactory> */
     use HasFactory;
 
+    use HasTenantResources;
     use HasUuids;
     use IsTenant;
 

@@ -12,21 +12,21 @@ use App\Models\User;
 use App\Queries\EmployeeTimeOffRequestsQuery;
 
 beforeEach(function (): void {
-    $this->organization = Organization::factory()->create();
+    $this->tenant = Organization::factory()->create();
 
     $this->period = Period::factory()
-        ->for($this->organization)
+        ->for($this->tenant)
         ->active()
         ->create();
 
     $this->timeOffType = TimeOffType::factory()
-        ->for($this->organization)
+        ->for($this->tenant)
         ->create();
 
     $this->user = User::factory()->create();
 
     $this->employee = Employee::factory()
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->user)
         ->create();
 
@@ -39,7 +39,7 @@ test('returns time off requests for current user ordered by created_at desc', fu
     /** @var TimeOffRequest $oldRequest */
     $oldRequest = TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['created_at' => now()->subDays(2)]);
@@ -47,7 +47,7 @@ test('returns time off requests for current user ordered by created_at desc', fu
     /** @var TimeOffRequest $newRequest */
     $newRequest = TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['created_at' => now()]);
@@ -65,20 +65,20 @@ test('does not return requests from other employees', function (): void {
 
     /** @var Employee $otherEmployee */
     $otherEmployee = Employee::factory()
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($otherUser)
         ->create();
 
     TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create();
 
     TimeOffRequest::factory()
         ->for($otherEmployee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create();
@@ -91,14 +91,14 @@ test('does not return requests from other employees', function (): void {
 test('withStatus filters by RequestStatus enum value', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Pending]);
 
     TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create(['status' => RequestStatus::Approved]);
@@ -127,7 +127,7 @@ test('withType returns self for chaining', function (): void {
 test('null status does not apply filter', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->count(3)
@@ -144,7 +144,7 @@ test('null status does not apply filter', function (): void {
 test('null type does not apply filter', function (): void {
     TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->count(3)
@@ -161,19 +161,19 @@ test('null type does not apply filter', function (): void {
 test('withType filters by time off type id', function (): void {
     /** @var TimeOffType $otherTimeOffType */
     $otherTimeOffType = TimeOffType::factory()
-        ->for($this->organization)
+        ->for($this->tenant)
         ->create();
 
     TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($this->timeOffType, 'type')
         ->create();
 
     TimeOffRequest::factory()
         ->for($this->employee)
-        ->for($this->organization)
+        ->for($this->tenant)
         ->for($this->period)
         ->for($otherTimeOffType, 'type')
         ->create();

@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         then: function (): void {
+
             Route::tenanted(function (): void {
                 Route::middleware('web')
                     ->as('tenant.')

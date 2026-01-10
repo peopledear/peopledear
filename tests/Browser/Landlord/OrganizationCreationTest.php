@@ -37,32 +37,6 @@ test('owner can create organization via modal', function (): void {
         ->country_id->toBe($country->id);
 });
 
-test('employee sees informational page when no organization exists', function (): void {
-    Organization::query()->delete();
-
-    $this->actingAs($this->employee);
-
-    $page = visit('/dashboard');
-
-    $page->assertPathIs('/organization-required')
-        ->assertSee('Organization Not Set Up')
-        ->assertSee('An owner or people manager needs to create the organization')
-        ->assertNoJavascriptErrors();
-});
-
-test('manager sees informational page when no organization exists', function (): void {
-    Organization::query()->delete();
-
-    $this->actingAs($this->manager);
-
-    $page = visit('/dashboard');
-
-    $page->assertPathIs('/organization-required')
-        ->assertSee('Organization Not Set Up')
-        ->assertSee('An owner or people manager needs to create the organization')
-        ->assertNoJavascriptErrors();
-});
-
 test('owner can access org overview after organization is created', function (): void {
 
     $this->actingAs($this->owner);

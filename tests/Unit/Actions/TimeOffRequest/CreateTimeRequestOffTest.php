@@ -22,27 +22,27 @@ beforeEach(
 
         $this->action = $action;
 
-        $this->organization = Organization::factory()
+        $this->tenant = Organization::factory()
             ->create();
 
         $this->employee = Employee::factory()->create([
-            'organization_id' => $this->organization->id,
+            'organization_id' => $this->tenant->id,
         ]);
 
         $this->period = Period::factory()
-            ->for($this->organization)
+            ->for($this->tenant)
             ->active()
             ->create();
 
         $this->vacationType = TimeOffType::factory()
-            ->for($this->organization)
+            ->for($this->tenant)
             ->requiresApproval()
             ->create([
                 'name' => 'Vacation',
             ]);
 
         $this->sickLeaveType = TimeOffType::factory()
-            ->for($this->organization)
+            ->for($this->tenant)
             ->dontRequireApproval()
             ->create([
                 'name' => 'Sick Leave',
@@ -57,7 +57,7 @@ test('creates time off with all fields',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organizationId: $this->organization->id,
+            organizationId: $this->tenant->id,
             employeeId: $this->employee->id,
             periodId: $this->period->id,
             timeOffTypeId: $this->vacationType->id,
@@ -75,7 +75,7 @@ test('creates time off with all fields',
         expect($timeOffRequest)
             ->toBeInstanceOf(TimeOffRequest::class)
             ->and($timeOffRequest->organization_id)
-            ->toBe($this->organization->id)
+            ->toBe($this->tenant->id)
             ->and($timeOffRequest->employee_id)
             ->toBe($this->employee->id)
             ->and($timeOffRequest->type->id)
@@ -96,7 +96,7 @@ test('creates half day time off with null end_date',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organizationId: $this->organization->id,
+            organizationId: $this->tenant->id,
             employeeId: $this->employee->id,
             periodId: $this->period->id,
             timeOffTypeId: $this->vacationType->id,
@@ -132,7 +132,7 @@ test('creates multi day time off with end_date',
     function (): void {
 
         $data = new CreateTimeOffRequestData(
-            organizationId: $this->organization->id,
+            organizationId: $this->tenant->id,
             employeeId: $this->employee->id,
             periodId: $this->period->id,
             timeOffTypeId: $this->vacationType->id,
@@ -164,7 +164,7 @@ test('time off request with time off type that does not require approval is auto
     function (): void {
 
         $data = CreateTimeOffRequestData::from([
-            'organization_id' => $this->organization->id,
+            'organization_id' => $this->tenant->id,
             'employee_id' => $this->employee->id,
             'period_id' => $this->period->id,
             'timeOffTypeId' => $this->sickLeaveType->id,
@@ -192,7 +192,7 @@ test('test time off request type with tupe that requires approval is pending app
     function (): void {
 
         $data = CreateTimeOffRequestData::from([
-            'organization_id' => $this->organization->id,
+            'organization_id' => $this->tenant->id,
             'employee_id' => $this->employee->id,
             'period_id' => $this->period->id,
             'time_off_type_id' => $this->vacationType->id,

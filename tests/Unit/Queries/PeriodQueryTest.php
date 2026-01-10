@@ -14,13 +14,13 @@ beforeEach(function (): void {
     $organization = Organization::factory()
         ->createQuietly();
 
-    $this->organization = $organization;
+    $this->tenant = $organization;
 
-    Session::put(SessionKey::CurrentOrganization->value, $this->organization->id);
+    Session::put(SessionKey::CurrentOrganization->value, $this->tenant->id);
 
     /** @var Period $activePeriod */
     $activePeriod = Period::factory()
-        ->for($this->organization)
+        ->for($this->tenant)
         ->active()
         ->createQuietly();
 

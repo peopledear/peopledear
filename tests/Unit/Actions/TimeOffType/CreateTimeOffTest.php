@@ -15,7 +15,7 @@ use Spatie\LaravelData\Optional;
 
 beforeEach(function (): void {
 
-    $this->organization = Organization::factory()
+    $this->tenant = Organization::factory()
         ->create();
 
     $this->action = resolve(CreateTimeOffType::class);
@@ -48,7 +48,7 @@ test('create a time off with nullable balance config',
         );
 
         $sickLeaveTimeOffType = $this->action->handle(
-            $this->organization,
+            $this->tenant,
             $sickLeaveData
         );
 
@@ -66,7 +66,7 @@ test('created a time off type',
     function (): void {
 
         $timeOffType = $this->action->handle(
-            $this->organization,
+            $this->tenant,
             new CreateTimeOffTypeData(
                 name: 'Vacation',
                 allowedUnits: [
@@ -97,7 +97,7 @@ test('created a time off type',
             ->toBeInstanceOf(TimeOffType::class)
             ->except($timeOffTypeFromStorage)
             ->organization_id
-            ->toBe($this->organization->id)
+            ->toBe($this->tenant->id)
             ->and($timeOffType->description)
             ->toBe($timeOffTypeFromStorage->description);
 

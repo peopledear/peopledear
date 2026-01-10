@@ -23,128 +23,132 @@ use App\Http\Controllers\UserTwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('welcome', []))
-    ->name('home');
+Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function (): void {
 
-Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::get('/', fn () => Inertia::render('welcome', []))
+        ->name('home');
 
-    Route::get('dashboard', fn () => Inertia::render('dashboard', []))
-        ->name('dashboard');
+    Route::middleware(['auth', 'verified'])->group(function (): void {
 
-    Route::as('employee.')->group(function (): void {
+        Route::get('dashboard', fn () => Inertia::render('dashboard', []))
+            ->name('dashboard');
 
-        Route::get('/overview', [EmployeeOverviewController::class, 'index'])
-            ->name('overview');
+        Route::as('employee.')->group(function (): void {
 
-        Route::as('time-offs.')
-            ->prefix('time-offs')
-            ->group(function (): void {
+            Route::get('/overview', [EmployeeOverviewController::class, 'index'])
+                ->name('overview');
 
-                Route::get('/', [EmployeeTimeOffController::class, 'index'])
-                    ->name('index');
+            Route::as('time-offs.')
+                ->prefix('time-offs')
+                ->group(function (): void {
 
-                Route::get('/create', [EmployeeTimeOffController::class, 'create'])
+                    Route::get('/', [EmployeeTimeOffController::class, 'index'])
+                        ->name('index');
+
+                    Route::get('/create', [EmployeeTimeOffController::class, 'create'])
+                        ->name('create');
+
+                    Route::post('/store', [EmployeeTimeOffController::class, 'store'])
+                        ->name('store');
+
+                });
+
+        });
+
+        Route::get('organization-required', fn () => Inertia::render('organization-required', []))
+            ->name('organization-required');
+
+        Route::prefix('org')
+            ->as('org.')->group(function (): void {
+
+                Route::get('/', [OrganizationController::class, 'index'])
+                    ->name('overview');
+
+                Route::as('employees.')->prefix('employees')
+                    ->group(function (): void {
+                        Route::get('/', [OrganizationEmployeeController::class, 'index'])
+                            ->name('index');
+                    });
+
+                Route::get('create', [OrganizationController::class, 'create'])
                     ->name('create');
 
-                Route::post('/store', [EmployeeTimeOffController::class, 'store'])
+                Route::post('create', [OrganizationController::class, 'store'])
                     ->name('store');
+
+                // Organization Settings...
+
+                Route::prefix('settings')->as('settings.')->group(function (): void {
+                    Route::get('/{organization}/edit', [OrganizationController::class, 'edit'])
+                        ->name('organization.edit');
+
+                    Route::put('organization/{organization}', [OrganizationController::class, 'update'])
+                        ->name('organization.update');
+
+                    Route::prefix('time-off-types')
+                        ->as('time-off-types.')->group(function (): void {
+
+                            Route::post('/', [OrganizationTimeOffTypesController::class, 'store'])
+                                ->name('store');
+
+                            Route::get('/', [OrganizationTimeOffTypesController::class, 'index'])
+                                ->name('index');
+
+                            Route::get('create', [OrganizationTimeOffTypesController::class, 'create'])
+                                ->name('create');
+
+                        });
+
+                });
+
+                Route::post('offices', [OrganizationOfficeController::class, 'store'])
+                    ->name('offices.store');
+
+                Route::put('offices/{office}', [OrganizationOfficeController::class, 'update'])
+                    ->name('offices.update');
+
+                Route::delete('offices/{office}', [OrganizationOfficeController::class, 'destroy'])
+                    ->name('offices.destroy');
 
             });
 
     });
 
-    Route::get('organization-required', fn () => Inertia::render('organization-required', []))
-        ->name('organization-required');
+    Route::middleware('auth')->group(function (): void {
+        // Notifications...
 
-    Route::prefix('org')
-        ->as('org.')->group(function (): void {
+        Route::get('notifications/dropdown', [DropdownNotificationController::class, 'index'])
+            ->name('notifications.dropdown');
 
-            Route::get('/', [OrganizationController::class, 'index'])
-                ->name('overview');
+        Route::post('notifications/{notification}/mark-read', [MarkNotificationAsReadController::class, 'store'])
+            ->name('notifications.mark-read');
+        Route::post('notifications/mark-all-read', [MarkAllNotificationsAsReadController::class, 'store'])
+            ->name('notifications.mark-all-read');
+        Route::delete('notifications/{notification}', [DeleteNotificationController::class, 'destroy'])
+            ->name('notifications.destroy');
 
-            Route::as('employees.')->prefix('employees')
-                ->group(function (): void {
-                    Route::get('/', [OrganizationEmployeeController::class, 'index'])
-                        ->name('index');
-                });
+        // User...
+        Route::delete('user', [UserController::class, 'destroy'])->name('user.destroy');
 
-            Route::get('create', [OrganizationController::class, 'create'])
-                ->name('create');
+        // User Profile...
+        Route::redirect('settings', '/settings/profile');
+        Route::get('settings/profile', [UserProfileController::class, 'edit'])->name('user-profile.edit');
+        Route::patch('settings/profile', [UserProfileController::class, 'update'])->name('user-profile.update');
 
-            Route::post('create', [OrganizationController::class, 'store'])
-                ->name('store');
+        // User Password...
+        Route::get('settings/password', [UserPasswordController::class, 'edit'])->name('password.edit');
+        Route::put('settings/password', [UserPasswordController::class, 'update'])
+            ->middleware('throttle:6,1')
+            ->name('password.update');
 
-            // Organization Settings...
+        // Appearance...
+        Route::get('settings/appearance', fn () => Inertia::render('appearance/update'))->name('appearance.edit');
 
-            Route::prefix('settings')->as('settings.')->group(function (): void {
-                Route::get('/{organization}/edit', [OrganizationController::class, 'edit'])
-                    ->name('organization.edit');
+        // User Two-Factor Authentication...
+        Route::get('settings/two-factor', [UserTwoFactorAuthenticationController::class, 'show'])
+            ->name('two-factor.show');
+    });
 
-                Route::put('organization/{organization}', [OrganizationController::class, 'update'])
-                    ->name('organization.update');
-
-                Route::prefix('time-off-types')
-                    ->as('time-off-types.')->group(function (): void {
-
-                        Route::post('/', [OrganizationTimeOffTypesController::class, 'store'])
-                            ->name('store');
-
-                        Route::get('/', [OrganizationTimeOffTypesController::class, 'index'])
-                            ->name('index');
-
-                        Route::get('create', [OrganizationTimeOffTypesController::class, 'create'])
-                            ->name('create');
-
-                    });
-
-            });
-
-            Route::post('offices', [OrganizationOfficeController::class, 'store'])
-                ->name('offices.store');
-
-            Route::put('offices/{office}', [OrganizationOfficeController::class, 'update'])
-                ->name('offices.update');
-
-            Route::delete('offices/{office}', [OrganizationOfficeController::class, 'destroy'])
-                ->name('offices.destroy');
-
-        });
-
-});
-
-Route::middleware('auth')->group(function (): void {
-    // Notifications...
-
-    Route::get('notifications/dropdown', [DropdownNotificationController::class, 'index'])
-        ->name('notifications.dropdown');
-
-    Route::post('notifications/{notification}/mark-read', [MarkNotificationAsReadController::class, 'store'])
-        ->name('notifications.mark-read');
-    Route::post('notifications/mark-all-read', [MarkAllNotificationsAsReadController::class, 'store'])
-        ->name('notifications.mark-all-read');
-    Route::delete('notifications/{notification}', [DeleteNotificationController::class, 'destroy'])
-        ->name('notifications.destroy');
-
-    // User...
-    Route::delete('user', [UserController::class, 'destroy'])->name('user.destroy');
-
-    // User Profile...
-    Route::redirect('settings', '/settings/profile');
-    Route::get('settings/profile', [UserProfileController::class, 'edit'])->name('user-profile.edit');
-    Route::patch('settings/profile', [UserProfileController::class, 'update'])->name('user-profile.update');
-
-    // User Password...
-    Route::get('settings/password', [UserPasswordController::class, 'edit'])->name('password.edit');
-    Route::put('settings/password', [UserPasswordController::class, 'update'])
-        ->middleware('throttle:6,1')
-        ->name('password.update');
-
-    // Appearance...
-    Route::get('settings/appearance', fn () => Inertia::render('appearance/update'))->name('appearance.edit');
-
-    // User Two-Factor Authentication...
-    Route::get('settings/two-factor', [UserTwoFactorAuthenticationController::class, 'show'])
-        ->name('two-factor.show');
 });
 
 Route::middleware('guest')->group(function (): void {

@@ -16,7 +16,7 @@ beforeEach(
      */
     function (): void {
         resolve(CreateSystemRoles::class)->handle();
-        $this->organization = Organization::factory()
+        $this->tenant = Organization::factory()
             ->createQuietly();
 
         $this->action = resolve(CreateSystemTimeOffTypes::class);
@@ -29,7 +29,7 @@ test('sick leave does not require approval and fallback role is null',
      */
     function (): void {
 
-        $this->action->handle($this->organization);
+        $this->action->handle($this->tenant);
 
         /** @var TimeOffType $sickLeaveTimeOffType */
         $sickLeaveTimeOffType = TimeOffType::query()
@@ -55,7 +55,7 @@ test('vacation has a people_manager role as the approval fallback',
      */
     function (): void {
 
-        $this->action->handle($this->organization);
+        $this->action->handle($this->tenant);
 
         /** @var TimeOffType $vacationTimeOffType */
         $vacationTimeOffType = TimeOffType::query()
@@ -79,10 +79,10 @@ test('it creates system time off types',
      */
     function (): void {
 
-        $this->action->handle($this->organization);
+        $this->action->handle($this->tenant);
 
         /** @var Collection<int, TimeOffType> $timeOffTypes */
-        $timeOffTypes = $this->organization->timeOffTypes()
+        $timeOffTypes = $this->tenant->timeOffTypes()
             ->where('is_system', true)
             ->get();
 

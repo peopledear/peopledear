@@ -24,7 +24,7 @@ return [
 
         'tenancy' => 'organizations',
         'provider' => 'organizations',
-        'resolver' => 'path',
+        'resolver' => 'subdomain',
 
     ],
 
@@ -46,6 +46,8 @@ return [
     | behaviour.
     |
     */
+
+    'tenanted_domain' => env('TENANTED_DOMAIN'),
 
     'tenancies' => [
 

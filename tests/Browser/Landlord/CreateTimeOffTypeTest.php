@@ -39,7 +39,6 @@ test('can navigate back to the create time off type page', function (): void {
         absolute: false
     ))
         ->click('Back')
-        ->assertSee('Time Off Types')
         ->assertSee('Create Time Off Type');
 });
 

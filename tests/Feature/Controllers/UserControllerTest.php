@@ -8,7 +8,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 
-it('renders registration page', function (): void {
+test('renders registration page', function (): void {
     $response = $this->fromRoute('home')
         ->get(route('register'));
 
@@ -16,7 +16,7 @@ it('renders registration page', function (): void {
         ->assertInertia(fn ($page) => $page->component('user/create'));
 });
 
-it('may register a new user', function (): void {
+test('may register a new user', function (): void {
     Event::fake([Registered::class]);
 
     $response = $this->fromRoute('register')
@@ -41,7 +41,7 @@ it('may register a new user', function (): void {
     Event::assertDispatched(Registered::class);
 });
 
-it('requires name', function (): void {
+test('requires name', function (): void {
     $response = $this->fromRoute('register')
         ->post(route('register.store'), [
             'email' => 'test@example.com',
@@ -53,7 +53,7 @@ it('requires name', function (): void {
         ->assertSessionHasErrors('name');
 });
 
-it('requires email', function (): void {
+test('requires email', function (): void {
     $response = $this->fromRoute('register')
         ->post(route('register.store'), [
             'name' => 'Test User',
@@ -65,7 +65,7 @@ it('requires email', function (): void {
         ->assertSessionHasErrors('email');
 });
 
-it('requires valid email', function (): void {
+test('requires valid email', function (): void {
     $response = $this->fromRoute('register')
         ->post(route('register.store'), [
             'name' => 'Test User',
@@ -78,7 +78,7 @@ it('requires valid email', function (): void {
         ->assertSessionHasErrors('email');
 });
 
-it('requires unique email', function (): void {
+test('requires unique email', function (): void {
     User::factory()->create(['email' => 'test@example.com']);
 
     $response = $this->fromRoute('register')
@@ -93,7 +93,7 @@ it('requires unique email', function (): void {
         ->assertSessionHasErrors('email');
 });
 
-it('requires password', function (): void {
+test('requires password', function (): void {
     $response = $this->fromRoute('register')
         ->post(route('register.store'), [
             'name' => 'Test User',
@@ -104,7 +104,7 @@ it('requires password', function (): void {
         ->assertSessionHasErrors('password');
 });
 
-it('requires password confirmation', function (): void {
+test('requires password confirmation', function (): void {
     $response = $this->fromRoute('register')
         ->post(route('register.store'), [
             'name' => 'Test User',
@@ -116,7 +116,7 @@ it('requires password confirmation', function (): void {
         ->assertSessionHasErrors('password');
 });
 
-it('requires matching password confirmation', function (): void {
+test('requires matching password confirmation', function (): void {
     $response = $this->fromRoute('register')
         ->post(route('register.store'), [
             'name' => 'Test User',
@@ -129,7 +129,7 @@ it('requires matching password confirmation', function (): void {
         ->assertSessionHasErrors('password');
 });
 
-it('may delete user account', function (): void {
+test('may delete user account', function (): void {
     $user = User::factory()->create([
         'password' => Hash::make('password'),
     ]);
@@ -147,7 +147,7 @@ it('may delete user account', function (): void {
     $this->assertGuest();
 });
 
-it('requires password to delete account', function (): void {
+test('requires password to delete account', function (): void {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)
@@ -160,7 +160,7 @@ it('requires password to delete account', function (): void {
     expect($user->fresh())->not->toBeNull();
 });
 
-it('requires correct password to delete account', function (): void {
+test('requires correct password to delete account', function (): void {
     $user = User::factory()->create([
         'password' => Hash::make('password'),
     ]);
@@ -177,7 +177,7 @@ it('requires correct password to delete account', function (): void {
     expect($user->fresh())->not->toBeNull();
 });
 
-it('redirects authenticated users away from registration', function (): void {
+test('redirects authenticated users away from registration', function (): void {
     Organization::factory()->create();
 
     $user = User::factory()->create();

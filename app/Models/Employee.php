@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\Addressable;
 use App\Enums\PeopleDear\EmploymentStatus;
 use App\Models\Concerns\BelongsToOrganization;
+use App\Models\Concerns\HasAddress;
 use App\Models\Scopes\OrganizationScope;
 use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
@@ -33,15 +35,17 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Organization $organization
- * @property-read Office|null $office
+ * @property-read Location|null $location
+ * @property-read Address $address
  * @property-read User|null $user
  * @property-read Employee|null $manager
  * @property-read Collection<int, Employee> $directReports
  */
 #[ScopedBy([OrganizationScope::class])]
-final class Employee extends Model
+final class Employee extends Model implements Addressable
 {
     use BelongsToOrganization;
+    use HasAddress;
 
     /** @use HasFactory<EmployeeFactory> */
     use HasFactory;
@@ -53,7 +57,7 @@ final class Employee extends Model
         return [
             'id' => 'string',
             'organization_id' => 'string',
-            'office_id' => 'string',
+            'location_id' => 'string',
             'user_id' => 'string',
             'manager_id' => 'string',
             'name' => 'string',
@@ -68,10 +72,10 @@ final class Employee extends Model
         ];
     }
 
-    /** @return BelongsTo<Office, $this> */
-    public function office(): BelongsTo
+    /** @return BelongsTo<Location, $this> */
+    public function location(): BelongsTo
     {
-        return $this->belongsTo(Office::class);
+        return $this->belongsTo(Location::class);
     }
 
     /** @return BelongsTo<User, $this> */

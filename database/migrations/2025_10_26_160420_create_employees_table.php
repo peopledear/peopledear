@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Models\Office;
+use App\Models\Location;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignIdFor(Organization::class)
                 ->constrained();
 
-            $table->foreignIdFor(Office::class)
+            $table->foreignIdFor(Location::class)
                 ->nullable()
                 ->constrained();
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Employee;
-use App\Models\Office;
+use App\Models\Location;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,13 +21,9 @@ final class EmployeeSeeder extends Seeder
         /** @var Organization $organization */
         $organization = Organization::query()->first();
 
-        /** @var Organization $secondOrganization */
-        $secondOrganization = Organization::query()->skip(1)->first();
-
         $users = User::query()->get();
 
         $this->createEmployeesWithHierarchy($organization, $users);
-        $this->createEmployeesWithHierarchy($secondOrganization, $users);
     }
 
     /**
@@ -35,8 +31,8 @@ final class EmployeeSeeder extends Seeder
      */
     private function createEmployeesWithHierarchy(Organization $organization, $users): void
     {
-        /** @var Office $office */
-        $office = $organization->offices()->first();
+        /** @var Location $headQuarter */
+        $headQuarter = $organization->headOffice()->first();
 
         $employees = [];
 
@@ -44,7 +40,7 @@ final class EmployeeSeeder extends Seeder
             $factory = Employee::factory()
                 ->for($organization)
                 ->for($user)
-                ->for($office);
+                ->for($headQuarter);
 
             // First employee is the owner (no manager)
             // Second employee reports to owner

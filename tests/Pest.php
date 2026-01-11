@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
@@ -18,7 +19,7 @@ function loadTestsDefaults(): void
 pest()->browser()->timeout(20000);
 
 pest()->extend(TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
         loadTestsDefaults();
         $this->freezeTime();
@@ -26,23 +27,30 @@ pest()->extend(TestCase::class)
     ->in('Unit', 'Integration');
 
 pest()->extend(Tests\WithUsersTestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
         loadTestsDefaults();
         pest()->browser()->withHost('localhost');
         $this->freezeTime();
     })
-    ->in('Browser/Landlord', 'Feature');
+    ->in('Browser/Landlord');
+
+pest()->extend(Tests\WithUsersTestCase::class)
+    ->use(RefreshDatabase::class)
+    ->beforeEach(function (): void {
+        loadTestsDefaults();
+        $this->freezeTime();
+
+    })
+    ->in('Feature');
 
 pest()->extend(Tests\TenantTestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
         pest()->browser()->withHost('acme.localhost');
         loadTestsDefaults();
         $this->freezeTime();
     })
     ->in('Browser/Tenant');
-
-expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 function something(): void {}

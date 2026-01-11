@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Models\Country;
 use App\Models\Organization;
 
 test('people manager can access organization settings', function (): void {
-    $this->actingAs($this->peopleManager);
 
-    $response = $this->get(route('org.settings.organization.edit', [
-        'organization' => $this->organization->id,
-    ]));
+    $response = $this->actingAs($this->peopleManager)->get(route(
+        'tenant.settings.organization.edit', [
+            'tenant' => $this->peopleManager->organization->identifier,
+        ]));
 
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
@@ -21,8 +20,8 @@ test('people manager can access organization settings', function (): void {
 test('owner can access organization settings', function (): void {
     $this->actingAs($this->owner);
 
-    $response = $this->get(route('org.settings.organization.edit', [
-        'organization' => $this->organization->id,
+    $response = $this->get(route('tenant.settings.organization.edit', [
+        'tenant' => $this->owner->organization->identifier,
     ]));
 
     $response->assertOk()
@@ -35,8 +34,8 @@ test('employee cannot access organization settings', function (): void {
 
     $this->actingAs($this->employee);
 
-    $response = $this->get(route('org.settings.organization.edit', [
-        'organization' => $this->organization->id,
+    $response = $this->get(route('tenant.settings.organization.edit', [
+        'tenant' => $this->employee->organization->identifier,
     ]));
 
     $response->assertForbidden();
@@ -46,8 +45,8 @@ test('people manager can update organization', function (): void {
 
     $this->actingAs($this->peopleManager);
 
-    $response = $this->put(route('org.settings.organization.update', [
-        'organization' => $this->organization->id,
+    $response = $this->put(route('tenant.settings.organization.update', [
+        'tenant' => $this->peopleManager->organization->identifier,
     ]), [
         'name' => 'Updated Company Name',
         'vat_number' => 'NEW456',
@@ -55,8 +54,8 @@ test('people manager can update organization', function (): void {
         'phone' => '+9876543210',
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit', [
-        'organization' => $this->organization->id,
+    $response->assertRedirect(route('tenant.settings.organization.edit', [
+        'tenant' => $this->peopleManager->organization->identifier,
     ]));
 
     /** @var Organization $updatedOrganization */
@@ -76,8 +75,8 @@ test('owner can update organization', function (): void {
 
     $this->actingAs($this->owner);
 
-    $response = $this->put(route('org.settings.organization.update', [
-        'organization' => $this->organization->id,
+    $response = $this->put(route('tenant.settings.organization.update', [
+        'tenant' => $this->owner->organization->identifier,
     ]), [
         'name' => 'Owner Updated Name',
         'vat_number' => null,
@@ -85,8 +84,8 @@ test('owner can update organization', function (): void {
         'phone' => null,
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit', [
-        'organization' => $this->organization->id,
+    $response->assertRedirect(route('tenant.settings.organization.edit', [
+        'tenant' => $this->owner->organization->identifier,
     ]));
 
     /** @var Organization $updatedOrganization */
@@ -100,8 +99,8 @@ test('employee cannot update organization', function (): void {
     $this->actingAs($this->employee);
     $organizationName = $this->organization->name;
 
-    $response = $this->put(route('org.settings.organization.update', [
-        'organization' => $this->organization->id,
+    $response = $this->put(route('tenant.settings.organization.update', [
+        'tenant' => $this->employee->organization->identifier,
     ]), [
         'name' => 'Hacked Name',
     ]);
@@ -118,8 +117,8 @@ test('employee cannot update organization', function (): void {
 test('requires organization name', function (): void {
     $this->actingAs($this->peopleManager);
 
-    $response = $this->put(route('org.settings.organization.update', [
-        'organization' => $this->organization->id,
+    $response = $this->put(route('tenant.settings.organization.update', [
+        'tenant' => $this->peopleManager->organization->identifier,
     ]), [
         'name' => '',
         'vat_number' => null,
@@ -134,8 +133,8 @@ test('requires organization name', function (): void {
 test('validates organization name max length', function (): void {
     $this->actingAs($this->peopleManager);
 
-    $response = $this->put(route('org.settings.organization.update', [
-        'organization' => $this->organization->id,
+    $response = $this->put(route('tenant.settings.organization.update', [
+        'tenant' => $this->peopleManager->organization->identifier,
     ]), [
         'name' => str_repeat('a', 256), // 256 characters - exceeds 255 max
         'vat_number' => null,
@@ -150,8 +149,8 @@ test('validates organization name max length', function (): void {
 test('allows optional vat_number, ssn, and phone', function (): void {
     $this->actingAs($this->peopleManager);
 
-    $response = $this->put(route('org.settings.organization.update', [
-        'organization' => $this->organization->id,
+    $response = $this->put(route('tenant.settings.organization.update', [
+        'tenant' => $this->peopleManager->organization->identifier,
     ]), [
         'name' => 'Minimal Organization',
         'vat_number' => null,
@@ -159,8 +158,8 @@ test('allows optional vat_number, ssn, and phone', function (): void {
         'phone' => null,
     ]);
 
-    $response->assertRedirect(route('org.settings.organization.edit', [
-        'organization' => $this->organization->id,
+    $response->assertRedirect(route('tenant.settings.organization.edit', [
+        'tenant' => $this->peopleManager->organization->identifier,
     ]));
 
     /** @var Organization $updatedOrganization */
@@ -174,73 +173,4 @@ test('allows optional vat_number, ssn, and phone', function (): void {
         ->toBeNull()
         ->and($updatedOrganization->phone)
         ->toBeNull();
-});
-
-test('requires country_id when creating organization', function (): void {
-
-    $this->actingAs($this->owner);
-
-    $response = $this->post(route('org.create'), [
-        'name' => 'Test Organization',
-    ]);
-
-    $response->assertRedirect()
-        ->assertSessionHasErrors('country_id');
-});
-
-test('validates country_id exists when creating organization', function (): void {
-    Organization::query()->delete();
-
-    $this->actingAs($this->owner);
-
-    $response = $this->post(route('org.create'), [
-        'name' => 'Test Organization',
-        'country_id' => 99999,
-    ]);
-
-    $response->assertRedirect()
-        ->assertSessionHasErrors('country_id');
-});
-
-test('people manager cannot create organization with country', function (): void {
-    Organization::query()->delete();
-
-    /** @var Country $country */
-    $country = Country::factory()->create();
-
-    $this->actingAs($this->peopleManager);
-
-    $response = $this->post(route('org.create'), [
-        'name' => 'New Organization',
-        'country_id' => $country->id,
-    ]);
-
-    $response->assertForbidden();
-
-});
-
-test('owner can create organization with country', function (): void {
-    Organization::query()->delete();
-
-    /** @var Country $country */
-    $country = Country::factory()->create();
-
-    $this->actingAs($this->owner);
-
-    $response = $this->post(route('org.create'), [
-        'name' => 'Owner Organization',
-        'country_id' => $country->id,
-    ]);
-
-    $response->assertRedirect(route('org.overview'));
-
-    /** @var Organization $organization */
-    $organization = Organization::query()
-        ->where('name', 'Owner Organization')
-        ->first();
-
-    expect($organization)
-        ->not->toBeNull()
-        ->name->toBe('Owner Organization')
-        ->country_id->toBe($country->id);
 });

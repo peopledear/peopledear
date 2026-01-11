@@ -7,14 +7,14 @@ namespace App\Policies;
 use App\Enums\UserPermission;
 use App\Models\User;
 
-final class OfficePolicy
+final class LocationPolicy
 {
     /**
      * @codeCoverageIgnore
      */
     public function viewAny(User $user): bool
     {
-        return $user->can(UserPermission::OfficeManage);
+        return $user->can(UserPermission::LocationManage);
     }
 
     /**
@@ -22,21 +22,21 @@ final class OfficePolicy
      */
     public function view(User $user): bool
     {
-        return $user->can(UserPermission::OfficeManage);
+        return $user->can(UserPermission::LocationManage);
     }
 
     public function create(User $user): bool
     {
-        return $user->can(UserPermission::OfficeCreate);
+        return $user->can(UserPermission::LocationCreate);
     }
 
     public function update(User $user): bool
     {
-        return $user->can(UserPermission::OfficeEdit);
+        return $user->can(UserPermission::LocationEdit);
     }
 
     public function delete(User $user): bool
     {
-        return $user->can(UserPermission::OfficeDelete);
+        return $user->can(UserPermission::LocationsDelete);
     }
 }

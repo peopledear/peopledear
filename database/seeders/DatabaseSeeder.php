@@ -11,10 +11,10 @@ final class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            CountrySeeder::class,
             OrganizationSeeder::class,
-            UserSeeder::class,
             PeriodSeeder::class,
-            OfficeSeeder::class,
+            LocationSeeder::class,
             EmployeeSeeder::class,
             TimeOffTypeSeeder::class,
             TimeOffRequestSeeder::class,

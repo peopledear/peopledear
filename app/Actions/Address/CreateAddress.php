@@ -10,9 +10,6 @@ use App\Models\Address;
 
 final readonly class CreateAddress
 {
-    /**
-     * Create an address for an addressable model.
-     */
     public function handle(Addressable $addressable, CreateAddressData $data): Address
     {
         /** @var Address $address */

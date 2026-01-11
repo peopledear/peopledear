@@ -97,7 +97,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\PeopleDear\OfficeType;
-use Database\Factories\OfficeFactory;
+use Database\Factories\LocationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -117,7 +117,7 @@ use Illuminate\Support\Carbon;
  */
 final class Office extends Model
 {
-    /** @use HasFactory<OfficeFactory> */
+    /** @use HasFactory<LocationFactory> */
     use HasFactory;
 
     /** @return BelongsTo<Organization, $this> */

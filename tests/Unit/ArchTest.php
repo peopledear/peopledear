@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Notification;
 use App\Models\VacationBalance;
+use App\Support\Exceptions\DomainException;
 
 arch()->preset()->php();
 arch()->preset()
@@ -11,6 +12,7 @@ arch()->preset()
     ->ignoring([
         VacationBalance::class,
         Notification::class,
+        DomainException::class,
     ]);
 arch()->preset()->security()->ignoring([
     'assert',

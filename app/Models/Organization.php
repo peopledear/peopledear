@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\PeopleDear\LocationType;
 use Database\Factories\OrganizationFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Sprout\Contracts\Tenant;
 use Sprout\Contracts\TenantHasResources;
@@ -20,17 +20,19 @@ use Sprout\Database\Eloquent\Concerns\IsTenant;
 
 /**
  * @property-read string $id
+ * @property-read string $identifier
+ * @property-read string $resource_key
  * @property-read string $name
  * @property-read string $slug
  * @property-read string|null $vat_number
  * @property-read string|null $ssn
  * @property-read string|null $phone
- * @property-read int|null $country_id
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Country|null $country
  * @property-read Collection<int, User> $users
- * @property-read Collection<int, Office> $offices
+ * @property-read Collection<int, Location> $locations
+ * @property-read Collection<int, Location> $headquarters
  * @property-read Collection<int, Holiday> $holidays
  */
 final class Organization extends Model implements Tenant, TenantHasResources
@@ -52,30 +54,38 @@ final class Organization extends Model implements Tenant, TenantHasResources
             'vat_number' => 'string',
             'ssn' => 'string',
             'phone' => 'string',
-            'country_id' => 'string',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
     }
 
     /**
-     * @return BelongsToMany<User, $this>
+     * @return HasMany<User, $this>
      */
-    public function users(): BelongsToMany
+    public function users(): HasMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class);
     }
 
-    /** @return BelongsTo<Country, $this> */
-    public function country(): BelongsTo
+    /** @return HasMany<Location, $this> */
+    public function locations(): HasMany
     {
-        return $this->belongsTo(Country::class);
+        return $this->hasMany(Location::class);
     }
 
-    /** @return HasMany<Office, $this> */
-    public function offices(): HasMany
+    /** @return HasMany<Location, $this> */
+    public function headquarters(): HasMany
     {
-        return $this->hasMany(Office::class);
+        return $this->hasMany(Location::class)
+            ->where('type', LocationType::Headquarters->value);
+    }
+
+    /** @return HasOne<Location, $this> */
+    public function headOffice(): HasOne
+    {
+        return $this->hasOne(Location::class)
+            ->where('type', LocationType::Headquarters->value)
+            ->latest();
     }
 
     /** @return HasMany<Holiday, $this> */
@@ -98,6 +108,6 @@ final class Organization extends Model implements Tenant, TenantHasResources
 
     public function hasLocationConfigured(): bool
     {
-        return $this->country_id !== null;
+        return $this->headOffice()->exists();
     }
 }

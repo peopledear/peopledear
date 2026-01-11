@@ -2,37 +2,19 @@
 
 declare(strict_types=1);
 
-use App\Models\Country;
+use App\Enums\PeopleDear\LocationType;
 use App\Models\Holiday;
-use App\Models\Office;
+use App\Models\Location;
 use App\Models\Organization;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
-test('user can be assigned to an organization', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
-    /** @var User $user */
-    $user = User::factory()->create();
-
-    $organization->users()->attach($user);
-
-    expect($organization->users)
-        ->toBeInstanceOf(Collection::class)
-        ->toHaveCount(1)
-        ->first()
-        ->id->toBe($user->id);
-});
 
 test('has a users relationship', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()->create();
 
     expect($organization->users())
-        ->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+        ->toBeInstanceOf(HasMany::class);
 });
 
 test('has a periods relationship', function (): void {
@@ -95,36 +77,39 @@ test('organization can be created with only required fields', function (): void 
         ->toBeNull();
 });
 
-test('organization has offices relationship', function (): void {
+test('organization has locations relationship', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()->create();
 
-    expect($organization->offices())->toBeInstanceOf(HasMany::class);
+    expect($organization->locations())
+        ->toBeInstanceOf(HasMany::class);
 });
 
 test('organization offices relationship is properly loaded', function (): void {
     /** @var Organization $organization */
     $organization = Organization::factory()->create();
 
-    /** @var Office $office1 */
-    $office1 = Office::factory()->create([
-        'organization_id' => $organization->id,
-        'name' => 'Office 1',
-    ]);
+    Location::factory()
+        ->for($organization)
+        ->create([
+            'name' => 'Headquarters',
+            'type' => LocationType::Headquarters,
+        ]);
 
-    /** @var Office $office2 */
-    $office2 = Office::factory()->create([
-        'organization_id' => $organization->id,
-        'name' => 'Office 2',
-    ]);
+    Location::factory()
+        ->for($organization)
+        ->create([
+            'name' => 'Office 2',
+            'type' => LocationType::Warehouse,
+        ]);
 
-    $organization->load('offices');
+    $organization->load('locations');
 
-    expect($organization->offices)
+    expect($organization->locations)
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(2)
-        ->and($organization->offices->pluck('name')->toArray())
-        ->toBe(['Office 1', 'Office 2']);
+        ->and($organization->locations->pluck('name')->toArray())
+        ->toBe(['Headquarters', 'Office 2']);
 });
 
 test('organization has holidays relationship', function (): void {
@@ -138,14 +123,12 @@ test('organization holidays relationship is properly loaded', function (): void 
     /** @var Organization $organization */
     $organization = Organization::factory()->create();
 
-    /** @var Holiday $holiday1 */
-    $holiday1 = Holiday::factory()->create([
+    Holiday::factory()->create([
         'organization_id' => $organization->id,
         'name' => ['en' => 'New Year'],
     ]);
 
-    /** @var Holiday $holiday2 */
-    $holiday2 = Holiday::factory()->create([
+    Holiday::factory()->create([
         'organization_id' => $organization->id,
         'name' => ['en' => 'Christmas'],
     ]);
@@ -155,67 +138,6 @@ test('organization holidays relationship is properly loaded', function (): void 
     expect($organization->holidays)
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(2);
-});
-
-test('organization has country relationship', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create();
-
-    expect($organization->country())->toBeInstanceOf(BelongsTo::class);
-});
-
-test('organization country relationship is properly loaded', function (): void {
-    /** @var Country $country */
-    $country = Country::factory()->create([
-        'iso_code' => 'US',
-        'name' => ['en' => 'United States'],
-        'official_languages' => ['en'],
-    ]);
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'country_id' => $country->id,
-    ]);
-
-    $organization->load('country');
-
-    expect($organization->country)
-        ->toBeInstanceOf(Country::class)
-        ->and($organization->country->iso_code)
-        ->toBe('US');
-});
-
-test('organization can exist without country', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'country_id' => null,
-    ]);
-
-    expect($organization->country_id)
-        ->toBeNull()
-        ->and($organization->country)
-        ->toBeNull();
-});
-
-test('has location configured returns true when country is set', function (): void {
-    /** @var Country $country */
-    $country = Country::factory()->create();
-
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'country_id' => $country->id,
-    ]);
-
-    expect($organization->hasLocationConfigured())->toBeTrue();
-});
-
-test('has location configured returns false when country is null', function (): void {
-    /** @var Organization $organization */
-    $organization = Organization::factory()->create([
-        'country_id' => null,
-    ]);
-
-    expect($organization->hasLocationConfigured())->toBeFalse();
 });
 
 test('to array', function (): void {
@@ -229,7 +151,6 @@ test('to array', function (): void {
             'id',
             'created_at',
             'updated_at',
-            'country_id',
             'name',
             'identifier',
             'resource_key',

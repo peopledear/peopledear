@@ -24,10 +24,10 @@ enum UserPermission: string
     case TimeOffRequestApprove = 'time-off-request:approve';
     case TimeOffRequestReject = 'time-off-request:reject';
 
-    case OfficeManage = 'office:manage';
-    case OfficeCreate = 'office:create';
-    case OfficeEdit = 'office:edit';
-    case OfficeDelete = 'office:delete';
+    case LocationManage = 'location:manage';
+    case LocationCreate = 'location:create';
+    case LocationEdit = 'location:edit';
+    case LocationsDelete = 'location:delete';
 
     case OrganizationManage = 'organization:manage';
     case OrganizationView = 'organization:view';

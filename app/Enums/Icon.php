@@ -25,6 +25,7 @@ enum Icon: string
     case LucideMountain = 'LucideMountain';
     case LucideTent = 'LucideTent';
     case LucideMap = 'LucideMap';
+    case LucideGlobe = 'LucideGlobe';
 
     // Medical & Health
     case LucideHeart = 'LucideHeart';

@@ -41,7 +41,7 @@ final readonly class CreateSystemTimeOffTypes
                     $organization,
                     CreateTimeOffTypeData::from([
                         ...$timeOffType,
-                        'fallback_approval_role_id' => $timeOffType['requires_approval'] ? $peopleManagerRole->id : null,
+                        'fallback_approval_role_id' => $timeOffType['requires_approval'] && $peopleManagerRole ? $peopleManagerRole->id : null,
                     ])
                 );
             }

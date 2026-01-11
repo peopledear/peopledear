@@ -51,6 +51,6 @@ return [
 
     'session' => [
         'driver' => Sprout\Overrides\SessionOverride::class,
-        'database' => false,
+        'database' => true,
     ],
 ];

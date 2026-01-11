@@ -28,10 +28,10 @@ final class Country extends Model
 
     public $timestamps = false;
 
-    /** @return HasMany<Organization, $this> */
-    public function organizations(): HasMany
+    /** @return HasMany<Location, $this> */
+    public function locations(): HasMany
     {
-        return $this->hasMany(Organization::class);
+        return $this->hasMany(Location::class);
     }
 
     /** @return HasMany<CountrySubdivision, $this> */

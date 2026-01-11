@@ -6,11 +6,11 @@ use App\Http\Controllers\DeleteNotificationController;
 use App\Http\Controllers\DropdownNotificationController;
 use App\Http\Controllers\EmployeeOverviewController;
 use App\Http\Controllers\EmployeeTimeOffController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MarkAllNotificationsAsReadController;
 use App\Http\Controllers\MarkNotificationAsReadController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationEmployeeController;
-use App\Http\Controllers\OrganizationOfficeController;
 use App\Http\Controllers\OrganizationTimeOffTypesController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
@@ -79,11 +79,6 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
                 // Organization Settings...
 
                 Route::prefix('settings')->as('settings.')->group(function (): void {
-                    Route::get('/{organization}/edit', [OrganizationController::class, 'edit'])
-                        ->name('organization.edit');
-
-                    Route::put('organization/{organization}', [OrganizationController::class, 'update'])
-                        ->name('organization.update');
 
                     Route::prefix('time-off-types')
                         ->as('time-off-types.')->group(function (): void {
@@ -101,14 +96,14 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
 
                 });
 
-                Route::post('offices', [OrganizationOfficeController::class, 'store'])
-                    ->name('offices.store');
+                Route::post('locations', [LocationController::class, 'store'])
+                    ->name('locations.store');
 
-                Route::put('offices/{office}', [OrganizationOfficeController::class, 'update'])
-                    ->name('offices.update');
+                Route::put('locations/{location}', [LocationController::class, 'update'])
+                    ->name('locations.update');
 
-                Route::delete('offices/{office}', [OrganizationOfficeController::class, 'destroy'])
-                    ->name('offices.destroy');
+                Route::delete('locations/{location}', [LocationController::class, 'destroy'])
+                    ->name('locations.destroy');
 
             });
 

@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
+use Sprout\Attributes\CurrentTenant;
 
 final class OrganizationController
 {
@@ -60,28 +61,30 @@ final class OrganizationController
     }
 
     public function edit(
-        #[CurrentOrganization] Organization $organization
+        #[CurrentTenant] Organization $organization
     ): Response {
 
         Gate::authorize('view', $organization);
 
         return Inertia::render('org-settings-general/edit', [
-            'organization' => $organization->load('offices.address'),
+            'organization' => $organization->load('locations.address'),
         ]);
     }
 
     public function update(
-        #[CurrentOrganization] Organization $organization,
         UpdateOrganizationRequest $request,
+        #[CurrentTenant] Organization $organization,
         UpdateOrganization $action
     ): RedirectResponse {
+
+        Gate::authorize('update', $organization);
 
         $data = UpdateOrganizationData::from($request->validated());
 
         $organization = $action->handle($organization, $data);
 
-        return to_route('org.settings.organization.edit', [
-            'organization' => $organization->id,
+        return to_route('tenant.settings.organization.edit', [
+            'tenant' => $organization->identifier,
         ])
             ->with('success', 'Organization updated successfully');
     }

@@ -22,8 +22,8 @@ return [
 
     'defaults' => [
 
-        'tenancy' => 'organizations',
-        'provider' => 'organizations',
+        'tenancy' => 'tenant',
+        'provider' => 'tenant',
         'resolver' => 'subdomain',
 
     ],
@@ -51,8 +51,8 @@ return [
 
     'tenancies' => [
 
-        'organizations' => [
-            'provider' => 'organizations',
+        'tenant' => [
+            'provider' => 'tenant',
             'options' => [
                 TenancyOptions::hydrateTenantRelation(),
                 TenancyOptions::throwIfNotRelated(),
@@ -95,7 +95,7 @@ return [
             'model' => Tenant::class,
         ],
 
-        'organizations' => [
+        'tenant' => [
             'driver' => 'eloquent',
             'model' => Organization::class,
         ],
@@ -134,6 +134,7 @@ return [
         'subdomain' => [
             'driver' => 'subdomain',
             'domain' => env('TENANTED_DOMAIN'),
+            'parameter' => '{tenancy}',
             'pattern' => '.*',
         ],
 

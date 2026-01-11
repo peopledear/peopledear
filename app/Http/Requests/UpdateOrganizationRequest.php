@@ -13,11 +13,6 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 final class UpdateOrganizationRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user()?->can('update', $this->organization) ?? false;
-    }
-
     /**
      * @return array<string, ValidationRule|array<mixed>|string>
      */

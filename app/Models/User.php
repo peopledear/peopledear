@@ -10,7 +10,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,6 +18,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Sprout\Attributes\TenantRelation;
+use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
 
 /**
  * @property-read string $id
@@ -32,12 +34,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read CarbonInterface|null $two_factor_confirmed_at
  * @property-read CarbonInterface $created_at
  * @property-read CarbonInterface $updated_at
- * @property-read Collection<int, Organization> $organizations
+ * @property-read Organization $organization
  * @property-read Collection<int, Role> $roles
  * @property-read Collection<int, Permission> $permissions
  */
 final class User extends Authenticatable implements MustVerifyEmail
 {
+    use BelongsToTenant;
+
     /** @use HasFactory<UserFactory> */
     use HasFactory;
 
@@ -77,11 +81,12 @@ final class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @return BelongsToMany<Organization, $this>
+     * @return BelongsTo<Organization, $this>
      */
-    public function organizations(): BelongsToMany
+    #[TenantRelation]
+    public function organization(): BelongsTo
     {
-        return $this->belongsToMany(Organization::class);
+        return $this->belongsTo(Organization::class);
     }
 
     /**

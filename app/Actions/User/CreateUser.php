@@ -11,7 +11,7 @@ use SensitiveParameter;
 final readonly class CreateUser
 {
     /**
-     * @param  array<string, mixed>  $attributes
+     * @param  array{organization_id: string, name: string, email: string}  $attributes
      */
     public function handle(array $attributes, #[SensitiveParameter] string $password): User
     {

@@ -10,5 +10,6 @@ Route::get('/', fn (
     #[CurrentTenant] Organization $organization
 ): string => 'Welcome to the '.$organization->name.' tenant!');
 
-Route::middleware(['auth', 'verified'])
+Route::as('settings.')
+    ->prefix('settings')
     ->group(__DIR__.'/tenant/settings.php');

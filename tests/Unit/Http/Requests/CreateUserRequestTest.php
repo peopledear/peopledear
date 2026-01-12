@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\CreateRegistrationRequest;
 use Illuminate\Validation\Rules\Password;
 
 test('password validation rules in testing environment', function (): void {
-    $request = new CreateUserRequest;
+    $request = new CreateRegistrationRequest;
     $rules = $request->rules();
 
     expect($rules['password'][0])->toBe('required')
@@ -17,7 +17,7 @@ test('password validation rules in testing environment', function (): void {
 test('password validation rules in local environment',
     function (): void {
         app()->detectEnvironment(fn (): string => 'local');
-        $request = new CreateUserRequest;
+        $request = new CreateRegistrationRequest;
         $rules = $request->rules();
 
         expect($rules)
@@ -31,7 +31,7 @@ test('password validation rules in local environment',
     });
 
 test('password validation rules in other environments', function (): void {
-    $request = new CreateUserRequest;
+    $request = new CreateRegistrationRequest;
     $rules = $request->rules();
 
     expect($rules['password'][0])->toBe('required')
@@ -40,14 +40,14 @@ test('password validation rules in other environments', function (): void {
 });
 
 test('name validation rules are correct', function (): void {
-    $request = new CreateUserRequest;
+    $request = new CreateRegistrationRequest;
     $rules = $request->rules();
 
     expect($rules['name'])->toBe(['required', 'string', 'max:255']);
 });
 
 test('email validation rules are correct', function (): void {
-    $request = new CreateUserRequest;
+    $request = new CreateRegistrationRequest;
     $rules = $request->rules();
 
     expect($rules['email'][0])->toBe('required')
@@ -58,7 +58,7 @@ test('email validation rules are correct', function (): void {
 });
 
 test('validation rules contain all required fields', function (): void {
-    $request = new CreateUserRequest;
+    $request = new CreateRegistrationRequest;
     $rules = $request->rules();
 
     expect($rules)->toHaveKeys(['name', 'email', 'password']);

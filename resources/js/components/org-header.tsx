@@ -3,7 +3,7 @@ import { type BreadcrumbItem, type NavItem, SharedData } from "@/types";
 import { dashboard } from "@/wayfinder/routes";
 import { overview } from "@/wayfinder/routes/org";
 import { index } from "@/wayfinder/routes/org/employees";
-import { edit } from "@/wayfinder/routes/org/settings/organization";
+import { edit } from "@/wayfinder/routes/tenant/settings/organization";
 import { usePage } from "@inertiajs/react";
 import {
     Calendar,

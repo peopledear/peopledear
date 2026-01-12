@@ -9,10 +9,9 @@ use App\Rules\ValidEmail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-
 use function app;
 
-final class CreateUserRequest extends FormRequest
+final class CreateRegistrationRequest extends FormRequest
 {
     /**
      * @return array<string, array<mixed>|string>
@@ -20,6 +19,7 @@ final class CreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'organization_name' => ['required', 'string', 'max:255', 'min:3'],
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',

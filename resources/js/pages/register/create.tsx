@@ -1,5 +1,3 @@
-import UserController from "@/wayfinder/actions/App/Http/Controllers/UserController";
-import { login } from "@/wayfinder/routes";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
@@ -10,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
+import RegistrationController from "@/wayfinder/actions/App/Http/Controllers/RegistrationController";
+import auth from "@/wayfinder/routes/auth";
 
 export default function Register() {
     return (
@@ -19,7 +19,7 @@ export default function Register() {
         >
             <Head title="Register" />
             <Form
-                {...UserController.store()}
+                {...RegistrationController.store()}
                 resetOnSuccess={["password", "password_confirmation"]}
                 disableWhileProcessing
                 className="flex flex-col gap-6"
@@ -27,6 +27,26 @@ export default function Register() {
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-6">
+                            <div className="grid gap-2">
+                                <Label htmlFor="organization">
+                                    Organization
+                                </Label>
+                                <Input
+                                    id="organization_name"
+                                    type="text"
+                                    required
+                                    autoFocus
+                                    tabIndex={1}
+                                    autoComplete="organization_name"
+                                    name="organization_name"
+                                    placeholder="Organization name"
+                                />
+                                <InputError
+                                    message={errors.organization_name}
+                                    className="mt-2"
+                                />
+                            </div>
+
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
                                 <Input
@@ -37,7 +57,7 @@ export default function Register() {
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
-                                    placeholder="Full name"
+                                    placeholder="Your full name"
                                 />
                                 <InputError
                                     message={errors.name}
@@ -104,7 +124,7 @@ export default function Register() {
 
                         <div className="text-muted-foreground text-center text-sm">
                             Already have an account?{" "}
-                            <TextLink href={login()} tabIndex={6}>
+                            <TextLink href={auth.login()} tabIndex={6}>
                                 Log in
                             </TextLink>
                         </div>

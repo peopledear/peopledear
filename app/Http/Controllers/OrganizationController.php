@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use App\Actions\Organization\CreateOrganization;
 use App\Actions\Organization\SetCurrentOrganization;
 use App\Actions\Organization\UpdateOrganization;
-use App\Attributes\CurrentOrganization;
 use App\Data\PeopleDear\Country\CountryData;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Data\PeopleDear\Organization\UpdateOrganizationData;
@@ -16,7 +15,6 @@ use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organization;
 use App\Queries\CountryQuery;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -25,8 +23,7 @@ use Sprout\Attributes\CurrentTenant;
 final class OrganizationController
 {
     public function index(
-        Request $request,
-        #[CurrentOrganization] Organization $organization
+        #[CurrentTenant] Organization $organization
     ): Response {
 
         Gate::authorize('view', $organization);
@@ -56,7 +53,9 @@ final class OrganizationController
 
         $setCurrentOrganization->handle($organization);
 
-        return to_route('org.overview')
+        return to_route('tenant.org.overview', [
+            'tenant' => $organization->identifier,
+        ])
             ->with('success', 'Organization created successfully');
     }
 

@@ -154,10 +154,10 @@ return [
             'cookie' => '{Tenancy}-Identifier',
         ],
 
-        'session' => [
+        /*'session' => [
             'driver' => 'session',
             'session' => 'multitenancy.{tenancy}',
-        ],
+        ],*/
 
     ],
 

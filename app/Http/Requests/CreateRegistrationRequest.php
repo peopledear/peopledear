@@ -9,6 +9,7 @@ use App\Rules\ValidEmail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+
 use function app;
 
 final class CreateRegistrationRequest extends FormRequest
@@ -28,7 +29,8 @@ final class CreateRegistrationRequest extends FormRequest
                 'max:255',
                 'email',
                 new ValidEmail,
-                Rule::unique(User::class),
+                Rule::unique(User::class)
+                    ->where('organization_id', null),
             ],
             'password' => [
                 'required',

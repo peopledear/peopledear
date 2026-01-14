@@ -24,10 +24,16 @@ final class FortifyServiceProvider extends ServiceProvider
     {
         $this->bootFortifyDefaults();
         $this->bootRateLimitingDefaults();
+
     }
 
     private function bootFortifyDefaults(): void
     {
+
+        Fortify::loginView(fn () => Inertia::render('session/create', [
+            'canResetPassword' => true,
+            'status' => session('status'),
+        ]));
         Fortify::twoFactorChallengeView(fn () => Inertia::render('user-two-factor-authentication-challenge/show', []));
         Fortify::confirmPasswordView(fn () => Inertia::render('user-password-confirmation/create', []));
     }

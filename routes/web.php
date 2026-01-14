@@ -12,10 +12,7 @@ use App\Http\Controllers\MarkNotificationAsReadController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationEmployeeController;
 use App\Http\Controllers\OrganizationTimeOffTypesController;
-use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserEmailVerification;
-use App\Http\Controllers\UserEmailVerificationNotificationController;
 use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserTwoFactorAuthenticationController;
@@ -59,9 +56,6 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
 
         Route::prefix('org')
             ->as('org.')->group(function (): void {
-
-                Route::get('/', [OrganizationController::class, 'index'])
-                    ->name('overview');
 
                 Route::as('employees.')->prefix('employees')
                     ->group(function (): void {
@@ -148,20 +142,8 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
 Route::as('auth.')
     ->group(__DIR__.'/auth.php');
 
-Route::middleware('auth')->group(function (): void {
-    // User Email Verification...
-    Route::get('verify-email', [UserEmailVerificationNotificationController::class, 'create'])
-        ->name('verification.notice');
-    Route::post('email/verification-notification', [UserEmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
-
-    // User Email Verification...
-    Route::get('verify-email/{id}/{hash}', [UserEmailVerification::class, 'update'])
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
-    // Session...
-    Route::post('logout', [SessionController::class, 'destroy'])
-        ->name('logout');
+Route::middleware(['sprout.tenanted:subdomain,tenant'])->group(function (): void {
+    Route::middleware('web')
+        ->as('tenant.')
+        ->group(base_path('routes/tenant.php'));
 });

@@ -8,7 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -17,18 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
-        then: function (): void {
-
-            Route::tenanted(function (): void {
-                Route::middleware('web')
-                    ->as('tenant.')
-                    ->group(base_path('routes/tenant.php'));
-            });
-        }
     )
     ->withMiddleware(function (Middleware $middleware): void {
 
-        $middleware->redirectUsersTo('/overview');
+        $middleware->redirectUsersTo(fn (Request $request) => route('tenant.org.overview'));
+
+        $middleware->redirectGuestsTo(fn (Request $request) => route('tenant.auth.login'));
 
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 

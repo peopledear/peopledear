@@ -22,8 +22,9 @@ final readonly class SessionController
         ]);
     }
 
-    public function store(CreateSessionRequest $request): RedirectResponse
-    {
+    public function store(
+        CreateSessionRequest $request,
+    ): RedirectResponse {
         $user = $request->validateCredentials();
 
         if ($user->hasEnabledTwoFactorAuthentication()) {
@@ -39,7 +40,7 @@ final readonly class SessionController
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('employee.overview', absolute: false));
+        return redirect()->intended(route('tenant.org.overview', absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -49,6 +50,6 @@ final readonly class SessionController
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect(route('tenant.auth.login'));
     }
 }

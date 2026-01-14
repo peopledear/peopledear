@@ -8,7 +8,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
 import SessionController from "@/wayfinder/actions/App/Http/Controllers/SessionController";
 import { register } from "@/wayfinder/routes/auth";
-import { request } from "@/wayfinder/routes/auth/password";
+import { request } from "@/wayfinder/routes/tenant/auth/password";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 

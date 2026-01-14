@@ -17,17 +17,22 @@ return new class extends Migration
             $table->foreignIdFor(Organization::class)->constrained();
 
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->text('two_factor_secret')->nullable();
             $table->text('two_factor_recovery_codes')->nullable();
             $table->timestamp('two_factor_confirmed_at')->nullable();
             $table->rememberToken();
+
+            $table->unique(['organization_id', 'email']);
+
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table): void {
             $table->string('email')->primary();
+            $table->string('tenancy')->nullable();
+            $table->string('tenant_id')->nullable();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });

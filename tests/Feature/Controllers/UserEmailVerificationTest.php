@@ -6,18 +6,23 @@ use App\Models\User;
 use Illuminate\Support\Facades\URL;
 
 it('may verify email', function (): void {
+    /** @var User $user */
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);
 
     $verificationUrl = URL::temporarySignedRoute(
-        'verification.verify',
+        'tenant.auth.verification.verify',
         now()->addMinutes(60),
-        ['id' => $user->getKey(), 'hash' => sha1((string) $user->email)]
+        [
+            'tenant' => $user->organization->identifier,
+            'id' => $user->getKey(),
+            'hash' => sha1((string) $user->email),
+        ]
     );
 
     $response = $this->actingAs($user)
-        ->fromRoute('verification.notice')
+        ->fromRoute('tenant.auth.verification.notice', ['tenant' => $user->organization->identifier])
         ->get($verificationUrl);
 
     expect($user->refresh()->hasVerifiedEmail())->toBeTrue();
@@ -26,35 +31,42 @@ it('may verify email', function (): void {
 });
 
 it('redirects to dashboard if already verified', function (): void {
+    /** @var User $user */
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
 
     $verificationUrl = URL::temporarySignedRoute(
-        'verification.verify',
+        'tenant.auth.verification.verify',
         now()->addMinutes(60),
-        ['id' => $user->getKey(), 'hash' => sha1((string) $user->email)]
+        [
+            'tenant' => $user->organization->identifier,
+            'id' => $user->getKey(),
+            'hash' => sha1((string) $user->email),
+        ]
     );
 
     $response = $this->actingAs($user)
-        ->fromRoute('verification.notice')
+        ->fromRoute('tenant.auth.verification.notice', ['tenant' => $user->organization->identifier])
         ->get($verificationUrl);
 
     $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
 });
 
 it('requires valid signature', function (): void {
+    /** @var User $user */
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);
 
-    $invalidUrl = route('verification.verify', [
+    $invalidUrl = route('tenant.auth.verification.verify', [
+        'tenant' => $user->organization->identifier,
         'id' => $user->getKey(),
         'hash' => sha1((string) $user->email),
     ]);
 
     $response = $this->actingAs($user)
-        ->fromRoute('verification.notice')
+        ->fromRoute('tenant.auth.verification.notice', ['tenant' => $user->organization->identifier])
         ->get($invalidUrl);
 
     $response->assertForbidden();

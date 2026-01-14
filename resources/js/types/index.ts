@@ -1,4 +1,3 @@
-import Organization from "@/wayfinder/routes/org/settings/organization";
 import { InertiaLinkProps } from "@inertiajs/react";
 import { LucideIcon } from "lucide-react";
 import {
@@ -42,7 +41,6 @@ export interface SharedData {
     name: string;
     auth: Auth;
     sidebarOpen: boolean;
-    organization?: Organization;
     show: {
         employeeLink: boolean;
         orgLink?: boolean;
@@ -55,6 +53,10 @@ export interface SharedData {
     previousPath?: string;
 
     [key: string]: unknown;
+}
+
+export interface TenantedSharedData extends SharedData {
+    organization: Organization;
 }
 
 export interface User {
@@ -85,9 +87,13 @@ export interface Employee {
 export interface Organization {
     id: string;
     name: string;
-    vat_number?: string;
+    identifier: string;
+    resourceKey: string;
+    vatNumber?: string;
     ssn?: string;
     phone?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface RequestStatus {

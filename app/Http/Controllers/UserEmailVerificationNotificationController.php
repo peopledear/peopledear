@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\User\CreateUserEmailVerificationNotification;
-use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Sprout\Attributes\CurrentTenant;
 
 final readonly class UserEmailVerificationNotificationController
 {
     public function create(
         Request $request,
         #[CurrentUser] User $user,
-        #[CurrentTenant] Organization $organization,
     ): Response|RedirectResponse {
 
         return $user->hasVerifiedEmail()
@@ -29,6 +26,7 @@ final readonly class UserEmailVerificationNotificationController
 
     public function store(#[CurrentUser] User $user, CreateUserEmailVerificationNotification $action): RedirectResponse
     {
+
         if ($user->hasVerifiedEmail()) {
             return redirect()->intended(route('dashboard', absolute: false));
         }

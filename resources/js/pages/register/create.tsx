@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
 import RegistrationController from "@/wayfinder/actions/App/Http/Controllers/RegistrationController";
-import auth from "@/wayfinder/routes/auth";
+import auth from "@/wayfinder/routes/tenant/auth";
 
 export default function Register() {
     return (

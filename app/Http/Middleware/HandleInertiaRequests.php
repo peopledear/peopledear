@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Attributes\CurrentOrganization;
+use App\Data\PeopleDear\OrganizationData;
 use App\Enums\UserRole;
 use App\Models\Organization;
 use App\Models\User;
@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Middleware;
 use Override;
+use Sprout\Attributes\CurrentTenant;
 
 final class HandleInertiaRequests extends Middleware
 {
@@ -24,7 +25,7 @@ final class HandleInertiaRequests extends Middleware
     protected $rootView = 'app';
 
     public function __construct(
-        #[CurrentOrganization] private readonly Organization $organization
+        #[CurrentTenant] private readonly Organization $organization
     ) {}
 
     /**
@@ -63,7 +64,7 @@ final class HandleInertiaRequests extends Middleware
                 'user' => $user,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'organization' => $this->organization,
+            'organization' => $this->organization->identifier ? OrganizationData::from($this->organization)->toArray() : null,
             'show' => [
                 'employeeLink' => $isOrgUri,
                 'orgLink' => ($user?->hasRole([

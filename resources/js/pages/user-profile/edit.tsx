@@ -1,6 +1,6 @@
 import { type BreadcrumbItem, type SharedData } from "@/types";
 import UserProfileController from "@/wayfinder/actions/App/Http/Controllers/UserProfileController";
-import { send } from "@/wayfinder/routes/verification";
+import { send } from "@/wayfinder/routes/tenant/auth/verification";
 import { Transition } from "@headlessui/react";
 import { Form, Head, Link, usePage } from "@inertiajs/react";
 

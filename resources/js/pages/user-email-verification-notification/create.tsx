@@ -1,6 +1,6 @@
 // Components
 import UserEmailVerificationNotificationController from "@/wayfinder/actions/App/Http/Controllers/UserEmailVerificationNotificationController";
-import { logout } from "@/wayfinder/routes";
+import { logout } from "@/wayfinder/routes/tenant/auth";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 

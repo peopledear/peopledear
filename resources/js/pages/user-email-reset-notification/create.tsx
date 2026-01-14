@@ -1,6 +1,6 @@
 // Components
 import UserEmailResetNotification from "@/wayfinder/actions/App/Http/Controllers/UserEmailResetNotification";
-import { login } from "@/wayfinder/routes/auth";
+import { login } from "@/wayfinder/routes/tenant/auth";
 import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 

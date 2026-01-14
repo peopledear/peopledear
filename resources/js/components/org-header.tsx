@@ -1,10 +1,9 @@
 import { AppHeader } from "@/components/app-header";
-import { type BreadcrumbItem, type NavItem, SharedData } from "@/types";
+import { type BreadcrumbItem, type NavItem } from "@/types";
 import { dashboard } from "@/wayfinder/routes";
-import { overview } from "@/wayfinder/routes/org";
 import { index } from "@/wayfinder/routes/org/employees";
+import { overview } from "@/wayfinder/routes/tenant/org";
 import { edit } from "@/wayfinder/routes/tenant/settings/organization";
-import { usePage } from "@inertiajs/react";
 import {
     Calendar,
     CheckSquare,
@@ -19,8 +18,6 @@ interface AdminHeaderProps {
 }
 
 export function OrgHeader({ breadcrumbs = [] }: AdminHeaderProps) {
-    const { organization } = usePage<SharedData>().props;
-
     const mainNavItems: NavItem[] = [
         {
             title: "Overview",
@@ -54,7 +51,7 @@ export function OrgHeader({ breadcrumbs = [] }: AdminHeaderProps) {
         },
         {
             title: "Settings",
-            href: edit(organization?.id ?? ""),
+            href: edit(),
             icon: Settings,
             show: true,
         },

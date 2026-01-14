@@ -1,6 +1,7 @@
 import { type SharedData } from "@/types";
 import { dashboard } from "@/wayfinder/routes";
-import { login, register } from "@/wayfinder/routes/auth";
+import { register } from "@/wayfinder/routes/auth";
+import { login } from "@/wayfinder/routes/tenant/auth";
 import { Head, Link, usePage } from "@inertiajs/react";
 
 export default function Welcome() {

@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
 import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
 import DropdownNotificationController from "@/wayfinder/actions/App/Http/Controllers/DropdownNotificationController";
 import { overview as employeeOverview } from "@/wayfinder/routes/employee";
-import { overview } from "@/wayfinder/routes/org";
+import { overview } from "@/wayfinder/routes/tenant/org";
 import { Link, usePage } from "@inertiajs/react";
 import { EyeIcon, Menu, Search } from "lucide-react";
 import AppLogo from "./app-logo";

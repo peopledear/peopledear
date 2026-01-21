@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Actions\Organization;
 
-use App\Actions\Organization\CreateOrganization;
+use App\Actions\TymeOffType\CreateSystemTimeOffTypes;
 use App\Actions\User\CreateUser;
 use App\Data\PeopleDear\CreateRegistrationData;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
@@ -13,10 +13,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-final readonly class NewAccountRegistration
+final readonly class RegisterOrganization
 {
     public function __construct(
         private CreateOrganization $createOrganization,
+        private CreateSystemTimeOffTypes $createSystemTimeOffTypes,
         private CreateUser $createUser,
     ) {}
 
@@ -31,6 +32,10 @@ final readonly class NewAccountRegistration
                 data: CreateOrganizationData::from([
                     'name' => $data->organizationName,
                 ])
+            );
+
+            $this->createSystemTimeOffTypes->handle(
+                organization: $organization,
             );
 
             $user = $this->createUser->handle(

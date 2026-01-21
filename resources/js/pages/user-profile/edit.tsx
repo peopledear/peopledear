@@ -1,4 +1,4 @@
-import { type BreadcrumbItem, type SharedData } from "@/types";
+import { type BreadcrumbItem, type TenantedSharedData } from "@/types";
 import UserProfileController from "@/wayfinder/actions/App/Http/Controllers/UserProfileController";
 import { send } from "@/wayfinder/routes/tenant/auth/verification";
 import { Transition } from "@headlessui/react";
@@ -26,17 +26,17 @@ import {
 import { Input } from "@/components/ui/input";
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
-import userProfile from "@/wayfinder/routes/user-profile";
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: "Profile settings",
-        href: userProfile.edit().url,
-    },
-];
 
 export default function Edit({ status }: { status?: string }) {
-    const { auth } = usePage<SharedData>().props;
+    const { props } = usePage<TenantedSharedData>();
+    const { auth } = props;
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: "Profile settings",
+            href: UserProfileController.edit(props.tenant.identifier).url,
+        },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -53,7 +53,9 @@ export default function Edit({ status }: { status?: string }) {
                     </CardHeader>
                     <CardContent>
                         <Form
-                            {...UserProfileController.update()}
+                            {...UserProfileController.update(
+                                props.tenant.identifier,
+                            )}
                             options={{
                                 preserveScroll: true,
                             }}
@@ -130,7 +132,9 @@ export default function Edit({ status }: { status?: string }) {
                                                 Your email address is
                                                 unverified.{" "}
                                                 <Link
-                                                    href={send()}
+                                                    href={send(
+                                                        props.tenant.identifier,
+                                                    )}
                                                     as="button"
                                                     className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                                 >

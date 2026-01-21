@@ -1,8 +1,8 @@
 import AppLayout from "@/layouts/app-layout";
 import TimeOffTypeForm from "@/pages/org-time-off-types/form";
-import { BalanceType, Icon, TimeOffUnit } from "@/types";
-import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
-import { Head, Link } from "@inertiajs/react";
+import { BalanceType, Icon, TenantedSharedData, TimeOffUnit } from "@/types";
+import TimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/TimeOffTypesController";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { ArrowLeftIcon } from "lucide-react";
 
 interface CreateTimeOffTypePageProps {
@@ -16,6 +16,8 @@ export default function CreateTimeOffTypePage({
     timeOffUnits,
     icons,
 }: CreateTimeOffTypePageProps) {
+    const { props } = usePage<TenantedSharedData>();
+
     return (
         <AppLayout>
             <Head title="Create a new Time Off Type" />
@@ -23,7 +25,9 @@ export default function CreateTimeOffTypePage({
             <div className="mx-auto flex w-full max-w-xl flex-col space-y-6 p-4 sm:p-0">
                 <div className="mb-6 flex cursor-pointer items-center space-x-1 text-sm">
                     <Link
-                        href={OrganizationTimeOffTypesController.index()}
+                        href={TimeOffTypesController.index(
+                            props.tenant.identifier,
+                        )}
                         className="flex items-center space-x-1 text-sm text-gray-500 hover:text-gray-700"
                     >
                         <ArrowLeftIcon size="16" />

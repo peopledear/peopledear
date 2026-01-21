@@ -1,4 +1,3 @@
-import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -14,8 +13,8 @@ import {
 } from "@/components/ui/input-otp";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { OTP_MAX_LENGTH } from "@/hooks/use-two-factor-auth";
-import { confirm } from "@/wayfinder/routes/two-factor";
-import { Form } from "@inertiajs/react";
+import { confirm as confirmTwoFactorAuth } from "@/wayfinder/routes/tenant/auth/two-factor";
+import { useForm } from "@inertiajs/react";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { Check, Copy, Loader2, ScanLine } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -131,12 +130,19 @@ function TwoFactorSetupStep({
 function TwoFactorVerificationStep({
     onClose,
     onBack,
+    confirm,
+    tenant,
 }: {
     onClose: () => void;
     onBack: () => void;
+    confirm: typeof confirmTwoFactorAuth;
+    tenant: string;
 }) {
-    const [code, setCode] = useState<string>("");
     const pinInputContainerRef = useRef<HTMLDivElement>(null);
+
+    const { post, processing, errors, setData, data } = useForm({
+        code: "",
+    });
 
     useEffect(() => {
         setTimeout(() => {
@@ -144,77 +150,71 @@ function TwoFactorVerificationStep({
         }, 0);
     }, []);
 
-    return (
-        <Form
-            {...confirm()}
-            onSuccess={() => onClose()}
-            resetOnError
-            resetOnSuccess
-        >
-            {({
-                processing,
-                errors,
-            }: {
-                processing: boolean;
-                errors?: { confirmTwoFactorAuthentication?: { code?: string } };
-            }) => (
-                <>
-                    <div
-                        ref={pinInputContainerRef}
-                        className="relative w-full space-y-3"
-                    >
-                        <div className="flex w-full flex-col items-center space-y-3 py-2">
-                            <InputOTP
-                                id="otp"
-                                name="code"
-                                maxLength={OTP_MAX_LENGTH}
-                                onChange={setCode}
-                                disabled={processing}
-                                pattern={REGEXP_ONLY_DIGITS}
-                            >
-                                <InputOTPGroup>
-                                    {Array.from(
-                                        { length: OTP_MAX_LENGTH },
-                                        (_, index) => (
-                                            <InputOTPSlot
-                                                key={index}
-                                                index={index}
-                                            />
-                                        ),
-                                    )}
-                                </InputOTPGroup>
-                            </InputOTP>
-                            <InputError
-                                message={
-                                    errors?.confirmTwoFactorAuthentication?.code
-                                }
-                            />
-                        </div>
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
 
-                        <div className="flex w-full space-x-5">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                className="flex-1"
-                                onClick={onBack}
-                                disabled={processing}
-                            >
-                                Back
-                            </Button>
-                            <Button
-                                type="submit"
-                                className="flex-1"
-                                disabled={
-                                    processing || code.length < OTP_MAX_LENGTH
-                                }
-                            >
-                                Confirm
-                            </Button>
-                        </div>
-                    </div>
-                </>
-            )}
-        </Form>
+        post(confirm(tenant).url, {
+            onSuccess: () => {
+                onClose();
+            },
+        });
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="w-full">
+            <div
+                ref={pinInputContainerRef}
+                className="relative w-full space-y-3"
+            >
+                <div className="flex w-full flex-col items-center space-y-3 py-2">
+                    <InputOTP
+                        id="otp"
+                        name="code"
+                        maxLength={OTP_MAX_LENGTH}
+                        value={data.code ?? ""}
+                        onChange={(value) => setData("code", value)}
+                        disabled={processing}
+                        pattern={REGEXP_ONLY_DIGITS}
+                    >
+                        <InputOTPGroup>
+                            {Array.from(
+                                { length: OTP_MAX_LENGTH },
+                                (_, index) => (
+                                    <InputOTPSlot key={index} index={index} />
+                                ),
+                            )}
+                        </InputOTPGroup>
+                    </InputOTP>
+                    {errors?.confirmTwoFactorAuthentication?.code && (
+                        <p className="text-destructive text-sm">
+                            {errors.confirmTwoFactorAuthentication.code}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex w-full space-x-5">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="flex-1"
+                        onClick={onBack}
+                        disabled={processing}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        type="submit"
+                        className="flex-1"
+                        disabled={
+                            processing ||
+                            (data.code?.length ?? 0) < OTP_MAX_LENGTH
+                        }
+                    >
+                        {processing ? "Confirming..." : "Confirm"}
+                    </Button>
+                </div>
+            </div>
+        </form>
     );
 }
 
@@ -227,6 +227,8 @@ interface TwoFactorSetupModalProps {
     clearSetupData: () => void;
     fetchSetupData: () => Promise<void>;
     errors: string[];
+    confirm: typeof confirmTwoFactorAuth;
+    tenant: string;
 }
 
 export default function TwoFactorSetupModal({
@@ -238,6 +240,8 @@ export default function TwoFactorSetupModal({
     clearSetupData,
     fetchSetupData,
     errors,
+    confirm: confirmRoute,
+    tenant,
 }: TwoFactorSetupModalProps) {
     const [showVerificationStep, setShowVerificationStep] =
         useState<boolean>(false);
@@ -312,6 +316,8 @@ export default function TwoFactorSetupModal({
                         <TwoFactorVerificationStep
                             onClose={onClose}
                             onBack={() => setShowVerificationStep(false)}
+                            confirm={confirmRoute}
+                            tenant={tenant}
                         />
                     ) : (
                         <TwoFactorSetupStep

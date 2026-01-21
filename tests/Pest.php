@@ -40,9 +40,16 @@ pest()->extend(Tests\WithUsersTestCase::class)
     ->beforeEach(function (): void {
         loadTestsDefaults();
         $this->freezeTime();
-
     })
-    ->in('Feature');
+    ->in('Feature/Landlord');
+
+pest()->extend(Tests\TenantTestCase::class)
+    ->use(RefreshDatabase::class)
+    ->beforeEach(function (): void {
+        loadTestsDefaults();
+        $this->freezeTime();
+    })
+    ->in('Feature/Tenant');
 
 pest()->extend(Tests\TenantTestCase::class)
     ->use(RefreshDatabase::class)

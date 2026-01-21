@@ -20,9 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
 
-        $middleware->redirectUsersTo(fn (Request $request) => route('tenant.org.overview'));
+        $middleware->redirectUsersTo(fn (Request $request): string => route('tenant.org.overview'));
 
-        $middleware->redirectGuestsTo(fn (Request $request) => route('tenant.auth.login'));
+        $middleware->redirectGuestsTo(fn (Request $request): string => route('tenant.auth.login'));
 
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 

@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { regenerateRecoveryCodes } from "@/wayfinder/routes/two-factor";
+import { regenerateRecoveryCodes } from "@/wayfinder/routes/tenant/auth/two-factor";
 import { Form } from "@inertiajs/react";
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -16,12 +16,14 @@ interface TwoFactorRecoveryCodesProps {
     recoveryCodesList: string[];
     fetchRecoveryCodes: () => Promise<void>;
     errors: string[];
+    tenant: string;
 }
 
 export default function TwoFactorRecoveryCodes({
     recoveryCodesList,
     fetchRecoveryCodes,
     errors,
+    tenant,
 }: TwoFactorRecoveryCodesProps) {
     const [codesAreVisible, setCodesAreVisible] = useState<boolean>(false);
     const codesSectionRef = useRef<HTMLDivElement | null>(null);
@@ -81,7 +83,8 @@ export default function TwoFactorRecoveryCodes({
 
                     {canRegenerateCodes && (
                         <Form
-                            {...regenerateRecoveryCodes()}
+                            action={regenerateRecoveryCodes(tenant).url}
+                            method={regenerateRecoveryCodes(tenant).method}
                             options={{ preserveScroll: true }}
                             onSuccess={fetchRecoveryCodes}
                         >

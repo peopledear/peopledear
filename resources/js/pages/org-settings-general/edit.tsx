@@ -60,7 +60,7 @@ export default function Edit({ organization }: OrganizationProps) {
                                         id="name"
                                         defaultValue={organization.name}
                                         placeholder="Organization name"
-                                        className="sm:min-w-[300px]"
+                                        className="sm:min-w-75"
                                     />
                                 </Field>
 
@@ -82,7 +82,7 @@ export default function Edit({ organization }: OrganizationProps) {
                                             organization.vat_number || ""
                                         }
                                         placeholder="VAT number"
-                                        className="sm:min-w-[300px]"
+                                        className="sm:min-w-75"
                                     />
                                 </Field>
 
@@ -102,7 +102,7 @@ export default function Edit({ organization }: OrganizationProps) {
                                         id="ssn"
                                         defaultValue={organization.ssn || ""}
                                         placeholder="SSN or Tax ID"
-                                        className="sm:min-w-[300px]"
+                                        className="sm:min-w-75"
                                     />
                                 </Field>
 
@@ -124,7 +124,7 @@ export default function Edit({ organization }: OrganizationProps) {
                                         type="tel"
                                         defaultValue={organization.phone || ""}
                                         placeholder="Phone number"
-                                        className="sm:min-w-[300px]"
+                                        className="sm:min-w-75"
                                     />
                                 </Field>
 

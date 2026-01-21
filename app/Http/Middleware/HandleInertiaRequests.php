@@ -25,7 +25,7 @@ final class HandleInertiaRequests extends Middleware
     protected $rootView = 'app';
 
     public function __construct(
-        #[CurrentTenant] private readonly Organization $organization
+        #[CurrentTenant] private readonly Organization $tenant
     ) {}
 
     /**
@@ -64,7 +64,7 @@ final class HandleInertiaRequests extends Middleware
                 'user' => $user,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'organization' => $this->organization->identifier ? OrganizationData::from($this->organization)->toArray() : null,
+            'tenant' => $this->tenant->identifier ? OrganizationData::from($this->tenant)->toArray() : null,
             'show' => [
                 'employeeLink' => $isOrgUri,
                 'orgLink' => ($user?->hasRole([

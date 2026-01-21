@@ -8,6 +8,14 @@ use App\Http\Controllers\UserEmailVerification;
 use App\Http\Controllers\UserEmailVerificationNotificationController;
 use App\Http\Controllers\UserPasswordController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController;
+use Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController;
+use Laravel\Fortify\Http\Controllers\ConfirmedTwoFactorAuthenticationController;
+use Laravel\Fortify\Http\Controllers\RecoveryCodeController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
+use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
+use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
 
 Route::middleware('guest')->group(function (): void {
 
@@ -47,4 +55,43 @@ Route::middleware('auth')->group(function (): void {
     // Session...
     Route::post('logout', [SessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('user/confirm-password', [ConfirmablePasswordController::class, 'show'])
+        ->name('password.confirm');
+
+    Route::post('user/confirm-password', [ConfirmablePasswordController::class, 'store'])
+        ->name('password.confirm.store');
+
+    Route::post('user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])
+        ->name('two-factor.enable');
+    Route::delete('user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy'])
+        ->name('two-factor.disable');
+
+    // Two-Factor Challenge...
+    Route::get('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
+        ->name('two-factor.login');
+    Route::post('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
+        ->name('two-factor.login.store');
+
+    // Password Confirmation Status...
+    Route::get('user/confirmed-password-status', [ConfirmedPasswordStatusController::class, 'show'])
+        ->name('password.confirmation');
+
+    // Confirm Two-Factor Authentication...
+    Route::post('user/confirmed-two-factor-authentication', [ConfirmedTwoFactorAuthenticationController::class, 'store'])
+        ->name('two-factor.confirm');
+
+    // Two-Factor QR Code...
+    Route::get('user/two-factor-qr-code', [TwoFactorQrCodeController::class, 'show'])
+        ->name('two-factor.qr-code');
+
+    // Two-Factor Recovery Codes...
+    Route::get('user/two-factor-recovery-codes', [RecoveryCodeController::class, 'index'])
+        ->name('two-factor.recovery-codes');
+    Route::post('user/two-factor-recovery-codes', [RecoveryCodeController::class, 'store'])
+        ->name('two-factor.regenerate-recovery-codes');
+
+    // Two-Factor Secret Key...
+    Route::get('user/two-factor-secret-key', [TwoFactorSecretKeyController::class, 'show'])
+        ->name('two-factor.secret-key');
 });

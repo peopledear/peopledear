@@ -1,7 +1,7 @@
 import { NavItem, VerticalMenu } from "@/components/vertical-menu";
 import { TenantedSharedData } from "@/types";
-import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
 import { edit as generalEdit } from "@/wayfinder/routes/tenant/settings/organization";
+import { index } from "@/wayfinder/routes/tenant/settings/time-off-types";
 import { usePage } from "@inertiajs/react";
 import { type ReactNode } from "react";
 
@@ -10,18 +10,18 @@ interface OrgLayoutProps {
 }
 
 export default function OrgSettingsLayout({ children }: OrgLayoutProps) {
-    const { url, component } = usePage<TenantedSharedData>();
+    const { url, component, props } = usePage<TenantedSharedData>();
 
     const items: NavItem[] = [
         {
             label: "General",
-            href: generalEdit().url,
+            href: generalEdit(props.tenant.identifier).url,
             active: component === "org-settings-general/edit",
         },
         {
             label: "Time Off Types",
-            href: OrganizationTimeOffTypesController.index().url,
-            active: url.startsWith("/org/settings/time-off-types"),
+            href: index(props.tenant.identifier).url,
+            active: url.startsWith("/settings/time-off-types"),
         },
         {
             label: "Offices",

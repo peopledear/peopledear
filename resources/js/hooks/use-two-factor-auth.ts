@@ -2,7 +2,7 @@ import {
     qrCode,
     recoveryCodes,
     secretKey,
-} from "@/wayfinder/routes/two-factor";
+} from "@/wayfinder/routes/tenant/auth/two-factor";
 import { useCallback, useMemo, useState } from "react";
 
 interface TwoFactorSetupData {
@@ -28,7 +28,7 @@ const fetchJson = async <T>(url: string): Promise<T> => {
     return response.json();
 };
 
-export const useTwoFactorAuth = () => {
+export const useTwoFactorAuth = (tenant: string) => {
     const [qrCodeSvg, setQrCodeSvg] = useState<string | null>(null);
     const [manualSetupKey, setManualSetupKey] = useState<string | null>(null);
     const [recoveryCodesList, setRecoveryCodesList] = useState<string[]>([]);
@@ -41,25 +41,27 @@ export const useTwoFactorAuth = () => {
 
     const fetchQrCode = useCallback(async (): Promise<void> => {
         try {
-            const { svg } = await fetchJson<TwoFactorSetupData>(qrCode.url());
+            const { svg } = await fetchJson<TwoFactorSetupData>(
+                qrCode.url(tenant),
+            );
             setQrCodeSvg(svg);
         } catch {
             setErrors((prev) => [...prev, "Failed to fetch QR code"]);
             setQrCodeSvg(null);
         }
-    }, []);
+    }, [tenant]);
 
     const fetchSetupKey = useCallback(async (): Promise<void> => {
         try {
             const { secretKey: key } = await fetchJson<TwoFactorSecretKey>(
-                secretKey.url(),
+                secretKey.url(tenant),
             );
             setManualSetupKey(key);
         } catch {
             setErrors((prev) => [...prev, "Failed to fetch a setup key"]);
             setManualSetupKey(null);
         }
-    }, []);
+    }, [tenant]);
 
     const clearErrors = useCallback((): void => {
         setErrors([]);
@@ -74,13 +76,13 @@ export const useTwoFactorAuth = () => {
     const fetchRecoveryCodes = useCallback(async (): Promise<void> => {
         try {
             clearErrors();
-            const codes = await fetchJson<string[]>(recoveryCodes.url());
+            const codes = await fetchJson<string[]>(recoveryCodes.url(tenant));
             setRecoveryCodesList(codes);
         } catch {
             setErrors((prev) => [...prev, "Failed to fetch recovery codes"]);
             setRecoveryCodesList([]);
         }
-    }, [clearErrors]);
+    }, [clearErrors, tenant]);
 
     const fetchSetupData = useCallback(async (): Promise<void> => {
         try {

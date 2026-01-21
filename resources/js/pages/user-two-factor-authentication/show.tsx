@@ -12,9 +12,14 @@ import {
 import { useTwoFactorAuth } from "@/hooks/use-two-factor-auth";
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
-import { type BreadcrumbItem } from "@/types";
-import { disable, enable, show } from "@/wayfinder/routes/two-factor";
-import { Form, Head } from "@inertiajs/react";
+import { type BreadcrumbItem, TenantedSharedData } from "@/types";
+import {
+    confirm as confirmTwoFactorAuth,
+    disable,
+    enable,
+} from "@/wayfinder/routes/tenant/auth/two-factor";
+import { show } from "@/wayfinder/routes/tenant/user/settings/two-factor";
+import { Form, Head, usePage } from "@inertiajs/react";
 import { ShieldBan, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
@@ -22,16 +27,11 @@ interface TwoFactorProps {
     twoFactorEnabled?: boolean;
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: "Two-Factor Authentication",
-        href: show.url(),
-    },
-];
-
 export default function TwoFactor({
     twoFactorEnabled = false,
 }: TwoFactorProps) {
+    const { props } = usePage<TenantedSharedData>();
+
     const {
         qrCodeSvg,
         hasSetupData,
@@ -41,8 +41,15 @@ export default function TwoFactor({
         recoveryCodesList,
         fetchRecoveryCodes,
         errors,
-    } = useTwoFactorAuth();
+    } = useTwoFactorAuth(props.tenant.identifier);
     const [showSetupModal, setShowSetupModal] = useState<boolean>(false);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: "Two-Factor Authentication",
+            href: show.url(props.tenant.identifier),
+        },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -73,10 +80,11 @@ export default function TwoFactor({
                                     recoveryCodesList={recoveryCodesList}
                                     fetchRecoveryCodes={fetchRecoveryCodes}
                                     errors={errors}
+                                    tenant={props.tenant.identifier}
                                 />
 
                                 <div className="relative inline">
-                                    <Form {...disable()}>
+                                    <Form {...disable(props.tenant.identifier)}>
                                         {({ processing }) => (
                                             <Button
                                                 variant="destructive"
@@ -111,7 +119,14 @@ export default function TwoFactor({
                                         </Button>
                                     ) : (
                                         <Form
-                                            {...enable()}
+                                            action={
+                                                enable(props.tenant.identifier)
+                                                    .url
+                                            }
+                                            method={
+                                                enable(props.tenant.identifier)
+                                                    .method
+                                            }
                                             onSuccess={() =>
                                                 setShowSetupModal(true)
                                             }
@@ -142,6 +157,8 @@ export default function TwoFactor({
                     clearSetupData={clearSetupData}
                     fetchSetupData={fetchSetupData}
                     errors={errors}
+                    confirm={confirmTwoFactorAuth}
+                    tenant={props.tenant.identifier}
                 />
             </UserSettingsLayout>
         </AppLayout>

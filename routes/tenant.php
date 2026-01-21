@@ -20,3 +20,9 @@ Route::as('settings.')
 
 Route::as('auth.')
     ->group(__DIR__.'/tenant/auth.php');
+
+Route::as('user.')
+    ->group(__DIR__.'/tenant/user.php');
+
+Route::as('notifications.')
+    ->group(__DIR__.'/tenant/notifications.php');

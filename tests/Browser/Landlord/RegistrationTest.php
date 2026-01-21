@@ -8,7 +8,7 @@ use App\Models\User;
 
 test('register a new organization and user', function (): void {
 
-    visit(route('auth.register'))
+    visit('/register')
         ->assertSee('Create an account')
         ->fill('organization_name', 'Acme Corp')
         ->fill('name', 'John Doe')

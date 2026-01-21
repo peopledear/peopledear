@@ -8,6 +8,6 @@ test('renders registration page', function (): void {
     $response = $this->get(route('auth.register'));
 
     $response->assertStatus(200);
-    $response->assertInertia(fn (AssertableInertia $page) => $page->component('register/create')
+    $response->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->component('register/create')
     );
 });

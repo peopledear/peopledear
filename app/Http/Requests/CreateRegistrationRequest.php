@@ -30,7 +30,7 @@ final class CreateRegistrationRequest extends FormRequest
                 'email',
                 new ValidEmail,
                 Rule::unique(User::class)
-                    ->where('organization_id', null),
+                    ->where('organization_id'),
             ],
             'password' => [
                 'required',

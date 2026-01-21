@@ -6,10 +6,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserInfo } from "@/components/user-info";
 import { useMobileNavigation } from "@/hooks/use-mobile-navigation";
-import { type User } from "@/types";
+import { TenantedSharedData, type User } from "@/types";
+import UserProfileController from "@/wayfinder/actions/App/Http/Controllers/UserProfileController";
 import { logout } from "@/wayfinder/routes/tenant/auth";
-import { edit } from "@/wayfinder/routes/user-profile";
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { LogOut, Settings } from "lucide-react";
 
 interface UserMenuContentProps {
@@ -18,6 +18,7 @@ interface UserMenuContentProps {
 
 export function UserMenuContent({ user }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
+    const { props } = usePage<TenantedSharedData>();
 
     const handleLogout = () => {
         cleanup();
@@ -36,7 +37,9 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                 <DropdownMenuItem asChild>
                     <Link
                         className="block w-full"
-                        href={edit()}
+                        href={UserProfileController.edit(
+                            props.tenant.identifier,
+                        )}
                         as="button"
                         prefetch
                         onClick={cleanup}
@@ -50,7 +53,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuItem asChild>
                 <Link
                     className="block w-full"
-                    href={logout()}
+                    href={logout(props.tenant.identifier)}
                     as="button"
                     onClick={handleLogout}
                     data-test="logout-button"

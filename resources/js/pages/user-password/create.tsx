@@ -1,5 +1,5 @@
 import UserPasswordController from "@/wayfinder/actions/App/Http/Controllers/UserPasswordController";
-import { Form, Head } from "@inertiajs/react";
+import { Form, Head, usePage } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
 import InputError from "@/components/input-error";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
+import { TenantedSharedData } from "@/types";
 
 interface ResetPasswordProps {
     token: string;
@@ -15,6 +16,8 @@ interface ResetPasswordProps {
 }
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
+    const { props } = usePage<TenantedSharedData>();
+
     return (
         <AuthLayout
             title="Reset password"
@@ -23,7 +26,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
             <Head title="Reset password" />
 
             <Form
-                {...UserPasswordController.store()}
+                {...UserPasswordController.store(props.tenant.identifier)}
                 transform={(data) => ({ ...data, token, email })}
                 resetOnSuccess={["password", "password_confirmation"]}
             >

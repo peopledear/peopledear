@@ -19,12 +19,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
+use Sprout\Attributes\CurrentTenant;
 
 use function back;
 
-final class OrganizationTimeOffTypesController
+final class TimeOffTypesController
 {
-    public function index(#[CurrentOrganization] Organization $organization): Response
+    public function index(#[CurrentTenant] Organization $organization): Response
     {
 
         Gate::authorize('viewAny', TimeOffType::class);

@@ -1,17 +1,19 @@
 import { PlaceholderPattern } from "@/components/ui/placeholder-pattern";
 import AdminLayout from "@/layouts/org-layout";
-import { type BreadcrumbItem } from "@/types";
+import { type BreadcrumbItem, TenantedSharedData } from "@/types";
 import { overview } from "@/wayfinder/routes/tenant/org";
-import { Head } from "@inertiajs/react";
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: "Overview",
-        href: overview().url,
-    },
-];
+import { Head, usePage } from "@inertiajs/react";
 
 export default function PeopleManagerOverview() {
+    const { props } = usePage<TenantedSharedData>();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: "Overview",
+            href: overview(props.tenant.identifier).url,
+        },
+    ];
+
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
             <Head title="Overview" />

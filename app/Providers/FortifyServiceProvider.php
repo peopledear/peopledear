@@ -17,7 +17,7 @@ final class FortifyServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        //
+        Fortify::ignoreRoutes();
     }
 
     public function boot(): void

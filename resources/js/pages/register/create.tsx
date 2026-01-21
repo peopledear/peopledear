@@ -2,14 +2,12 @@ import { Form, Head } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
 import InputError from "@/components/input-error";
-import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
 import RegistrationController from "@/wayfinder/actions/App/Http/Controllers/RegistrationController";
-import auth from "@/wayfinder/routes/tenant/auth";
 
 export default function Register() {
     return (
@@ -120,13 +118,6 @@ export default function Register() {
                                 )}
                                 Create account
                             </Button>
-                        </div>
-
-                        <div className="text-muted-foreground text-center text-sm">
-                            Already have an account?{" "}
-                            <TextLink href={auth.login()} tabIndex={6}>
-                                Log in
-                            </TextLink>
                         </div>
                     </>
                 )}

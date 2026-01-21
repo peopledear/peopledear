@@ -8,12 +8,15 @@ import {
 } from "@/components/ui/input-otp";
 import { OTP_MAX_LENGTH } from "@/hooks/use-two-factor-auth";
 import AuthLayout from "@/layouts/auth-layout";
-import { store } from "@/wayfinder/routes/two-factor/login";
-import { Form, Head } from "@inertiajs/react";
+import { TenantedSharedData } from "@/types";
+import twoFactor from "@/wayfinder/routes/tenant/auth/two-factor/login";
+import { Form, Head, usePage } from "@inertiajs/react";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useMemo, useState } from "react";
 
 export default function Show() {
+    const { props } = usePage<TenantedSharedData>();
+
     const [showRecoveryInput, setShowRecoveryInput] = useState<boolean>(false);
     const [code, setCode] = useState<string>("");
 
@@ -54,7 +57,7 @@ export default function Show() {
 
             <div className="space-y-6">
                 <Form
-                    {...store()}
+                    {...twoFactor.store(props.tenant.identifier)}
                     className="space-y-4"
                     resetOnError
                     resetOnSuccess={!showRecoveryInput}

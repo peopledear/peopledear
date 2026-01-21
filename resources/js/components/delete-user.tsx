@@ -12,11 +12,14 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
+import { TenantedSharedData } from "@/types";
 import UserController from "@/wayfinder/actions/App/Http/Controllers/UserController";
-import { Form } from "@inertiajs/react";
+import { Form, usePage } from "@inertiajs/react";
 import { useRef } from "react";
 
 export default function DeleteUser() {
+    const { props } = usePage<TenantedSharedData>();
+
     const passwordInput = useRef<HTMLInputElement>(null);
 
     return (
@@ -54,7 +57,7 @@ export default function DeleteUser() {
                         </DialogDescription>
 
                         <Form
-                            {...UserController.destroy()}
+                            {...UserController.destroy(props.tenant.identifier)}
                             options={{
                                 preserveScroll: true,
                             }}

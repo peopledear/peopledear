@@ -56,7 +56,7 @@ export interface SharedData {
 }
 
 export interface TenantedSharedData extends SharedData {
-    organization: Organization;
+    tenant: Organization;
 }
 
 export interface User {

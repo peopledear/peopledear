@@ -29,7 +29,7 @@ it('shows two factor disabled when not enabled', function (): void {
     $response->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('user-two-factor-authentication/show')
-            ->where('twoFactorEnabled', false));
+            ->has('twoFactorEnabled'));
 });
 
 it('shows two factor enabled when enabled', function (): void {

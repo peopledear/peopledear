@@ -13,7 +13,6 @@ it('generates tenant-aware verification URL', function (): void {
 
     $notification = new VerifyEmail;
     $reflectionMethod = new ReflectionMethod($notification, 'verificationUrl');
-    $reflectionMethod->setAccessible(true);
 
     $url = $reflectionMethod->invoke($notification, $user);
 

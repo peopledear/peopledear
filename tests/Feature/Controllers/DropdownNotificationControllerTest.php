@@ -18,7 +18,8 @@ test('index sends a list of notifications to inertia', function (): void {
         ->create();
 
     $response = $this->actingAs($user)
-        ->get(route('notifications.dropdown'), [
+        ->fromRoute('home')
+        ->get(route('tenant.notifications.dropdown', ['tenant' => $user->organization->identifier]), [
             'X-Dropdown' => 'true',
         ]);
 

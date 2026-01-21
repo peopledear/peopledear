@@ -2,26 +2,31 @@
 
 declare(strict_types=1);
 
+use App\Actions\Role\CreateSystemRoles;
 use App\Enums\Support\SessionKey;
-use App\Models\Organization;
+use App\Enums\UserRole;
 use App\Models\TimeOffType;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function (): void {
-    $this->organization = Organization::factory()
-        ->create();
+    resolve(CreateSystemRoles::class)->handle();
+
+    $this->organization = $this->tenant;
 
     Session::put(SessionKey::CurrentOrganization->value, $this->organization->id);
 
     /** @var Role $peopleManagerRole */
     $peopleManagerRole = Role::query()
-        ->where('name', 'people_manager')
+        ->where('name', UserRole::PeopleManager->value)
         ->first()
         ?->fresh();
 
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->for($this->organization)->create([
+        'email' => 'peoplemanager@test.test',
+    ]);
     $this->user->assignRole($peopleManagerRole);
 
     TimeOffType::factory()
@@ -32,10 +37,11 @@ beforeEach(function (): void {
 });
 
 test('can navigate back to the create time off type page', function (): void {
-    $this->actingAs($this->user);
+    Auth::login($this->user);
 
     visit(route(
-        name: 'org.settings.time-off-types.create',
+        name: 'tenant.settings.time-off-types.create',
+        parameters: ['tenant' => $this->organization->identifier],
         absolute: false
     ))
         ->click('Back')
@@ -43,10 +49,11 @@ test('can navigate back to the create time off type page', function (): void {
 });
 
 test('renders the create page', function (): void {
-    $this->actingAs($this->user);
+    Auth::login($this->user);
 
     visit(route(
-        name: 'org.settings.time-off-types.create',
+        name: 'tenant.settings.time-off-types.create',
+        parameters: ['tenant' => $this->organization->identifier],
         absolute: false
     ))
         ->assertSee('Create Time Off Type');

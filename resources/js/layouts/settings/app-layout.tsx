@@ -1,33 +1,34 @@
 import { NavItem, VerticalMenu } from "@/components/vertical-menu";
-import { edit as editAppearance } from "@/wayfinder/routes/appearance";
-import { edit as editPassword } from "@/wayfinder/routes/password";
-import { show } from "@/wayfinder/routes/two-factor";
-import { edit } from "@/wayfinder/routes/user-profile";
+import { TenantedSharedData } from "@/types";
+import { edit as editAppearance } from "@/wayfinder/routes/tenant/user/settings/appearance";
+import { edit as editPassword } from "@/wayfinder/routes/tenant/user/settings/password";
+import { show } from "@/wayfinder/routes/tenant/user/settings/two-factor";
+import { edit } from "@/wayfinder/routes/tenant/user/settings/user-profile";
 import { usePage } from "@inertiajs/react";
 import { PropsWithChildren } from "react";
 
 export default function UserSettingsLayout({ children }: PropsWithChildren) {
-    const { url } = usePage();
+    const { props, url } = usePage<TenantedSharedData>();
 
     const items: NavItem[] = [
         {
             label: "Profile",
-            href: edit().url,
+            href: edit(props.tenant.identifier).url,
             active: url.startsWith("/settings/profile"),
         },
         {
             label: "Password",
-            href: editPassword().url,
+            href: editPassword(props.tenant.identifier).url,
             active: url.startsWith("/settings/password"),
         },
         {
             label: "Two-Factor Auth",
-            href: show().url,
+            href: show(props.tenant.identifier).url,
             active: url.startsWith("/settings/two-factor"),
         },
         {
             label: "Appearance",
-            href: editAppearance().url,
+            href: editAppearance(props.tenant.identifier).url,
             active: url.startsWith("/settings/appearance"),
         },
     ];

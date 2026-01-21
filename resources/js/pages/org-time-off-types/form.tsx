@@ -30,10 +30,15 @@ import {
     MultiSelectValue,
 } from "@/components/ui/multi-select";
 
-import { BalanceType, Icon as IconType, TimeOffUnit } from "@/types";
-import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
+import {
+    BalanceType,
+    Icon as IconType,
+    TenantedSharedData,
+    TimeOffUnit,
+} from "@/types";
+import { store } from "@/wayfinder/routes/tenant/settings/time-off-types";
 import { Fieldset, Transition } from "@headlessui/react";
-import { Form } from "@inertiajs/react";
+import { Form, usePage } from "@inertiajs/react";
 import { ChevronRight, XIcon } from "lucide-react";
 
 import { useState } from "react";
@@ -49,6 +54,8 @@ export default function TimeOffTypeForm({
     timeOffUnits,
     icons,
 }: TimeOffTypeFormProps) {
+    const { props } = usePage<TenantedSharedData>();
+
     const [openAdvancedSettings, setOpenAdvancedSettings] =
         useState<boolean>(false);
     const [selectedUnits, setSelectedUnits] = useState<number[]>([]);
@@ -65,7 +72,7 @@ export default function TimeOffTypeForm({
         <Card>
             <CardContent>
                 <Form
-                    action={OrganizationTimeOffTypesController.store()}
+                    action={store(props.tenant.identifier)}
                     transform={(data) => ({
                         ...data,
                         allowed_units: selectedUnits,

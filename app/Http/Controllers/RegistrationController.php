@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\NewAccountRegistration;
+use App\Actions\Organization\RegisterOrganization;
 use App\Data\PeopleDear\CreateRegistrationData;
 use App\Http\Requests\CreateRegistrationRequest;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +24,9 @@ final class RegistrationController
 
     }
 
-    public function store(CreateRegistrationRequest $request, NewAccountRegistration $action): RedirectResponse
+    public function store(
+        CreateRegistrationRequest $request,
+        RegisterOrganization $action): RedirectResponse
     {
 
         $user = $action->handle(
@@ -35,6 +37,11 @@ final class RegistrationController
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route(
+            name: 'tenant.org.overview',
+            parameters: [
+                'tenant' => $user->organization->identifier,
+            ],
+            absolute: true));
     }
 }

@@ -2,15 +2,32 @@
     "mcpServers": {
         "laravel-boost": {
             "command": "php",
-            "args": ["artisan", "boost:mcp"]
+            "args": [
+                "artisan",
+                "boost:mcp"
+            ]
         },
         "shadcn": {
             "command": "npx",
-            "args": ["shadcn@latest", "mcp"]
+            "args": [
+                "shadcn@latest",
+                "mcp"
+            ]
         },
         "playwright": {
             "command": "npx",
-            "args": ["@playwright/mcp@latest"]
+            "args": [
+                "@playwright/mcp@latest"
+            ]
+        },
+        "herd": {
+            "command": "php",
+            "args": [
+                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
+            ],
+            "env": {
+                "SITE_PATH": "/Users/franciscobarrento/Herd/peopledear"
+            }
         }
     }
 }

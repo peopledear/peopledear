@@ -1,10 +1,11 @@
 import InputError from "@/components/input-error";
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
-import { type BreadcrumbItem } from "@/types";
+import { type BreadcrumbItem, type TenantedSharedData } from "@/types";
 import UserPasswordController from "@/wayfinder/actions/App/Http/Controllers/UserPasswordController";
+import { edit } from "@/wayfinder/routes/tenant/user/settings/password";
 import { Transition } from "@headlessui/react";
-import { Form, Head } from "@inertiajs/react";
+import { Form, Head, usePage } from "@inertiajs/react";
 import { useRef } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -25,18 +26,18 @@ import {
     FieldSet,
 } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { edit } from "@/wayfinder/routes/password";
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: "Password settings",
-        href: edit().url,
-    },
-];
 
 export default function Password() {
+    const { props } = usePage<TenantedSharedData>();
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: "Password settings",
+            href: edit(props.tenant.identifier).url,
+        },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -53,7 +54,9 @@ export default function Password() {
                     </CardHeader>
                     <CardContent>
                         <Form
-                            {...UserPasswordController.update()}
+                            {...UserPasswordController.update(
+                                props.tenant.identifier,
+                            )}
                             options={{
                                 preserveScroll: true,
                             }}
@@ -97,7 +100,7 @@ export default function Password() {
                                                             currentPasswordInput
                                                         }
                                                         name="current_password"
-                                                        className="sm:min-w-[300px]"
+                                                        className="sm:min-w-75"
                                                         autoComplete="current-password"
                                                         placeholder="Current password"
                                                     />
@@ -125,7 +128,7 @@ export default function Password() {
                                                         id="password"
                                                         ref={passwordInput}
                                                         name="password"
-                                                        className="sm:min-w-[300px]"
+                                                        className="sm:min-w-75"
                                                         autoComplete="new-password"
                                                         placeholder="New password"
                                                     />
@@ -151,7 +154,7 @@ export default function Password() {
                                                     <PasswordInput
                                                         id="password_confirmation"
                                                         name="password_confirmation"
-                                                        className="sm:min-w-[300px]"
+                                                        className="sm:min-w-75"
                                                         autoComplete="new-password"
                                                         placeholder="Confirm password"
                                                     />

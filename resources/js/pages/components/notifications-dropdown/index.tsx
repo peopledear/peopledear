@@ -27,11 +27,14 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { TenantedSharedData } from "@/types";
 import { Notification, NotificationList } from "@/types/notifications";
-import DeleteNotificationController from "@/wayfinder/actions/App/Http/Controllers/DeleteNotificationController";
-import MarkAllNotificationsAsReadController from "@/wayfinder/actions/App/Http/Controllers/MarkAllNotificationsAsReadController";
-import MarkNotificationAsReadController from "@/wayfinder/actions/App/Http/Controllers/MarkNotificationAsReadController";
-import { router } from "@inertiajs/react";
+import {
+    destroy,
+    markAllRead,
+    markRead,
+} from "@/wayfinder/routes/tenant/notifications";
+import { router, usePage } from "@inertiajs/react";
 import { CheckCircle2, LucideBell, Trash2 } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 
@@ -39,6 +42,7 @@ export default function NotificationsDropdownComponent({
     notifications: notificationsProp,
     unread: unreadProp,
 }: NotificationList) {
+    const { props } = usePage<TenantedSharedData>();
     const [notifications, setNotifications] =
         useState<Notification[]>(notificationsProp);
     const [unread, setUnread] = useState<number>(unreadProp);
@@ -51,7 +55,7 @@ export default function NotificationsDropdownComponent({
 
     const markAsRead = (id: string) => {
         router.post(
-            MarkNotificationAsReadController.store(id),
+            markRead({ tenant: props.tenant.identifier, notification: id }),
             {},
             {
                 onSuccess: () => {
@@ -76,7 +80,7 @@ export default function NotificationsDropdownComponent({
 
     const markAllAsRead = () => {
         router.post(
-            MarkAllNotificationsAsReadController.store(),
+            markAllRead(props.tenant.identifier),
             {},
             {
                 onSuccess: () => {
@@ -93,23 +97,26 @@ export default function NotificationsDropdownComponent({
     };
 
     const deleteNotification = (id: string) => {
-        router.delete(DeleteNotificationController.destroy(id), {
-            onSuccess: () => {
-                setNotifications((prev) => {
-                    const found = prev.find(
-                        (notification) => notification.id === id,
-                    );
-                    if (!found) return prev;
+        router.delete(
+            destroy({ tenant: props.tenant.identifier, notification: id }),
+            {
+                onSuccess: () => {
+                    setNotifications((prev) => {
+                        const found = prev.find(
+                            (notification) => notification.id === id,
+                        );
+                        if (!found) return prev;
 
-                    if (found.readAt === null) {
-                        setUnread((u) => Math.max(0, u - 1));
-                    }
-                    return prev.filter(
-                        (notification) => notification.id !== id,
-                    );
-                });
+                        if (found.readAt === null) {
+                            setUnread((u) => Math.max(0, u - 1));
+                        }
+                        return prev.filter(
+                            (notification) => notification.id !== id,
+                        );
+                    });
+                },
             },
-        });
+        );
     };
 
     return (

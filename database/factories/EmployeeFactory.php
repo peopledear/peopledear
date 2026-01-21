@@ -6,7 +6,7 @@ namespace Database\Factories;
 
 use App\Enums\PeopleDear\EmploymentStatus;
 use App\Models\Employee;
-use App\Models\Office;
+use App\Models\Location;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,7 +25,7 @@ final class EmployeeFactory extends Factory
     {
         return [
             'organization_id' => Organization::factory(),
-            'office_id' => fake()->optional()->randomElement([null, Office::factory()]),
+            'location_id' => Location::factory(),
             'user_id' => fake()->optional()->randomElement([null, User::factory()]),
             'manager_id' => null,
             'name' => fake()->name(),

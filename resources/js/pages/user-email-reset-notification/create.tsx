@@ -1,7 +1,7 @@
 // Components
 import UserEmailResetNotification from "@/wayfinder/actions/App/Http/Controllers/UserEmailResetNotification";
 import { login } from "@/wayfinder/routes/tenant/auth";
-import { Form, Head } from "@inertiajs/react";
+import { Form, Head, usePage } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
 import InputError from "@/components/input-error";
@@ -10,8 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
+import { TenantedSharedData } from "@/types";
 
 export default function ForgotPassword({ status }: { status?: string }) {
+    const { props } = usePage<TenantedSharedData>();
+
     return (
         <AuthLayout
             title="Forgot password"
@@ -26,7 +29,11 @@ export default function ForgotPassword({ status }: { status?: string }) {
             )}
 
             <div className="space-y-6">
-                <Form {...UserEmailResetNotification.store()}>
+                <Form
+                    {...UserEmailResetNotification.store(
+                        props.tenant.identifier,
+                    )}
+                >
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
@@ -61,7 +68,9 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
                     <span>Or, return to</span>
-                    <TextLink href={login()}>log in</TextLink>
+                    <TextLink href={login(props.tenant.identifier)}>
+                        log in
+                    </TextLink>
                 </div>
             </div>
         </AuthLayout>

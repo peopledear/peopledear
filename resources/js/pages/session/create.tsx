@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import AuthLayout from "@/layouts/auth-layout";
+import { TenantedSharedData } from "@/types";
 import SessionController from "@/wayfinder/actions/App/Http/Controllers/SessionController";
 import { register } from "@/wayfinder/routes/auth";
 import { request } from "@/wayfinder/routes/tenant/auth/password";
-import { Form, Head } from "@inertiajs/react";
+import { Form, Head, usePage } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
 interface LoginProps {
@@ -18,6 +19,8 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
+    const { props } = usePage<TenantedSharedData>();
+
     return (
         <AuthLayout
             title="Log in to your account"
@@ -26,7 +29,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             <Head title="Log in" />
 
             <Form
-                {...SessionController.store()}
+                {...SessionController.store(props.tenant.identifier)}
                 resetOnSuccess={["password"]}
                 className="flex flex-col gap-6"
             >
@@ -53,7 +56,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                     <Label htmlFor="password">Password</Label>
                                     {canResetPassword && (
                                         <TextLink
-                                            href={request()}
+                                            href={request(
+                                                props.tenant.identifier,
+                                            )}
                                             className="ml-auto text-sm"
                                             tabIndex={5}
                                         >

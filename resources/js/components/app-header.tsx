@@ -30,9 +30,13 @@ import {
 import { UserMenuContent } from "@/components/user-menu-content";
 import { useInitials } from "@/hooks/use-initials";
 import { cn } from "@/lib/utils";
-import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
-import DropdownNotificationController from "@/wayfinder/actions/App/Http/Controllers/DropdownNotificationController";
+import {
+    type BreadcrumbItem,
+    type NavItem,
+    type TenantedSharedData,
+} from "@/types";
 import { overview as employeeOverview } from "@/wayfinder/routes/employee";
+import { dropdown } from "@/wayfinder/routes/tenant/notifications";
 import { overview } from "@/wayfinder/routes/tenant/org";
 import { Link, usePage } from "@inertiajs/react";
 import { EyeIcon, Menu, Search } from "lucide-react";
@@ -51,14 +55,14 @@ export function AppHeader({
     breadcrumbs = [],
     mainNavItems = [],
 }: AppHeaderProps) {
-    const page = usePage<SharedData>();
-    const { auth, show } = page.props;
+    const page = usePage<TenantedSharedData>();
+    const { auth, show, tenant } = page.props;
     const getInitials = useInitials();
 
     const rightNavItems: NavItem[] = [
         {
             title: "People Manager",
-            href: overview(),
+            href: overview(tenant.identifier),
             icon: EyeIcon,
             show: show.orgLink,
         },
@@ -95,7 +99,7 @@ export function AppHeader({
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-[34px] w-[34px]"
+                                    className="h-8.5 w-8.5"
                                 >
                                     <Menu className="h-5 w-5" />
                                 </Button>
@@ -178,7 +182,7 @@ export function AppHeader({
                                 size="icon"
                                 className="group h-9 w-9 cursor-pointer"
                             >
-                                <Search className="!size-5 opacity-80 group-hover:opacity-100" />
+                                <Search className="size-5! opacity-80 group-hover:opacity-100" />
                             </Button>
                             <div className="hidden lg:flex">
                                 {rightNavItems.map((item) => (
@@ -221,7 +225,7 @@ export function AppHeader({
                             </div>
                         </div>
                         <NotificationsDropdown
-                            href={DropdownNotificationController.index().url}
+                            href={dropdown(tenant.identifier).url}
                         />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>

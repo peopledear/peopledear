@@ -1,14 +1,17 @@
 // Components
 import UserEmailVerificationNotificationController from "@/wayfinder/actions/App/Http/Controllers/UserEmailVerificationNotificationController";
 import { logout } from "@/wayfinder/routes/tenant/auth";
-import { Form, Head } from "@inertiajs/react";
+import { Form, Head, usePage } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 
 import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/layouts/auth-layout";
+import { TenantedSharedData } from "@/types";
 
 export default function VerifyEmail({ status }: { status?: string }) {
+    const { props } = usePage<TenantedSharedData>();
+
     return (
         <AuthLayout
             title="Verify email"
@@ -24,7 +27,9 @@ export default function VerifyEmail({ status }: { status?: string }) {
             )}
 
             <Form
-                {...UserEmailVerificationNotificationController.store()}
+                {...UserEmailVerificationNotificationController.store(
+                    props.tenant.identifier,
+                )}
                 className="space-y-6 text-center"
             >
                 {({ processing }) => (
@@ -37,7 +42,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                         </Button>
 
                         <TextLink
-                            href={logout()}
+                            href={logout(props.tenant.identifier)}
                             className="mx-auto block text-sm"
                         >
                             Log out

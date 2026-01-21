@@ -26,9 +26,9 @@ import {
 import AdminLayout from "@/layouts/org-layout";
 import OrgSettingsLayout from "@/layouts/settings/org-layout";
 import { cn } from "@/lib/utils";
-import { TimeOffType, TimeOffTypeStatus } from "@/types";
-import OrganizationTimeOffTypesController from "@/wayfinder/actions/App/Http/Controllers/OrganizationTimeOffTypesController";
-import { Head, Link } from "@inertiajs/react";
+import { TenantedSharedData, TimeOffType, TimeOffTypeStatus } from "@/types";
+import { create } from "@/wayfinder/routes/tenant/settings/time-off-types";
+import { Head, Link, usePage } from "@inertiajs/react";
 import {
     Circle,
     CircleCheck,
@@ -45,6 +45,8 @@ interface TimeOffTypesPageProps {
 export default function TimeOffTypesPage({
     timeOffTypes,
 }: TimeOffTypesPageProps) {
+    const { props } = usePage<TenantedSharedData>();
+
     return (
         <AdminLayout>
             <Head title="Time Off Types" />
@@ -61,7 +63,7 @@ export default function TimeOffTypesPage({
                                 </div>
                                 <div>
                                     <Link
-                                        href={OrganizationTimeOffTypesController.create()}
+                                        href={create(props.tenant.identifier)}
                                     >
                                         <Button
                                             variant="outline"

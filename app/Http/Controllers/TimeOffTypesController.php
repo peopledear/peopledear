@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\TymeOffType\CreateTimeOffType;
-use App\Attributes\CurrentOrganization;
 use App\Data\PeopleDear\TimeOffType\CreateTimeOffTypeData;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
 use App\Enums\BalanceType;
@@ -54,7 +53,7 @@ final class TimeOffTypesController
     public function store(
         CreateTimeOffTypeRequest $request,
         CreateTimeOffType $action,
-        #[CurrentOrganization] Organization $organization
+        #[CurrentTenant] Organization $organization
     ): RedirectResponse {
 
         $action->handle(

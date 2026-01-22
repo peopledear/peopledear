@@ -116,7 +116,9 @@ final class EmployeeTimeOffController
             $timeOffType,
         );
 
-        return to_route('employee.overview')
+        return to_route('tenant.employee.overview', [
+            'tenant' => $employee->organization->identifier,
+        ])
             ->with('status', 'Time off request submitted successfully.');
     }
 }

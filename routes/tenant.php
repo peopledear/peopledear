@@ -14,6 +14,9 @@ Route::get('/', fn (
 Route::as('org.')
     ->group(__DIR__.'/tenant/organization.php');
 
+Route::as('employee.')
+    ->group(__DIR__.'/tenant/employee.php');
+
 Route::as('settings.')
     ->prefix('settings')
     ->group(__DIR__.'/tenant/settings.php');

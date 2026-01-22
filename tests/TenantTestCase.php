@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Tests;
 
 use App\Models\Organization;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-abstract class TenantTestCase extends BaseTestCase
+abstract class TenantTestCase extends WithUsersTestCase
 {
     protected Organization $tenant;
 
@@ -15,11 +14,7 @@ abstract class TenantTestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->tenant = Organization::factory()
-            ->createQuietly([
-                'name' => 'Acme Corporation',
-                'identifier' => 'acme',
-            ]);
+        $this->tenant = $this->organization;
 
     }
 }

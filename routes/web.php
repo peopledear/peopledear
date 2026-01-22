@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\EmployeeOverviewController;
-use App\Http\Controllers\EmployeeTimeOffController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationEmployeeController;
@@ -24,28 +22,6 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
 
         Route::get('dashboard', fn () => Inertia::render('dashboard', []))
             ->name('dashboard');
-
-        Route::as('employee.')->group(function (): void {
-
-            Route::get('/overview', [EmployeeOverviewController::class, 'index'])
-                ->name('overview');
-
-            Route::as('time-offs.')
-                ->prefix('time-offs')
-                ->group(function (): void {
-
-                    Route::get('/', [EmployeeTimeOffController::class, 'index'])
-                        ->name('index');
-
-                    Route::get('/create', [EmployeeTimeOffController::class, 'create'])
-                        ->name('create');
-
-                    Route::post('/store', [EmployeeTimeOffController::class, 'store'])
-                        ->name('store');
-
-                });
-
-        });
 
         Route::get('organization-required', fn () => Inertia::render('organization-required', []))
             ->name('organization-required');

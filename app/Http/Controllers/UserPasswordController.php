@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 final readonly class UserPasswordController
 {
@@ -27,6 +28,9 @@ final readonly class UserPasswordController
         ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function store(CreateUserPasswordRequest $request, CreateUserPassword $action): RedirectResponse
     {
         /** @var array<string, mixed> $credentials */
@@ -41,7 +45,7 @@ final readonly class UserPasswordController
             'email' => [__(is_string($status) ? $status : '')],
         ]));
 
-        return to_route('login')->with('status', __('passwords.reset'));
+        return redirect(route('tenant.auth.login'))->with('status', __('passwords.reset'));
     }
 
     public function edit(): Response

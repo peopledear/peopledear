@@ -7,9 +7,7 @@ namespace App\Models;
 use App\Contracts\Addressable;
 use App\Enums\PeopleDear\LocationType;
 use App\Models\Concerns\HasAddress;
-use App\Models\Scopes\OrganizationScope;
 use Database\Factories\LocationFactory;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Sprout\Attributes\TenantRelation;
+use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
 
 /**
  * @property-read string $id
@@ -32,9 +32,9 @@ use Illuminate\Support\Carbon;
  * @property-read Address $address
  * @property-read Collection<int, Employee> $employees
  */
-#[ScopedBy([OrganizationScope::class])]
 final class Location extends Model implements Addressable
 {
+    use BelongsToTenant;
     use HasAddress;
 
     /** @use HasFactory<LocationFactory> */
@@ -57,6 +57,7 @@ final class Location extends Model implements Addressable
     }
 
     /** @return BelongsTo<Organization, $this> */
+    #[TenantRelation]
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);

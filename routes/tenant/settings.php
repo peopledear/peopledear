@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\TimeOffTypesController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,19 @@ Route::middleware(['auth', 'verified:tenant.auth.verification.notice'])
 
                 Route::put('/', [OrganizationController::class, 'update'])
                     ->name('update');
+            });
+
+        Route::as('locations.')
+            ->prefix('locations')
+            ->group(function (): void {
+                Route::post('/', [LocationController::class, 'store'])
+                    ->name('store');
+
+                Route::put('{location}', [LocationController::class, 'update'])
+                    ->name('update');
+
+                Route::delete('{location}', [LocationController::class, 'destroy'])
+                    ->name('destroy');
             });
 
         Route::as('time-off-types.')

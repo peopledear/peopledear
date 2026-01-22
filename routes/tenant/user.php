@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified:tenant.auth.verification.notice'])
         Route::delete('user', [UserController::class, 'destroy'])
             ->name('user.destroy');
 
-        Route::prefix('settings')
+        Route::prefix('user/settings')
             ->name('settings.')
             ->group(function (): void {
 

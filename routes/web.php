@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationEmployeeController;
 use Illuminate\Support\Facades\Route;
@@ -40,21 +39,6 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
 
                 Route::post('create', [OrganizationController::class, 'store'])
                     ->name('store');
-
-                // Organization Settings...
-
-                Route::prefix('settings')->as('settings.')->group(function (): void {
-
-                    Route::post('locations', [LocationController::class, 'store'])
-                        ->name('locations.store');
-
-                    Route::put('locations/{location}', [LocationController::class, 'update'])
-                        ->name('locations.update');
-
-                    Route::delete('locations/{location}', [LocationController::class, 'destroy'])
-                        ->name('locations.destroy');
-
-                });
 
             });
 

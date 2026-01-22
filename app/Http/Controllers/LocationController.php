@@ -34,8 +34,8 @@ final class LocationController
             data: CreateLocationData::from($request->validated())
         );
 
-        return to_route('org.settings.organization.edit', [
-            'organization' => $organization->id,
+        return to_route('tenant.settings.organization.edit', [
+            'tenant' => $organization->identifier,
         ])
             ->with('success', 'Location created successfully');
     }
@@ -51,8 +51,8 @@ final class LocationController
             data: UpdateLocationData::from($request->validated())
         );
 
-        return to_route('org.settings.organization.edit', [
-            'organization' => $location->organization_id,
+        return to_route('tenant.settings.organization.edit', [
+            'tenant' => $location->organization->identifier,
         ])
             ->with('success', 'Location updated successfully');
     }
@@ -68,8 +68,8 @@ final class LocationController
 
         $action->handle($location);
 
-        return to_route('org.settings.organization.edit', [
-            'organization' => $location->organization_id,
+        return to_route('tenant.settings.organization.edit', [
+            'tenant' => $location->organization->identifier,
         ])
             ->with('success', 'Location deleted successfully');
     }

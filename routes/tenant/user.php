@@ -13,7 +13,7 @@ Route::middleware(['auth', 'verified:tenant.auth.verification.notice'])
     ->group(function (): void {
 
         Route::delete('user', [UserController::class, 'destroy'])
-            ->name('user.destroy');
+            ->name('destroy');
 
         Route::prefix('user.settings')
             ->name('settings.')
@@ -21,9 +21,9 @@ Route::middleware(['auth', 'verified:tenant.auth.verification.notice'])
 
                 Route::redirect('/', '/settings/profile');
                 Route::get('profile', [UserProfileController::class, 'edit'])
-                    ->name('user-profile.edit');
+                    ->name('profile.edit');
                 Route::patch('profile', [UserProfileController::class, 'update'])
-                    ->name('user-profile.update');
+                    ->name('profile.update');
 
                 // User Password...
                 Route::get('password', [UserPasswordController::class, 'edit'])->name('password.edit');

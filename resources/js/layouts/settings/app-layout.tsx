@@ -2,8 +2,8 @@ import { NavItem, VerticalMenu } from "@/components/vertical-menu";
 import { TenantedSharedData } from "@/types";
 import { edit as editAppearance } from "@/wayfinder/routes/tenant/user/settings/appearance";
 import { edit as editPassword } from "@/wayfinder/routes/tenant/user/settings/password";
+import { edit } from "@/wayfinder/routes/tenant/user/settings/profile";
 import { show } from "@/wayfinder/routes/tenant/user/settings/two-factor";
-import { edit } from "@/wayfinder/routes/tenant/user/settings/user-profile";
 import { usePage } from "@inertiajs/react";
 import { PropsWithChildren } from "react";
 

@@ -14,7 +14,7 @@ it('returns string values for route checks', function (): void {
         'org.create',
         'org.store',
         'organization-required',
-        'user-profile.*',
+        'profile.*',
         'password.*',
         'appearance.*',
         'two-factor.*',

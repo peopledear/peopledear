@@ -9,7 +9,7 @@ enum OrganizationExcludedRoute: string
     case OrgCreate = 'org.create';
     case OrgStore = 'org.store';
     case OrganizationRequired = 'organization-required';
-    case UserProfile = 'user-profile.*';
+    case UserProfile = 'profile.*';
     case Password = 'password.*';
     case Appearance = 'appearance.*';
     case TwoFactor = 'two-factor.*';

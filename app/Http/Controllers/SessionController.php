@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSessionRequest;
+use App\Models\Organization;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Sprout\Attributes\CurrentTenant;
 
 final readonly class SessionController
 {
@@ -24,6 +26,7 @@ final readonly class SessionController
 
     public function store(
         CreateSessionRequest $request,
+        #[CurrentTenant] Organization $organization,
     ): RedirectResponse {
         $user = $request->validateCredentials();
 
@@ -33,7 +36,9 @@ final readonly class SessionController
                 'login.remember' => $request->boolean('remember'),
             ]);
 
-            return to_route('two-factor.login');
+            return to_route('tenant.auth.two-factor.login', [
+                'tenant' => $organization->identifier,
+            ]);
         }
 
         Auth::login($user, $request->boolean('remember'));

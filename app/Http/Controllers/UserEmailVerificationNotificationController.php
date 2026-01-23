@@ -19,15 +19,25 @@ final readonly class UserEmailVerificationNotificationController
         #[CurrentUser] User $user,
     ): Response|RedirectResponse {
 
-        return $user->hasVerifiedEmail()
-            ? redirect()->intended(route('dashboard', absolute: false))
-            : Inertia::render('user-email-verification-notification/create', ['status' => $request->session()->get('status')]);
+        if ($user->hasVerifiedEmail()) {
+            if (str_starts_with($request->route()->getName(), 'tenant.')) {
+                return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]));
+            }
+
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        return Inertia::render('user-email-verification-notification/create', ['status' => $request->session()->get('status')]);
     }
 
-    public function store(#[CurrentUser] User $user, CreateUserEmailVerificationNotification $action): RedirectResponse
+    public function store(Request $request, #[CurrentUser] User $user, CreateUserEmailVerificationNotification $action): RedirectResponse
     {
 
         if ($user->hasVerifiedEmail()) {
+            if (str_starts_with($request->route()->getName(), 'tenant.')) {
+                return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]));
+            }
+
             return redirect()->intended(route('dashboard', absolute: false));
         }
 

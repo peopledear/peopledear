@@ -13,7 +13,7 @@ beforeEach(function (): void {
     $this->tenant = $this->organization;
 });
 
-it('renders forgot password page',
+test('renders forgot password page',
     /**
      * @throws MisconfigurationException
      */
@@ -26,7 +26,7 @@ it('renders forgot password page',
                 ->has('status'));
     });
 
-it('may send password reset notification',
+test('may send password reset notification',
     /**
      * @throws MisconfigurationException
      */
@@ -50,7 +50,7 @@ it('may send password reset notification',
         Notification::assertSentTo($user, ResetPassword::class);
     });
 
-it('returns generic message for non-existent email',
+test('returns generic message for non-existent email',
     /**
      * @throws MisconfigurationException
      */
@@ -68,7 +68,7 @@ it('returns generic message for non-existent email',
         Notification::assertNothingSent();
     });
 
-it('requires email',
+test('requires email',
     /**
      * @throws MisconfigurationException
      */
@@ -80,7 +80,7 @@ it('requires email',
             ->assertSessionHasErrors('email');
     });
 
-it('requires valid email format',
+test('requires valid email format',
     /**
      * @throws MisconfigurationException
      */
@@ -94,7 +94,7 @@ it('requires valid email format',
             ->assertSessionHasErrors('email');
     });
 
-it('redirects authenticated users away from forgot password',
+test('redirects authenticated users away from forgot password',
     /**
      * @throws MisconfigurationException
      */

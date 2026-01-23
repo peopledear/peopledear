@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\TimeOffType;
 
-use App\Enums\PeopleDear\CarryOverType;
+use App\Enums\CarryOverType;
 use App\Enums\PeopleDear\RecurringPeriod;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\WithCast;

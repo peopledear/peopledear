@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
 use App\Enums\BalanceType;
+use App\Enums\CarryOverType;
 use App\Enums\Icon;
-use App\Enums\PeopleDear\CarryOverType;
 use App\Enums\TimeOffUnit;
 
 return [

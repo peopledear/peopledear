@@ -15,10 +15,18 @@ final readonly class UserEmailVerification
     {
 
         if ($user->hasVerifiedEmail()) {
+            if (str_starts_with($request->route()->getName(), 'tenant.')) {
+                return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]).'?verified=1');
+            }
+
             return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
         }
 
         $request->fulfill();
+
+        if (str_starts_with($request->route()->getName(), 'tenant.')) {
+            return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]).'?verified=1');
+        }
 
         return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
     }

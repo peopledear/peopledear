@@ -17,7 +17,7 @@ final readonly class UserProfileController
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('profile/edit', [
+        return Inertia::render('user-profile/edit', [
             'status' => $request->session()->get('status'),
         ]);
     }
@@ -25,6 +25,10 @@ final readonly class UserProfileController
     public function update(UpdateUserRequest $request, #[CurrentUser] User $user, UpdateUser $action): RedirectResponse
     {
         $action->handle($user, $request->validated());
+
+        if (str_starts_with($request->route()->getName(), 'tenant.')) {
+            return to_route('tenant.user.settings.profile.edit');
+        }
 
         return to_route('profile.edit');
     }

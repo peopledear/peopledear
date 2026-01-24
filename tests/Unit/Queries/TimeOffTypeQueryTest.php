@@ -45,7 +45,6 @@ test('returns only active time off types for current organization', function ():
         ->active()
         ->createQuietly();
 
-    /** @var TimeOffType $inactiveType */
     TimeOffType::factory()
         ->for($organization)
         ->inactive()
@@ -55,7 +54,6 @@ test('returns only active time off types for current organization', function ():
     $otherOrganization = Organization::factory()
         ->createQuietly();
 
-    /** @var TimeOffType $otherOrgType */
     TimeOffType::factory()
         ->for($otherOrganization)
         ->active()
@@ -82,13 +80,11 @@ test('returns all time off types for current organization when not filtering by 
     $organization = Organization::factory()
         ->createQuietly();
 
-    /** @var TimeOffType $activeType */
     TimeOffType::factory()
         ->for($organization)
         ->active()
         ->createQuietly();
 
-    /** @var TimeOffType $inactiveType */
     TimeOffType::factory()
         ->for($organization)
         ->inactive()

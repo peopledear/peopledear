@@ -36,6 +36,12 @@ Route::middleware('guest')->group(function (): void {
         ->name('login');
     Route::post('login', [SessionController::class, 'store'])
         ->name('login.store');
+
+    // Two-Factor Challenge...
+    Route::get('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
+        ->name('two-factor.login');
+    Route::post('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
+        ->name('two-factor.login.store');
 });
 
 Route::middleware('auth')->group(function (): void {
@@ -66,12 +72,6 @@ Route::middleware('auth')->group(function (): void {
         ->name('two-factor.enable');
     Route::delete('user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy'])
         ->name('two-factor.disable');
-
-    // Two-Factor Challenge...
-    Route::get('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
-        ->name('two-factor.login');
-    Route::post('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
-        ->name('two-factor.login.store');
 
     // Password Confirmation Status...
     Route::get('user/confirmed-password-status', [ConfirmedPasswordStatusController::class, 'show'])

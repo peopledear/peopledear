@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 beforeEach(function (): void {
     // Initialize system roles and permissions
     Artisan::call('config:clear');
-    app(CreateSystemRoles::class)->handle();
+    resolve(CreateSystemRoles::class)->handle();
 
     $this->policy = new OrganizationPolicy();
 });

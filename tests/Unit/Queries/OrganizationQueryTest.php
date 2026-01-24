@@ -23,17 +23,14 @@ test('builder returns organization query builder', function (): void {
 });
 
 test('can retrieve all organizations using builder', function (): void {
-    /** @var Organization $org1 */
     Organization::factory()->create([
         'name' => 'First Organization',
     ]);
 
-    /** @var Organization $org2 */
     Organization::factory()->create([
         'name' => 'Second Organization',
     ]);
 
-    /** @var Organization $org3 */
     Organization::factory()->create([
         'name' => 'Third Organization',
     ]);

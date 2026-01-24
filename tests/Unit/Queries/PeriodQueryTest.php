@@ -8,7 +8,6 @@ use App\Queries\PeriodQuery;
 
 beforeEach(function (): void {
 
-    /** @var Organization $tenant */
     $organization = Organization::factory()
         ->createQuietly();
 

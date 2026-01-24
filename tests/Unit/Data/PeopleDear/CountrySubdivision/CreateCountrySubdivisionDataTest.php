@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
-use App\Enums\PeopleDear\CountrySubdivisionType;
+use App\Enums\CountrySubdivisionType;
 use Illuminate\Support\Str;
 
 test('does not transform arrays to JSON strings', function (): void {

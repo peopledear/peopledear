@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data\CastsAndTransformers;
 
 use App\Data\PeopleDear\RequestStatus\RequestStatusData;
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;

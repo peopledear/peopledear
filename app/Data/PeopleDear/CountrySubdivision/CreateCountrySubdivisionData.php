@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\CountrySubdivision;
 
-use App\Enums\PeopleDear\CountrySubdivisionType;
+use App\Enums\CountrySubdivisionType;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Data;

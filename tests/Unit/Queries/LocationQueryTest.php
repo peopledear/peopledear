@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\LocationType;
+use App\Enums\LocationType;
 use App\Models\Country;
 use App\Models\Location;
 use App\Models\Organization;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\Addressable;
-use App\Enums\PeopleDear\LocationType;
+use App\Enums\LocationType;
 use App\Models\Concerns\HasAddress;
 use Database\Factories\LocationFactory;
 use Illuminate\Database\Eloquent\Collection;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Period;
 
-use App\Enums\PeopleDear\PeriodStatus;
+use App\Enums\PeriodStatus;
 use App\Models\Organization;
 use App\Models\Period;
 

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Actions\Organization\SetCurrentOrganization;
-use App\Enums\Support\OrganizationExcludedRoute;
-use App\Enums\Support\SessionKey;
+use App\Enums\OrganizationExcludedRoute;
+use App\Enums\SessionKey;
 use App\Models\Organization;
 use App\Queries\OrganizationQuery;
 use Closure;

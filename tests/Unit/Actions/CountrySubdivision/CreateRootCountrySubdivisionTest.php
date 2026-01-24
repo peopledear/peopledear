@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\CountrySubdivision\CreateRootCountrySubdivision;
 use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
-use App\Enums\PeopleDear\CountrySubdivisionType;
+use App\Enums\CountrySubdivisionType;
 use App\Models\Country;
 use App\Models\CountrySubdivision;
 

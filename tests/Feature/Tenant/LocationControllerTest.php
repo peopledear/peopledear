@@ -3,12 +3,11 @@
 declare(strict_types=1);
 
 use App\Actions\Organization\SetCurrentOrganization;
-use App\Enums\PeopleDear\LocationType;
+use App\Enums\LocationType;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\Location;
 use Sprout\Exceptions\MisconfigurationException;
-
 use function App\tenant_route;
 
 beforeEach(

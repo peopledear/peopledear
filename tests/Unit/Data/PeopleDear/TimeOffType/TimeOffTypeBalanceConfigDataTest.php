@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeBalanceConfigData;
 use App\Enums\CarryOverType;
-use App\Enums\PeopleDear\RecurringPeriod;
+use App\Enums\RecurringPeriod;
 
 test('handles snake case recurring period key', function (): void {
 

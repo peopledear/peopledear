@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Support\OrganizationExcludedRoute;
+use App\Enums\OrganizationExcludedRoute;
 
 it('returns string values for route checks', function (): void {
     $values = OrganizationExcludedRoute::values();

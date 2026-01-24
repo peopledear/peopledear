@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\Holiday;
 
-use App\Enums\PeopleDear\HolidayType;
+use App\Enums\HolidayType;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Data;

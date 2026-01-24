@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\Role\CreateSystemRoles;
-use App\Enums\Support\SessionKey;
+use App\Enums\SessionKey;
 use App\Enums\UserRole;
 use App\Models\TimeOffType;
 use App\Models\User;

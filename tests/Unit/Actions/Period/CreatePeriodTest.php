@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\Period\CreatePeriod;
-use App\Enums\PeopleDear\PeriodStatus;
+use App\Enums\PeriodStatus;
 use App\Models\Organization;
 use App\Models\Period;
 use Illuminate\Database\UniqueConstraintViolationException;

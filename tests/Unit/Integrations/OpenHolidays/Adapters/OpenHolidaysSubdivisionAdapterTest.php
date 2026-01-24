@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Data\Integrations\OpenHolidays\OpenHolidaysSubdivisionData;
 use App\Data\PeopleDear\CountrySubdivision\CreateCountrySubdivisionData;
-use App\Enums\PeopleDear\CountrySubdivisionType;
+use App\Enums\CountrySubdivisionType;
 use App\Http\Integrations\OpenHolidays\Adapters\OpenHolidaysSubdivisionAdapter;
 use Illuminate\Support\Str;
 

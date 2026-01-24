@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\CountrySubdivisionType;
+use App\Enums\CountrySubdivisionType;
 use App\Models\Country;
 use App\Models\CountrySubdivision;
 use Illuminate\Database\Eloquent\Collection;

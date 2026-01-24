@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\PeopleDear\HolidayType;
+use App\Enums\HolidayType;
 use App\Models\Country;
 use App\Models\Holiday;
 use App\Models\Organization;

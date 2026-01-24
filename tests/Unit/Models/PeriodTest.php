@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\PeriodStatus;
+use App\Enums\PeriodStatus;
 use App\Models\Period;
 
 test('period model has a status enum cast', function (): void {

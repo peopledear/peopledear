@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\Period;
 
-use App\Enums\PeopleDear\PeriodStatus;
+use App\Enums\PeriodStatus;
 use DateTimeInterface;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;

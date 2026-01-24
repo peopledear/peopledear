@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\PeopleDear\PeriodStatus;
+use App\Enums\PeriodStatus;
 use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Period;

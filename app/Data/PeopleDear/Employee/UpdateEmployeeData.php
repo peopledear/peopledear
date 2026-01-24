@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\PeopleDear\Employee;
 
-use App\Enums\PeopleDear\EmploymentStatus;
+use App\Enums\EmploymentStatus;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;

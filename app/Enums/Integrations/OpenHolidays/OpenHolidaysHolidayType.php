@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums\Integrations\OpenHolidays;
 
-use App\Enums\PeopleDear\HolidayType;
+use App\Enums\HolidayType;
 
 enum OpenHolidaysHolidayType: string
 {

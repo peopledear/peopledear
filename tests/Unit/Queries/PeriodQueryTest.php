@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Support\SessionKey;
+use App\Enums\SessionKey;
 use App\Models\Organization;
 use App\Models\Period;
 use App\Queries\PeriodQuery;

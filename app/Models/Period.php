@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PeopleDear\PeriodStatus;
+use App\Enums\PeriodStatus;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Scopes\OrganizationScope;
 use Database\Factories\PeriodFactory;

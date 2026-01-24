@@ -7,7 +7,7 @@ namespace App\Data\PeopleDear\TimeOffRequest;
 use App\Data\CastsAndTransformers\RequestStatusTransformer;
 use App\Data\PeopleDear\Period\PeriodData;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Attributes\WithCast;

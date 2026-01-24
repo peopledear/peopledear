@@ -9,7 +9,7 @@ use App\Attributes\CurrentEmployee;
 use App\Data\PeopleDear\TimeOffRequest\CreateTimeOffRequestData;
 use App\Data\PeopleDear\TimeOffRequest\TimeOffRequestData;
 use App\Data\PeopleDear\TimeOffType\TimeOffTypeData;
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use App\Http\Requests\CreateTimeOffRequest;
 use App\Models\Employee;
 use App\Models\Period;

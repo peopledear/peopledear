@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use App\Models\TimeOffRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;

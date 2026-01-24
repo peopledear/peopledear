@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Support\RequestStatusIcon;
+use App\Enums\RequestStatusIcon;
 
 test('all cases have string values matching their names', function (): void {
     foreach (RequestStatusIcon::cases() as $case) {

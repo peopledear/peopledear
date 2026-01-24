@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use App\Models\TimeOffRequest;
 use App\Queries\TimeOffRequestQuery;
 use Illuminate\Support\Str;

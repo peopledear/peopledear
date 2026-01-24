@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\TimeOffRequest\CreateTimeOffRequest;
 use App\Data\PeopleDear\TimeOffRequest\CreateTimeOffRequestData;
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Period;

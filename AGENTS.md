@@ -444,6 +444,7 @@ test('it can set fields to null explicitly', function (): void {
 - **TDD approach** - Write tests first, then implementation
 - **All tests must pass before committing**
 - Use Pest for all tests (`php artisan make:test --pest`)
+- **ALWAYS use `test('description', function () { ... });` syntax** - NEVER use `it()`.
 
 ## Test Structure
 
@@ -452,6 +453,7 @@ test('it can set fields to null explicitly', function (): void {
 - ✅ Correct: `tests/Unit/Actions/CreateOfficeActionTest.php`
 - ❌ Wrong: `tests/Unit/Actions/Office/CreateOfficeActionTest.php`
 - Exception: Organizing by type is allowed (Models/, Actions/, Enums/)
+- Exception: For multi-tenant applications, use Landlord/ and Tenant/ subdirectories under Feature/ and Browser/ to scope tests appropriately (e.g., tests/Feature/Tenant/UserProfileControllerTest.php).
 
 ### Test File Naming
 - Test files end with `Test.php`
@@ -463,7 +465,8 @@ test('it can set fields to null explicitly', function (): void {
 **ALWAYS use imperative mood for test names** - describe what the code does, not what "it" does:
 
 @boostsnippet('Imperative Mood Test Names')
-```php
+
+<code-snippet name="Imperative Mood Test Names" lang="php">
 // ✅ CORRECT - Imperative mood (commands)
 test('creates user with valid data', function (): void { ... });
 test('validates required email field', function (): void { ... });
@@ -476,7 +479,7 @@ test('it creates user with valid data', function (): void { ... });
 test('it validates required email field', function (): void { ... });
 test('it transforms arrays to JSON strings', function (): void { ... });
 test('it handles null values correctly', function (): void { ... });
-```
+</code-snippet>
 
 **Why imperative mood?**
 - More concise and readable
@@ -1311,43 +1314,6 @@ Schema::table('users', function (Blueprint $table) {
 # General Guidelines
 
 - Don't include any superfluous PHP Annotations, except ones that start with `@` for typing variables.
-
-## Session Keys
-
-**ALWAYS use the `SessionKey` enum for session key management:**
-
-- Centralized session key definitions in `app/Enums/SessionKey.php`
-- Type-safe and prevents typos
-- Easy to find all session keys used in the application
-- Use `SessionKey::KeyName->value` to get the string value
-
-<code-snippet name="Using SessionKey Enum" lang="php">
-
-<?php
-
-// ✅ CORRECT - Use SessionKey enum
-session([SessionKey::CurrentOrganization->value => $organization->id]);
-$organizationId = session(SessionKey::CurrentOrganization->value);
-
-// ❌ WRONG - Magic strings
-session(['current_organization' => $organization->id]);
-$organizationId = session('current_organization');
-
-</code-snippet>
-
-<code-snippet name="SessionKey Enum" lang="php">
-
-<?php
-
-namespace App\Enums;
-
-enum SessionKey: string
-{
-    case CurrentOrganization = 'current_organization';
-    // Add more session keys as needed
-}
-
-</code-snippet>
 
 === .ai/app.controllers rules ===
 

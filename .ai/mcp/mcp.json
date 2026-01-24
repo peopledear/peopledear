@@ -12,6 +12,22 @@
       "args": [
         "@playwright/mcp@latest"
       ]
+    },
+    "herd": {
+      "command": "/Users/franciscobarrento/Library/Application Support/Herd/bin/php84",
+      "args": [
+        "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
+      ],
+      "env": {
+        "SITE_PATH": "/Users/franciscobarrento/Herd/peopledear"
+      }
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
     }
   }
 }

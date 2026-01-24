@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Enums\Support\SessionKey;
+use App\Enums\SessionKey;
 use App\Models\Organization;
 use Illuminate\Support\Facades\Session;
 use Sprout\Exceptions\MisconfigurationException;

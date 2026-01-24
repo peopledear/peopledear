@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\PeopleDear\EmploymentStatus;
+use App\Enums\EmploymentStatus;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Organization;

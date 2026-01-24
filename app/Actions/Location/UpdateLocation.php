@@ -6,7 +6,7 @@ namespace App\Actions\Location;
 
 use App\Actions\Address\UpdateAddress;
 use App\Data\PeopleDear\Location\UpdateLocationData;
-use App\Enums\PeopleDear\LocationType;
+use App\Enums\LocationType;
 use App\Exceptions\Domain\LocationAlreadyExistsException;
 use App\Models\Location;
 use Illuminate\Support\Facades\DB;

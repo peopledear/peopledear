@@ -217,9 +217,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Period;
 
-use App\Enums\PeopleDear\PeriodStatus;
-use App\Models\Organization;
-use App\Models\Period;
+use App\Enums\PeriodStatus;use App\Models\Organization;use App\Models\Period;
 
 final class ClosePeriods
 {
@@ -240,12 +238,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Period;
 
-use App\Enums\PeopleDear\PeriodStatus;
-use App\Models\Organization;
-use App\Models\Period;
-use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\DB;
-use Throwable;
+use App\Enums\PeriodStatus;use App\Models\Organization;use App\Models\Period;use Carbon\CarbonImmutable;use Illuminate\Support\Facades\DB;
 
 final readonly class CreatePeriod
 {

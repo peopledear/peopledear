@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\EmploymentStatus;
+use App\Enums\EmploymentStatus;
 use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Organization;

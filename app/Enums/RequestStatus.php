@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Enums\PeopleDear;
-
-use App\Enums\Support\RequestStatusIcon;
+namespace App\Enums;
 
 enum RequestStatus: int
 {

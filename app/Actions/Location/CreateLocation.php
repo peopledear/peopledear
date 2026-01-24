@@ -6,7 +6,7 @@ namespace App\Actions\Location;
 
 use App\Actions\Address\CreateAddress;
 use App\Data\PeopleDear\Location\CreateLocationData;
-use App\Enums\PeopleDear\LocationType;
+use App\Enums\LocationType;
 use App\Exceptions\Domain\LocationAlreadyExistsException;
 use App\Models\Location;
 use App\Models\Organization;

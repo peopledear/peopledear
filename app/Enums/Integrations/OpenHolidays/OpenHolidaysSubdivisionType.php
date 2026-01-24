@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums\Integrations\OpenHolidays;
 
-use App\Enums\PeopleDear\CountrySubdivisionType;
+use App\Enums\CountrySubdivisionType;
 
 /**
  * OpenHolidays API subdivision type mapping

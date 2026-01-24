@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\CountrySubdivisionType;
 use App\Enums\Integrations\OpenHolidays\OpenHolidaysSubdivisionType;
-use App\Enums\PeopleDear\CountrySubdivisionType;
 
 test('distrito maps to District type', function (): void {
     /** @var OpenHolidaysSubdivisionType $type */

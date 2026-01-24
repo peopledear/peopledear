@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Support\SessionKey;
+use App\Enums\SessionKey;
 
 test('has current organization case', function (): void {
     expect(SessionKey::CurrentOrganization->value)->toBe('current_organization');

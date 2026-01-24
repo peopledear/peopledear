@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\Addressable;
-use App\Enums\PeopleDear\EmploymentStatus;
+use App\Enums\EmploymentStatus;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Concerns\HasAddress;
 use App\Models\Scopes\OrganizationScope;

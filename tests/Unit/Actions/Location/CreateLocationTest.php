@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Actions\Location\CreateLocation;
 use App\Data\PeopleDear\Address\CreateAddressData;
 use App\Data\PeopleDear\Location\CreateLocationData;
-use App\Enums\PeopleDear\LocationType;
+use App\Enums\LocationType;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\Location;

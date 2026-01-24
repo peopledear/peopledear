@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\TimeOffRequest\UpdateTimeOffRequest;
 use App\Data\PeopleDear\TimeOffRequest\UpdateTimeOffRequestData;
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use App\Models\TimeOffRequest;
 use App\Models\TimeOffType;
 use Carbon\CarbonImmutable;

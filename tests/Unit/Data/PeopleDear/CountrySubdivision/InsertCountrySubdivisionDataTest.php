@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Data\PeopleDear\CountrySubdivision\InsertCountrySubdivisionData;
-use App\Enums\PeopleDear\CountrySubdivisionType;
+use App\Enums\CountrySubdivisionType;
 use Illuminate\Support\Str;
 
 test('transforms country subdivision data correctly',

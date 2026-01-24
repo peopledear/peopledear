@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\EmploymentStatus;
+use App\Enums\EmploymentStatus;
 
 test('has all expected cases', function (): void {
     $cases = EmploymentStatus::cases();

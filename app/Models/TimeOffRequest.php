@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 use App\Models\Concerns\BelongsToEmployee;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Concerns\BelongsToPeriod;

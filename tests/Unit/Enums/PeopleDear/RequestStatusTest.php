@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\RequestStatus;
+use App\Enums\RequestStatus;
 
 test('has all expected cases', function (): void {
     $cases = RequestStatus::cases();

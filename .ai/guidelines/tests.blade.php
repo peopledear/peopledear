@@ -6,6 +6,7 @@
 - **TDD approach** - Write tests first, then implementation
 - **All tests must pass before committing**
 - Use Pest for all tests (`php artisan make:test --pest`)
+- **ALWAYS use `test('description', function () { ... });` syntax** - NEVER use `it()`.
 
 ## Test Structure
 
@@ -14,6 +15,7 @@
 - ✅ Correct: `tests/Unit/Actions/CreateOfficeActionTest.php`
 - ❌ Wrong: `tests/Unit/Actions/Office/CreateOfficeActionTest.php`
 - Exception: Organizing by type is allowed (Models/, Actions/, Enums/)
+- Exception: For multi-tenant applications, use Landlord/ and Tenant/ subdirectories under Feature/ and Browser/ to scope tests appropriately (e.g., tests/Feature/Tenant/UserProfileControllerTest.php).
 
 ### Test File Naming
 - Test files end with `Test.php`
@@ -25,7 +27,8 @@
 **ALWAYS use imperative mood for test names** - describe what the code does, not what "it" does:
 
 @boostsnippet('Imperative Mood Test Names')
-```php
+@verbatim
+<code-snippet name="Imperative Mood Test Names" lang="php">
 // ✅ CORRECT - Imperative mood (commands)
 test('creates user with valid data', function (): void { ... });
 test('validates required email field', function (): void { ... });
@@ -38,7 +41,8 @@ test('it creates user with valid data', function (): void { ... });
 test('it validates required email field', function (): void { ... });
 test('it transforms arrays to JSON strings', function (): void { ... });
 test('it handles null values correctly', function (): void { ... });
-```
+</code-snippet>
+@endverbatim
 
 **Why imperative mood?**
 - More concise and readable

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PeopleDear\HolidayType;
+use App\Enums\HolidayType;
 use App\Models\Holiday;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

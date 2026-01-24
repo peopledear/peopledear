@@ -6,20 +6,14 @@ import {
     BreadcrumbItem,
     Employee,
     EnumOptions,
+    TenantedSharedData,
     TimeOffRequest,
     VacationBalance,
 } from "@/types";
 import EmployeeOverviewController from "@/wayfinder/actions/App/Http/Controllers/EmployeeOverviewController";
 import EmployeeTimeOffController from "@/wayfinder/actions/App/Http/Controllers/EmployeeTimeOffController";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { PlusIcon } from "lucide-react";
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: "Dashboard",
-        href: EmployeeOverviewController.index().url,
-    },
-];
 
 interface EmployeeOverviewPageProps {
     employee: Employee;
@@ -34,6 +28,15 @@ export default function EmployeeOverview({
     vacationBalance,
     timeOffRequests,
 }: EmployeeOverviewPageProps) {
+    const { props } = usePage<TenantedSharedData>();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: "Dashboard",
+            href: EmployeeOverviewController.index(props.tenant.identifier).url,
+        },
+    ];
+
     return (
         <EmployeeLayout
             breadcrumbs={breadcrumbs}
@@ -61,7 +64,9 @@ export default function EmployeeOverview({
                                 </Button>
                                 <Link
                                     href={
-                                        EmployeeTimeOffController.create().url
+                                        EmployeeTimeOffController.create(
+                                            props.tenant.identifier,
+                                        ).url
                                     }
                                 >
                                     <Button>
@@ -91,7 +96,9 @@ export default function EmployeeOverview({
                             <div>
                                 <Link
                                     href={
-                                        EmployeeTimeOffController.create().url
+                                        EmployeeTimeOffController.create(
+                                            props.tenant.identifier,
+                                        ).url
                                     }
                                 >
                                     <Button size="icon" variant="outline">

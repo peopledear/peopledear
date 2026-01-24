@@ -19,7 +19,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import AppLayout from "@/layouts/app-layout";
-import { Employee, Period, SharedData, TimeOffType } from "@/types";
+import { Employee, Period, TenantedSharedData, TimeOffType } from "@/types";
 import { TimeOffUnitEnum } from "@/types/enums";
 import EmployeeOverviewController from "@/wayfinder/actions/App/Http/Controllers/EmployeeOverviewController";
 import EmployeeTimeOffController from "@/wayfinder/actions/App/Http/Controllers/EmployeeTimeOffController";
@@ -39,12 +39,15 @@ export default function CreateTimeOffPage({
     employee,
     timeOffTypes,
 }: CreateTimeOffProps) {
-    const page = usePage<SharedData>();
+    const page = usePage<TenantedSharedData>();
+
+    const { props } = page;
+
     const { previousPath } = page.props;
 
     const back =
         previousPath == page.url
-            ? EmployeeOverviewController.index().url
+            ? EmployeeOverviewController.index(props.tenant.identifier).url
             : previousPath;
 
     const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -98,7 +101,7 @@ export default function CreateTimeOffPage({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(EmployeeTimeOffController.store().url);
+        post(EmployeeTimeOffController.store(props.tenant.identifier).url);
     };
 
     return (

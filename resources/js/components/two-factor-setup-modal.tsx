@@ -185,9 +185,9 @@ function TwoFactorVerificationStep({
                             )}
                         </InputOTPGroup>
                     </InputOTP>
-                    {errors?.confirmTwoFactorAuthentication?.code && (
+                    {errors?.code && (
                         <p className="text-destructive text-sm">
-                            {errors.confirmTwoFactorAuthentication.code}
+                            {errors.code}
                         </p>
                     )}
                 </div>

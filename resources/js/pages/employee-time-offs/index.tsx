@@ -26,20 +26,13 @@ import {
 } from "@/components/ui/table";
 import EmployeeLayout from "@/layouts/employee-layout";
 import {
-    BreadcrumbItem,
     EnumOptions,
     PaginatedResponse,
+    TenantedSharedData,
     TimeOffRequest,
 } from "@/types";
 import EmployeeTimeOffController from "@/wayfinder/actions/App/Http/Controllers/EmployeeTimeOffController";
-import { Head, router } from "@inertiajs/react";
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: "Time Offs",
-        href: EmployeeTimeOffController.index().url,
-    },
-];
+import { Head, router, usePage } from "@inertiajs/react";
 
 interface TimeOffsPageProps {
     timeOffRequests: PaginatedResponse<TimeOffRequest>;
@@ -57,9 +50,18 @@ export default function TimeOffsIndex({
     statuses,
     filters,
 }: TimeOffsPageProps) {
+    const { props } = usePage<TenantedSharedData>();
+
+    const breadcrumbs = [
+        {
+            title: "Time Offs",
+            href: EmployeeTimeOffController.index(props.tenant.identifier).url,
+        },
+    ];
+
     const handleStatusChange = (value: string) => {
         router.get(
-            EmployeeTimeOffController.index().url,
+            EmployeeTimeOffController.index(props.tenant.identifier).url,
             {
                 status: value === "all" ? undefined : value,
                 type: filters.type ?? undefined,
@@ -70,7 +72,7 @@ export default function TimeOffsIndex({
 
     const handleTypeChange = (value: string) => {
         router.get(
-            EmployeeTimeOffController.index().url,
+            EmployeeTimeOffController.index(props.tenant.identifier).url,
             {
                 status: filters.status ?? undefined,
                 type: value === "all" ? undefined : value,

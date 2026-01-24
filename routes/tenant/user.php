@@ -7,7 +7,6 @@ use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserTwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified:tenant.auth.verification.notice'])
     ->group(function (): void {
@@ -30,10 +29,6 @@ Route::middleware(['auth', 'verified:tenant.auth.verification.notice'])
                 Route::put('password', [UserPasswordController::class, 'update'])
                     ->middleware('throttle:6,1')
                     ->name('password.update');
-
-                // Appearance...
-                Route::get('appearance', fn () => Inertia::render('appearance/update'))
-                    ->name('appearance.edit');
 
                 // User Two-Factor Authentication...
                 Route::get('two-factor', [UserTwoFactorAuthenticationController::class, 'show'])

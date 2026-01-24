@@ -1,6 +1,5 @@
 import { NavItem, VerticalMenu } from "@/components/vertical-menu";
 import { TenantedSharedData } from "@/types";
-import { edit as editAppearance } from "@/wayfinder/routes/tenant/user/settings/appearance";
 import { edit as editPassword } from "@/wayfinder/routes/tenant/user/settings/password";
 import { edit } from "@/wayfinder/routes/tenant/user/settings/profile";
 import { show } from "@/wayfinder/routes/tenant/user/settings/two-factor";
@@ -25,11 +24,6 @@ export default function UserSettingsLayout({ children }: PropsWithChildren) {
             label: "Two-Factor Auth",
             href: show(props.tenant.identifier).url,
             active: url.startsWith("/settings/two-factor"),
-        },
-        {
-            label: "Appearance",
-            href: editAppearance(props.tenant.identifier).url,
-            active: url.startsWith("/settings/appearance"),
         },
     ];
 

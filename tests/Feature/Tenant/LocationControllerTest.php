@@ -16,7 +16,7 @@ beforeEach(
      * @throws Throwable
      */
     function (): void {
-        resolve(SetCurrentOrganization::class)->handle($this->organization);
+        resolve(SetCurrentOrganization::class)->handle($this->tenant);
 
         $this->country = Country::factory()->create();
     });
@@ -55,7 +55,7 @@ test('people manager can create location with address',
         expect($location)
             ->not->toBeNull()
             ->and($location->organization_id)
-            ->toBe($this->organization->id)
+            ->toBe($this->tenant->id)
             ->and($location->name)
             ->toBe('New York Location')
             ->and($location->type)
@@ -152,7 +152,7 @@ test('people manager can update location and address',
 
         /** @var Location $location */
         $location = Location::factory()
-            ->for($this->organization, 'organization')
+            ->for($this->tenant, 'organization')
             ->for($this->country, 'country')
             ->create([
                 'name' => 'Old Location Name',
@@ -224,7 +224,7 @@ test('owner can update location',
     function (): void {
         /** @var Location $location */
         $location = Location::factory()
-            ->for($this->organization, 'organization')
+            ->for($this->tenant, 'organization')
             ->for($this->country, 'country')
             ->create();
 
@@ -266,7 +266,7 @@ test('employee cannot update location',
     function (): void {
         /** @var Location $location */
         $location = Location::factory()
-            ->for($this->organization, 'organization')
+            ->for($this->tenant, 'organization')
             ->for($this->country, 'country')
             ->create([
                 'name' => 'Protected Location',
@@ -308,7 +308,7 @@ test('people manager can delete location',
     function (): void {
         /** @var Location $location */
         $location = Location::factory()
-            ->for($this->organization, 'organization')
+            ->for($this->tenant, 'organization')
             ->for($this->country, 'country')
             ->create();
 
@@ -335,7 +335,7 @@ test('owner can delete location',
     function (): void {
         /** @var Location $location */
         $location = Location::factory()
-            ->for($this->organization, 'organization')
+            ->for($this->tenant, 'organization')
             ->for($this->country, 'country')
             ->create();
 
@@ -362,7 +362,7 @@ test('employee cannot delete location',
     function (): void {
         /** @var Location $location */
         $location = Location::factory()
-            ->for($this->organization, 'organization')
+            ->for($this->tenant, 'organization')
             ->for($this->country, 'country')
             ->create();
 

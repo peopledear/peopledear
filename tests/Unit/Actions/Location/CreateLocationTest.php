@@ -14,7 +14,7 @@ use App\Models\Organization;
 beforeEach(function (): void {
     $this->action = resolve(CreateLocation::class);
 
-    $this->organization = Organization::factory()
+    $this->tenant = Organization::factory()
         ->create();
 
     $this->country = Country::factory()
@@ -45,7 +45,7 @@ test('creates office with address',
         );
 
         $result = $this->action->handle(
-            organization: $this->organization,
+            organization: $this->tenant,
             data: $data
         );
 
@@ -58,7 +58,7 @@ test('creates office with address',
             ->and($result->phone)
             ->toBe('+1-555-0100')
             ->and($result->organization_id)
-            ->toBe($this->organization->id);
+            ->toBe($this->tenant->id);
 
         /** @var Address $address */
         $address = $result->address;
@@ -103,7 +103,7 @@ test('creates office with minimal address',
         );
 
         $result = $this->action->handle(
-            organization: $this->organization,
+            organization: $this->tenant,
             data: $data
         );
 

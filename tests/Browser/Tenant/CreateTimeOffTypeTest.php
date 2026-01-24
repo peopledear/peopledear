@@ -14,9 +14,9 @@ use Spatie\Permission\Models\Role;
 beforeEach(function (): void {
     resolve(CreateSystemRoles::class)->handle();
 
-    $this->organization = $this->tenant;
+    $this->tenant = $this->tenant;
 
-    Session::put(SessionKey::CurrentOrganization->value, $this->organization->id);
+    Session::put(SessionKey::CurrentOrganization->value, $this->tenant->id);
 
     /** @var Role $peopleManagerRole */
     $peopleManagerRole = Role::query()
@@ -24,13 +24,13 @@ beforeEach(function (): void {
         ->first()
         ?->fresh();
 
-    $this->user = User::factory()->for($this->organization)->create([
+    $this->user = User::factory()->for($this->tenant)->create([
         'email' => 'peoplemanager@test.test',
     ]);
     $this->user->assignRole($peopleManagerRole);
 
     TimeOffType::factory()
-        ->for($this->organization)
+        ->for($this->tenant)
         ->count(4)
         ->create();
 
@@ -41,7 +41,7 @@ test('can navigate back to the create time off type page', function (): void {
 
     visit(route(
         name: 'tenant.settings.time-off-types.create',
-        parameters: ['tenant' => $this->organization->identifier],
+        parameters: ['tenant' => $this->tenant->identifier],
         absolute: false
     ))
         ->click('Back')
@@ -53,7 +53,7 @@ test('renders the create page', function (): void {
 
     visit(route(
         name: 'tenant.settings.time-off-types.create',
-        parameters: ['tenant' => $this->organization->identifier],
+        parameters: ['tenant' => $this->tenant->identifier],
         absolute: false
     ))
         ->assertSee('Create Time Off Type');

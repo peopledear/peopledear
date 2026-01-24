@@ -11,7 +11,7 @@ beforeEach(
      * @throws Throwable
      */
     function (): void {
-        $this->tenant = $this->organization;
+        $this->tenant = $this->tenant;
     });
 
 test('renders profile edit page',

@@ -12,7 +12,7 @@ beforeEach(
      * @throws Throwable
      */
     function (): void {
-        $this->tenant = $this->organization;
+        $this->tenant = $this->tenant;
     });
 
 it('renders two factor authentication page',

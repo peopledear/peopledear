@@ -10,7 +10,7 @@ use Sprout\Exceptions\MisconfigurationException;
 use function App\tenant_route;
 
 beforeEach(function (): void {
-    $this->tenant = $this->organization;
+    $this->tenant = $this->tenant;
 });
 
 test('renders forgot password page',

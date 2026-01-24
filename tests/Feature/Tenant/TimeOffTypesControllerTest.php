@@ -52,7 +52,7 @@ test('renders the create page',
      */
     function (): void {
         TimeOffType::factory()
-            ->for($this->organization)
+            ->for($this->tenant)
             ->count(3)
             ->create();
 
@@ -69,7 +69,7 @@ test('people manager can view time off types index',
      */
     function (): void {
         TimeOffType::factory()
-            ->for($this->organization)
+            ->for($this->tenant)
             ->count(3)
             ->create();
 

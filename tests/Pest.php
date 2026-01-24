@@ -26,7 +26,7 @@ pest()->extend(TestCase::class)
     })
     ->in('Unit', 'Integration');
 
-pest()->extend(Tests\WithUsersTestCase::class)
+pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
         loadTestsDefaults();
@@ -35,7 +35,7 @@ pest()->extend(Tests\WithUsersTestCase::class)
     })
     ->in('Browser/Landlord');
 
-pest()->extend(Tests\WithUsersTestCase::class)
+pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
         loadTestsDefaults();

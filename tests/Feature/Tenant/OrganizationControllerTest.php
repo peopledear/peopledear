@@ -68,7 +68,7 @@ test('people manager can update organization',
         $response->assertRedirect(tenant_route('tenant.settings.organization.edit', $this->tenant));
 
         /** @var Organization $updatedOrganization */
-        $updatedOrganization = $this->organization->fresh();
+        $updatedOrganization = $this->tenant->fresh();
 
         expect($updatedOrganization->name)
             ->toBe('Updated Company Name')
@@ -98,7 +98,7 @@ test('owner can update organization',
         $response->assertRedirect(tenant_route('tenant.settings.organization.edit', $this->tenant));
 
         /** @var Organization $updatedOrganization */
-        $updatedOrganization = $this->organization->fresh();
+        $updatedOrganization = $this->tenant->fresh();
 
         expect($updatedOrganization->name)->toBe('Owner Updated Name');
     });
@@ -110,7 +110,7 @@ test('employee cannot update organization',
     function (): void {
 
         $this->actingAs($this->employee);
-        $organizationName = $this->organization->name;
+        $organizationName = $this->tenant->name;
 
         $response = $this->put(tenant_route('tenant.settings.organization.update', $this->tenant), [
             'name' => 'Hacked Name',
@@ -119,7 +119,7 @@ test('employee cannot update organization',
         $response->assertForbidden();
 
         /** @var Organization $unchangedOrganization */
-        $unchangedOrganization = $this->organization->fresh();
+        $unchangedOrganization = $this->tenant->fresh();
 
         expect($unchangedOrganization->name)
             ->toBe($organizationName);
@@ -178,7 +178,7 @@ test('allows optional vat_number, ssn, and phone',
         $response->assertRedirect(tenant_route('tenant.settings.organization.edit', $this->tenant));
 
         /** @var Organization $updatedOrganization */
-        $updatedOrganization = $this->organization->fresh();
+        $updatedOrganization = $this->tenant->fresh();
 
         expect($updatedOrganization->name)
             ->toBe('Minimal Organization')

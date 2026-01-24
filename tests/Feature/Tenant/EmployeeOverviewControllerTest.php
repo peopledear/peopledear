@@ -14,13 +14,13 @@ test('renders the employee overview page',
      */
     function (): void {
         $employee = Employee::factory()
-            ->for($this->organization)
+            ->for($this->tenant)
             ->for($this->employee)
             ->create();
 
         VacationBalance::factory()
             ->for($employee)
-            ->for($this->organization)
+            ->for($this->tenant)
             ->create();
 
         $response = $this->actingAs($this->employee)

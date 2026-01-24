@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\URL;
 use function App\tenant_route;
 
 beforeEach(function (): void {
-    $this->tenant = $this->organization;
+    $this->tenant = $this->tenant;
 });
 
 it('may verify email', function (): void {

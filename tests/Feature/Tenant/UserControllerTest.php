@@ -5,10 +5,11 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Sprout\Exceptions\MisconfigurationException;
+
 use function App\tenant_route;
 
 beforeEach(function (): void {
-    $this->tenant = $this->organization;
+    $this->tenant = $this->tenant;
 });
 
 it('may delete user account',

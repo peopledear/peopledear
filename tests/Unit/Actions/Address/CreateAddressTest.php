@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Actions\Address\CreateAddress;
 use App\Data\PeopleDear\Address\CreateAddressData;
 use App\Models\Address;
-use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
@@ -19,10 +18,10 @@ test('creates address for addressable model',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
@@ -35,12 +34,12 @@ test('creates address for addressable model',
             'country' => 'United States',
         ]);
 
-        $result = $this->action->handle($office, $data);
+        $result = $this->action->handle($location, $data);
 
         expect($result)
             ->toBeInstanceOf(Address::class)
-            ->and($result->addressable_id)->toBe($office->id)
-            ->and($result->addressable_type)->toBe(Office::class)
+            ->and($result->addressable_id)->toBe($location->id)
+            ->and($result->addressable_type)->toBe(Location::class)
             ->and($result->line1)->toBe('123 Main Street')
             ->and($result->line2)->toBe('Suite 100')
             ->and($result->city)->toBe('San Francisco')
@@ -56,10 +55,10 @@ test('creates address with minimal fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
@@ -72,7 +71,7 @@ test('creates address with minimal fields',
             'country' => 'United States',
         ]);
 
-        $result = $this->action->handle($office, $data);
+        $result = $this->action->handle($location, $data);
 
         expect($result->line1)->toBe('456 Oak Ave')
             ->and($result->line2)->toBeNull()

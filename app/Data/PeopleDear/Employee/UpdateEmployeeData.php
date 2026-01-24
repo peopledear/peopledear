@@ -22,7 +22,7 @@ final class UpdateEmployeeData extends Data
         public readonly string|Optional|null $phone,
         public readonly string|Optional|null $job_title,
         public readonly CarbonImmutable|Optional|null $hire_date,
-        public readonly string|Optional|null $office_id,
+        public readonly string|Optional|null $location_id,
         public readonly string|Optional|null $user_id,
     ) {}
 }

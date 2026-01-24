@@ -6,7 +6,6 @@ use App\Actions\Employee\CreateEmployee;
 use App\Data\PeopleDear\Employee\CreateEmployeeData;
 use App\Enums\EmploymentStatus;
 use App\Models\Employee;
-use App\Models\Office;
 use App\Models\Organization;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -22,15 +21,15 @@ test('creates employee with all fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
         /** @var User $user */
-        $user = User::factory()->create();
+        $user = User::factory()->createQuietly();
 
         $data = new CreateEmployeeData(
             name: 'John Doe',
@@ -40,7 +39,7 @@ test('creates employee with all fields',
             phone: '+1-555-0100',
             job_title: 'Software Engineer',
             hire_date: CarbonImmutable::now(),
-            office_id: $office->id,
+            location_id: $location->id,
             user_id: $user->id,
         );
 
@@ -54,7 +53,7 @@ test('creates employee with all fields',
             ->and($result->email)->toBe('john@example.com')
             ->and($result->phone)->toBe('+1-555-0100')
             ->and($result->job_title)->toBe('Software Engineer')
-            ->and($result->office_id)->toBe($office->id)
+            ->and($result->location_id)->toBe($location->id)
             ->and($result->user_id)->toBe($user->id)
             ->and($result->organization_id)->toBe($organization->id);
     });
@@ -66,7 +65,7 @@ test('creates employee with minimal required fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
         $data = new CreateEmployeeData(
             name: 'Jane Smith',
@@ -76,7 +75,7 @@ test('creates employee with minimal required fields',
             phone: null,
             job_title: null,
             hire_date: null,
-            office_id: null,
+            location_id: null,
             user_id: null,
         );
 
@@ -89,7 +88,7 @@ test('creates employee with minimal required fields',
             ->and($result->phone)->toBeNull()
             ->and($result->job_title)->toBeNull()
             ->and($result->hire_date)->toBeNull()
-            ->and($result->office_id)->toBeNull()
+            ->and($result->location_id)->toBeNull()
             ->and($result->user_id)->toBeNull();
     });
 
@@ -100,7 +99,7 @@ test('creates employee with different employment status',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
         $data = new CreateEmployeeData(
             name: 'Bob Johnson',
@@ -110,7 +109,7 @@ test('creates employee with different employment status',
             phone: null,
             job_title: null,
             hire_date: null,
-            office_id: null,
+            location_id: null,
             user_id: null,
         );
 

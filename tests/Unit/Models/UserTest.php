@@ -5,22 +5,23 @@ declare(strict_types=1);
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 test('user has organizations relationship', function (): void {
-    /** @var User $user */
-    $user = User::factory()
-        ->create();
     $organization = Organization::factory()
         ->create();
 
-    $user->organizations()->attach($organization);
+    /** @var User $user */
+    $user = User::factory()
+        ->for($organization)
+        ->create();
 
-    expect($user->organizations())
-        ->toBeInstanceOf(BelongsToMany::class)
-        ->and($user->organizations->first()->id)
+    expect($user->organization())
+        ->toBeInstanceOf(BelongsTo::class)
+        ->and($user->organization->id)
         ->toBe($organization->id);
 });
 
@@ -77,11 +78,12 @@ test('to array', function (): void {
     expect(array_keys($user->toArray()))
         ->toBe([
             'id',
+            'created_at',
+            'updated_at',
+            'organization_id',
             'name',
             'email',
             'email_verified_at',
             'two_factor_confirmed_at',
-            'created_at',
-            'updated_at',
         ]);
 });

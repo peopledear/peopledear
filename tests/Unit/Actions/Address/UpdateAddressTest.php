@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Actions\Address\UpdateAddress;
 use App\Data\PeopleDear\Address\UpdateAddressData;
 use App\Models\Address;
-use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
@@ -19,17 +18,16 @@ test('updates address with all fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()
-            ->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
         Address::factory()
-            ->for($office, 'addressable')
-            ->create([
+            ->for($location, 'addressable')
+            ->createQuietly([
                 'line1' => 'Old Street',
                 'line2' => 'Old Suite',
                 'city' => 'Old City',
@@ -47,7 +45,7 @@ test('updates address with all fields',
             'country' => 'United States',
         ]);
 
-        $result = $this->action->handle($office, $data);
+        $result = $this->action->handle($location, $data);
 
         expect($result->line1)->toBe('New Street')
             ->and($result->line2)->toBe('New Suite')
@@ -64,16 +62,16 @@ test('updates address with partial fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
         Address::factory()
-            ->for($office, 'addressable')
-            ->create([
+            ->for($location, 'addressable')
+            ->createQuietly([
                 'line1' => 'Original Street',
                 'city' => 'Original City',
                 'postal_code' => '12345',
@@ -84,7 +82,7 @@ test('updates address with partial fields',
             'city' => 'Updated City',
         ]);
 
-        $result = $this->action->handle($office, $data);
+        $result = $this->action->handle($location, $data);
 
         expect($result->line1)->toBe('Original Street')
             ->and($result->city)->toBe('Updated City')
@@ -99,16 +97,16 @@ test('can set fields to null explicitly',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
         Address::factory()
-            ->for($office, 'addressable')
-            ->create([
+            ->for($location, 'addressable')
+            ->createQuietly([
                 'line1' => 'Street',
                 'line2' => 'Suite 200',
                 'city' => 'City',
@@ -122,7 +120,7 @@ test('can set fields to null explicitly',
             'state' => null,
         ]);
 
-        $result = $this->action->handle($office, $data);
+        $result = $this->action->handle($location, $data);
 
         expect($result->line1)->toBe('Street')
             ->and($result->line2)->toBeNull()

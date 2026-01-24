@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Actions\Address\DeleteAddress;
 use App\Models\Address;
-use App\Models\Office;
 use App\Models\Organization;
 
 beforeEach(function (): void {
@@ -18,21 +17,21 @@ test('deletes address of addressable model',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
         /** @var Address $address */
         $address = Address::factory()
-            ->for($office, 'addressable')
-            ->create();
+            ->for($location, 'addressable')
+            ->createQuietly();
 
         $addressId = $address->id;
 
-        $this->action->handle($office);
+        $this->action->handle($location);
 
         /** @var Address|null $deletedAddress */
         $deletedAddress = Address::query()->find($addressId);
@@ -47,15 +46,15 @@ test('handles addressable without address gracefully',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $office */
-        $office = Office::factory()->create([
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
         // No address created - should not throw exception
-        $this->action->handle($office);
+        $this->action->handle($location);
 
-        expect($office->address)->toBeNull();
+        expect($location->address)->toBeNull();
     });

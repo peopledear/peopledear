@@ -6,7 +6,6 @@ use App\Actions\Employee\UpdateEmployee;
 use App\Data\PeopleDear\Employee\UpdateEmployeeData;
 use App\Enums\EmploymentStatus;
 use App\Models\Employee;
-use App\Models\Office;
 use App\Models\Organization;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -22,28 +21,28 @@ test('updates employee with all fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
-        /** @var Office $oldOffice */
-        $oldOffice = Office::factory()->create([
+        /** @var Location $oldLocation */
+        $oldLocation = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
-        /** @var Office $newOffice */
-        $newOffice = Office::factory()->create([
+        /** @var Location $newLocation */
+        $newLocation = Location::factory()->createQuietly([
             'organization_id' => $organization->id,
         ]);
 
         /** @var User $oldUser */
-        $oldUser = User::factory()->create();
+        $oldUser = User::factory()->createQuietly();
 
         /** @var User $newUser */
-        $newUser = User::factory()->create();
+        $newUser = User::factory()->createQuietly();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->create([
+        $employee = Employee::factory()->createQuietly([
             'organization_id' => $organization->id,
-            'office_id' => $oldOffice->id,
+            'location_id' => $oldLocation->id,
             'user_id' => $oldUser->id,
             'name' => 'Old Name',
             'employee_number' => 'EMP-OLD',
@@ -61,7 +60,7 @@ test('updates employee with all fields',
             phone: '+1-555-9999',
             job_title: 'New Title',
             hire_date: CarbonImmutable::now(),
-            office_id: $newOffice->id,
+            location_id: $newLocation->id,
             user_id: $newUser->id,
         );
 
@@ -73,7 +72,7 @@ test('updates employee with all fields',
             ->and($result->email)->toBe('new@example.com')
             ->and($result->phone)->toBe('+1-555-9999')
             ->and($result->job_title)->toBe('New Title')
-            ->and($result->office_id)->toBe($newOffice->id)
+            ->and($result->location_id)->toBe($newLocation->id)
             ->and($result->user_id)->toBe($newUser->id);
     });
 
@@ -84,10 +83,10 @@ test('updates employee with partial fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->create([
+        $employee = Employee::factory()->createQuietly([
             'organization_id' => $organization->id,
             'name' => 'Original Name',
             'employee_number' => 'EMP-ORIG',
@@ -113,10 +112,10 @@ test('updates employee clearing nullable fields',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->create([
+        $employee = Employee::factory()->createQuietly([
             'organization_id' => $organization->id,
             'email' => 'test@example.com',
             'phone' => '+1-555-1234',
@@ -143,10 +142,10 @@ test('updates employee employment status',
     function (): void {
 
         /** @var Organization $organization */
-        $organization = Organization::factory()->create();
+        $organization = Organization::factory()->createQuietly();
 
         /** @var Employee $employee */
-        $employee = Employee::factory()->create([
+        $employee = Employee::factory()->createQuietly([
             'organization_id' => $organization->id,
             'employment_status' => EmploymentStatus::Active,
         ]);

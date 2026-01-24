@@ -5,7 +5,8 @@
 - **Full test coverage required** - Test happy paths, failure paths, edge cases
 - **TDD approach** - Write tests first, then implementation
 - **All tests must pass before committing**
-- Use Pest for all tests (`php artisan make:test --pest`)
+- use `composer test:lint` to check code style
+- Use `composer test` to run all the test suite
 - **ALWAYS use `test('description', function () { ... });` syntax** - NEVER use `it()`.
 
 ## Test Structure

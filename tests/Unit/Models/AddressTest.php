@@ -3,56 +3,67 @@
 declare(strict_types=1);
 
 use App\Models\Address;
-use App\Models\Office;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-test('address has addressable relationship', function (): void {
-    /** @var Address $address */
-    $address = Address::factory()
-        ->for(Office::factory(), 'addressable')
-        ->create();
+test('address has addressable relationship',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Address $address */
+        $address = Address::factory()
+            ->for(Location::factory(), 'addressable')
+            ->createQuietly();
 
-    expect($address->addressable())
-        ->toBeInstanceOf(MorphTo::class);
-});
+        expect($address->addressable())
+            ->toBeInstanceOf(MorphTo::class);
+    });
 
-test('address addressable relationship is properly loaded for office', function (): void {
-    /** @var Office $office */
-    $office = Office::factory()
-        ->create();
+test('address addressable relationship is properly loaded for location',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Location $location */
+        $location = Location::factory()->createQuietly();
 
-    /** @var Address $address */
-    $address = Address::factory()
-        ->for($office, 'addressable')
-        ->create();
+        /** @var Address $address */
+        $address = Address::factory()
+            ->for($location, 'addressable')
+            ->createQuietly();
 
-    $address->load('addressable');
+        $address->load('addressable');
 
-    expect($address->addressable)
-        ->toBeInstanceOf(Office::class)
-        ->and($address->addressable->id)
-        ->toBe($office->id);
-});
+        expect($address->addressable)
+            ->toBeInstanceOf(Location::class)
+            ->and($address->addressable->id)
+            ->toBe($location->id);
+    });
 
-test('to array', function (): void {
-    /** @var Address $address */
-    $address = Address::factory()
-        ->for(Office::factory(), 'addressable')
-        ->create()
-        ->refresh();
+test('to array',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Address $address */
+        $address = Address::factory()
+            ->for(Location::factory(), 'addressable')
+            ->createQuietly()
+            ->refresh();
 
-    expect(array_keys($address->toArray()))
-        ->toBe([
-            'id',
-            'created_at',
-            'updated_at',
-            'addressable_type',
-            'addressable_id',
-            'line1',
-            'line2',
-            'city',
-            'state',
-            'postal_code',
-            'country',
-        ]);
-});
+        expect(array_keys($address->toArray()))
+            ->toBe([
+                'id',
+                'created_at',
+                'updated_at',
+                'addressable_type',
+                'addressable_id',
+                'line1',
+                'line2',
+                'city',
+                'state',
+                'postal_code',
+                'country',
+            ]);
+    });

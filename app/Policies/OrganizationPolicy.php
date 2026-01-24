@@ -23,11 +23,6 @@ final class OrganizationPolicy
         return $user->can(UserPermission::OrganizationView);
     }
 
-    public function create(User $user): bool
-    {
-        return $user->can(UserPermission::OrganizationCreate);
-    }
-
     public function update(User $user): bool
     {
         return $user->can(UserPermission::OrganizationEdit);

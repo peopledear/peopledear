@@ -9,6 +9,7 @@ use App\Data\PeopleDear\Location\UpdateLocationData;
 use App\Enums\LocationType;
 use App\Exceptions\Domain\LocationAlreadyExistsException;
 use App\Models\Location;
+use App\Queries\LocationQuery;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\Optional;
 use Throwable;
@@ -17,6 +18,7 @@ final readonly class UpdateLocation
 {
     public function __construct(
         private UpdateAddress $updateAddress,
+        private LocationQuery $locationQuery,
     ) {}
 
     /**
@@ -42,29 +44,28 @@ final readonly class UpdateLocation
         UpdateLocationData $data
     ): void {
         $isChangingToHeadquarters = ($data->type instanceof LocationType)
-            && ($data->type->value === LocationType::Headquarters->value)
-            && ($location->type !== LocationType::Headquarters->value);
+            && ($data->type === LocationType::Headquarters)
+            && ($location->type !== LocationType::Headquarters);
 
         $isChangingCountryForHeadquarters =
-            ($location->type === LocationType::Headquarters->value)
+            ($location->type === LocationType::Headquarters)
             && ! ($data->countryId instanceof Optional)
-            && ($data->countryId->value !== $location->country_id);
+            && ($data->countryId !== $location->country_id);
 
         if (! $isChangingToHeadquarters && ! $isChangingCountryForHeadquarters) {
             return;
         }
 
-        $query = Location::query()
-            ->where('organization_id', $location->organization_id)
-            ->where('type', LocationType::Headquarters->value);
-
         $countryId = ($data->countryId instanceof Optional)
-            ? $data->countryId->value
-            : $location->country_id;
+            ? $location->country_id
+            : $data->countryId;
 
-        $query->where('country_id', $countryId);
-
-        $exists = $query->where('id', '!=', $location->id)->exists();
+        $exists = ($this->locationQuery)()
+            ->ofOrganization($location->organization_id)
+            ->ofType(LocationType::Headquarters)
+            ->ofCountry($countryId)
+            ->except($location)
+            ->exists();
 
         if ($exists) {
             throw LocationAlreadyExistsException::headquartersInCountry(

@@ -7,6 +7,31 @@ use Sprout\Exceptions\MisconfigurationException;
 
 use function App\tenant_route;
 
+test('owner can access organization overview',
+    /**
+     * @throws MisconfigurationException
+     */
+    function (): void {
+        $this->actingAs($this->owner);
+
+        $response = $this->get(tenant_route('tenant.org.overview', $this->tenant));
+
+        $response->assertOk()
+            ->assertInertia(fn ($page) => $page->component('org/index'));
+    });
+
+test('employee cannot access organization overview',
+    /**
+     * @throws MisconfigurationException
+     */
+    function (): void {
+        $this->actingAs($this->employee);
+
+        $response = $this->get(tenant_route('tenant.org.overview', $this->tenant));
+
+        $response->assertForbidden();
+    });
+
 test('people manager can access organization settings',
     /**
      * @throws MisconfigurationException

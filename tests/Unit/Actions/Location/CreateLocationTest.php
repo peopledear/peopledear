@@ -6,6 +6,7 @@ use App\Actions\Location\CreateLocation;
 use App\Data\PeopleDear\Address\CreateAddressData;
 use App\Data\PeopleDear\Location\CreateLocationData;
 use App\Enums\LocationType;
+use App\Exceptions\Domain\LocationAlreadyExistsException;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\Location;
@@ -122,3 +123,36 @@ test('creates office with minimal address',
             ->and($address->state)
             ->toBeNull();
     });
+
+test('throws exception when headquarters already exists in country',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        Location::factory()
+            ->for($this->tenant, 'organization')
+            ->createQuietly([
+                'type' => LocationType::Headquarters,
+                'country_id' => $this->country->id,
+            ]);
+
+        $addressData = CreateAddressData::from([
+            'line1' => '789 New St',
+            'city' => 'Seattle',
+            'postal_code' => '98101',
+            'country' => 'United States',
+        ]);
+
+        $data = new CreateLocationData(
+            name: 'Second Headquarters',
+            type: LocationType::Headquarters,
+            countryId: $this->country->id,
+            phone: null,
+            address: $addressData,
+        );
+
+        $this->action->handle(
+            organization: $this->tenant,
+            data: $data
+        );
+    })->throws(LocationAlreadyExistsException::class);

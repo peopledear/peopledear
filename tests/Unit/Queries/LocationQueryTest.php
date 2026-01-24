@@ -100,3 +100,43 @@ test('can query locations of an organization', function (): void {
         ->toContain('select * from "locations" where "organization_id" = ?');
 
 });
+
+test('can exclude a location from query', function (): void {
+
+    /** @var Location $location */
+    $location = Location::factory()->createQuietly();
+
+    $query = ($this->query)()->except($location);
+
+    expect($query->builder()->toSql())
+        ->toContain('select * from "locations" where "id" != ?');
+
+});
+
+test('except excludes the correct location', function (): void {
+
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    /** @var Location $location1 */
+    $location1 = Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'name' => 'Location 1',
+    ]);
+
+    /** @var Location $location2 */
+    $location2 = Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'name' => 'Location 2',
+    ]);
+
+    $locations = ($this->query)()
+        ->ofOrganization($organization)
+        ->except($location1)
+        ->get();
+
+    expect($locations)
+        ->toHaveCount(1)
+        ->and($locations->first()->id)
+        ->toBe($location2->id);
+});

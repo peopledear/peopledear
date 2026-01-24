@@ -6,6 +6,7 @@ use App\Actions\Location\UpdateLocation;
 use App\Data\PeopleDear\Address\UpdateAddressData;
 use App\Data\PeopleDear\Location\UpdateLocationData;
 use App\Enums\LocationType;
+use App\Exceptions\Domain\LocationAlreadyExistsException;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\Location;
@@ -122,3 +123,63 @@ test('updates office without updating address when not provided',
             ->and($unchangedAddress->city)
             ->toBe('Original City');
     });
+
+test('throws exception when changing to headquarters and one already exists in country',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
+
+        Location::factory()->createQuietly([
+            'organization_id' => $organization->id,
+            'type' => LocationType::Headquarters,
+            'country_id' => $this->country->id,
+        ]);
+
+        /** @var Location $branchLocation */
+        $branchLocation = Location::factory()->createQuietly([
+            'organization_id' => $organization->id,
+            'type' => LocationType::Branch,
+            'country_id' => $this->country->id,
+        ]);
+
+        $data = UpdateLocationData::from([
+            'type' => LocationType::Headquarters,
+        ]);
+
+        $this->action->handle($branchLocation, $data);
+    })->throws(LocationAlreadyExistsException::class);
+
+test('throws exception when changing headquarters country to one that already has headquarters',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var Organization $organization */
+        $organization = Organization::factory()->createQuietly();
+
+        /** @var Country $targetCountry */
+        $targetCountry = Country::factory()->createQuietly(['name' => 'Canada']);
+
+        /** @var Location $existingHeadquarters */
+        $existingHeadquarters = Location::factory()->createQuietly([
+            'organization_id' => $organization->id,
+            'type' => LocationType::Headquarters,
+            'country_id' => $targetCountry->id,
+        ]);
+
+        /** @var Location $currentHeadquarters */
+        $currentHeadquarters = Location::factory()->createQuietly([
+            'organization_id' => $organization->id,
+            'type' => LocationType::Headquarters,
+            'country_id' => $this->country->id,
+        ]);
+
+        $data = UpdateLocationData::from([
+            'country_id' => $targetCountry->id,
+        ]);
+
+        $this->action->handle($currentHeadquarters, $data);
+    })->throws(LocationAlreadyExistsException::class);

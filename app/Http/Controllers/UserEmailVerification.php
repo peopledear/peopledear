@@ -9,25 +9,16 @@ use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 
+use function App\tenant_route;
+
 final readonly class UserEmailVerification
 {
     public function update(EmailVerificationRequest $request, #[CurrentUser] User $user): RedirectResponse
     {
-
-        if ($user->hasVerifiedEmail()) {
-            if (str_starts_with((string) $request->route()->getName(), 'tenant.')) {
-                return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]).'?verified=1');
-            }
-
-            return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        if (! $user->hasVerifiedEmail()) {
+            $request->fulfill();
         }
 
-        $request->fulfill();
-
-        if (str_starts_with((string) $request->route()->getName(), 'tenant.')) {
-            return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]).'?verified=1');
-        }
-
-        return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        return redirect(tenant_route('tenant.org.overview', $user->organization).'?verified=1');
     }
 }

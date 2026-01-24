@@ -13,8 +13,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
 
+use function App\tenant_route;
 use function redirect;
-use function route;
 
 final class RegistrationController
 {
@@ -41,11 +41,6 @@ final class RegistrationController
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route(
-            name: 'tenant.org.overview',
-            parameters: [
-                'tenant' => $user->organization->identifier,
-            ],
-            absolute: true));
+        return redirect()->intended(tenant_route('tenant.org.overview', $user->organization));
     }
 }

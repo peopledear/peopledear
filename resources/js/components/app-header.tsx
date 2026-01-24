@@ -35,7 +35,7 @@ import {
     type NavItem,
     type TenantedSharedData,
 } from "@/types";
-import { overview as employeeOverview } from "@/wayfinder/routes/employee";
+import { overview as employeeOverview } from "@/wayfinder/routes/tenant/employee";
 import { dropdown } from "@/wayfinder/routes/tenant/notifications";
 import { overview } from "@/wayfinder/routes/tenant/org";
 import { Link, usePage } from "@inertiajs/react";
@@ -68,7 +68,7 @@ export function AppHeader({
         },
         {
             title: "Employee",
-            href: employeeOverview(),
+            href: employeeOverview(tenant.identifier),
             icon: EyeIcon,
             show: show.employeeLink,
         },
@@ -169,7 +169,7 @@ export function AppHeader({
                         </Sheet>
                     </div>
                     <Link
-                        href={employeeOverview()}
+                        href={employeeOverview(tenant.identifier)}
                         prefetch
                         className="flex items-center space-x-2"
                     >

@@ -50,6 +50,15 @@ final class LocationQuery
         return $this;
     }
 
+    public function except(Location|string $location): self
+    {
+        $id = $location instanceof Location ? $location->id : $location;
+
+        $this->query->where('id', '!=', $id);
+
+        return $this;
+    }
+
     /**
      * @return Builder<Location>
      */

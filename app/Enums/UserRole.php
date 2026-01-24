@@ -38,6 +38,7 @@ enum UserRole: string
                 ...self::PeopleManager->permissions(),
                 UserPermission::OrganizationCreate,
                 UserPermission::OrganizationDelete,
+                UserPermission::OrganizationManage,
             ],
             self::PeopleManager => [
                 UserPermission::TimeOffTypeManage,

@@ -9,27 +9,28 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Sprout\Exceptions\MisconfigurationException;
+
+use function App\tenant_route;
 
 final readonly class UserProfileController
 {
-    public function edit(Request $request): Response
+    public function edit(): Response
     {
         return Inertia::render('user-profile/edit', [
-            'status' => $request->session()->get('status'),
+            'status' => session('status'),
         ]);
     }
 
+    /**
+     * @throws MisconfigurationException
+     */
     public function update(UpdateUserRequest $request, #[CurrentUser] User $user, UpdateUser $action): RedirectResponse
     {
         $action->handle($user, $request->validated());
 
-        if (str_starts_with((string) $request->route()->getName(), 'tenant.')) {
-            return to_route('tenant.user.settings.profile.edit');
-        }
-
-        return to_route('profile.edit');
+        return redirect(tenant_route('tenant.user.settings.profile.edit', $user->organization));
     }
 }

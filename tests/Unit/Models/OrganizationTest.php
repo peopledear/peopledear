@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 test('has a users relationship', function (): void {
     /** @var Organization $organization */
@@ -158,4 +159,108 @@ test('to array', function (): void {
             'ssn',
             'phone',
         ]);
+});
+
+test('organization has headquarters relationship', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    expect($organization->headquarters())
+        ->toBeInstanceOf(HasMany::class);
+});
+
+test('headquarters relationship only returns headquarters locations', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'name' => 'US Headquarters',
+        'type' => LocationType::Headquarters,
+    ]);
+
+    Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'name' => 'EU Headquarters',
+        'type' => LocationType::Headquarters,
+    ]);
+
+    Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'name' => 'Branch Office',
+        'type' => LocationType::Branch,
+    ]);
+
+    expect($organization->headquarters)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(2)
+        ->and($organization->headquarters->pluck('name')->toArray())
+        ->toContain('US Headquarters')
+        ->toContain('EU Headquarters')
+        ->not->toContain('Branch Office');
+});
+
+test('organization has headOffice relationship', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    expect($organization->headOffice())
+        ->toBeInstanceOf(HasOne::class);
+});
+
+test('headOffice relationship returns latest headquarters', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    /** @var Location $oldHeadquarters */
+    $oldHeadquarters = Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'name' => 'Old Headquarters',
+        'type' => LocationType::Headquarters,
+        'created_at' => now()->subYear(),
+    ]);
+
+    /** @var Location $newHeadquarters */
+    $newHeadquarters = Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'name' => 'New Headquarters',
+        'type' => LocationType::Headquarters,
+        'created_at' => now(),
+    ]);
+
+    expect($organization->headOffice)
+        ->toBeInstanceOf(Location::class)
+        ->and($organization->headOffice->name)
+        ->toBe('New Headquarters');
+});
+
+test('hasLocationConfigured returns true when headOffice exists', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'type' => LocationType::Headquarters,
+    ]);
+
+    expect($organization->hasLocationConfigured())->toBeTrue();
+});
+
+test('hasLocationConfigured returns false when no headOffice exists', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    expect($organization->hasLocationConfigured())->toBeFalse();
+});
+
+test('hasLocationConfigured returns false when only branch locations exist', function (): void {
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    Location::factory()->createQuietly([
+        'organization_id' => $organization->id,
+        'type' => LocationType::Branch,
+    ]);
+
+    expect($organization->hasLocationConfigured())->toBeFalse();
 });

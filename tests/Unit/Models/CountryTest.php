@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Models\Country;
 use App\Models\CountrySubdivision;
+use App\Models\Location;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\QueryException;
@@ -96,6 +98,35 @@ test('country can have multiple official languages', function (): void {
         ->toHaveCount(4)
         ->and($country->official_languages)
         ->toContain('DE', 'FR', 'IT', 'RM');
+});
+
+test('country has locations relationship', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->create();
+
+    expect($country->locations())->toBeInstanceOf(HasMany::class);
+});
+
+test('country locations relationship is properly loaded', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->create();
+
+    /** @var Organization $organization */
+    $organization = Organization::factory()->createQuietly();
+
+    /** @var Location $location */
+    $location = Location::factory()->createQuietly([
+        'country_id' => $country->id,
+        'organization_id' => $organization->id,
+    ]);
+
+    $country->load('locations');
+
+    expect($country->locations)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(1)
+        ->and($country->locations->first()->id)
+        ->toBe($location->id);
 });
 
 test('country has subdivisions relationship', function (): void {

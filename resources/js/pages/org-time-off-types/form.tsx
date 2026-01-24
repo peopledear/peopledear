@@ -237,7 +237,7 @@ export default function TimeOffTypeForm({
                                             </DialogTitle>
                                         </DialogHeader>
                                         <div>
-                                            <DialogClose>
+                                            <DialogClose asChild>
                                                 <Button
                                                     variant="ghost"
                                                     className="size-8"

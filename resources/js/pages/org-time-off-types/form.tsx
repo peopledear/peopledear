@@ -10,6 +10,7 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -235,6 +236,10 @@ export default function TimeOffTypeForm({
                                             <DialogTitle>
                                                 Advanced settings
                                             </DialogTitle>
+                                            <DialogDescription className="sr-only">
+                                                Configure additional options for
+                                                this time off type
+                                            </DialogDescription>
                                         </DialogHeader>
                                         <div>
                                             <DialogClose asChild>

@@ -47,7 +47,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                         prefetch
                         onClick={cleanup}
                     >
-                        <Settings className="mr-2" />
+                        <Settings className="mr-2 size-5" />
                         Account
                     </Link>
                 </DropdownMenuItem>
@@ -61,7 +61,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                     onClick={handleLogout}
                     data-test="logout-button"
                 >
-                    <LogOut className="mr-2" />
+                    <LogOut className="mr-2 size-5" />
                     Log out
                 </Link>
             </DropdownMenuItem>
@@ -71,7 +71,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                 onSelect={(e) => e.preventDefault()}
             >
                 <span className="flex items-center gap-2">
-                    <SwatchBook className="mr-2 size-4" />
+                    <SwatchBook className="mr-2 size-5" />
                     Theme
                 </span>
                 <ToggleGroup

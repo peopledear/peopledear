@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToEmployee;
-use App\Models\Concerns\BelongsToOrganization;
-use App\Models\Scopes\OrganizationScope;
+use Carbon\CarbonImmutable;
 use Database\Factories\VacationBalanceFactory;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Sprout\Attributes\TenantRelation;
+use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
 
 /**
  * @property-read string $id
@@ -24,21 +24,45 @@ use Illuminate\Support\Carbon;
  * @property-read int $accrued
  * @property-read int $taken
  * @property-read int $remaining
- * @property-read Carbon $created_at
- * @property-read Carbon $updated_at
+ * @property-read CarbonImmutable $created_at
+ * @property-read CarbonImmutable $updated_at
  * @property-read Organization $organization
  * @property-read Employee $employee
  */
-#[ScopedBy([OrganizationScope::class])]
 final class VacationBalance extends Model
 {
     use BelongsToEmployee;
-    use BelongsToOrganization;
+    use BelongsToTenant;
 
     /** @use HasFactory<VacationBalanceFactory> */
     use HasFactory;
 
     use HasUuids;
+
+    /**
+     * @return array<string, string>
+     */
+    public function casts(): array
+    {
+        return [
+            'id' => 'string',
+            'organization_id' => 'string',
+            'employee_id' => 'string',
+            'year' => 'integer',
+            'from_last_year' => 'integer',
+            'accrued' => 'integer',
+            'taken' => 'integer',
+            'created_at' => 'immutable_datetime',
+            'updated_at' => 'immutable_datetime',
+        ];
+    }
+
+    /** @return BelongsTo<Organization, $this> */
+    #[TenantRelation]
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
     /**
      * @return Attribute<int, never>

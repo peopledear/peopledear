@@ -10,17 +10,16 @@ use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\TimeOffTypeStatus;
 use App\Enums\TimeOffUnit;
-use App\Models\Concerns\BelongsToOrganization;
-use App\Models\Scopes\OrganizationScope;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Database\Factories\TimeOffTypeFactory;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Permission\Models\Role;
+use Sprout\Attributes\TenantRelation;
+use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
 
 /**
  * @property-read string $id
@@ -38,15 +37,14 @@ use Spatie\Permission\Models\Role;
  * @property bool $requires_justification_document
  * @property BalanceType $balance_mode
  * @property-read TimeOffTypeBalanceConfigData $balance_config
- * @property-read Carbon $created_at
- * @property-read Carbon $updated_at
- * @property-read Carbon|null $deleted_at
+ * @property-read CarbonImmutable $created_at
+ * @property-read CarbonImmutable $updated_at
+ * @property-read CarbonImmutable|null $deleted_at
  * @property-read ?Role $fallbackApprovalRole
  */
-#[ScopedBy(OrganizationScope::class)]
 final class TimeOffType extends Model
 {
-    use BelongsToOrganization;
+    use BelongsToTenant;
 
     /** @use HasFactory<TimeOffTypeFactory> */
     use HasFactory;
@@ -60,9 +58,9 @@ final class TimeOffType extends Model
     {
         return [
             'id' => 'string',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
+            'created_at' => 'immutable_datetime',
+            'updated_at' => 'immutable_datetime',
+            'deleted_at' => 'immutable_datetime',
             'organization_id' => 'string',
             'fallback_approval_role_id' => 'integer',
             'name' => 'string',
@@ -94,5 +92,12 @@ final class TimeOffType extends Model
     public function timeOffRequests(): HasMany
     {
         return $this->hasMany(TimeOffRequest::class);
+    }
+
+    /** @return BelongsTo<Organization, $this> */
+    #[TenantRelation]
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
     }
 }

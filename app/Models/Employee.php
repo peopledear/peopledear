@@ -6,23 +6,22 @@ namespace App\Models;
 
 use App\Contracts\Addressable;
 use App\Enums\EmploymentStatus;
-use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Concerns\HasAddress;
-use App\Models\Scopes\OrganizationScope;
+use Carbon\CarbonImmutable;
 use Database\Factories\EmployeeFactory;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
+use Sprout\Attributes\TenantRelation;
+use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
 
 /**
  * @property-read string $id
  * @property-read string $organization_id
- * @property-read string|null $office_id
+ * @property-read string|null $location_id
  * @property-read string|null $user_id
  * @property-read string|null $manager_id
  * @property-read string $name
@@ -30,10 +29,10 @@ use Illuminate\Support\Carbon;
  * @property-read string|null $phone
  * @property-read string $employee_number
  * @property-read string|null $job_title
- * @property-read Carbon|null $hire_date
+ * @property-read CarbonImmutable|null $hire_date
  * @property-read EmploymentStatus $employment_status
- * @property-read Carbon $created_at
- * @property-read Carbon $updated_at
+ * @property-read CarbonImmutable $created_at
+ * @property-read CarbonImmutable $updated_at
  * @property-read Organization $organization
  * @property-read Location|null $location
  * @property-read Address $address
@@ -41,10 +40,9 @@ use Illuminate\Support\Carbon;
  * @property-read Employee|null $manager
  * @property-read Collection<int, Employee> $directReports
  */
-#[ScopedBy([OrganizationScope::class])]
 final class Employee extends Model implements Addressable
 {
-    use BelongsToOrganization;
+    use BelongsToTenant;
     use HasAddress;
 
     /** @use HasFactory<EmployeeFactory> */
@@ -65,11 +63,18 @@ final class Employee extends Model implements Addressable
             'phone' => 'string',
             'employee_number' => 'string',
             'job_title' => 'string',
-            'hire_date' => 'date',
+            'hire_date' => 'immutable_datetime',
             'employment_status' => EmploymentStatus::class,
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'created_at' => 'immutable_datetime',
+            'updated_at' => 'immutable_datetime',
         ];
+    }
+
+    /** @return BelongsTo<Organization, $this> */
+    #[TenantRelation]
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
     }
 
     /** @return BelongsTo<Location, $this> */

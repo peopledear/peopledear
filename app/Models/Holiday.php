@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\HolidayType;
-use App\Models\Concerns\BelongsToOrganization;
-use App\Models\Scopes\OrganizationScope;
+use Carbon\CarbonImmutable;
 use Database\Factories\HolidayFactory;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Sprout\Attributes\TenantRelation;
+use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
 
 /**
  * @property-read string $id
@@ -26,20 +26,26 @@ use Illuminate\Support\Carbon;
  * @property-read string|null $subdivision_code
  * @property-read string|null $api_holiday_id
  * @property-read bool $is_custom
- * @property-read Carbon $created_at
- * @property-read Carbon $updated_at
+ * @property-read CarbonImmutable $created_at
+ * @property-read CarbonImmutable $updated_at
  * @property-read Organization $organization
  * @property-read Country $country
  */
-#[ScopedBy([OrganizationScope::class])]
 final class Holiday extends Model
 {
-    use BelongsToOrganization;
+    use BelongsToTenant;
 
     /** @use HasFactory<HolidayFactory> */
     use HasFactory;
 
     use HasUuids;
+
+    /** @return BelongsTo<Organization, $this> */
+    #[TenantRelation]
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
     /** @return BelongsTo<Country, $this> */
     public function country(): BelongsTo
@@ -60,8 +66,8 @@ final class Holiday extends Model
             'subdivision_code' => 'string',
             'api_holiday_id' => 'string',
             'is_custom' => 'boolean',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'created_at' => 'immutable_datetime',
+            'updated_at' => 'immutable_datetime',
         ];
     }
 }

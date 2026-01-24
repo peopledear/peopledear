@@ -12,13 +12,13 @@
     "devDependencies": {
         "@eslint/js": "^9.39.2",
         "@laravel/vite-plugin-wayfinder": "^0.1.7",
-        "@types/node": "^25.0.9",
+        "@types/node": "^25.0.10",
         "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.0.1",
         "npm-check-updates": "^19.3.1",
-        "playwright": "^1.57.0",
+        "playwright": "^1.58.0",
         "prettier": "^3.8.1",
         "prettier-plugin-organize-imports": "^4.3.0",
         "prettier-plugin-tailwindcss": "^0.7.2",
@@ -52,10 +52,10 @@
         "cmdk": "^1.1.1",
         "concurrently": "^9.2.1",
         "date-fns": "^4.1.0",
-        "globals": "^17.0.0",
+        "globals": "^17.1.0",
         "input-otp": "^1.4.2",
         "laravel-vite-plugin": "^2.1",
-        "lucide-react": "^0.562.0",
+        "lucide-react": "^0.563.0",
         "react": "^19.2.3",
         "react-aria-components": "^1.14.0",
         "react-day-picker": "^9.13.0",
@@ -67,7 +67,7 @@
         "vite": "^7.3.1"
     },
     "optionalDependencies": {
-        "@rollup/rollup-linux-x64-gnu": "4.55.3",
+        "@rollup/rollup-linux-x64-gnu": "4.56.0",
         "@tailwindcss/oxide-linux-x64-gnu": "^4.1.18",
         "lightningcss-linux-x64-gnu": "^1.31.1"
     }

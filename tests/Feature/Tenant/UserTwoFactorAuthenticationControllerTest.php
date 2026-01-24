@@ -11,9 +11,7 @@ beforeEach(
     /**
      * @throws Throwable
      */
-    function (): void {
-        $this->tenant = $this->tenant;
-    });
+    function (): void {});
 
 it('renders two factor authentication page',
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Actions\Address\UpdateAddress;
 use App\Data\PeopleDear\Address\UpdateAddressData;
 use App\Models\Address;
+use App\Models\Location;
 use App\Models\Organization;
 
 beforeEach(function (): void {

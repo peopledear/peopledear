@@ -20,7 +20,7 @@ final readonly class UserEmailVerificationNotificationController
     ): Response|RedirectResponse {
 
         if ($user->hasVerifiedEmail()) {
-            if (str_starts_with($request->route()->getName(), 'tenant.')) {
+            if (str_starts_with((string) $request->route()->getName(), 'tenant.')) {
                 return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]));
             }
 
@@ -34,7 +34,7 @@ final readonly class UserEmailVerificationNotificationController
     {
 
         if ($user->hasVerifiedEmail()) {
-            if (str_starts_with($request->route()->getName(), 'tenant.')) {
+            if (str_starts_with((string) $request->route()->getName(), 'tenant.')) {
                 return redirect(route('tenant.org.overview', ['tenant' => $request->route('tenant')]));
             }
 

@@ -2,32 +2,22 @@
 
 declare(strict_types=1);
 
-use App\Actions\Role\CreateSystemRoles;
-use App\Enums\SessionKey;
 use App\Enums\UserRole;
 use App\Models\TimeOffType;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Spatie\Permission\Models\Role;
+use Sprout\Exceptions\MisconfigurationException;
+
+use function App\tenant_route;
 
 beforeEach(function (): void {
-    resolve(CreateSystemRoles::class)->handle();
 
-    $this->tenant = $this->tenant;
-
-    Session::put(SessionKey::CurrentOrganization->value, $this->tenant->id);
-
-    /** @var Role $peopleManagerRole */
-    $peopleManagerRole = Role::query()
-        ->where('name', UserRole::PeopleManager->value)
-        ->first()
-        ?->fresh();
-
-    $this->user = User::factory()->for($this->tenant)->create([
-        'email' => 'peoplemanager@test.test',
-    ]);
-    $this->user->assignRole($peopleManagerRole);
+    $this->user = User::factory()
+        ->for($this->tenant)
+        ->create([
+            'email' => 'peoplemanager@test.test',
+        ]);
+    $this->user->assignRole(UserRole::PeopleManager);
 
     TimeOffType::factory()
         ->for($this->tenant)
@@ -36,17 +26,22 @@ beforeEach(function (): void {
 
 });
 
-test('can navigate back to the create time off type page', function (): void {
-    Auth::login($this->user);
+test('can navigate back to the create time off type page',
+    /**
+     * @throws MisconfigurationException
+     */
+    function (): void {
 
-    visit(route(
-        name: 'tenant.settings.time-off-types.create',
-        parameters: ['tenant' => $this->tenant->identifier],
-        absolute: false
-    ))
-        ->click('Back')
-        ->assertSee('Create Time Off Type');
-});
+        Auth::login($this->user);
+
+        visit(tenant_route(
+            name: 'tenant.settings.time-off-types.create',
+            tenant: $this->tenant,
+            absolute: false,
+        ))
+            ->click('Back')
+            ->assertSee('Create Time Off Type');
+    });
 
 test('renders the create page', function (): void {
     Auth::login($this->user);

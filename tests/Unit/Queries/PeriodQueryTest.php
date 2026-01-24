@@ -2,21 +2,17 @@
 
 declare(strict_types=1);
 
-use App\Enums\SessionKey;
 use App\Models\Organization;
 use App\Models\Period;
 use App\Queries\PeriodQuery;
-use Illuminate\Support\Facades\Session;
 
 beforeEach(function (): void {
 
-    /** @var Organization $organization */
+    /** @var Organization $tenant */
     $organization = Organization::factory()
         ->createQuietly();
 
     $this->tenant = $organization;
-
-    Session::put(SessionKey::CurrentOrganization->value, $this->tenant->id);
 
     /** @var Period $activePeriod */
     $activePeriod = Period::factory()
@@ -50,9 +46,16 @@ test('returns only active periods for current organization', function (): void {
     $query = $this->query;
 
     /** @var Period $result */
-    $result = $query()->active()->first();
+    $result = $query()
+        ->ofOrganization($this->tenant)
+        ->active()
+        ->first();
 
-    $periods = $query()->active()->builder()->get();
+    $periods = $query()
+        ->ofOrganization($this->tenant)
+        ->active()
+        ->builder()
+        ->get();
 
     expect($result)
         ->toBeInstanceOf(Period::class)

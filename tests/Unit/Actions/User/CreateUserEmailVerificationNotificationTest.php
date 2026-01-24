@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\User\CreateUserEmailVerificationNotification;
 use App\Models\User;
-use App\Notifications\VerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
 
 it('may send email verification notification', function (): void {

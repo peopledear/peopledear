@@ -13,6 +13,7 @@ final readonly class CreateUserEmailResetNotification
      */
     public function handle(array $credentials): string
     {
+
         return Password::sendResetLink($credentials);
     }
 }

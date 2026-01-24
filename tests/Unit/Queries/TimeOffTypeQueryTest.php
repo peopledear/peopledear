@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Enums\SessionKey;
 use App\Models\Organization;
 use App\Models\TimeOffType;
 use App\Queries\TimeOffTypeQuery;
-use Illuminate\Support\Facades\Session;
 
 test('selects from the correct table', function (): void {
 
@@ -41,8 +39,6 @@ test('returns only active time off types for current organization', function ():
     $organization = Organization::factory()
         ->createQuietly();
 
-    Session::put(SessionKey::CurrentOrganization->value, $organization->id);
-
     /** @var TimeOffType $activeType */
     $activeType = TimeOffType::factory()
         ->for($organization)
@@ -50,7 +46,7 @@ test('returns only active time off types for current organization', function ():
         ->createQuietly();
 
     /** @var TimeOffType $inactiveType */
-    $inactiveType = TimeOffType::factory()
+    TimeOffType::factory()
         ->for($organization)
         ->inactive()
         ->createQuietly();
@@ -60,7 +56,7 @@ test('returns only active time off types for current organization', function ():
         ->createQuietly();
 
     /** @var TimeOffType $otherOrgType */
-    $otherOrgType = TimeOffType::factory()
+    TimeOffType::factory()
         ->for($otherOrganization)
         ->active()
         ->createQuietly();
@@ -68,7 +64,11 @@ test('returns only active time off types for current organization', function ():
     /** @var TimeOffTypeQuery $query */
     $query = resolve(TimeOffTypeQuery::class);
 
-    $results = $query()->active()->builder()->get();
+    $results = $query()
+        ->ofOrganization($organization)
+        ->active()
+        ->builder()
+        ->get();
 
     expect($results)
         ->toHaveCount(1)
@@ -82,16 +82,14 @@ test('returns all time off types for current organization when not filtering by 
     $organization = Organization::factory()
         ->createQuietly();
 
-    Session::put(SessionKey::CurrentOrganization->value, $organization->id);
-
     /** @var TimeOffType $activeType */
-    $activeType = TimeOffType::factory()
+    TimeOffType::factory()
         ->for($organization)
         ->active()
         ->createQuietly();
 
     /** @var TimeOffType $inactiveType */
-    $inactiveType = TimeOffType::factory()
+    TimeOffType::factory()
         ->for($organization)
         ->inactive()
         ->createQuietly();
@@ -99,7 +97,10 @@ test('returns all time off types for current organization when not filtering by 
     /** @var TimeOffTypeQuery $query */
     $query = resolve(TimeOffTypeQuery::class);
 
-    $results = $query()->builder()->get();
+    $results = $query()
+        ->ofOrganization($organization)
+        ->builder()
+        ->get();
 
     expect($results)
         ->toHaveCount(2);

@@ -16,6 +16,7 @@ arch()->preset()
     ]);
 arch()->preset()->security()->ignoring([
     'assert',
+    'App\Providers\FortifyServiceProvider', // Uses sha1 to match Laravel's VerifyEmail behavior
 ]);
 
 arch('controllers')

@@ -18,13 +18,17 @@ test('register a new organization and user', function (): void {
         ->click('Create account')
         ->screenshot();
 
-    $organization = Organization::query()->where('name', 'Acme Corp')->first();
-    $user = User::query()->where('email', 'john.doe@peopledear.com')->first();
+    $organization = Organization::query()
+        ->where('name', 'Acme Corp')
+        ->first();
+
+    $user = User::query()
+        ->where('email', 'john.doe@peopledear.com')
+        ->first();
 
     expect($organization)->toBeInstanceOf(Organization::class)
         ->name->toBe('Acme Corp')
-        ->and($user)
-        ->toBeInstanceOf(User::class)
+        ->and($user)->toBeInstanceOf(User::class)
         ->name->toBe('John Doe')
         ->organization_id->toBe($organization->id)
         ->and($user->hasRole(UserRole::Owner));

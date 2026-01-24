@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 use function redirect;
 use function route;
@@ -24,10 +25,13 @@ final class RegistrationController
 
     }
 
+    /**
+     * @throws Throwable
+     */
     public function store(
         CreateRegistrationRequest $request,
-        RegisterOrganization $action): RedirectResponse
-    {
+        RegisterOrganization $action
+    ): RedirectResponse {
 
         $user = $action->handle(
             data: CreateRegistrationData::from($request->safe())

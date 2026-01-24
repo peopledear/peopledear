@@ -6,6 +6,7 @@ use App\Actions\Employee\CreateEmployee;
 use App\Data\PeopleDear\Employee\CreateEmployeeData;
 use App\Enums\EmploymentStatus;
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\Organization;
 use App\Models\User;
 use Carbon\CarbonImmutable;

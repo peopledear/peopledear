@@ -13,14 +13,14 @@
 
 ### Flat Test Organization
 **ALWAYS use flat structure** - NO nested subdirectories:
-- ✅ Correct: `tests/Unit/Actions/CreateOfficeActionTest.php`
-- ❌ Wrong: `tests/Unit/Actions/Office/CreateOfficeActionTest.php`
+- ✅ Correct: `tests/Unit/Actions/CreateLocationTest.php`
+- ❌ Wrong: `tests/Unit/Actions/Location/CreateLocationTest.php`
 - Exception: Organizing by type is allowed (Models/, Actions/, Enums/)
 - Exception: For multi-tenant applications, use Landlord/ and Tenant/ subdirectories under Feature/ and Browser/ to scope tests appropriately (e.g., tests/Feature/Tenant/UserProfileControllerTest.php).
 
 ### Test File Naming
 - Test files end with `Test.php`
-- Match the class being tested: `CreateOfficeAction` → `CreateOfficeActionTest`
+- Match the class being tested: `CreateLocation` → `CreateLocationTest`
 - Place in appropriate directory: Unit/, Feature/, or Browser/
 
 ### Test Naming Convention

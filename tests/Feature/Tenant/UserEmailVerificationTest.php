@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\URL;
 
 use function App\tenant_route;
 
-beforeEach(function (): void {
-    $this->tenant = $this->tenant;
-});
+beforeEach(function (): void {});
 
 it('may verify email', function (): void {
     $user = User::factory()

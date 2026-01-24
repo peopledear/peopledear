@@ -7,6 +7,7 @@ namespace App\Actions\Organization;
 use App\Actions\TymeOffType\CreateSystemTimeOffTypes;
 use App\Actions\User\CreateUser;
 use App\Data\PeopleDear\CreateRegistrationData;
+use App\Data\PeopleDear\CreateUserData;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Enums\UserRole;
 use App\Models\User;
@@ -39,12 +40,12 @@ final readonly class RegisterOrganization
             );
 
             $user = $this->createUser->handle(
-                attributes: [
+                data: CreateUserData::from([
                     'organization_id' => $organization->id,
                     'name' => $data->name,
                     'email' => $data->email,
-                ],
-                password: $data->password
+                    'password' => $data->password,
+                ])
             );
 
             $user->assignRole(UserRole::Owner);

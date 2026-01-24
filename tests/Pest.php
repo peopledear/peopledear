@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
+use Tests\LandlordTestCase;
 use Tests\TestCase;
 
 function loadTestsDefaults(): void
@@ -26,7 +27,7 @@ pest()->extend(TestCase::class)
     })
     ->in('Unit', 'Integration');
 
-pest()->extend(TestCase::class)
+pest()->extend(LandlordTestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
         loadTestsDefaults();
@@ -35,7 +36,7 @@ pest()->extend(TestCase::class)
     })
     ->in('Browser/Landlord');
 
-pest()->extend(TestCase::class)
+pest()->extend(LandlordTestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
         loadTestsDefaults();
@@ -54,7 +55,10 @@ pest()->extend(Tests\TenantTestCase::class)
 pest()->extend(Tests\TenantTestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function (): void {
-        pest()->browser()->withHost('acme.localhost');
+
+        $host = sprintf('%s.localhost', $this->tenant->identifier);
+
+        pest()->browser()->withHost($host);
         loadTestsDefaults();
         $this->freezeTime();
     })

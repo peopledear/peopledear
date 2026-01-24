@@ -26,7 +26,7 @@ final readonly class UserProfileController
     {
         $action->handle($user, $request->validated());
 
-        if (str_starts_with($request->route()->getName(), 'tenant.')) {
+        if (str_starts_with((string) $request->route()->getName(), 'tenant.')) {
             return to_route('tenant.user.settings.profile.edit');
         }
 

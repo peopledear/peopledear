@@ -94,7 +94,7 @@
             "pint --parallel",
             "npm run lint"
         ],
-        "test:type-coverage": "php -d memory_limit=512M vendor/bin/pest --type-coverage --compact --min=100",
+        "test:type-coverage": "php -d memory_limit=1G vendor/bin/pest --type-coverage --compact --min=100",
         "test:lint": [
             "pint --parallel --test",
             "rector --dry-run",
@@ -102,7 +102,7 @@
         ],
         "test:unit": "pest --parallel --coverage --compact --exactly=100.0",
         "test:types": [
-            "phpstan --memory-limit=512M",
+            "phpstan --memory-limit=1G",
             "npm run test:types"
         ],
         "test": [

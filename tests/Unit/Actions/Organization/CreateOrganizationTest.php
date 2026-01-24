@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 use App\Actions\Organization\CreateOrganization;
 use App\Data\PeopleDear\Organization\CreateOrganizationData;
-use App\Models\Country;
 use App\Models\Organization;
 
 beforeEach(function (): void {
     $this->action = resolve(CreateOrganization::class);
-    $this->country = Country::factory()
-        ->create();
 });
 
 test('creates organization with provided data',
@@ -19,8 +16,7 @@ test('creates organization with provided data',
      */
     function (): void {
         $data = new CreateOrganizationData(
-            name: 'Test Organization',
-            countryId: $this->country->id,
+            name: 'Test Organization'
         );
 
         $organization = $this->action->handle($data);
@@ -29,9 +25,7 @@ test('creates organization with provided data',
             ->toBeInstanceOf(Organization::class)
             ->id->toBeString()
             ->name
-            ->toBe('Test Organization')
-            ->country_id
-            ->toBe($this->country->id);
+            ->toBe('Test Organization');
 
         /** @var Organization $persistedOrganization */
         $persistedOrganization = Organization::query()
@@ -40,8 +34,7 @@ test('creates organization with provided data',
 
         expect($persistedOrganization)
             ->not->toBeNull()
-            ->name->toBe('Test Organization')
-            ->country_id->toBe($this->country->id);
+            ->name->toBe('Test Organization');
     });
 
 test('creates organization with minimal data',
@@ -52,7 +45,6 @@ test('creates organization with minimal data',
 
         $data = new CreateOrganizationData(
             name: 'Minimal Organization',
-            countryId: $this->country->id,
         );
 
         $organization = $this->action->handle($data);
@@ -60,7 +52,6 @@ test('creates organization with minimal data',
         expect($organization)
             ->toBeInstanceOf(Organization::class)
             ->name->toBe('Minimal Organization')
-            ->country_id->toBe($this->country->id)
             ->vat_number->toBeNull()
             ->ssn->toBeNull()
             ->phone->toBeNull();
@@ -74,7 +65,6 @@ test('returns refreshed organization instance',
 
         $data = new CreateOrganizationData(
             name: 'Test Organization',
-            countryId: $this->country->id,
         );
 
         $organization = $this->action->handle($data);
@@ -84,7 +74,5 @@ test('returns refreshed organization instance',
             ->and($organization->id)
             ->toBeString()
             ->and($organization->name)
-            ->toBe('Test Organization')
-            ->and($organization->country_id)
-            ->toBe($this->country->id);
+            ->toBe('Test Organization');
     });

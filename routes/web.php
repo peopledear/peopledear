@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\OrganizationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -33,12 +32,6 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
                         Route::get('/', [EmployeeController::class, 'index'])
                             ->name('index');
                     });
-
-                Route::get('create', [OrganizationController::class, 'create'])
-                    ->name('create');
-
-                Route::post('create', [OrganizationController::class, 'store'])
-                    ->name('store');
 
             });
 

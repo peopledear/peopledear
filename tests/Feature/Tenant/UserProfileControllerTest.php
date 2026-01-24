@@ -10,9 +10,7 @@ beforeEach(
     /**
      * @throws Throwable
      */
-    function (): void {
-        $this->tenant = $this->tenant;
-    });
+    function (): void {});
 
 test('renders profile edit page',
     /**

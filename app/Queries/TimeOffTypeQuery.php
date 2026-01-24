@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Enums\TimeOffTypeStatus;
+use App\Models\Organization;
 use App\Models\TimeOffType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,7 +26,7 @@ final class TimeOffTypeQuery
                 ->where('id', $id);
         }
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -34,6 +35,18 @@ final class TimeOffTypeQuery
     public function builder(): Builder
     {
         return $this->builder;
+    }
+
+    public function ofOrganization(Organization|string $organizationId): self
+    {
+        if ($organizationId instanceof Organization) {
+            $organizationId = $organizationId->id;
+        }
+
+        $this->builder
+            ->where('organization_id', $organizationId);
+
+        return $this;
     }
 
     public function first(): ?TimeOffType

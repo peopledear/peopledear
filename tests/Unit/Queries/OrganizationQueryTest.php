@@ -24,17 +24,17 @@ test('builder returns organization query builder', function (): void {
 
 test('can retrieve all organizations using builder', function (): void {
     /** @var Organization $org1 */
-    $org1 = Organization::factory()->create([
+    Organization::factory()->create([
         'name' => 'First Organization',
     ]);
 
     /** @var Organization $org2 */
-    $org2 = Organization::factory()->create([
+    Organization::factory()->create([
         'name' => 'Second Organization',
     ]);
 
     /** @var Organization $org3 */
-    $org3 = Organization::factory()->create([
+    Organization::factory()->create([
         'name' => 'Third Organization',
     ]);
 
@@ -96,13 +96,13 @@ test('builder supports relationship eager loading', function (): void {
     $org = Organization::factory()->create();
 
     $result = $this->query->builder()
-        ->with('offices')
+        ->with('locations')
         ->where('id', $org->id)
         ->first();
 
     expect($result)
         ->not->toBeNull()
-        ->relationLoaded('offices')->toBeTrue();
+        ->relationLoaded('locations')->toBeTrue();
 });
 
 test('returns empty collection when no organizations exist', function (): void {

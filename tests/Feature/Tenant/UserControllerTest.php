@@ -8,9 +8,7 @@ use Sprout\Exceptions\MisconfigurationException;
 
 use function App\tenant_route;
 
-beforeEach(function (): void {
-    $this->tenant = $this->tenant;
-});
+beforeEach(function (): void {});
 
 it('may delete user account',
     /**

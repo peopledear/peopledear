@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\Address\DeleteAddress;
 use App\Models\Address;
+use App\Models\Location;
 use App\Models\Organization;
 
 beforeEach(function (): void {

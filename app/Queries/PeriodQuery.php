@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Enums\PeriodStatus;
+use App\Models\Organization;
 use App\Models\Period;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -22,7 +23,7 @@ final class PeriodQuery
                 ->where('id', $id);
         }
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -42,6 +43,18 @@ final class PeriodQuery
     {
         $this->builder
             ->where('status', PeriodStatus::Active);
+
+        return $this;
+    }
+
+    public function ofOrganization(Organization|string $organizationId): self
+    {
+        if ($organizationId instanceof Organization) {
+            $organizationId = $organizationId->id;
+        }
+
+        $this->builder
+            ->where('organization_id', $organizationId);
 
         return $this;
     }

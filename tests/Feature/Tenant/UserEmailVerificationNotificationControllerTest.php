@@ -3,15 +3,13 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use App\Notifications\VerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
 use Sprout\Exceptions\MisconfigurationException;
 
 use function App\tenant_route;
 
-beforeEach(function (): void {
-    $this->tenant = $this->tenant;
-});
+beforeEach(function (): void {});
 
 it('renders verify email page',
     /**

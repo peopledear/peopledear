@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Organization\CreateOrganization;
-use App\Actions\Organization\SetCurrentOrganization;
 use App\Actions\Organization\UpdateOrganization;
-use App\Data\PeopleDear\Country\CountryData;
-use App\Data\PeopleDear\Organization\CreateOrganizationData;
 use App\Data\PeopleDear\Organization\UpdateOrganizationData;
-use App\Http\Requests\CreateOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organization;
-use App\Queries\CountryQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -29,34 +23,6 @@ final class OrganizationController
         Gate::authorize('view', $organization);
 
         return Inertia::render('org/index', []);
-    }
-
-    public function create(CountryQuery $countryQuery): Response
-    {
-        $countries = $countryQuery->builder()
-            ->orderBy('iso_code')
-            ->get();
-
-        return Inertia::render('org/create', [
-            'countries' => CountryData::collect($countries),
-        ]);
-    }
-
-    public function store(
-        CreateOrganizationRequest $request,
-        CreateOrganization $action,
-        SetCurrentOrganization $setCurrentOrganization,
-    ): RedirectResponse {
-        $data = CreateOrganizationData::from($request->validated());
-
-        $organization = $action->handle($data);
-
-        $setCurrentOrganization->handle($organization);
-
-        return to_route('tenant.org.overview', [
-            'tenant' => $organization->identifier,
-        ])
-            ->with('success', 'Organization created successfully');
     }
 
     public function edit(

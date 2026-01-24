@@ -70,7 +70,7 @@ export default function TimeOffTypeForm({
         useState<boolean>(false);
 
     return (
-        <Card>
+        <Card className="bg-weaker ring-weaker ring-1">
             <CardContent>
                 <Form
                     action={store(props.tenant.identifier)}
@@ -228,7 +228,7 @@ export default function TimeOffTypeForm({
                                 onOpenChange={setOpenAdvancedSettings}
                             >
                                 <DialogContent
-                                    className="sm:max-w-131.25"
+                                    className="bg-weaker ring-weaker ring-1 sm:max-w-131.25"
                                     showCloseButton={false}
                                 >
                                     <div className="flex items-center justify-between gap-x-6 pb-4">

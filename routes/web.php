@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\OrganizationEmployeeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,7 +30,7 @@ Route::domain(config()->string('multitenancy.tenanted_domain'))->group(function 
 
                 Route::as('employees.')->prefix('employees')
                     ->group(function (): void {
-                        Route::get('/', [OrganizationEmployeeController::class, 'index'])
+                        Route::get('/', [EmployeeController::class, 'index'])
                             ->name('index');
                     });
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\PeopleDear\TimeOffType;
 
 use App\Data\CastsAndTransformers\AsIconDataTransformer;
+use App\Data\CastsAndTransformers\TimeOffTypeStatusTransformer;
 use App\Enums\BalanceType;
 use App\Enums\Icon;
 use App\Enums\TimeOffTypeStatus;
@@ -34,6 +35,7 @@ final class TimeOffTypeData extends Data
         public readonly Icon $icon,
         public readonly string $color,
         #[WithCast(EnumCast::class, TimeOffTypeStatus::class)]
+        #[WithTransformer(TimeOffTypeStatusTransformer::class)]
         public readonly TimeOffTypeStatus $status,
         public readonly bool $requiresApproval,
         public readonly bool $requiresJustification,

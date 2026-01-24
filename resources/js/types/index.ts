@@ -3,14 +3,14 @@ import { LucideIcon } from "lucide-react";
 import {
     RequestStatusEnum,
     TimeOffTypeEnum,
-    TimeOffTypeStatus,
+    TimeOffTypeStatusEnum,
     TimeOffUnitEnum,
 } from "./enums";
 
 export {
     RequestStatusEnum,
     TimeOffTypeEnum,
-    TimeOffTypeStatus,
+    TimeOffTypeStatusEnum,
     TimeOffUnitEnum,
 };
 
@@ -101,6 +101,12 @@ export interface RequestStatus {
     label: string;
     color: string;
     icon: string;
+}
+
+export interface TimeOffTypeStatus {
+    value: TimeOffTypeStatusEnum;
+    label: string;
+    color: string;
 }
 
 export interface TimeOffType {

@@ -28,9 +28,9 @@ enum TimeOffTypeStatus: int
     public function color(): string
     {
         return match ($this) {
-            self::Pending => 'yellow',
-            self::Active => 'green',
-            self::Inactive => 'gray',
+            self::Pending => 'warning',
+            self::Active => 'success',
+            self::Inactive => 'secondary',
         };
     }
 }

@@ -19,7 +19,7 @@ export enum TimeOffTypeEnum {
     Bereavement = 4,
 }
 
-export enum TimeOffTypeStatus {
+export enum TimeOffTypeStatusEnum {
     Pending = 1,
     Active = 2,
     Inactive = 3,

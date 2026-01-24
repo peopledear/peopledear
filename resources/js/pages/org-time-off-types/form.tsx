@@ -193,7 +193,7 @@ export default function TimeOffTypeForm({
                                     <Button
                                         type="button"
                                         variant="link"
-                                        className="cursor-pointer text-teal-500 hover:text-teal-600 hover:no-underline"
+                                        className="cursor-pointer text-emerald-500 hover:text-emerald-500 hover:no-underline"
                                         onClick={() =>
                                             setOpenAdvancedSettings(true)
                                         }

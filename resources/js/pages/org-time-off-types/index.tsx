@@ -1,5 +1,4 @@
 import Icon from "@/components/time-offs/icon";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -18,6 +17,7 @@ import {
     ItemSeparator,
     ItemTitle,
 } from "@/components/ui/item";
+import { BadgeColor, StatusBadge } from "@/components/ui/status-badge";
 import {
     Tooltip,
     TooltipContent,
@@ -25,8 +25,11 @@ import {
 } from "@/components/ui/tooltip";
 import AdminLayout from "@/layouts/org-layout";
 import OrgSettingsLayout from "@/layouts/settings/org-layout";
-import { cn } from "@/lib/utils";
-import { TenantedSharedData, TimeOffType, TimeOffTypeStatus } from "@/types";
+import {
+    TenantedSharedData,
+    TimeOffType,
+    TimeOffTypeStatusEnum,
+} from "@/types";
 import { create } from "@/wayfinder/routes/tenant/settings/time-off-types";
 import { Head, Link, usePage } from "@inertiajs/react";
 import {
@@ -96,11 +99,11 @@ export default function TimeOffTypesPage({
                                                     {timeOffType.description}
                                                 </ItemDescription>
                                             </ItemContent>
-                                            <div>
+                                            <div className="flex items-center gap-2">
                                                 {timeOffType.isSystem && (
                                                     <Tooltip>
                                                         <TooltipTrigger>
-                                                            <ShieldCheck className="size-4 text-teal-500" />
+                                                            <ShieldCheck className="size-4 text-emerald-500" />
                                                         </TooltipTrigger>
                                                         <TooltipContent>
                                                             System time off
@@ -108,36 +111,22 @@ export default function TimeOffTypesPage({
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 )}
-                                            </div>
-
-                                            <div>
-                                                <Badge
-                                                    variant="outline"
-                                                    className={cn(
-                                                        timeOffType.status ===
-                                                            TimeOffTypeStatus.Active
-                                                            ? "border-emerald-500 bg-emerald-500 text-emerald-500"
-                                                            : timeOffType.status ===
-                                                                TimeOffTypeStatus.Pending
-                                                              ? "border-yellow-500 bg-yellow-500 text-yellow-500"
-                                                              : "border-gray-500 bg-gray-500 text-gray-500",
-                                                        "rounded-md px-3 py-0.5 text-xs font-semibold dark:bg-transparent",
-                                                    )}
-                                                >
-                                                    {timeOffType.status ===
-                                                    TimeOffTypeStatus.Active ? (
-                                                        <CircleCheck className="size-4" />
-                                                    ) : (
-                                                        <Circle className="size-4" />
-                                                    )}
-                                                    {timeOffType.status ===
-                                                    TimeOffTypeStatus.Active
-                                                        ? "Active"
-                                                        : timeOffType.status ===
-                                                            TimeOffTypeStatus.Pending
-                                                          ? "Pending"
-                                                          : "Inactive"}
-                                                </Badge>
+                                                <StatusBadge
+                                                    label={
+                                                        timeOffType.status.label
+                                                    }
+                                                    color={
+                                                        timeOffType.status
+                                                            .color as BadgeColor
+                                                    }
+                                                    icon={
+                                                        timeOffType.status
+                                                            .value ===
+                                                        TimeOffTypeStatusEnum.Active
+                                                            ? CircleCheck
+                                                            : Circle
+                                                    }
+                                                />
                                             </div>
                                             <ItemActions>
                                                 <Button

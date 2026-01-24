@@ -34,7 +34,7 @@ test('colors', function (TimeOffTypeStatus $case, string $color): void {
     expect($case->color())->toBe($color);
 
 })->with([
-    [TimeOffTypeStatus::Pending, 'yellow'],
-    [TimeOffTypeStatus::Active, 'green'],
-    [TimeOffTypeStatus::Inactive, 'gray'],
+    [TimeOffTypeStatus::Pending, 'warning'],
+    [TimeOffTypeStatus::Active, 'success'],
+    [TimeOffTypeStatus::Inactive, 'secondary'],
 ]);

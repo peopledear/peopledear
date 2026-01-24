@@ -9,6 +9,7 @@ use App\Models\TimeOffRequest;
 use App\Models\TimeOffType;
 use App\Models\VacationBalance;
 use Sprout\Exceptions\MisconfigurationException;
+
 use function App\tenant_route;
 
 beforeEach(function (): void {

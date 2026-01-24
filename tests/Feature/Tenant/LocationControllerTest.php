@@ -8,6 +8,7 @@ use App\Models\Address;
 use App\Models\Country;
 use App\Models\Location;
 use Sprout\Exceptions\MisconfigurationException;
+
 use function App\tenant_route;
 
 beforeEach(

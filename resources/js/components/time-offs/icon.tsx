@@ -8,7 +8,7 @@ interface IconProps {
 
 export default function Icon({ name, size = "size-4" }: IconProps) {
     return (
-        <div className="bg-weak flex items-center justify-center rounded-sm p-2.5 text-white dark:text-gray-400">
+        <div className="border-border bg-muted text-foreground flex items-center justify-center rounded-sm border p-2.5">
             <DynamicIcon name={name as IconName} className={cn(size)} />
         </div>
     );

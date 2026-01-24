@@ -126,7 +126,15 @@ public function builder(): Builder
 
 - **Feature branches**: Always create `git checkout -b feature/descriptive-name`
 - **Before branching**: `git fetch && git pull origin main`
-- **Before commits**: Run `composer test:unit`, `vendor/bin/pint --dirty`, `composer test:types`
+
+### Before Every Commit (CRITICAL)
+
+**You MUST run these commands before every commit:**
+
+1. `composer test:lint` - Check and fix code style (runs rector, pint, npm lint)
+2. `composer test` - Run full test suite (requires 100% coverage, linting, type checking)
+
+**Do NOT commit if either command fails.** Fix any issues first, then commit.
 
 ### Commits
 
@@ -748,11 +756,6 @@ test('existing feature works', function (): void {
 - To filter on a particular test name: `php artisan test --compact --filter=testName` (recommended after making a change to a related file).
 - At the end of each work session, run the full test suite to ensure everything passes.
 
-### Before Every Commit
-
-**ALWAYS run:**
-- `composer test:lint` to check code style
-- `composer test` to run the full test suite
 
 === .ai/app.queries rules ===
 

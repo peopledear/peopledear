@@ -23,8 +23,8 @@ Queries should **NOT** contain business logic - that belongs in Actions.
 ### Required Method
 **ALL Queries MUST implement a `builder()` method** that returns an Eloquent or Query Builder instance:
 
-@boostsnippet('Query Class Structure')
-```php
+@verbatim
+<code-snippet name="Query Class Structure" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -44,7 +44,8 @@ final class CountryQuery
         return Country::query();
     }
 }
-```
+</code-snippet>
+@endverbatim
 
 ## Usage in Controllers
 
@@ -189,8 +190,8 @@ public function index(CountryQuery $countryQuery): Response
 ### Query Tests
 Create tests for Query classes in `tests/Unit/Queries/`:
 
-@boostsnippet('Query Test Example')
-```php
+@verbatim
+<code-snippet name="Query Test Example" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -218,7 +219,8 @@ test('builder returns countries', function (): void {
         ->not->toBeNull()
         ->id->toBe($country->id);
 });
-```
+</code-snippet>
+@endverbatim
 
 ## What NOT to Put in Queries
 

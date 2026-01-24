@@ -23,11 +23,11 @@ Controllers should **NOT** contain business logic - that belongs in Actions.
 ```php
 final readonly class ActivateUserController
 {
-public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
-{
-$action->handle($user);
-return redirect()->back();
-}
+    public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
+    {
+        $action->handle($user);
+        return redirect()->back();
+    }
 }
 ```
 
@@ -35,9 +35,9 @@ return redirect()->back();
 ```php
 final readonly class LocationController
 {
-public function store(CreateLocationRequest $request): RedirectResponse { }
-public function update(UpdateLocationRequest $request, Location $office): RedirectResponse { }
-public function destroy(Location $office): RedirectResponse { }
+    public function store(CreateLocationRequest $request): RedirectResponse { }
+    public function update(UpdateLocationRequest $request, Location $office): RedirectResponse { }
+    public function destroy(Location $office): RedirectResponse { }
 }
 ```
 
@@ -46,8 +46,8 @@ public function destroy(Location $office): RedirectResponse { }
 ### Always Use Form Requests
 **ALWAYS create dedicated Form Request classes** - NEVER use inline validation:
 
-@boostsnippet('Form Request Example')
-```php
+@verbatim
+<code-snippet name="Form Request Example" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -79,18 +79,18 @@ final class UpdateLocationRequest extends FormRequest
         ];
     }
 }
-
-```
+</code-snippet>
+@endverbatim
 
 ### Create Form Requests
 ```bash
-php artisan make:request UpdateLocationRequest--no - interaction
+php artisan make:request UpdateLocationRequest --no-interaction
 ```
 
 ## Controller Flow Pattern
 
-@boostsnippet('Complete Controller Example')
-```php
+@verbatim
+<code-snippet name="Complete Controller Example" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -106,7 +106,6 @@ use App\Http\Requests\CreateLocationRequest;
 use App\Http\Requests\UpdateLocationRequest;
 use App\Models\Location;
 use App\Models\User;
-use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 
@@ -154,8 +153,8 @@ final class LocationController
             ->with('success', 'Location deleted successfully');
     }
 }
-
-```
+</code-snippet>
+@endverbatim
 
 ## Dependency Injection
 
@@ -194,9 +193,8 @@ public function store(CreateLocationRequest $request): RedirectResponse
 
 **Always use `#[CurrentUser]` instead of `Request::user()`:**
 
-@boostsnippet('CurrentUser Attribute')
-```php
-
+@verbatim
+<code-snippet name="CurrentUser Attribute" lang="php">
 public function store(
     CreateLocationRequest $request,
     #[CurrentUser] User $user  // ✅ Clean and explicit
@@ -206,7 +204,8 @@ public function store(
     $this->createLocation->handle($data, $user);
     return redirect()->route('admin.settings.organization.edit');
 }
-```
+</code-snippet>
+@endverbatim
 
 ❌ **Don't inject Request just to get user:**
 ```php

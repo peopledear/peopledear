@@ -9,7 +9,8 @@
 - Wrap complex operations in `DB::transaction()` within actions when multiple models are involved.
 - Some actions won't require dependencies via `__construct` and they can use just the `handle()` method.
 
-@boostsnippet('Example action class', 'php')
+@verbatim
+<code-snippet name="Example action class" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -28,15 +29,16 @@ final readonly class CreateFavorite
         return $this->favorites->add($user, $favorite);
     }
 }
-
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
 ## Action Method Signatures
 
 ### Update Actions
-** ALWAYS accept the model being updated ** as a parameter:
+**ALWAYS accept the model being updated** as a parameter:
 
-@boostsnippet('Update Action Signature', 'php')
+@verbatim
+<code-snippet name="Update Action Signature" lang="php">
 <?php
 
 // ✅ CORRECT - Accept the model
@@ -53,13 +55,14 @@ public function handle(UpdateOrganizationData $data): Organization
     $organization->update($data->toArray());
     return $organization->refresh();
 }
-
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
 ### Delete Actions
-** ALWAYS accept the model being deleted ** as a parameter:
+**ALWAYS accept the model being deleted** as a parameter:
 
-@boostsnippet('Delete Action Signature', 'php')
+@verbatim
+<code-snippet name="Delete Action Signature" lang="php">
 <?php
 
 // ✅ CORRECT - Accept the model
@@ -74,13 +77,14 @@ public function handle(int $officeId): void
     $office = Office::query()->findOrFail($officeId); // ❌ Don't do this
     $office->delete();
 }
-
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
 ### Create Actions
-** Accept Data object and any required context ** (user, parent models, etc .):
+**Accept Data object and any required context** (user, parent models, etc.):
 
-@boostsnippet('Create Action Signature', 'php')
+@verbatim
+<code-snippet name="Create Action Signature" lang="php">
 <?php
 
 public function handle(CreateOfficeData $data, Organization $organization): Office
@@ -91,15 +95,16 @@ public function handle(CreateOfficeData $data, Organization $organization): Offi
 
     return $office->refresh();
 }
-
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
 ## Using toArray() with Optional
 
-** Data objects automatically handle Optional ** - use;use App\Actions\Organization\UpdateOrganization;`toArray()` for clean updates:
+**Data objects automatically handle Optional** - use `toArray()` for clean updates:
 
-    @boostsnippet('toArray with Optional', 'php')
-    <?php
+@verbatim
+<code-snippet name="toArray with Optional" lang="php">
+<?php
 
 public function handle(UpdateOrganizationData $data, Organization $organization): Organization
 {
@@ -109,28 +114,29 @@ public function handle(UpdateOrganizationData $data, Organization $organization)
 
     return $organization->refresh();
 }
-
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
 ## Action Naming Convention
 
-    ** Action classes are named WITHOUT the "Action" suffix:**
+**Action classes are named WITHOUT the "Action" suffix:**
 
--✅ CORRECT: `CreateOrganization`, `UpdateOrganization`, `DeleteOffice`
+- ✅ CORRECT: `CreateOrganization`, `UpdateOrganization`, `DeleteOffice`
 - ❌ WRONG: `CreateOrganizationAction`, `UpdateOrganizationAction`, `DeleteOfficeAction`
 
-** Action test files follow the same naming:**
+**Action test files follow the same naming:**
 
--Action class: `app/Actions/CreateOrganization.php`
+- Action class: `app/Actions/CreateOrganization.php`
 - Test file: `tests/Unit/Actions/CreateOrganizationTest.php`
 
-This keeps action names clean and concise while maintaining clarity about their purpose .
+This keeps action names clean and concise while maintaining clarity about their purpose.
 
 ## Testing Actions
 
-**ALWAYS create unit tests for Actions ** to verify business logic:
+**ALWAYS create unit tests for Actions** to verify business logic:
 
-@boostsnippet('Action Tests', 'php')
+@verbatim
+<code-snippet name="Action Tests" lang="php">
 <?php
 
 use App\Actions\Organization\UpdateOrganization;
@@ -138,8 +144,8 @@ use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
 use Spatie\LaravelData\Optional;
 
-test('it updates organization with all fields', function (): void {
-    $action = new UpdateOrganization();
+test('updates organization with all fields', function (): void {
+    $action = app(UpdateOrganization::class);
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -162,8 +168,8 @@ test('it updates organization with all fields', function (): void {
         ->and($result->phone)->toBe('+1234567890');
 });
 
-test('it updates organization with partial fields only', function (): void {
-    $action = new UpdateOrganization();
+test('updates organization with partial fields only', function (): void {
+    $action = app(UpdateOrganization::class);
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -184,8 +190,8 @@ test('it updates organization with partial fields only', function (): void {
         ->and($result->vat_number)->toBe('OLD_VAT'); // ✅ Unchanged
 });
 
-test('it can set fields to null explicitly', function (): void {
-    $action = new UpdateOrganization();
+test('can set fields to null explicitly', function (): void {
+    $action = app(UpdateOrganization::class);
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -201,7 +207,7 @@ test('it can set fields to null explicitly', function (): void {
     $result = $action->handle($data, $organization);
 
     expect($result->name)->toBe('Test Company') // ✅ Unchanged
-    ->and($result->phone)->toBeNull(); // ✅ Set to null
+        ->and($result->phone)->toBeNull(); // ✅ Set to null
 });
-
-@endboostsnippet
+</code-snippet>
+@endverbatim

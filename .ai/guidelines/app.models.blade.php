@@ -10,15 +10,15 @@ Use `@property` for writable database fields and `@property-read` for read-only 
 
 ```php
 /**
-* @property-read int $id
-* @property string $name
-* @property string|null $vat_number
-* @property string|null $ssn
-* @property string|null $phone
-* @property OfficeType $type
-* @property-read Carbon $created_at
-* @property-read Carbon $updated_at
-*/
+ * @property-read int $id
+ * @property string $name
+ * @property string|null $vat_number
+ * @property string|null $ssn
+ * @property string|null $phone
+ * @property OfficeType $type
+ * @property-read Carbon $created_at
+ * @property-read Carbon $updated_at
+ */
 ```
 
 #### Relationships
@@ -26,62 +26,61 @@ Use `@property-read` for ALL relationships (relationships are always read-only):
 
 ```php
 /**
-* @property-read Organization $organization
-* @property-read Address $address
-* @property-read Collection
-<int, Office> $offices
-*/
+ * @property-read Organization $organization
+ * @property-read Address $address
+ * @property-read Collection<int, Office> $offices
+ */
 ```
 
 ### Relationship Method Return Types
 **ALWAYS add PHPDoc return type hints with PHPStan generics** for all relationship methods:
 
-@boostsnippet('BelongsTo Relationship')
-```php
-/** @return BelongsTo
-<Organization, $this> */
+@verbatim
+<code-snippet name="BelongsTo Relationship" lang="php">
+/** @return BelongsTo<Organization, $this> */
 public function organization(): BelongsTo
 {
-return $this->belongsTo(Organization::class);
+    return $this->belongsTo(Organization::class);
 }
-```
+</code-snippet>
+@endverbatim
 
-@boostsnippet('HasMany Relationship')
-```php
-/** @return HasMany
-<Office, $this> */
+@verbatim
+<code-snippet name="HasMany Relationship" lang="php">
+/** @return HasMany<Office, $this> */
 public function offices(): HasMany
 {
-return $this->hasMany(Office::class);
+    return $this->hasMany(Office::class);
 }
-```
+</code-snippet>
+@endverbatim
 
-@boostsnippet('MorphTo Relationship')
-```php
-/** @return MorphTo
-<Model, $this> */
+@verbatim
+<code-snippet name="MorphTo Relationship" lang="php">
+/** @return MorphTo<Model, $this> */
 public function addressable(): MorphTo
 {
-return $this->morphTo();
+    return $this->morphTo();
 }
-```
+</code-snippet>
+@endverbatim
 
-@boostsnippet('MorphOne Relationship')
-```php
-/** @return MorphOne
-<Address, $this> */
+@verbatim
+<code-snippet name="MorphOne Relationship" lang="php">
+/** @return MorphOne<Address, $this> */
 public function address(): MorphOne
 {
-return $this->morphOne(Address::class, 'addressable');
+    return $this->morphOne(Address::class, 'addressable');
 }
-```
+</code-snippet>
+@endverbatim
 
-@boostsnippet('BelongsToMany Relationship')
-```php
-/** @return BelongsToMany
-<Role, $this> */
+@verbatim
+<code-snippet name="BelongsToMany Relationship" lang="php">
+/** @return BelongsToMany<Role, $this> */
 public function roles(): BelongsToMany
 {
-return $this->belongsToMany(Role::class);
+    return $this->belongsToMany(Role::class);
 }
-```
+</code-snippet>
+@endverbatim

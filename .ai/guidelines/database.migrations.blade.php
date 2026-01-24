@@ -12,7 +12,8 @@
 - Handle deletions explicitly in the application layer using Actions (cascading can lead to unintended data loss)
 - When modifying a column, MUST include ALL attributes previously defined, otherwise they will be dropped
 
-@boostsnippet('Correct CREATE TABLE column order', 'php')
+@verbatim
+<code-snippet name="Correct CREATE TABLE column order" lang="php">
 Schema::create('users', function (Blueprint $table) {
     $table->id();
     $table->timestamps();
@@ -20,16 +21,20 @@ Schema::create('users', function (Blueprint $table) {
     $table->string('email')->unique();
     $table->boolean('is_active');
 });
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
-@boostsnippet('Correct ALTER TABLE migration without after()', 'php')
+@verbatim
+<code-snippet name="Correct ALTER TABLE migration without after()" lang="php">
 Schema::table('users', function (Blueprint $table) {
     $table->string('phone')->nullable();
     // ✅ CORRECT - no after() method for PostgreSQL compatibility
 });
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
-@boostsnippet('Correct migration structure without down()', 'php')
+@verbatim
+<code-snippet name="Correct migration structure without down()" lang="php">
 return new class extends Migration
 {
     public function up(): void
@@ -44,18 +49,22 @@ return new class extends Migration
         });
     }
 };
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
-@boostsnippet('CORRECT - Default in Model attributes', 'php')
+@verbatim
+<code-snippet name="CORRECT - Default in Model attributes" lang="php">
 class User extends Model
 {
     protected $attributes = [
         'is_active' => true, // ✅ Simple defaults belong here
     ];
 }
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
-@boostsnippet('CORRECT - Context-dependent default in Action', 'php')
+@verbatim
+<code-snippet name="CORRECT - Context-dependent default in Action" lang="php">
 class CreateUser
 {
     public function handle(string $email, string $name, ?int $roleId = null): User
@@ -68,9 +77,11 @@ class CreateUser
         ]);
     }
 }
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
-@boostsnippet('Correct foreign keys without cascade', 'php')
+@verbatim
+<code-snippet name="Correct foreign keys without cascade" lang="php">
 Schema::create('invitations', function (Blueprint $table) {
     $table->id();
     $table->timestamps();
@@ -80,11 +91,14 @@ Schema::create('invitations', function (Blueprint $table) {
     // ✅ Auto-infers 'role_id' and 'roles' table
     // ❌ NO ->onDelete('cascade') or ->onUpdate('cascade')
 });
-@endboostsnippet
+</code-snippet>
+@endverbatim
 
-@boostsnippet('Column modification preserving all attributes', 'php')
+@verbatim
+<code-snippet name="Column modification preserving all attributes" lang="php">
 Schema::table('users', function (Blueprint $table) {
     $table->string('email')->unique()->nullable()->change();
     // ✅ MUST include ALL previous attributes or they will be lost
 });
-@endboostsnippet
+</code-snippet>
+@endverbatim

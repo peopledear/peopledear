@@ -232,7 +232,6 @@ Then update your MCP configuration files (`.mcp.json`, `.cursor/mcp.json`, etc.)
 - Some actions won't require dependencies via `__construct` and they can use just the `handle()` method.
 
 <code-snippet name="Example action class" lang="php">
-
 <?php
 
 declare(strict_types=1);
@@ -251,16 +250,14 @@ final readonly class CreateFavorite
         return $this->favorites->add($user, $favorite);
     }
 }
-
 </code-snippet>
 
 ## Action Method Signatures
 
 ### Update Actions
-** ALWAYS accept the model being updated ** as a parameter:
+**ALWAYS accept the model being updated** as a parameter:
 
 <code-snippet name="Update Action Signature" lang="php">
-
 <?php
 
 // ✅ CORRECT - Accept the model
@@ -277,14 +274,12 @@ public function handle(UpdateOrganizationData $data): Organization
     $organization->update($data->toArray());
     return $organization->refresh();
 }
-
 </code-snippet>
 
 ### Delete Actions
-** ALWAYS accept the model being deleted ** as a parameter:
+**ALWAYS accept the model being deleted** as a parameter:
 
 <code-snippet name="Delete Action Signature" lang="php">
-
 <?php
 
 // ✅ CORRECT - Accept the model
@@ -299,14 +294,12 @@ public function handle(int $officeId): void
     $office = Office::query()->findOrFail($officeId); // ❌ Don't do this
     $office->delete();
 }
-
 </code-snippet>
 
 ### Create Actions
-** Accept Data object and any required context ** (user, parent models, etc .):
+**Accept Data object and any required context** (user, parent models, etc.):
 
 <code-snippet name="Create Action Signature" lang="php">
-
 <?php
 
 public function handle(CreateOfficeData $data, Organization $organization): Office
@@ -317,16 +310,14 @@ public function handle(CreateOfficeData $data, Organization $organization): Offi
 
     return $office->refresh();
 }
-
 </code-snippet>
 
 ## Using toArray() with Optional
 
-** Data objects automatically handle Optional ** - use;use App\Actions\Organization\UpdateOrganization;`toArray()` for clean updates:
+**Data objects automatically handle Optional** - use `toArray()` for clean updates:
 
-    <code-snippet name="toArray with Optional" lang="php">
-
-    <?php
+<code-snippet name="toArray with Optional" lang="php">
+<?php
 
 public function handle(UpdateOrganizationData $data, Organization $organization): Organization
 {
@@ -336,29 +327,27 @@ public function handle(UpdateOrganizationData $data, Organization $organization)
 
     return $organization->refresh();
 }
-
 </code-snippet>
 
 ## Action Naming Convention
 
-    ** Action classes are named WITHOUT the "Action" suffix:**
+**Action classes are named WITHOUT the "Action" suffix:**
 
--✅ CORRECT: `CreateOrganization`, `UpdateOrganization`, `DeleteOffice`
+- ✅ CORRECT: `CreateOrganization`, `UpdateOrganization`, `DeleteOffice`
 - ❌ WRONG: `CreateOrganizationAction`, `UpdateOrganizationAction`, `DeleteOfficeAction`
 
-** Action test files follow the same naming:**
+**Action test files follow the same naming:**
 
--Action class: `app/Actions/CreateOrganization.php`
+- Action class: `app/Actions/CreateOrganization.php`
 - Test file: `tests/Unit/Actions/CreateOrganizationTest.php`
 
-This keeps action names clean and concise while maintaining clarity about their purpose .
+This keeps action names clean and concise while maintaining clarity about their purpose.
 
 ## Testing Actions
 
-**ALWAYS create unit tests for Actions ** to verify business logic:
+**ALWAYS create unit tests for Actions** to verify business logic:
 
 <code-snippet name="Action Tests" lang="php">
-
 <?php
 
 use App\Actions\Organization\UpdateOrganization;
@@ -366,8 +355,8 @@ use App\Data\PeopleDear\Organization\UpdateOrganizationData;
 use App\Models\Organization;
 use Spatie\LaravelData\Optional;
 
-test('it updates organization with all fields', function (): void {
-    $action = new UpdateOrganization();
+test('updates organization with all fields', function (): void {
+    $action = app(UpdateOrganization::class);
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -390,8 +379,8 @@ test('it updates organization with all fields', function (): void {
         ->and($result->phone)->toBe('+1234567890');
 });
 
-test('it updates organization with partial fields only', function (): void {
-    $action = new UpdateOrganization();
+test('updates organization with partial fields only', function (): void {
+    $action = app(UpdateOrganization::class);
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -412,8 +401,8 @@ test('it updates organization with partial fields only', function (): void {
         ->and($result->vat_number)->toBe('OLD_VAT'); // ✅ Unchanged
 });
 
-test('it can set fields to null explicitly', function (): void {
-    $action = new UpdateOrganization();
+test('can set fields to null explicitly', function (): void {
+    $action = app(UpdateOrganization::class);
 
     /** @var Organization $organization */
     $organization = Organization::factory()->createQuietly([
@@ -429,9 +418,8 @@ test('it can set fields to null explicitly', function (): void {
     $result = $action->handle($data, $organization);
 
     expect($result->name)->toBe('Test Company') // ✅ Unchanged
-    ->and($result->phone)->toBeNull(); // ✅ Set to null
+        ->and($result->phone)->toBeNull(); // ✅ Set to null
 });
-
 </code-snippet>
 
 === .ai/tests rules ===
@@ -443,28 +431,27 @@ test('it can set fields to null explicitly', function (): void {
 - **Full test coverage required** - Test happy paths, failure paths, edge cases
 - **TDD approach** - Write tests first, then implementation
 - **All tests must pass before committing**
-- Use Pest for all tests (`php artisan make:test --pest`)
+- use `composer test:lint` to check code style
+- Use `composer test` to run all the test suite
 - **ALWAYS use `test('description', function () { ... });` syntax** - NEVER use `it()`.
 
 ## Test Structure
 
 ### Flat Test Organization
 **ALWAYS use flat structure** - NO nested subdirectories:
-- ✅ Correct: `tests/Unit/Actions/CreateOfficeActionTest.php`
-- ❌ Wrong: `tests/Unit/Actions/Office/CreateOfficeActionTest.php`
+- ✅ Correct: `tests/Unit/Actions/CreateLocationTest.php`
+- ❌ Wrong: `tests/Unit/Actions/Location/CreateLocationTest.php`
 - Exception: Organizing by type is allowed (Models/, Actions/, Enums/)
 - Exception: For multi-tenant applications, use Landlord/ and Tenant/ subdirectories under Feature/ and Browser/ to scope tests appropriately (e.g., tests/Feature/Tenant/UserProfileControllerTest.php).
 
 ### Test File Naming
 - Test files end with `Test.php`
-- Match the class being tested: `CreateOfficeAction` → `CreateOfficeActionTest`
+- Match the class being tested: `CreateLocation` → `CreateLocationTest`
 - Place in appropriate directory: Unit/, Feature/, or Browser/
 
 ### Test Naming Convention
 
 **ALWAYS use imperative mood for test names** - describe what the code does, not what "it" does:
-
-@boostsnippet('Imperative Mood Test Names')
 
 <code-snippet name="Imperative Mood Test Names" lang="php">
 // ✅ CORRECT - Imperative mood (commands)
@@ -493,8 +480,7 @@ test('it handles null values correctly', function (): void { ... });
 
 **ALWAYS resolve Actions from container** - NEVER use `new`:
 
-@boostsnippet('Action Test with beforeEach')
-```php
+<code-snippet name="Action Test with beforeEach" lang="php">
 <?php
 
 use App\Actions\Organization\UpdateOrganization;
@@ -518,7 +504,7 @@ test('updates organization with all fields', function (): void {
 
     expect($result->name)->toBe('New Name');
 });
-```
+</code-snippet>
 
 ❌ **WRONG - Don't use new:**
 ```php
@@ -546,8 +532,7 @@ beforeEach(function (): void {
 
 **Same pattern applies to ALL container-resolved classes** (Processors, Validators, Services, etc.):
 
-@boostsnippet('Processor Test with beforeEach')
-```php
+<code-snippet name="Processor Test with beforeEach" lang="php">
 <?php
 
 use App\Processors\TimeOffType\VacationProcessor;
@@ -577,14 +562,13 @@ test('deducts days from vacation balance when processed', function (): void {
 
     expect($balance->refresh()->taken)->toBe(800);
 });
-```
+</code-snippet>
 
 ### Reusable Test Data in beforeEach
 
 **If models, actions, or other resources are reused across multiple tests, ALWAYS define them in `beforeEach`:**
 
-@boostsnippet('Reusable Resources in beforeEach')
-```php
+<code-snippet name="Reusable Resources in beforeEach" lang="php">
 beforeEach(
     /**
      * @throws Throwable
@@ -607,7 +591,7 @@ test('creates office', function (): void {
 
     expect($office->name)->toBe('HQ');
 });
-```
+</code-snippet>
 
 **When NOT to use beforeEach:**
 - Data specific to a single test
@@ -656,8 +640,7 @@ beforeEach(
 - **Use `fresh()`** for records from migrations/seeders
 - **Pass data explicitly** - Don't rely on factory defaults in tests
 
-@boostsnippet('Factory Usage in Tests')
-```php
+<code-snippet name="Factory Usage in Tests" lang="php">
 // Create models
 /** @var User $user */
 $user = User::factory()->createQuietly(['name' => 'Test']);
@@ -668,36 +651,33 @@ $role = Role::query()
     ->where('name', 'employee')
     ->first()
     ?->fresh();
-```
+</code-snippet>
 
 ### Assertions
 - **Chain expect() methods** for cleaner tests
 - Use specific assertions: `assertOk()`, `assertForbidden()` not `assertStatus()`
 - **Import all classes** - Never use fully qualified names inline
 
-@boostsnippet('Chained Expect')
-```php
+<code-snippet name="Chained Expect" lang="php">
 expect($result->name)
     ->toBe('Test Name')
     ->and($result->email)
     ->toBe('test@example.com')
     ->and($result->active)
     ->toBeTrue();
-```
+</code-snippet>
 
 ## Exception Testing
 
 **Use Pest's `->throws()` method:**
 
-@boostsnippet('Exception Testing')
-```php
-
+<code-snippet name="Exception Testing" lang="php">
 test('validates required field', function () {
     $data = [];
 
     CreateUserData::validateAndCreate($data);
 })->throws(ValidationException::class, 'email');
-```
+</code-snippet>
 
 ❌ **WRONG - Don't wrap in expect():**
 ```php
@@ -742,7 +722,7 @@ test('page renders correctly', function (): void {
 ```
 
 ### Global Configuration
-- `RefreshDatabase` applied globally in `tests / Pest . php`
+- `RefreshDatabase` applied globally in `tests/Pest.php`
 - Don't add `uses(RefreshDatabase::class)` in individual tests
 
 ## Test Organization
@@ -769,13 +749,13 @@ test('existing feature works', function (): void {
 php artisan test
 
 # Run specific file
-php artisan test tests / Unit / Actions / CreateOfficeActionTest . php
+php artisan test tests/Unit/Actions/CreateOfficeActionTest.php
 
 # Run with filter
-php artisan test--filter = "CreateOfficeActionTest"
+php artisan test --filter="CreateOfficeActionTest"
 
 # Stop on first failure
-php artisan test--stop - on - failure
+php artisan test --stop-on-failure
 ```
 
 ## Before Every Commit
@@ -784,7 +764,7 @@ php artisan test--stop - on - failure
 
 ```bash
 php artisan test              # All tests must pass
-vendor / bin / pint--dirty       # Format code
+vendor/bin/pint --dirty       # Format code
 ```
 
 === .ai/app.queries rules ===
@@ -814,8 +794,7 @@ Queries should **NOT** contain business logic - that belongs in Actions.
 ### Required Method
 **ALL Queries MUST implement a `builder()` method** that returns an Eloquent or Query Builder instance:
 
-@boostsnippet('Query Class Structure')
-```php
+<code-snippet name="Query Class Structure" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -835,7 +814,7 @@ final class CountryQuery
         return Country::query();
     }
 }
-```
+</code-snippet>
 
 ## Usage in Controllers
 
@@ -980,8 +959,7 @@ public function index(CountryQuery $countryQuery): Response
 ### Query Tests
 Create tests for Query classes in `tests/Unit/Queries/`:
 
-@boostsnippet('Query Test Example')
-```php
+<code-snippet name="Query Test Example" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -1009,7 +987,7 @@ test('builder returns countries', function (): void {
         ->not->toBeNull()
         ->id->toBe($country->id);
 });
-```
+</code-snippet>
 
 ## What NOT to Put in Queries
 
@@ -1126,15 +1104,15 @@ Use `@property` for writable database fields and `@property-read` for read-only 
 
 ```php
 /**
-* @property-read int $id
-* @property string $name
-* @property string|null $vat_number
-* @property string|null $ssn
-* @property string|null $phone
-* @property OfficeType $type
-* @property-read Carbon $created_at
-* @property-read Carbon $updated_at
-*/
+ * @property-read int $id
+ * @property string $name
+ * @property string|null $vat_number
+ * @property string|null $ssn
+ * @property string|null $phone
+ * @property OfficeType $type
+ * @property-read Carbon $created_at
+ * @property-read Carbon $updated_at
+ */
 ```
 
 #### Relationships
@@ -1142,65 +1120,54 @@ Use `@property-read` for ALL relationships (relationships are always read-only):
 
 ```php
 /**
-* @property-read Organization $organization
-* @property-read Address $address
-* @property-read Collection
-<int, Office> $offices
-*/
+ * @property-read Organization $organization
+ * @property-read Address $address
+ * @property-read Collection<int, Office> $offices
+ */
 ```
 
 ### Relationship Method Return Types
 **ALWAYS add PHPDoc return type hints with PHPStan generics** for all relationship methods:
 
-@boostsnippet('BelongsTo Relationship')
-```php
-/** @return BelongsTo
-<Organization, $this> */
+<code-snippet name="BelongsTo Relationship" lang="php">
+/** @return BelongsTo<Organization, $this> */
 public function organization(): BelongsTo
 {
-return $this->belongsTo(Organization::class);
+    return $this->belongsTo(Organization::class);
 }
-```
+</code-snippet>
 
-@boostsnippet('HasMany Relationship')
-```php
-/** @return HasMany
-<Office, $this> */
+<code-snippet name="HasMany Relationship" lang="php">
+/** @return HasMany<Office, $this> */
 public function offices(): HasMany
 {
-return $this->hasMany(Office::class);
+    return $this->hasMany(Office::class);
 }
-```
+</code-snippet>
 
-@boostsnippet('MorphTo Relationship')
-```php
-/** @return MorphTo
-<Model, $this> */
+<code-snippet name="MorphTo Relationship" lang="php">
+/** @return MorphTo<Model, $this> */
 public function addressable(): MorphTo
 {
-return $this->morphTo();
+    return $this->morphTo();
 }
-```
+</code-snippet>
 
-@boostsnippet('MorphOne Relationship')
-```php
-/** @return MorphOne
-<Address, $this> */
+<code-snippet name="MorphOne Relationship" lang="php">
+/** @return MorphOne<Address, $this> */
 public function address(): MorphOne
 {
-return $this->morphOne(Address::class, 'addressable');
+    return $this->morphOne(Address::class, 'addressable');
 }
-```
+</code-snippet>
 
-@boostsnippet('BelongsToMany Relationship')
-```php
-/** @return BelongsToMany
-<Role, $this> */
+<code-snippet name="BelongsToMany Relationship" lang="php">
+/** @return BelongsToMany<Role, $this> */
 public function roles(): BelongsToMany
 {
-return $this->belongsToMany(Role::class);
+    return $this->belongsToMany(Role::class);
 }
-```
+</code-snippet>
 
 === .ai/database.migrations rules ===
 
@@ -1219,7 +1186,6 @@ return $this->belongsToMany(Role::class);
 - When modifying a column, MUST include ALL attributes previously defined, otherwise they will be dropped
 
 <code-snippet name="Correct CREATE TABLE column order" lang="php">
-
 Schema::create('users', function (Blueprint $table) {
     $table->id();
     $table->timestamps();
@@ -1227,20 +1193,16 @@ Schema::create('users', function (Blueprint $table) {
     $table->string('email')->unique();
     $table->boolean('is_active');
 });
-
 </code-snippet>
 
 <code-snippet name="Correct ALTER TABLE migration without after()" lang="php">
-
 Schema::table('users', function (Blueprint $table) {
     $table->string('phone')->nullable();
     // ✅ CORRECT - no after() method for PostgreSQL compatibility
 });
-
 </code-snippet>
 
 <code-snippet name="Correct migration structure without down()" lang="php">
-
 return new class extends Migration
 {
     public function up(): void
@@ -1255,22 +1217,18 @@ return new class extends Migration
         });
     }
 };
-
 </code-snippet>
 
 <code-snippet name="CORRECT - Default in Model attributes" lang="php">
-
 class User extends Model
 {
     protected $attributes = [
         'is_active' => true, // ✅ Simple defaults belong here
     ];
 }
-
 </code-snippet>
 
 <code-snippet name="CORRECT - Context-dependent default in Action" lang="php">
-
 class CreateUser
 {
     public function handle(string $email, string $name, ?int $roleId = null): User
@@ -1283,11 +1241,9 @@ class CreateUser
         ]);
     }
 }
-
 </code-snippet>
 
 <code-snippet name="Correct foreign keys without cascade" lang="php">
-
 Schema::create('invitations', function (Blueprint $table) {
     $table->id();
     $table->timestamps();
@@ -1297,16 +1253,13 @@ Schema::create('invitations', function (Blueprint $table) {
     // ✅ Auto-infers 'role_id' and 'roles' table
     // ❌ NO ->onDelete('cascade') or ->onUpdate('cascade')
 });
-
 </code-snippet>
 
 <code-snippet name="Column modification preserving all attributes" lang="php">
-
 Schema::table('users', function (Blueprint $table) {
     $table->string('email')->unique()->nullable()->change();
     // ✅ MUST include ALL previous attributes or they will be lost
 });
-
 </code-snippet>
 
 === .ai/general rules ===
@@ -1334,7 +1287,7 @@ Controllers should **NOT** contain business logic - that belongs in Actions.
 ### Flat Hierarchy
 - **Controllers live directly in `app/Http/Controllers/`** - NO nested folders
 - Clear naming eliminates need for namespace nesting
-- Examples: `UserController`, `OfficeController`, `OrganizationController`
+- Examples: `UserController`, `LocationController`, `OrganizationController`
 
 ### Single vs Multi-Action Controllers
 
@@ -1342,21 +1295,21 @@ Controllers should **NOT** contain business logic - that belongs in Actions.
 ```php
 final readonly class ActivateUserController
 {
-public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
-{
-$action->handle($user);
-return redirect()->back();
-}
+    public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
+    {
+        $action->handle($user);
+        return redirect()->back();
+    }
 }
 ```
 
 **Multi-Action Controllers** - Use named methods for related CRUD operations:
 ```php
-final readonly class OfficeController
+final readonly class LocationController
 {
-public function store(CreateOfficeRequest $request): RedirectResponse { }
-public function update(UpdateOfficeRequest $request, Office $office): RedirectResponse { }
-public function destroy(Office $office): RedirectResponse { }
+    public function store(CreateLocationRequest $request): RedirectResponse { }
+    public function update(UpdateLocationRequest $request, Location $office): RedirectResponse { }
+    public function destroy(Location $office): RedirectResponse { }
 }
 ```
 
@@ -1365,8 +1318,7 @@ public function destroy(Office $office): RedirectResponse { }
 ### Always Use Form Requests
 **ALWAYS create dedicated Form Request classes** - NEVER use inline validation:
 
-@boostsnippet('Form Request Example')
-```php
+<code-snippet name="Form Request Example" lang="php">
 <?php
 
 declare(strict_types=1);
@@ -1375,7 +1327,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class UpdateOfficeRequest extends FormRequest
+final class UpdateLocationRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -1398,83 +1350,79 @@ final class UpdateOfficeRequest extends FormRequest
         ];
     }
 }
-
-```
+</code-snippet>
 
 ### Create Form Requests
 ```bash
-php artisan make:request UpdateOfficeRequest--no - interaction
+php artisan make:request UpdateLocationRequest --no-interaction
 ```
 
 ## Controller Flow Pattern
 
-@boostsnippet('Complete Controller Example')
-```php
+<code-snippet name="Complete Controller Example" lang="php">
 <?php
 
 declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Office\CreateOffice;
-use App\Actions\Office\DeleteOffice;
-use App\Actions\Office\UpdateOffice;
-use App\Data\PeopleDear\Office\CreateOfficeData;
-use App\Data\PeopleDear\Office\UpdateOfficeData;
-use App\Http\Requests\CreateOfficeRequest;
-use App\Http\Requests\UpdateOfficeRequest;
-use App\Models\Office;
+use App\Actions\Location\CreateLocation;
+use App\Actions\Location\DeleteLocation;
+use App\Actions\Location\UpdateLocation;
+use App\Data\PeopleDear\Location\CreateLocationData;
+use App\Data\PeopleDear\Location\UpdateLocationData;
+use App\Http\Requests\CreateLocationRequest;
+use App\Http\Requests\UpdateLocationRequest;
+use App\Models\Location;
 use App\Models\User;
-use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 
-final class OfficeController
+final class LocationController
 {
     public function store(
-        CreateOfficeRequest $request,
-        CreateOffice        $action,
+        CreateLocationRequest $request,
+        CreateLocation        $action,
         #[CurrentUser] User $user
     ): RedirectResponse
     {
-        $data = CreateOfficeData::from($request->validated());
+        $data = CreateLocationData::from($request->validated());
 
         $action->handle($data, $user);
 
         return redirect()
             ->route('admin.settings.organization.edit')
-            ->with('success', 'Office created successfully');
+            ->with('success', 'Location created successfully');
     }
 
     public function update(
-        UpdateOfficeRequest $request,
-        Office              $office,
-        UpdateOffice        $action
+        UpdateLocationRequest $request,
+        Location              $office,
+        UpdateLocation        $action
     ): RedirectResponse
     {
-        $data = UpdateOfficeData::from($request->validated());
+        $data = UpdateLocationData::from($request->validated());
 
         $action->handle($data, $office);
 
         return redirect()
             ->route('admin.settings.organization.edit')
-            ->with('success', 'Office updated successfully');
+            ->with('success', 'Location updated successfully');
     }
 
     public function destroy(
-        Office       $office,
-        DeleteOffice $action
+        Location       $office,
+        DeleteLocation $action
     ): RedirectResponse
     {
         $action->handle($office);
 
         return redirect()
             ->route('admin.settings.organization.edit')
-            ->with('success', 'Office deleted successfully');
+            ->with('success', 'Location deleted successfully');
     }
 }
-
-```
+</code-snippet>
 
 ## Dependency Injection
 
@@ -1484,12 +1432,12 @@ final class OfficeController
 ✅ **CORRECT - Method-level injection:**
 ```php
 public function store(
-    CreateOfficeRequest $request,
-    CreateOffice        $action,  // ✅ Injected here
+    CreateLocationRequest $request,
+    CreateLocation        $action,  // ✅ Injected here
     #[CurrentUser] User $user
 ): RedirectResponse
 {
-    $data = CreateOfficeData::from($request->validated());
+    $data = CreateLocationData::from($request->validated());
     $action->handle($data, $user);
     return redirect()->route('admin.settings.organization.edit');
 }
@@ -1498,14 +1446,14 @@ public function store(
 ❌ **WRONG - Constructor injection:**
 ```php
 public function __construct(
-    private CreateOffice $createOffice,  // ❌ Don't do this
+    private CreateLocation $createLocation,  // ❌ Don't do this
 )
 {
 }
 
-public function store(CreateOfficeRequest $request): RedirectResponse
+public function store(CreateLocationRequest $request): RedirectResponse
 {
-    $this->createOffice->handle(...);  // ❌ Wrong pattern
+    $this->createLocation->handle(...);  // ❌ Wrong pattern
 }
 ```
 
@@ -1513,24 +1461,22 @@ public function store(CreateOfficeRequest $request): RedirectResponse
 
 **Always use `#[CurrentUser]` instead of `Request::user()`:**
 
-@boostsnippet('CurrentUser Attribute')
-```php
-
+<code-snippet name="CurrentUser Attribute" lang="php">
 public function store(
-    CreateOfficeRequest $request,
+    CreateLocationRequest $request,
     #[CurrentUser] User $user  // ✅ Clean and explicit
 ): RedirectResponse
 {
-    $data = CreateOfficeData::from($request->validated());
-    $this->createOffice->handle($data, $user);
+    $data = CreateLocationData::from($request->validated());
+    $this->createLocation->handle($data, $user);
     return redirect()->route('admin.settings.organization.edit');
 }
-```
+</code-snippet>
 
 ❌ **Don't inject Request just to get user:**
 ```php
 public function store(
-    CreateOfficeRequest $request,
+    CreateLocationRequest $request,
     Request             $httpRequest  // ❌ Unnecessary
 ): RedirectResponse
 {
@@ -1563,7 +1509,7 @@ public function store(
 
 ❌ **WRONG - Business logic in controller:**
 ```php
-public function update(UpdateOfficeRequest $request, Office $office): RedirectResponse
+public function update(UpdateLocationRequest $request, Location $office): RedirectResponse
 {
     // ❌ Business logic in controller
     $office->update([
@@ -1583,13 +1529,13 @@ public function update(UpdateOfficeRequest $request, Office $office): RedirectRe
 ✅ **CORRECT - Delegate to Action:**
 ```php
 public function update(
-    UpdateOfficeRequest $request,
-    Office              $office,
-    UpdateOffice        $action
+    UpdateLocationRequest $request,
+    Location              $office,
+    UpdateLocation        $action
 ): RedirectResponse
 {
     // ✅ Create Data object from validated data
-    $data = UpdateOfficeData::from($request->validated());
+    $data = UpdateLocationData::from($request->validated());
 
     // ✅ Delegate business logic to Action
     $action->handle($data, $office);
@@ -1597,7 +1543,7 @@ public function update(
     // ✅ Return response
     return redirect()
         ->route('admin.settings.organization.edit')
-        ->with('success', 'Office updated');
+        ->with('success', 'Location updated');
 }
 ```
 

@@ -27,7 +27,6 @@
 
 **ALWAYS use imperative mood for test names** - describe what the code does, not what "it" does:
 
-@boostsnippet('Imperative Mood Test Names')
 @verbatim
 <code-snippet name="Imperative Mood Test Names" lang="php">
 // ✅ CORRECT - Imperative mood (commands)
@@ -57,8 +56,8 @@ test('it handles null values correctly', function (): void { ... });
 
 **ALWAYS resolve Actions from container** - NEVER use `new`:
 
-@boostsnippet('Action Test with beforeEach')
-```php
+@verbatim
+<code-snippet name="Action Test with beforeEach" lang="php">
 <?php
 
 use App\Actions\Organization\UpdateOrganization;
@@ -82,7 +81,8 @@ test('updates organization with all fields', function (): void {
 
     expect($result->name)->toBe('New Name');
 });
-```
+</code-snippet>
+@endverbatim
 
 ❌ **WRONG - Don't use new:**
 ```php
@@ -110,8 +110,8 @@ beforeEach(function (): void {
 
 **Same pattern applies to ALL container-resolved classes** (Processors, Validators, Services, etc.):
 
-@boostsnippet('Processor Test with beforeEach')
-```php
+@verbatim
+<code-snippet name="Processor Test with beforeEach" lang="php">
 <?php
 
 use App\Processors\TimeOffType\VacationProcessor;
@@ -141,14 +141,15 @@ test('deducts days from vacation balance when processed', function (): void {
 
     expect($balance->refresh()->taken)->toBe(800);
 });
-```
+</code-snippet>
+@endverbatim
 
 ### Reusable Test Data in beforeEach
 
 **If models, actions, or other resources are reused across multiple tests, ALWAYS define them in `beforeEach`:**
 
-@boostsnippet('Reusable Resources in beforeEach')
-```php
+@verbatim
+<code-snippet name="Reusable Resources in beforeEach" lang="php">
 beforeEach(
     /**
      * @throws Throwable
@@ -171,7 +172,8 @@ test('creates office', function (): void {
 
     expect($office->name)->toBe('HQ');
 });
-```
+</code-snippet>
+@endverbatim
 
 **When NOT to use beforeEach:**
 - Data specific to a single test
@@ -220,8 +222,8 @@ beforeEach(
 - **Use `fresh()`** for records from migrations/seeders
 - **Pass data explicitly** - Don't rely on factory defaults in tests
 
-@boostsnippet('Factory Usage in Tests')
-```php
+@verbatim
+<code-snippet name="Factory Usage in Tests" lang="php">
 // Create models
 /** @var User $user */
 $user = User::factory()->createQuietly(['name' => 'Test']);
@@ -232,36 +234,38 @@ $role = Role::query()
     ->where('name', 'employee')
     ->first()
     ?->fresh();
-```
+</code-snippet>
+@endverbatim
 
 ### Assertions
 - **Chain expect() methods** for cleaner tests
 - Use specific assertions: `assertOk()`, `assertForbidden()` not `assertStatus()`
 - **Import all classes** - Never use fully qualified names inline
 
-@boostsnippet('Chained Expect')
-```php
+@verbatim
+<code-snippet name="Chained Expect" lang="php">
 expect($result->name)
     ->toBe('Test Name')
     ->and($result->email)
     ->toBe('test@example.com')
     ->and($result->active)
     ->toBeTrue();
-```
+</code-snippet>
+@endverbatim
 
 ## Exception Testing
 
 **Use Pest's `->throws()` method:**
 
-@boostsnippet('Exception Testing')
-```php
-
+@verbatim
+<code-snippet name="Exception Testing" lang="php">
 test('validates required field', function () {
     $data = [];
 
     CreateUserData::validateAndCreate($data);
 })->throws(ValidationException::class, 'email');
-```
+</code-snippet>
+@endverbatim
 
 ❌ **WRONG - Don't wrap in expect():**
 ```php
@@ -306,7 +310,7 @@ test('page renders correctly', function (): void {
 ```
 
 ### Global Configuration
-- `RefreshDatabase` applied globally in `tests / Pest . php`
+- `RefreshDatabase` applied globally in `tests/Pest.php`
 - Don't add `uses(RefreshDatabase::class)` in individual tests
 
 ## Test Organization
@@ -333,13 +337,13 @@ test('existing feature works', function (): void {
 php artisan test
 
 # Run specific file
-php artisan test tests / Unit / Actions / CreateOfficeActionTest . php
+php artisan test tests/Unit/Actions/CreateOfficeActionTest.php
 
 # Run with filter
-php artisan test--filter = "CreateOfficeActionTest"
+php artisan test --filter="CreateOfficeActionTest"
 
 # Stop on first failure
-php artisan test--stop - on - failure
+php artisan test --stop-on-failure
 ```
 
 ## Before Every Commit
@@ -348,5 +352,5 @@ php artisan test--stop - on - failure
 
 ```bash
 php artisan test              # All tests must pass
-vendor / bin / pint--dirty       # Format code
+vendor/bin/pint --dirty       # Format code
 ```

@@ -19,7 +19,7 @@ use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
  * @property-read string $id
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
- * @property-read int $organization_id
+ * @property-read string $organization_id
  * @property-read int $year
  * @property-read CarbonImmutable $start
  * @property-read CarbonImmutable $end
@@ -43,7 +43,7 @@ final class Period extends Model
         return [
             'id' => 'string',
             'year' => 'integer',
-            'organization_id' => 'integer',
+            'organization_id' => 'string',
             'start' => 'immutable_date',
             'end' => 'immutable_date',
             'status' => PeriodStatus::class,

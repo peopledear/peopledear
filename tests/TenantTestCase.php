@@ -14,7 +14,7 @@ use Throwable;
 
 use function resolve;
 
-abstract class TenantTestCase extends WithUsersTestCase
+abstract class TenantTestCase extends TestCase
 {
     protected Organization $tenant;
 

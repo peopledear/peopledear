@@ -16,7 +16,7 @@ final class PeriodData extends Data
 {
     public function __construct(
         public readonly string $id,
-        public readonly int $organizationId,
+        public readonly string $organizationId,
         public readonly int $year,
         #[WithTransformer(DateTimeInterfaceTransformer::class, 'Y-m-d')]
         public readonly DateTimeInterface $start,

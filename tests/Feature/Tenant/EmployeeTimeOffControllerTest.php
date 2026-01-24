@@ -179,15 +179,13 @@ test('employee sees paginated time off requests with 20 per page',
      */
     function (): void {
 
-        $timeOffRequest = TimeOffRequest::factory()
+        TimeOffRequest::factory()
             ->for($this->userEmployee, 'employee')
             ->for($this->tenant)
             ->for($this->period)
             ->for($this->timeOffType, 'type')
             ->count(25)
             ->create();
-
-        dd($timeOffRequest->first()->organization_id, $this->tenant->id, $this->tenant->id);
 
         $response = $this->actingAs($this->employee)
             ->get(tenant_route(

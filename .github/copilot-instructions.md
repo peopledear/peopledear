@@ -231,7 +231,6 @@ test('can set fields to null explicitly', function (): void {
 ## General Testing Principles
 
 - **Full test coverage required** - Test happy paths, failure paths, edge cases
-- **TDD approach** - Write tests first, then implementation
 - **All tests must pass before committing**
 - use `composer test:lint` to check code style
 - Use `composer test` to run all the test suite
@@ -544,30 +543,18 @@ test('existing feature works', function (): void {
 });
 ```
 
-## Running Tests
+### Running Tests
+- To run style checks: `composer test:lint`.
+- To run all tests: `composer test`.
+- To run all tests in a file: `php artisan test --compact tests/Feature/ExampleTest.php`.
+- To filter on a particular test name: `php artisan test --compact --filter=testName` (recommended after making a change to a related file).
+- At the end of each work session, run the full test suite to ensure everything passes.
 
-```bash
-# Run all tests
-php artisan test
+### Before Every Commit
 
-# Run specific file
-php artisan test tests/Unit/Actions/CreateOfficeActionTest.php
-
-# Run with filter
-php artisan test --filter="CreateOfficeActionTest"
-
-# Stop on first failure
-php artisan test --stop-on-failure
-```
-
-## Before Every Commit
-
-**ALWAYS run tests before committing:**
-
-```bash
-php artisan test              # All tests must pass
-vendor/bin/pint --dirty       # Format code
-```
+**ALWAYS run:**
+- `composer test:lint` to check code style
+- `composer test` to run the full test suite
 
 === .ai/app.queries rules ===
 

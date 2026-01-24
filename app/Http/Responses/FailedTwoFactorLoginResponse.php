@@ -25,7 +25,7 @@ final readonly class FailedTwoFactorLoginResponse implements FailedTwoFactorLogi
      *
      * @throws MisconfigurationException
      */
-    public function toResponse($request): Response
+    public function toResponse($request): Response // @pest-ignore-type
     {
         [$key, $message] = $request->filled('recovery_code')
             ? ['recovery_code', __('The provided two factor recovery code was invalid.')]

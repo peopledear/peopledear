@@ -7,7 +7,6 @@ namespace App;
 use App\Enums\SessionKey;
 use App\Models\Organization;
 use Illuminate\Support\Facades\Session;
-use Sprout\Exceptions\MisconfigurationException;
 use Sprout\Facades\Sprout;
 
 use function function_exists;
@@ -26,7 +25,7 @@ if (! function_exists('organization')) {
 if (! function_exists('tenant_route')) {
 
     /**
-     * @throws MisconfigurationException
+     * @param  array<string, mixed>  $parameters
      */
     function tenant_route(
         string $name,

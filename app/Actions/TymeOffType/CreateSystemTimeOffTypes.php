@@ -32,7 +32,7 @@ final readonly class CreateSystemTimeOffTypes
 
         DB::transaction(function () use ($organization): void {
 
-            /** @var Role $peopleManagerRole */
+            /** @var Role|null $peopleManagerRole */
             $peopleManagerRole = ($this->roleQuery)(UserRole::PeopleManager)
                 ->first();
 
@@ -41,7 +41,7 @@ final readonly class CreateSystemTimeOffTypes
                     $organization,
                     CreateTimeOffTypeData::from([
                         ...$timeOffType,
-                        'fallback_approval_role_id' => $timeOffType['requires_approval'] && $peopleManagerRole ? $peopleManagerRole->id : null,
+                        'fallback_approval_role_id' => $timeOffType['requires_approval'] && $peopleManagerRole !== null ? $peopleManagerRole->id : null,
                     ])
                 );
             }

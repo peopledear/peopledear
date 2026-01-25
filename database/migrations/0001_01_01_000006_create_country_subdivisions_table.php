@@ -27,7 +27,7 @@ return new class extends Migration
             $table->jsonb('official_languages');
         });
 
-        Schema::table(new CountrySubdivision()->getTable(), function (Blueprint $table): void {
+        Schema::table(new CountrySubdivision()->getTable(), function (Blueprint $table) {
 
             $table->foreignIdFor(CountrySubdivision::class)
                 ->nullable()

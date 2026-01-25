@@ -122,7 +122,6 @@ Visit `http://localhost:8000` and login with seeded credentials.
 
 ## 📚 Documentation
 
-- [Architecture Guidelines](CLAUDE.md) - Code style and development patterns
 - [Tech Stack Details](docs/tech-stack.md) - Complete technology breakdown
 - [Product Roadmap](docs/roadmap.md) - Feature timeline and priorities
 

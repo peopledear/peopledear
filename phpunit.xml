@@ -36,5 +36,13 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="database"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="AWS_ACCESS_KEY_ID" value="testing"/>
+        <env name="AWS_SECRET_ACCESS_KEY" value="testing"/>
+        <env name="AWS_DEFAULT_REGION" value="us-east-1"/>
+        <env name="AWS_ENDPOINT" value="http://localhost:9000"/>
+        <env name="AWS_USE_PATH_STYLE_ENDPOINT" value="true"/>
+        <env name="AWS_PRIVATE_BUCKET" value="test-private"/>
+        <env name="AWS_PUBLIC_BUCKET" value="test-public"/>
+        <env name="AWS_PUBLIC_URL" value="http://localhost:9000/test-public"/>
     </php>
 </phpunit>

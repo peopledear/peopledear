@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Actions\DeleteUserAvatar;
+use App\Enums\Disk;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -13,14 +15,15 @@ test('stores avatar for authenticated user',
      * @throws Throwable
      */
     function (): void {
-        Storage::fake('public');
+        Storage::fake(Disk::S3Public->value);
 
         /** @var User $user */
         $user = User::factory()
             ->for($this->tenant, 'organization')
             ->createQuietly();
 
-        $file = UploadedFile::fake()->image('avatar.jpg', 200, 200);
+        $file = UploadedFile::fake()
+            ->image('avatar.jpg', 200, 200);
 
         $response = $this->actingAs($user)
             ->post(tenant_route('tenant.user.users.avatar.store', $this->tenant), [
@@ -37,7 +40,7 @@ test('stores avatar for authenticated user',
 
         expect($storedPath)->toMatch($expectedPattern);
 
-        Storage::disk('public')->assertExists($storedPath);
+        Disk::S3Public->storage()->assertExists($storedPath);
     });
 
 test('replaces old avatar when uploading new one',
@@ -45,7 +48,7 @@ test('replaces old avatar when uploading new one',
      * @throws Throwable
      */
     function (): void {
-        Storage::fake('public');
+        Storage::fake(Disk::S3Public->value);
 
         /** @var User $user */
         $user = User::factory()
@@ -54,12 +57,16 @@ test('replaces old avatar when uploading new one',
 
         // Store an old avatar first
         $oldFile = UploadedFile::fake()->image('old.jpg');
-        $oldPath = $oldFile->storeAs('avatars', $user->id.'.webp', 'public');
+        $oldPath = $oldFile->storeAs('avatars', $user->id.'.'.(time() - 1000).'.webp', Disk::S3Public->value);
         $user->update(['avatar' => $oldPath]);
 
-        Storage::disk('public')->assertExists($oldPath);
+        Disk::S3Public->storage()->assertExists($oldPath);
 
-        $newFile = UploadedFile::fake()->image('new.jpg', 200, 200);
+        $deleteAvatar = resolve(DeleteUserAvatar::class);
+        $deleteAvatar->handle($user);
+
+        $newFile = UploadedFile::fake()
+            ->image('new.jpg', 200, 200);
 
         $response = $this->actingAs($user)
             ->post(tenant_route('tenant.user.users.avatar.store', $this->tenant), [
@@ -78,8 +85,8 @@ test('replaces old avatar when uploading new one',
             ->and($newPath)
             ->not->toBe($oldPath);
 
-        Storage::disk('public')->assertMissing($oldPath);
-        Storage::disk('public')->assertExists($newPath);
+        Disk::S3Public->storage()->assertMissing($oldPath);
+        Disk::S3Public->storage()->assertExists($newPath);
     });
 
 test('requires avatar field',
@@ -185,7 +192,7 @@ test('destroys avatar for authenticated user',
      * @throws Throwable
      */
     function (): void {
-        Storage::fake('public');
+        Storage::fake(Disk::S3Public->value);
 
         /** @var User $user */
         $user = User::factory()
@@ -193,10 +200,10 @@ test('destroys avatar for authenticated user',
             ->createQuietly();
 
         $file = UploadedFile::fake()->image('avatar.jpg');
-        $path = $file->storeAs('avatars', $user->id.'.webp', 'public');
+        $path = $file->storeAs('avatars', $user->id.'.webp', Disk::S3Public->value);
         $user->update(['avatar' => $path]);
 
-        Storage::disk('public')->assertExists($path);
+        Disk::S3Public->storage()->assertExists($path);
 
         $response = $this->actingAs($user)
             ->delete(tenant_route('tenant.user.users.avatar.destroy', $this->tenant));

@@ -2,13 +2,46 @@
 
 declare(strict_types=1);
 
+use App\Enums\Disk;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+
+test('avatar returns null when no avatar',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var User $user */
+        $user = User::factory()->createQuietly(['avatar' => null]);
+
+        expect($user->avatarUrl)->toBeNull();
+    });
+
+test('avatar returns route when avatar exists',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var User $user */
+        $user = User::factory()->createQuietly();
+
+        Storage::fake(Disk::S3Public->value);
+
+        $user->update([
+            'avatar' => 'avatars/'.$user->id.'.webp',
+        ]);
+
+        expect($user->avatar)
+            ->not->toBeNull()
+            ->toContain('/avatars/')
+            ->toContain($user->id);
+    });
 
 test('user has organizations relationship', function (): void {
     $organization = Organization::factory()
@@ -88,32 +121,3 @@ test('to array', function (): void {
             'avatar',
         ]);
 });
-
-test('avatarUrl returns null when no avatar',
-    /**
-     * @throws Throwable
-     */
-    function (): void {
-        /** @var User $user */
-        $user = User::factory()->createQuietly(['avatar' => null]);
-
-        expect($user->avatarUrl)->toBeNull();
-    });
-
-test('avatarUrl returns route when avatar exists',
-    /**
-     * @throws Throwable
-     */
-    function (): void {
-        /** @var User $user */
-        $user = User::factory()->createQuietly();
-
-        $user->update([
-            'avatar' => 'avatars/'.$user->id.'.webp',
-        ]);
-
-        expect($user->avatarUrl)
-            ->not->toBeNull()
-            ->toContain('/avatars/')
-            ->toContain($user->id);
-    });

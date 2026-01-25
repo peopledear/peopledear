@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Enums\Disk;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 
 use function assert;
 
@@ -15,7 +15,7 @@ final readonly class DeleteUserAvatar
     {
         if ($path = $user->getRawOriginal('avatar')) {
             assert(is_string($path));
-            Storage::disk('public')->delete($path);
+            Disk::S3Public->storage()->delete($path);
             $user->update(['avatar' => null]);
         }
     }

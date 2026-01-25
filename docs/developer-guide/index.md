@@ -5,6 +5,7 @@ Welcome to the PeopleDear developer guide. This guide covers architecture patter
 ## Architecture Patterns
 
 - [Action Pattern](./actions-pattern.md) - Comprehensive guide to the Action pattern for business logic
+- [File Storage](./file-storage.md) - S3/MinIO storage configuration and the Disk enum
 
 ## Architecture Decisions
 

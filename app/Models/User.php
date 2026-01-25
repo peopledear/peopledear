@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Disk;
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -21,6 +22,8 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Sprout\Attributes\TenantRelation;
 use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
+
+use function is_string;
 
 /**
  * @property-read string $id
@@ -105,22 +108,12 @@ final class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return Attribute<string|null, never>
      */
-    // @noRector \Rector\Laravel\Rector\ClassMethod\MakeModelAttributesAndScopesProtectedRector
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value): ?string => is_string($value) ? url('/'.$value) : null,
-        );
-    }
-
-    /**
-     * @return Attribute<string|null, never>
-     */
-    // @noRector \Rector\Laravel\Rector\ClassMethod\MakeModelAttributesAndScopesProtectedRector
-    public function avatarUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn (): ?string => $this->avatar,
+            get: fn (mixed $value): ?string => $value && is_string($value)
+                ? Disk::S3Public->storage()->url($value)
+                : null,
         );
     }
 }

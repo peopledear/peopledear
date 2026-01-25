@@ -11,11 +11,12 @@
     "require": {
         "php": "^8.4.0",
         "inertiajs/inertia-laravel": "^2.0.19",
-        "intervention/image-laravel": "^1.5",
+        "intervention/image-laravel": "^1.5.6",
         "laravel/fortify": "^1.33.0",
         "laravel/framework": "^12.48.1",
         "laravel/tinker": "^2.11.0",
         "laravel/wayfinder": "^0.1.13",
+        "league/flysystem-aws-s3-v3": ">=3.31",
         "nunomaduro/essentials": "^1.0.1",
         "saloonphp/cache-plugin": "^3.0.1",
         "saloonphp/laravel-plugin": "^3.8",

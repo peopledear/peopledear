@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Actions\StoreUserAvatar;
+use App\Enums\Disk;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 beforeEach(
     /**
@@ -20,7 +20,8 @@ test('stores avatar and returns path',
      * @throws Throwable
      */
     function (): void {
-        Storage::fake('public');
+
+        Disk::S3Public->fake();
 
         /** @var User $user */
         $user = User::factory()->createQuietly();
@@ -36,39 +37,7 @@ test('stores avatar and returns path',
             ->and($user->refresh()->getRawOriginal('avatar'))
             ->toBe($path);
 
-        Storage::disk('public')->assertExists($path);
-    });
-
-test('deletes old avatar when storing new one',
-    /**
-     * @throws Throwable
-     */
-    function (): void {
-        Storage::fake('public');
-
-        /** @var User $user */
-        $user = User::factory()->createQuietly();
-
-        // Store an old avatar first
-        $oldFile = UploadedFile::fake()->image('old.jpg');
-        $oldPath = $oldFile->storeAs('avatars', $user->id.'.webp', 'public');
-        $user->update(['avatar' => $oldPath]);
-
-        Storage::disk('public')->assertExists($oldPath);
-
-        // Store a new avatar
-        $newFile = UploadedFile::fake()->image('new.jpg');
-        $path = $this->action->handle($user, $newFile);
-
-        $expectedPattern = sprintf('/^avatars\/%s\.\d+\.webp$/', $user->id);
-
-        expect($path)
-            ->toMatch($expectedPattern)
-            ->and($path)
-            ->not->toBe($oldPath);
-
-        Storage::disk('public')->assertMissing($oldPath);
-        Storage::disk('public')->assertExists($path);
+        Disk::S3Public->storage()->assertExists($path);
     });
 
 test('resizes large images to max 400x400',
@@ -76,18 +45,43 @@ test('resizes large images to max 400x400',
      * @throws Throwable
      */
     function (): void {
-        Storage::fake('public');
+
+        Disk::S3Public->fake();
 
         /** @var User $user */
         $user = User::factory()->createQuietly();
 
-        $file = UploadedFile::fake()->image('large.jpg', 2000, 1500);
+        $file = UploadedFile::fake()
+            ->image('large.jpg', 2000, 1500);
 
         $path = $this->action->handle($user, $file);
 
         expect($path)->not->toBeNull();
 
-        Storage::disk('public')->assertExists($path);
+        Disk::S3Public->storage()->assertExists($path);
+    });
+
+test('deletes old avatar when replacing',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        Disk::S3Public->fake();
+
+        $oldPath = 'avatars/old-avatar.webp';
+        Disk::S3Public->storage()->put($oldPath, 'old content');
+
+        /** @var User $user */
+        $user = User::factory()->createQuietly(['avatar' => $oldPath]);
+
+        $file = UploadedFile::fake()->image('new-avatar.jpg');
+
+        $newPath = $this->action->handle($user, $file);
+
+        Disk::S3Public->storage()->assertMissing($oldPath);
+        Disk::S3Public->storage()->assertExists($newPath);
+
+        expect($user->refresh()->getRawOriginal('avatar'))->toBe($newPath);
     });
 
 test('updates user avatar field',
@@ -95,10 +89,11 @@ test('updates user avatar field',
      * @throws Throwable
      */
     function (): void {
-        Storage::fake('public');
+
+        Disk::S3Public->fake();
 
         /** @var User $user */
-        $user = User::factory()->createQuietly(['avatar' => null]);
+        $user = User::factory()->create(['avatar' => null]);
 
         expect($user->getRawOriginal('avatar'))->toBeNull();
 

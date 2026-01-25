@@ -42,30 +42,29 @@ export default function Welcome(): JSX.Element {
                 </div>
 
                 <div className="relative z-10 flex min-h-screen flex-col">
-                    <header className="flex items-center justify-between px-6 py-7 lg:px-12">
-                        <Link
-                            href="/"
-                            className="flex items-center gap-2 text-base font-semibold"
-                        >
-                            <AppLogo />
-                        </Link>
+                    <header className="px-6 py-7 lg:px-12">
+                        <div className="mx-auto flex w-full max-w-295 items-center justify-between">
+                            <Link href="/" className="flex items-center">
+                                <AppLogo variant="external" />
+                            </Link>
 
-                        <div className="flex items-center gap-3">
-                            {auth.user ? (
-                                <Link
-                                    href={dashboard()}
-                                    className="inline-flex items-center gap-2 rounded-full border border-transparent bg-[#1c1c1a] px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#ff6d2d]/40 transition-all hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#ff6d2d] dark:bg-[#ededec] dark:text-[#161513] dark:shadow-none dark:hover:bg-white"
-                                >
-                                    Go to dashboard
-                                </Link>
-                            ) : (
-                                <Link
-                                    href={register()}
-                                    className="inline-flex items-center gap-2 rounded-full border border-[#f7c7a7] bg-white/90 px-5 py-2 text-sm font-semibold text-[#49230f] shadow-lg shadow-[#ff7a45]/30 transition-all hover:-translate-y-0.5 hover:bg-white focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#fb6f1f] dark:border-[#2d120b] dark:bg-[#130804] dark:text-[#ffddb8] dark:shadow-none dark:hover:bg-[#1f0c06]"
-                                >
-                                    Register
-                                </Link>
-                            )}
+                            <div className="flex items-center gap-3">
+                                {auth.user ? (
+                                    <Link
+                                        href={dashboard()}
+                                        className="inline-flex items-center gap-2 rounded-full border border-transparent bg-[#1c1c1a] px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#ff6d2d]/40 transition-all hover:-translate-y-0.5 hover:bg-black focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#ff6d2d] dark:bg-[#ededec] dark:text-[#161513] dark:shadow-none dark:hover:bg-white"
+                                    >
+                                        Go to dashboard
+                                    </Link>
+                                ) : (
+                                    <Link
+                                        href={register()}
+                                        className="inline-flex items-center gap-2 rounded-full border border-[#f7c7a7] bg-white/90 px-5 py-2 text-sm font-semibold text-[#49230f] shadow-lg shadow-[#ff7a45]/30 transition-all hover:-translate-y-0.5 hover:bg-white focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#fb6f1f] dark:border-[#2d120b] dark:bg-[#130804] dark:text-[#ffddb8] dark:shadow-none dark:hover:bg-[#1f0c06]"
+                                    >
+                                        Register
+                                    </Link>
+                                )}
+                            </div>
                         </div>
                     </header>
 

@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4.0",
+        "filament/filament": "^5.1",
         "inertiajs/inertia-laravel": "^2.0.19",
         "intervention/image-laravel": "^1.5.6",
         "laravel/fortify": "^1.33.0",
@@ -23,7 +24,8 @@
         "saloonphp/saloon": "^3.14.2",
         "spatie/laravel-data": "^4.19",
         "spatie/laravel-permission": "^6.24",
-        "sprout/sprout": "^1.1.1"
+        "sprout/sprout": "^1.1.1",
+        "stripe/stripe-php": ">=19.2"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.1.9",

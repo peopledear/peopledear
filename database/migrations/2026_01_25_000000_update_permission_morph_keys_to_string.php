@@ -11,6 +11,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! $this->isPostgresConnection()) {
+            return;
+        }
+
         /** @var array<string, string> $tableNames */
         $tableNames = (array) config('permission.table_names');
         /** @var array<string, string|null> $columnNames */
@@ -68,5 +72,10 @@ return new class extends Migration
                 ->on($referenceTable)
                 ->onDelete('cascade');
         });
+    }
+
+    private function isPostgresConnection(): bool
+    {
+        return Schema::getConnection()->getDriverName() === 'pgsql';
     }
 };

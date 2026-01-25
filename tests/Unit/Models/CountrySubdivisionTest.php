@@ -298,12 +298,12 @@ test('to array', function (): void {
         ->toBe([
             'id',
             'country_id',
-            'country_subdivision_id',
             'name',
             'code',
             'iso_code',
             'short_name',
             'type',
             'official_languages',
+            'country_subdivision_id',
         ]);
 });

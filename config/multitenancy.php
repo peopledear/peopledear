@@ -6,6 +6,12 @@ use App\Models\Organization;
 use Sprout\Database\Eloquent\Tenant;
 use Sprout\TenancyOptions;
 
+$parsedMarketingDomains = explode(',', (string) env('MARKETING_DOMAINS', ''));
+
+foreach ($parsedMarketingDomains as $domainIndex => $domainValue) {
+    $parsedMarketingDomains[$domainIndex] = mb_trim($domainValue);
+}
+
 return [
 
     /*
@@ -48,6 +54,7 @@ return [
     */
 
     'tenanted_domain' => env('TENANTED_DOMAIN'),
+    'marketing_domains' => array_filter($parsedMarketingDomains),
 
     'tenancies' => [
 

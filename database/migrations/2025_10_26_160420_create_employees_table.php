@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Organization;
 use App\Models\User;
@@ -16,7 +17,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table): void {
+        Schema::create(new Employee()->getTable(), function (Blueprint $table): void {
             $table->uuid('id')
                 ->primary();
             $table->timestamps();

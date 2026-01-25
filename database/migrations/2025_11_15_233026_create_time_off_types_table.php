@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Organization;
+use App\Models\TimeOffType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('time_off_types', function (Blueprint $table): void {
+        Schema::create(new TimeOffType()->getTable(), function (Blueprint $table): void {
             $table->uuid('id')
                 ->primary();
             $table->timestamps();

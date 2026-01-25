@@ -12,15 +12,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('country_subdivisions', function (Blueprint $table): void {
+        Schema::create(new CountrySubdivision()->getTable(), function (Blueprint $table): void {
             $table->uuid('id')
                 ->primary();
 
             $table->foreignIdFor(Country::class)
-                ->constrained();
-
-            $table->foreignIdFor(CountrySubdivision::class)
-                ->nullable()
                 ->constrained();
 
             $table->jsonb('name');
@@ -29,6 +25,14 @@ return new class extends Migration
             $table->string('short_name');
             $table->integer('type');
             $table->jsonb('official_languages');
+        });
+
+        Schema::table(new CountrySubdivision()->getTable(), function (Blueprint $table): void {
+
+            $table->foreignIdFor(CountrySubdivision::class)
+                ->nullable()
+                ->constrained();
+
         });
     }
 };

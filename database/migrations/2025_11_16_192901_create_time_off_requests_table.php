@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Period;
+use App\Models\TimeOffRequest;
 use App\Models\TimeOffType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,7 +15,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('time_off_requests', function (Blueprint $table): void {
+        Schema::create(new TimeOffRequest()->getTable(), function (Blueprint $table): void {
             $table->uuid('id')->primary();
 
             $table->timestamps();

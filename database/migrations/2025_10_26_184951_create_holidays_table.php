@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Country;
+use App\Models\Holiday;
 use App\Models\Organization;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,7 +13,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('holidays', function (Blueprint $table): void {
+        Schema::create(new Holiday()->getTable(), function (Blueprint $table): void {
             $table->uuid('id')
                 ->primary();
             $table->timestamps();

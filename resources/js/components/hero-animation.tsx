@@ -1,3 +1,5 @@
+import type { JSX } from "react";
+
 import { cn } from "@/lib/utils";
 
 type HeroAnimationProps = {
@@ -10,7 +12,7 @@ export default function HeroAnimation({
     return (
         <div
             className={cn(
-                "relative -mb-px aspect-335/376 w-full shrink-0 overflow-hidden rounded-t-[2rem] border border-[#ffd5c4] bg-[#fff2f2] shadow-[0_30px_80px_rgba(255,110,46,0.25)] lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-109.5 lg:rounded-t-none lg:rounded-r-[2rem] lg:border-l-0 dark:border-[#2c0c07] dark:bg-[#1D0002]",
+                "relative -mb-px aspect-335/376 w-full shrink-0 overflow-hidden rounded-t-4xl border border-[#ffd5c4] bg-[#fff2f2] shadow-[0_30px_80px_rgba(255,110,46,0.25)] lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-109.5 lg:rounded-t-none lg:rounded-r-4xl lg:border-l-0 dark:border-[#2c0c07] dark:bg-[#1D0002]",
                 className,
             )}
         >

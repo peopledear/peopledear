@@ -1,3 +1,5 @@
+import type { JSX } from "react";
+
 import AppLogo from "@/components/app-logo";
 import type { SharedData } from "@/types";
 import { dashboard } from "@/wayfinder/routes";

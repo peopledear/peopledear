@@ -45,6 +45,9 @@ return RectorConfig::configure()
         RectorLaravel\Rector\ClassMethod\MakeModelAttributesAndScopesProtectedRector::class => [
             __DIR__.'/app/Models/User.php',
         ],
+        Rector\TypeDeclaration\Rector\Closure\AddClosureVoidReturnTypeWhereNoReturnRector::class => [
+            __DIR__.'/database/migrations/0001_01_01_000006_create_country_subdivisions_table.php',
+        ],
     ])
     ->withPreparedSets(
         deadCode: true,

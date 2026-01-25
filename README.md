@@ -88,7 +88,7 @@ Managing people shouldn't be complicated. Between tracking overtime, approving t
 ### Prerequisites
 - PHP 8.4+
 - Composer
-- Node.js 18+
+- Bun (https://bun.sh)
 - PostgreSQL
 - Redis (optional, for queues)
 
@@ -100,7 +100,7 @@ cd peopledear
 
 # Install dependencies
 composer install
-npm install
+bun install
 
 # Setup environment
 cp .env.example .env
@@ -110,7 +110,7 @@ php artisan key:generate
 php artisan migrate --seed
 
 # Build frontend assets
-npm run build
+bun run build
 
 # Start development server
 php artisan serve

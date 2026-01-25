@@ -23,10 +23,10 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '22'
+          bun-version: latest
 
       - name: Copy Environment File
         run: cp .env.example .env
@@ -37,18 +37,18 @@ jobs:
       - name: Generate Application Key
         run: php artisan key:generate
 
-      - name: Install Node Dependencies
-        run: npm install
+      - name: Install Bun Dependencies
+        run: bun install
 
       - name: Generate Wayfinder Routes
         run: php artisan wayfinder:generate --path=resources/js/wayfinder --with-form
 
       - name: Build Assets
-        run: npm run build
+        run: bun run build
 
       - name: Get Playwright version
         id: playwright-version
-        run: echo "version=$(npm list playwright --depth=0 --json | jq -r '.dependencies["playwright"].version')" >> $GITHUB_OUTPUT
+        run: echo "version=$(bun pm ls playwright --depth=0 | grep playwright | awk '{print $2}')" >> $GITHUB_OUTPUT
 
       - name: Cache Playwright Browsers
         uses: actions/cache@v4
@@ -59,11 +59,11 @@ jobs:
 
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps
+        run: bun x playwright install --with-deps
 
       - name: Install Playwright System Dependencies
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps
+        run: bun x playwright install-deps
       - name: Rector Cache
         uses: actions/cache@v4
         with:

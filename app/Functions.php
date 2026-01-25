@@ -6,7 +6,9 @@ namespace App;
 
 use App\Enums\SessionKey;
 use App\Models\Organization;
+use Exception;
 use Illuminate\Support\Facades\Session;
+use Sprout\Exceptions\MisconfigurationException;
 use Sprout\Facades\Sprout;
 
 use function function_exists;
@@ -26,6 +28,8 @@ if (! function_exists('tenant_route')) {
 
     /**
      * @param  array<string, mixed>  $parameters
+     *
+     * @throws MisconfigurationException
      */
     function tenant_route(
         string $name,
@@ -35,14 +39,19 @@ if (! function_exists('tenant_route')) {
         ?string $resolver = null,
         ?string $tenancy = null,
     ): string {
-        return Sprout::route(
-            name: $name,
-            tenant: $tenant,
-            resolver: $resolver,
-            tenancy: $tenancy,
-            parameters: $parameters,
-            absolute: $absolute,
-        );
+        try {
+            return Sprout::route(
+                name: $name,
+                tenant: $tenant,
+                resolver: $resolver,
+                tenancy: $tenancy,
+                parameters: $parameters,
+                absolute: $absolute,
+            );
+        } catch (Exception $exception) {
+            throw new MisconfigurationException('Tenancy is not properly configured. Please check your tenancy settings.', previous: $exception);
+        }
+
     }
 
 }

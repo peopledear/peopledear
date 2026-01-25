@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function (): void {
 
     Route::post('user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])
         ->name('two-factor.enable');
-    Route::delete('user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy'])
+    Route::delete('user/two-factor', [TwoFactorAuthenticationController::class, 'destroy'])
         ->name('two-factor.disable');
 
     // Password Confirmation Status...

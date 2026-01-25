@@ -108,7 +108,7 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value): ?string => $value ? url('/'.$value) : null,
+            get: fn (mixed $value): ?string => is_string($value) ? url('/'.$value) : null,
         );
     }
 

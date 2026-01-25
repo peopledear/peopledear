@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\UserProfileController;
@@ -11,14 +12,20 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified:tenant.auth.verification.notice'])
     ->group(function (): void {
 
-        Route::delete('user', [UserController::class, 'destroy'])
+        Route::delete('user/profile', [UserController::class, 'destroy'])
             ->name('destroy');
 
-        Route::prefix('user.settings')
+        Route::post('/user/avatar', [UserAvatarController::class, 'store'])
+            ->name('users.avatar.store');
+
+        Route::delete('/user/avatar', [UserAvatarController::class, 'destroy'])
+            ->name('users.avatar.destroy');
+
+        Route::prefix('user')
             ->name('settings.')
             ->group(function (): void {
 
-                Route::redirect('/', '/settings/profile');
+                Route::redirect('/', '/user/profile');
                 Route::get('profile', [UserProfileController::class, 'edit'])
                     ->name('profile.edit');
                 Route::patch('profile', [UserProfileController::class, 'update'])

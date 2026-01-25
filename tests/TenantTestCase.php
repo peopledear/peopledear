@@ -73,7 +73,7 @@ abstract class TenantTestCase extends TestCase
 
     final public function actingAs(Authenticatable $user, $guard = null): self
     {
-        Auth::login($user, $guard);
+        Auth::login($user);
 
         return $this;
     }

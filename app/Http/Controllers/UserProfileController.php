@@ -31,6 +31,9 @@ final readonly class UserProfileController
     {
         $action->handle($user, $request->validated());
 
-        return redirect(tenant_route('tenant.user.settings.profile.edit', $user->organization));
+        return redirect(tenant_route(
+            name: 'tenant.user.settings.profile.edit',
+            tenant: $user->organization
+        ));
     }
 }

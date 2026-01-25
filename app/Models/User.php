@@ -24,6 +24,7 @@ use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
 
 /**
  * @property-read string $id
+ * @property-read string $organization_id
  * @property-read string $name
  * @property-read string $email
  * @property string|null $avatar

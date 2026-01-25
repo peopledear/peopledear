@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\CrossDomainAuthController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserEmailResetNotification;
 use App\Http\Controllers\UserEmailVerification;
@@ -18,6 +19,10 @@ use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
 use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
 
 Route::middleware('guest')->group(function (): void {
+
+    // Cross-Domain Authentication...
+    Route::get('auth/cross-domain', CrossDomainAuthController::class)
+        ->name('cross-domain');
 
     // User Password...
     Route::get('reset-password/{token}', [UserPasswordController::class, 'create'])

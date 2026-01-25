@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\GenerateCrossDomainToken;
 use App\Actions\Organization\RegisterOrganization;
 use App\Data\PeopleDear\CreateRegistrationData;
 use App\Http\Requests\CreateRegistrationRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 use function App\tenant_route;
-use function redirect;
 
 final class RegistrationController
 {
-    public function create(): Response
+    public function create(): InertiaResponse
     {
-
         return Inertia::render('register/create');
-
     }
 
     /**
@@ -30,17 +27,22 @@ final class RegistrationController
      */
     public function store(
         CreateRegistrationRequest $request,
-        RegisterOrganization $action
-    ): RedirectResponse {
-
+        RegisterOrganization $action,
+        GenerateCrossDomainToken $tokenAction
+    ): Response {
         $user = $action->handle(
             data: CreateRegistrationData::from($request->safe())
         );
 
-        Auth::login($user);
+        $intended = tenant_route('tenant.org.overview', $user->organization);
+        $token = $tokenAction->handle($user, $user->organization, $intended);
 
-        $request->session()->regenerate();
+        $authUrl = tenant_route(
+            'tenant.auth.cross-domain',
+            $user->organization,
+            ['nonce' => $token->nonce]
+        );
 
-        return redirect()->intended(tenant_route('tenant.org.overview', $user->organization));
+        return Inertia::location($authUrl);
     }
 }

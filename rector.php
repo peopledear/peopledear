@@ -42,6 +42,9 @@ return RectorConfig::configure()
         AddOverrideAttributeToOverriddenMethodsRector::class,
         MakeInheritedMethodVisibilitySameAsParentRector::class,
         FunctionLikeToFirstClassCallableRector::class,
+        RectorLaravel\Rector\ClassMethod\MakeModelAttributesAndScopesProtectedRector::class => [
+            __DIR__.'/app/Models/User.php',
+        ],
     ])
     ->withPreparedSets(
         deadCode: true,

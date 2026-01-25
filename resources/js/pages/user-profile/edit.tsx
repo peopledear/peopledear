@@ -24,6 +24,7 @@ import {
     FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import UserAvatarManager from "@/components/user-avatar-manager";
 import AppLayout from "@/layouts/app-layout";
 import UserSettingsLayout from "@/layouts/settings/app-layout";
 
@@ -121,6 +122,27 @@ export default function Edit({ status }: { status?: string }) {
                                                         message={errors.email}
                                                     />
                                                 </div>
+                                            </Field>
+
+                                            <Field orientation="responsive">
+                                                <FieldContent>
+                                                    <FieldLabel>
+                                                        Profile photo
+                                                    </FieldLabel>
+                                                    <FieldDescription>
+                                                        Used for attribution on
+                                                        deployments and other
+                                                        events.
+                                                    </FieldDescription>
+                                                </FieldContent>
+                                                <UserAvatarManager
+                                                    tenantIdentifier={
+                                                        props.tenant.identifier
+                                                    }
+                                                    userName={auth.user.name}
+                                                    avatarUrl={auth.user.avatar}
+                                                    initialError={errors.avatar}
+                                                />
                                             </Field>
                                         </FieldGroup>
                                         <FieldSeparator className="-mx-6" />

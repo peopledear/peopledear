@@ -85,5 +85,35 @@ test('to array', function (): void {
             'email',
             'email_verified_at',
             'two_factor_confirmed_at',
+            'avatar',
         ]);
 });
+
+test('avatarUrl returns null when no avatar',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var User $user */
+        $user = User::factory()->createQuietly(['avatar' => null]);
+
+        expect($user->avatarUrl)->toBeNull();
+    });
+
+test('avatarUrl returns route when avatar exists',
+    /**
+     * @throws Throwable
+     */
+    function (): void {
+        /** @var User $user */
+        $user = User::factory()->createQuietly();
+
+        $user->update([
+            'avatar' => 'avatars/'.$user->id.'.webp',
+        ]);
+
+        expect($user->avatarUrl)
+            ->not->toBeNull()
+            ->toContain('/avatars/')
+            ->toContain($user->id);
+    });

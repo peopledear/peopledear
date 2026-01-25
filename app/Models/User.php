@@ -7,6 +7,7 @@ namespace App\Models;
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +26,8 @@ use Sprout\Database\Eloquent\Concerns\BelongsToTenant;
  * @property-read string $id
  * @property-read string $name
  * @property-read string $email
+ * @property string|null $avatar
+ * @property-read string|null $avatarUrl
  * @property-read CarbonInterface|null $email_verified_at
  * @property-read string $password
  * @property-read string|null $remember_token
@@ -69,6 +72,7 @@ final class User extends Authenticatable implements MustVerifyEmail
             'id' => 'string',
             'name' => 'string',
             'email' => 'string',
+            'avatar' => 'string',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'remember_token' => 'string',
@@ -95,5 +99,27 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class);
+    }
+
+    /**
+     * @return Attribute<string|null, never>
+     */
+    // @noRector \Rector\Laravel\Rector\ClassMethod\MakeModelAttributesAndScopesProtectedRector
+    public function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value): ?string => $value ? url('/'.$value) : null,
+        );
+    }
+
+    /**
+     * @return Attribute<string|null, never>
+     */
+    // @noRector \Rector\Laravel\Rector\ClassMethod\MakeModelAttributesAndScopesProtectedRector
+    public function avatarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): ?string => $this->avatar,
+        );
     }
 }

@@ -41,7 +41,7 @@ export default function AppLogo({
             aria-label="PeopleDear"
             {...props}
         >
-            <div className="bg-weak ring-weak text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md ring-1">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-[#f3efe9] text-[#1c1c1a] ring-1 ring-[#e2ddd4] dark:bg-white/10 dark:text-white dark:ring-white/20">
                 <span className="text-sm font-black">PD</span>
             </div>
         </div>

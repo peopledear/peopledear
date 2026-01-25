@@ -1,6 +1,8 @@
+import AppLogo from "@/components/app-logo";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Icon } from "@/components/icon";
 import NotificationsDropdown from "@/components/notifications/dropdown";
+import { TenantMenu } from "@/components/tenant-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +42,6 @@ import { dropdown } from "@/wayfinder/routes/tenant/notifications";
 import { overview } from "@/wayfinder/routes/tenant/org";
 import { Link, usePage } from "@inertiajs/react";
 import { EyeIcon, Menu, Search } from "lucide-react";
-import AppLogo from "./app-logo";
 import AppLogoIcon from "./app-logo-icon";
 
 interface AppHeaderProps {
@@ -168,13 +169,16 @@ export function AppHeader({
                             </SheetContent>
                         </Sheet>
                     </div>
-                    <Link
-                        href={employeeOverview(tenant.identifier)}
-                        prefetch
-                        className="flex items-center space-x-2"
-                    >
-                        <AppLogo />
-                    </Link>
+                    <div className="flex items-center gap-3">
+                        <Link
+                            href={employeeOverview(tenant.identifier)}
+                            prefetch
+                            className="flex items-center"
+                        >
+                            <AppLogo />
+                        </Link>
+                        <TenantMenu name={tenant.name} />
+                    </div>
                     <div className="ml-auto flex items-center space-x-2">
                         <div className="relative flex items-center space-x-1">
                             <Button

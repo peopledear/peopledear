@@ -15,6 +15,7 @@
         "intervention/image-laravel": "^1.5.6",
         "laravel/fortify": "^1.33.0",
         "laravel/framework": "^12.48.1",
+        "laravel/octane": "^2.13",
         "laravel/tinker": "^2.11.0",
         "laravel/wayfinder": "^0.1.13",
         "league/flysystem-aws-s3-v3": ">=3.31",

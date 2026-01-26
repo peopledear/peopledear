@@ -30,3 +30,7 @@ auto-imports.d.ts
 components.d.ts
 .claude/settings.local.json
 .tinker
+
+**/caddy
+frankenphp
+frankenphp-worker.php

@@ -13,6 +13,7 @@ arch()->preset()
         VacationBalance::class,
         Notification::class,
         DomainException::class,
+        'App\Filament\Resources',
     ]);
 arch()->preset()->security()->ignoring([
     'assert',

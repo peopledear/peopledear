@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Override;
+use Stripe\StripeClient;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,10 @@ final class AppServiceProvider extends ServiceProvider
             /** @var Request $this */
             return (bool) $this->header('X-Dropdown');
         });
+
+        $this->app->singleton(StripeClient::class, fn (): StripeClient => new StripeClient(
+            config()->string('services.stripe.secret'),
+        ));
     }
 
     public function boot(): void

@@ -3,7 +3,10 @@
     "name": "nunomaduro/laravel-starter-kit-inertia-react",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.4.0",
@@ -96,7 +99,7 @@
             "pint --parallel",
             "bun run lint"
         ],
-        "test:type-coverage": "php -d memory_limit=1G vendor/bin/pest --type-coverage --compact --min=100",
+        "test:type-coverage": "php -d memory_limit=2G vendor/bin/pest --type-coverage --compact --min=100",
         "test:lint": [
             "pint --parallel --test",
             "rector --dry-run",
@@ -104,7 +107,7 @@
         ],
         "test:unit": "pest --parallel --coverage --compact --exactly=100.0",
         "test:types": [
-            "phpstan --memory-limit=1G",
+            "phpstan --memory-limit=2G",
             "bun run test:types"
         ],
         "test": [

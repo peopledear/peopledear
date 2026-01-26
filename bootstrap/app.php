@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Models\Organization;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,6 +14,9 @@ use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
+use function App\tenant_route;
+use function Sprout\tenancy;
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -20,9 +24,27 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
 
-        $middleware->redirectUsersTo(fn (Request $request): string => route('tenant.org.overview'));
+        $middleware->redirectUsersTo(function (Request $request): string {
+            /** @var Organization|null $organization */
+            $organization = tenancy()->tenant();
 
-        $middleware->redirectGuestsTo(fn (Request $request): string => route('tenant.auth.login'));
+            if ($organization !== null) {
+                return tenant_route('tenant.org.overview', $organization);
+            }
+
+            return route(name: 'home');
+        });
+
+        $middleware->redirectGuestsTo(function (Request $request): string {
+            /** @var Organization|null $organization */
+            $organization = tenancy()->tenant();
+
+            if ($organization !== null) {
+                return tenant_route('tenant.auth.login', $organization);
+            }
+
+            return route(name: 'home');
+        });
 
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 

@@ -16,6 +16,7 @@ use Sprout\Attributes\CurrentTenant;
 use Sprout\Exceptions\MisconfigurationException;
 
 use function App\tenant_route;
+use function redirect;
 
 final readonly class SessionController
 {
@@ -42,9 +43,10 @@ final readonly class SessionController
                 'login.remember' => $request->boolean('remember'),
             ]);
 
-            return new RedirectResponse(
-                url: tenant_route('tenant.auth.two-factor.login', $organization)
-            );
+            return redirect(tenant_route(
+                name: 'tenant.auth.two-factor.login',
+                tenant: $organization
+            ));
         }
 
         Auth::login($user, $request->boolean('remember'));
@@ -52,17 +54,27 @@ final readonly class SessionController
         $request->session()->regenerate();
 
         return redirect()->intended(tenant_route(
-            name: 'tenant.org.overview', tenant: $organization, absolute: false
+            name: 'tenant.org.overview',
+            tenant: $organization,
+            absolute: false
         ));
     }
 
-    public function destroy(Request $request): RedirectResponse
-    {
+    /**
+     * @throws MisconfigurationException
+     */
+    public function destroy(
+        Request $request,
+        #[CurrentTenant] Organization $organization,
+    ): RedirectResponse {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect(route('tenant.auth.login'));
+        return redirect(tenant_route(
+            name: 'tenant.auth.login',
+            tenant: $organization
+        ));
     }
 }

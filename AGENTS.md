@@ -263,6 +263,7 @@ final readonly class CreateFavorite
 ## Action Method Signatures
 
 ### Update Actions
+
 **ALWAYS accept the model being updated** as a parameter:
 
 <code-snippet name="Update Action Signature" lang="php">
@@ -285,6 +286,7 @@ public function handle(UpdateOrganizationData $data): Organization
 </code-snippet>
 
 ### Delete Actions
+
 **ALWAYS accept the model being deleted** as a parameter:
 
 <code-snippet name="Delete Action Signature" lang="php">
@@ -305,6 +307,7 @@ public function handle(int $officeId): void
 </code-snippet>
 
 ### Create Actions
+
 **Accept Data object and any required context** (user, parent models, etc.):
 
 <code-snippet name="Create Action Signature" lang="php">
@@ -430,6 +433,806 @@ test('can set fields to null explicitly', function (): void {
 });
 </code-snippet>
 
+=== .ai/app.controllers rules ===
+
+# Controller Guidelines
+
+## Controller Responsibilities
+
+Controllers are **thin HTTP adapters** that:
+1. Validate requests (via Form Requests)
+2. Convert validated data to Data objects
+3. Call Actions to perform business logic
+4. Return responses (Inertia renders, redirects, JSON)
+
+Controllers should **NOT** contain business logic - that belongs in Actions.
+
+## Structure
+
+### Flat Hierarchy
+
+- **Controllers live directly in `app/Http/Controllers/`** - NO nested folders
+- Clear naming eliminates need for namespace nesting
+- Examples: `UserController`, `LocationController`, `OrganizationController`
+
+### Single vs Multi-Action Controllers
+
+**Single Action Controllers** - Use `__invoke()` for one specific action:
+```php
+final readonly class ActivateUserController
+{
+    public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
+    {
+        $action->handle($user);
+        return redirect()->back();
+    }
+}
+```
+
+**Multi-Action Controllers** - Use named methods for related CRUD operations:
+```php
+final readonly class LocationController
+{
+    public function store(CreateLocationRequest $request): RedirectResponse { }
+    public function update(UpdateLocationRequest $request, Location $office): RedirectResponse { }
+    public function destroy(Location $office): RedirectResponse { }
+}
+```
+
+## Request Validation
+
+### Always Use Form Requests
+
+**ALWAYS create dedicated Form Request classes** - NEVER use inline validation:
+
+<code-snippet name="Form Request Example" lang="php">
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+final class UpdateLocationRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return $this->user()->can('organizations.edit');
+    }
+
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'integer', 'in:1,2,3,4,5,6,7,8'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'address' => ['required', 'array'],
+            'address.line1' => ['required', 'string', 'max:255'],
+            'address.line2' => ['nullable', 'string', 'max:255'],
+            'address.city' => ['required', 'string', 'max:255'],
+            'address.state' => ['nullable', 'string', 'max:255'],
+            'address.postal_code' => ['required', 'string', 'max:255'],
+            'address.country' => ['required', 'string', 'max:255'],
+        ];
+    }
+}
+</code-snippet>
+
+### Create Form Requests
+
+```bash
+php artisan make:request UpdateLocationRequest --no-interaction
+```
+
+## Controller Flow Pattern
+
+<code-snippet name="Complete Controller Example" lang="php">
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
+use App\Actions\Location\CreateLocation;
+use App\Actions\Location\DeleteLocation;
+use App\Actions\Location\UpdateLocation;
+use App\Data\PeopleDear\Location\CreateLocationData;
+use App\Data\PeopleDear\Location\UpdateLocationData;
+use App\Http\Requests\CreateLocationRequest;
+use App\Http\Requests\UpdateLocationRequest;
+use App\Models\Location;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
+use Illuminate\Http\RedirectResponse;
+
+final class LocationController
+{
+    public function store(
+        CreateLocationRequest $request,
+        CreateLocation        $action,
+        #[CurrentUser] User $user
+    ): RedirectResponse
+    {
+        $data = CreateLocationData::from($request->validated());
+
+        $action->handle($data, $user);
+
+        return redirect()
+            ->route('admin.settings.organization.edit')
+            ->with('success', 'Location created successfully');
+    }
+
+    public function update(
+        UpdateLocationRequest $request,
+        Location              $office,
+        UpdateLocation        $action
+    ): RedirectResponse
+    {
+        $data = UpdateLocationData::from($request->validated());
+
+        $action->handle($data, $office);
+
+        return redirect()
+            ->route('admin.settings.organization.edit')
+            ->with('success', 'Location updated successfully');
+    }
+
+    public function destroy(
+        Location       $office,
+        DeleteLocation $action
+    ): RedirectResponse
+    {
+        $action->handle($office);
+
+        return redirect()
+            ->route('admin.settings.organization.edit')
+            ->with('success', 'Location deleted successfully');
+    }
+}
+</code-snippet>
+
+## Dependency Injection
+
+### Method-Level Injection
+
+**ALWAYS inject Actions at the method level** - NOT in `__construct()`:
+
+✅ **CORRECT - Method-level injection:**
+```php
+public function store(
+    CreateLocationRequest $request,
+    CreateLocation        $action,  // ✅ Injected here
+    #[CurrentUser] User $user
+): RedirectResponse
+{
+    $data = CreateLocationData::from($request->validated());
+    $action->handle($data, $user);
+    return redirect()->route('admin.settings.organization.edit');
+}
+```
+
+❌ **WRONG - Constructor injection:**
+```php
+public function __construct(
+    private CreateLocation $createLocation,  // ❌ Don't do this
+)
+{
+}
+
+public function store(CreateLocationRequest $request): RedirectResponse
+{
+    $this->createLocation->handle(...);  // ❌ Wrong pattern
+}
+```
+
+### Use Laravel 12 Contextual Attributes
+
+**Always use `#[CurrentUser]` instead of `Request::user()`:**
+
+<code-snippet name="CurrentUser Attribute" lang="php">
+public function store(
+    CreateLocationRequest $request,
+    #[CurrentUser] User $user  // ✅ Clean and explicit
+): RedirectResponse
+{
+    $data = CreateLocationData::from($request->validated());
+    $this->createLocation->handle($data, $user);
+    return redirect()->route('admin.settings.organization.edit');
+}
+</code-snippet>
+
+❌ **Don't inject Request just to get user:**
+```php
+public function store(
+    CreateLocationRequest $request,
+    Request             $httpRequest  // ❌ Unnecessary
+): RedirectResponse
+{
+    $user = $httpRequest->user();  // ❌ Verbose
+    // ...
+}
+```
+
+## Return Types
+
+- **Inertia Pages** - Return `Response` (from `Inertia::render()`)
+- **Redirects** - Return `RedirectResponse`
+- **JSON APIs** - Return `JsonResponse`
+- **Always use explicit return type hints**
+
+## What NOT to Put in Controllers
+
+❌ **Business Logic** - Belongs in Actions
+❌ **Database Queries** - Belongs in Actions/Queries
+❌ **Validation Logic** - Belongs in Form Requests
+❌ **Data Transformation** - Belongs in Actions/Data objects
+
+✅ **What Controllers SHOULD Do:**
+- Type-hint Form Requests
+- Create Data objects from validated data
+- Call Actions
+- Return HTTP responses
+
+## Example: Wrong vs Right
+
+❌ **WRONG - Business logic in controller:**
+```php
+public function update(UpdateLocationRequest $request, Location $office): RedirectResponse
+{
+    // ❌ Business logic in controller
+    $office->update([
+        'name' => $request->validated('name'),
+        'type' => $request->validated('type'),
+    ]);
+
+    // ❌ More business logic
+    if ($request->has('address')) {
+        $office->address->update($request->validated('address'));
+    }
+
+    return redirect()->back();
+}
+```
+
+✅ **CORRECT - Delegate to Action:**
+```php
+public function update(
+    UpdateLocationRequest $request,
+    Location              $office,
+    UpdateLocation        $action
+): RedirectResponse
+{
+    // ✅ Create Data object from validated data
+    $data = UpdateLocationData::from($request->validated());
+
+    // ✅ Delegate business logic to Action
+    $action->handle($data, $office);
+
+    // ✅ Return response
+    return redirect()
+        ->route('admin.settings.organization.edit')
+        ->with('success', 'Location updated');
+}
+```
+
+=== .ai/app.models rules ===
+
+# Eloquent Model Guidelines
+
+## Type Hinting
+
+### Property Annotations
+
+**ALWAYS add PHPDoc annotations for ALL properties** - database fields, casts, and relationships:
+
+#### Database Fields & Casts
+
+Use `@property` for writable database fields and `@property-read` for read-only fields (like timestamps, auto-incremented IDs):
+
+```php
+/**
+ * @property-read int $id
+ * @property string $name
+ * @property string|null $vat_number
+ * @property string|null $ssn
+ * @property string|null $phone
+ * @property OfficeType $type
+ * @property-read Carbon $created_at
+ * @property-read Carbon $updated_at
+ */
+```
+
+#### Relationships
+
+Use `@property-read` for ALL relationships (relationships are always read-only):
+
+```php
+/**
+ * @property-read Organization $organization
+ * @property-read Address $address
+ * @property-read Collection<int, Office> $offices
+ */
+```
+
+### Relationship Method Return Types
+
+**ALWAYS add PHPDoc return type hints with PHPStan generics** for all relationship methods:
+
+<code-snippet name="BelongsTo Relationship" lang="php">
+/** @return BelongsTo<Organization, $this> */
+public function organization(): BelongsTo
+{
+    return $this->belongsTo(Organization::class);
+}
+</code-snippet>
+
+<code-snippet name="HasMany Relationship" lang="php">
+/** @return HasMany<Office, $this> */
+public function offices(): HasMany
+{
+    return $this->hasMany(Office::class);
+}
+</code-snippet>
+
+<code-snippet name="MorphTo Relationship" lang="php">
+/** @return MorphTo<Model, $this> */
+public function addressable(): MorphTo
+{
+    return $this->morphTo();
+}
+</code-snippet>
+
+<code-snippet name="MorphOne Relationship" lang="php">
+/** @return MorphOne<Address, $this> */
+public function address(): MorphOne
+{
+    return $this->morphOne(Address::class, 'addressable');
+}
+</code-snippet>
+
+<code-snippet name="BelongsToMany Relationship" lang="php">
+/** @return BelongsToMany<Role, $this> */
+public function roles(): BelongsToMany
+{
+    return $this->belongsToMany(Role::class);
+}
+</code-snippet>
+
+=== .ai/app.queries rules ===
+
+# Query Guidelines
+
+## Query Responsibilities
+
+Queries are **thin data access layers** that:
+1. Encapsulate database read operations
+2. Provide reusable query builders for complex queries
+3. Keep controllers clean by moving query logic out of HTTP layer
+
+Queries should **NOT** contain business logic - that belongs in Actions.
+
+## Structure
+
+### Location
+
+- **Queries live in `app/Queries/`** directory
+- Use descriptive names without "Get" prefix (e.g., `UsersQuery` not `GetUsersQuery`)
+- One Query class per model/resource
+
+### Naming Convention
+
+- Use singular model name + "Query" suffix
+- Examples: `CountryQuery`, `OrganizationQuery`, `UserQuery`
+
+### Required Method
+
+**ALL Queries MUST implement a `builder()` method** that returns an Eloquent or Query Builder instance:
+
+<code-snippet name="Query Class Structure" lang="php">
+<?php
+
+declare(strict_types=1);
+
+namespace App\Queries;
+
+use App\Models\Country;
+use Illuminate\Database\Eloquent\Builder;
+
+final class CountryQuery
+{
+    /**
+     * @return Builder<Country>
+     */
+    public function builder(): Builder
+    {
+        return Country::query();
+    }
+}
+</code-snippet>
+
+## Usage in Controllers
+
+### Dependency Injection
+
+**ALWAYS inject Queries at the method level** - NOT in `__construct()`:
+
+✅ **CORRECT - Method-level injection:**
+```php
+public function create(CountryQuery $countryQuery): Response
+{
+    $countries = $countryQuery->builder()
+        ->orderBy('iso_code')
+        ->get()
+        ->map(fn (Country $country) => [
+            'id' => $country->id,
+            'iso_code' => $country->iso_code,
+            'name' => $country->name['en'] ?? $country->name['EN'] ?? $country->name[array_key_first($country->name)] ?? $country->iso_code,
+        ]);
+
+    return Inertia::render('org/create', [
+        'countries' => $countries,
+    ]);
+}
+```
+
+❌ **WRONG - Direct querying in controller:**
+```php
+public function create(): Response
+{
+    $countries = Country::query()  // ❌ Don't query directly in controller
+        ->orderBy('iso_code')
+        ->get();
+    
+    return Inertia::render('org/create', [
+        'countries' => $countries,
+    ]);
+}
+```
+
+❌ **WRONG - Constructor injection:**
+```php
+public function __construct(
+    private CountryQuery $countryQuery,  // ❌ Don't inject in constructor
+)
+{
+}
+
+public function create(): Response
+{
+    $countries = $this->countryQuery->builder()->get();  // ❌ Wrong pattern
+}
+```
+
+## Query Building
+
+### Basic Queries
+
+Start with a simple `builder()` method that returns the base query:
+
+```php
+public function builder(): Builder
+{
+    return Country::query();
+}
+```
+
+### Chaining in Controllers
+
+Call `builder()` and chain additional query methods in the controller:
+
+```php
+public function index(CountryQuery $countryQuery): Response
+{
+    $countries = $countryQuery->builder()
+        ->orderBy('iso_code')
+        ->where('active', true)
+        ->get();
+    
+    return Inertia::render('countries/index', [
+        'countries' => $countries,
+    ]);
+}
+```
+
+### Complex Query Logic
+
+If query logic becomes complex or reusable, add helper methods to the Query class:
+
+```php
+final class CountryQuery
+{
+    /**
+     * @return Builder<Country>
+     */
+    public function builder(): Builder
+    {
+        return Country::query();
+    }
+
+    /**
+     * @return Builder<Country>
+     */
+    public function active(): Builder
+    {
+        return $this->builder()->where('active', true);
+    }
+
+    /**
+     * @return Builder<Country>
+     */
+    public function orderedByIsoCode(): Builder
+    {
+        return $this->builder()->orderBy('iso_code');
+    }
+}
+```
+
+Then use in controller:
+```php
+public function index(CountryQuery $countryQuery): Response
+{
+    $countries = $countryQuery->active()
+        ->orderedByIsoCode()
+        ->get();
+    
+    return Inertia::render('countries/index', [
+        'countries' => $countries,
+    ]);
+}
+```
+
+## Type Hints
+
+### Return Types
+
+- **Always use explicit return type hints** for the `builder()` method
+- Use generic type hints: `Builder<Model>`
+- Example: `Builder<Country>`, `Builder<Organization>`
+
+### PHPDoc
+
+- Include PHPDoc blocks with return type annotations
+- Helps IDE autocomplete and static analysis
+
+## Testing
+
+### Query Tests
+
+Create tests for Query classes in `tests/Unit/Queries/`:
+
+<code-snippet name="Query Test Example" lang="php">
+<?php
+
+declare(strict_types=1);
+
+use App\Queries\CountryQuery;
+use App\Models\Country;
+
+beforeEach(function (): void {
+    $this->query = new CountryQuery;
+});
+
+test('returns country query builder', function (): void {
+    $builder = $this->query->builder();
+
+    expect($builder)->toBeInstanceOf(Builder::class);
+});
+
+test('builder returns countries', function (): void {
+    /** @var Country $country */
+    $country = Country::factory()->createQuietly();
+
+    $result = $this->query->builder()->first();
+
+    expect($result)
+        ->not->toBeNull()
+        ->id->toBe($country->id);
+});
+</code-snippet>
+
+## What NOT to Put in Queries
+
+❌ **Business Logic** - Belongs in Actions
+❌ **Write Operations** - Belongs in Actions
+❌ **Data Transformation** - Can be done in controllers or use Transformers
+❌ **Validation** - Belongs in Form Requests
+
+✅ **What Queries SHOULD Do:**
+- Return query builders
+- Provide reusable query methods
+- Encapsulate complex WHERE clauses
+- Handle eager loading relationships
+
+## Example: Wrong vs Right
+
+❌ **WRONG - Business logic in Query:**
+```php
+public function builder(): Builder
+{
+    return Country::query()
+        ->where('active', true)
+        ->get()  // ❌ Don't execute queries in builder()
+        ->map(fn ($country) => [  // ❌ Don't transform data in Query
+            'id' => $country->id,
+            'name' => $country->name['en'],
+        ]);
+}
+```
+
+✅ **CORRECT - Return builder, transform in controller:**
+```php
+// Query class
+public function builder(): Builder
+{
+    return Country::query();
+}
+
+// Controller
+public function create(CountryQuery $countryQuery): Response
+{
+    $countries = $countryQuery->builder()
+        ->orderBy('iso_code')
+        ->get()
+        ->map(fn (Country $country) => [
+            'id' => $country->id,
+            'iso_code' => $country->iso_code,
+            'name' => $country->name['en'] ?? $country->name['EN'] ?? $country->name[array_key_first($country->name)] ?? $country->iso_code,
+        ]);
+
+    return Inertia::render('org/create', [
+        'countries' => $countries,
+    ]);
+}
+```
+
+## Queries vs Actions
+
+### Use Queries For:
+
+- Reading data (SELECT operations)
+- Complex WHERE clauses
+- Reusable query scopes
+- Getting lists/collections
+
+### Use Actions For:
+
+- Creating records (INSERT)
+- Updating records (UPDATE)
+- Deleting records (DELETE)
+- Business logic operations
+
+## Integration with Actions
+
+Actions can also use Queries when they need to read data:
+
+```php
+final readonly class CreateOrganization
+{
+    public function __construct(
+        private CountryQuery $countryQuery,
+    ) {}
+
+    public function handle(CreateOrganizationData $data): Organization
+    {
+        // Use query to validate country exists
+        $countryExists = $this->countryQuery->builder()
+            ->where('id', $data->country_id)
+            ->exists();
+
+        if (! $countryExists) {
+            throw new InvalidArgumentException('Country does not exist');
+        }
+
+        $organization = Organization::query()->create([
+            'name' => $data->name,
+            'country_id' => $data->country_id,
+        ]);
+
+        return $organization->refresh();
+    }
+}
+```
+
+=== .ai/database.migrations rules ===
+
+# Database Migration Guidelines
+
+- **Column Order for CREATE TABLE**: ALWAYS use this exact order: `id()` first, then `timestamps()`, then all other columns
+- **Column Order for ALTER TABLE**: Do NOT use `after()` method - simply add columns without position specification (using `after()` breaks PostgreSQL compatibility)
+- **NEVER implement the `down()` method** - this application does not roll back migrations, always remove it
+- Use `php artisan migrate:fresh --seed` to reset the database
+- **NO default values in migrations** - default values are business logic, NOT database constraints
+- Implement defaults in Model's `$attributes` property, Model's `booted()` method, Action classes, or Data Objects
+- **ALWAYS use `foreignIdFor(Model::class)`** for foreign key columns
+- Use the second parameter to customize column name: `foreignIdFor(User::class, 'invited_by_id')->constrained('users')`
+- **NEVER add cascade constraints** - no `->onDelete('cascade')` or `->onUpdate('cascade')`
+- Handle deletions explicitly in the application layer using Actions (cascading can lead to unintended data loss)
+- When modifying a column, MUST include ALL attributes previously defined, otherwise they will be dropped
+
+<code-snippet name="Correct CREATE TABLE column order" lang="php">
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->timestamps();
+    $table->string('name');
+    $table->string('email')->unique();
+    $table->boolean('is_active');
+});
+</code-snippet>
+
+<code-snippet name="Correct ALTER TABLE migration without after()" lang="php">
+Schema::table('users', function (Blueprint $table) {
+    $table->string('phone')->nullable();
+    // ✅ CORRECT - no after() method for PostgreSQL compatibility
+});
+</code-snippet>
+
+<code-snippet name="Correct migration structure without down()" lang="php">
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('invitations', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('email');
+            $table->foreignIdFor(User::class, 'invited_by_id')->constrained('users');
+            $table->foreignIdFor(Role::class);
+            $table->timestamp('accepted_at')->nullable();
+        });
+    }
+};
+</code-snippet>
+
+<code-snippet name="CORRECT - Default in Model attributes" lang="php">
+class User extends Model
+{
+    protected $attributes = [
+        'is_active' => true, // ✅ Simple defaults belong here
+    ];
+}
+</code-snippet>
+
+<code-snippet name="CORRECT - Context-dependent default in Action" lang="php">
+class CreateUser
+{
+    public function handle(string $email, string $name, ?int $roleId = null): User
+    {
+        return User::query()->create([
+            'email' => $email,
+            'name' => $name,
+            'role_id' => $roleId ?? Role::query()->where('name', 'employee')->first()->id,
+            // ✅ Business logic belongs in Actions
+        ]);
+    }
+}
+</code-snippet>
+
+<code-snippet name="Correct foreign keys without cascade" lang="php">
+Schema::create('invitations', function (Blueprint $table) {
+    $table->id();
+    $table->timestamps();
+    $table->foreignIdFor(User::class, 'invited_by_id')->constrained('users');
+    // ✅ Explicit table name when column name differs
+    $table->foreignIdFor(Role::class);
+    // ✅ Auto-infers 'role_id' and 'roles' table
+    // ❌ NO ->onDelete('cascade') or ->onUpdate('cascade')
+});
+</code-snippet>
+
+<code-snippet name="Column modification preserving all attributes" lang="php">
+Schema::table('users', function (Blueprint $table) {
+    $table->string('email')->unique()->nullable()->change();
+    // ✅ MUST include ALL previous attributes or they will be lost
+});
+</code-snippet>
+
+=== .ai/general rules ===
+
+# General Guidelines
+
+- Don't include any superfluous PHP Annotations, except ones that start with `@` for typing variables.
+
 === .ai/tests rules ===
 
 # Testing Guidelines
@@ -445,6 +1248,7 @@ test('can set fields to null explicitly', function (): void {
 ## Test Structure
 
 ### Flat Test Organization
+
 **ALWAYS use flat structure** - NO nested subdirectories:
 - ✅ Correct: `tests/Unit/Actions/CreateLocationTest.php`
 - ❌ Wrong: `tests/Unit/Actions/Location/CreateLocationTest.php`
@@ -452,6 +1256,7 @@ test('can set fields to null explicitly', function (): void {
 - Exception: For multi-tenant applications, use Landlord/ and Tenant/ subdirectories under Feature/ and Browser/ to scope tests appropriately (e.g., tests/Feature/Tenant/UserProfileControllerTest.php).
 
 ### Test File Naming
+
 - Test files end with `Test.php`
 - Match the class being tested: `CreateLocation` → `CreateLocationTest`
 - Place in appropriate directory: Unit/, Feature/, or Browser/
@@ -608,6 +1413,7 @@ test('creates office', function (): void {
 ## Test Conventions
 
 ### Type Hints & Exception Annotations
+
 **ALWAYS type hint all variables and add @throws annotations before closures:**
 
 ```php
@@ -643,6 +1449,7 @@ beforeEach(
 - **MUST be placed before the closure**, not before the test() or beforeEach() call
 
 ### Factory Methods
+
 - **ALWAYS use `createQuietly()`** - Prevents events from firing
 - **Use `fresh()`** for records from migrations/seeders
 - **Pass data explicitly** - Don't rely on factory defaults in tests
@@ -661,6 +1468,7 @@ $role = Role::query()
 </code-snippet>
 
 ### Assertions
+
 - **Chain expect() methods** for cleaner tests
 - Use specific assertions: `assertOk()`, `assertForbidden()` not `assertStatus()`
 - **Import all classes** - Never use fully qualified names inline
@@ -713,6 +1521,7 @@ test('authorized user can access', function (): void {
 ## Browser Tests (Pest v4)
 
 ### Using visit()
+
 **Use `visit()` function** (no `$this->`):
 
 ```php
@@ -729,12 +1538,14 @@ test('page renders correctly', function (): void {
 ```
 
 ### Global Configuration
+
 - `RefreshDatabase` applied globally in `tests/Pest.php`
 - Don't add `uses(RefreshDatabase::class)` in individual tests
 
 ## Test Organization
 
 ### New Tests First
+
 **Place newly written tests at the TOP of the file:**
 
 ```php
@@ -750,808 +1561,38 @@ test('existing feature works', function (): void {
 ```
 
 ### Running Tests
+
 - To run style checks: `composer test:lint`.
 - To run all tests: `composer test`.
 - To run all tests in a file: `php artisan test --compact tests/Feature/ExampleTest.php`.
 - To filter on a particular test name: `php artisan test --compact --filter=testName` (recommended after making a change to a related file).
 - At the end of each work session, run the full test suite to ensure everything passes.
 
-
-=== .ai/app.queries rules ===
-
-# Query Guidelines
-
-## Query Responsibilities
-
-Queries are **thin data access layers** that:
-1. Encapsulate database read operations
-2. Provide reusable query builders for complex queries
-3. Keep controllers clean by moving query logic out of HTTP layer
-
-Queries should **NOT** contain business logic - that belongs in Actions.
-
-## Structure
-
-### Location
-- **Queries live in `app/Queries/`** directory
-- Use descriptive names without "Get" prefix (e.g., `UsersQuery` not `GetUsersQuery`)
-- One Query class per model/resource
-
-### Naming Convention
-- Use singular model name + "Query" suffix
-- Examples: `CountryQuery`, `OrganizationQuery`, `UserQuery`
-
-### Required Method
-**ALL Queries MUST implement a `builder()` method** that returns an Eloquent or Query Builder instance:
-
-<code-snippet name="Query Class Structure" lang="php">
-<?php
-
-declare(strict_types=1);
-
-namespace App\Queries;
-
-use App\Models\Country;
-use Illuminate\Database\Eloquent\Builder;
-
-final class CountryQuery
-{
-    /**
-     * @return Builder<Country>
-     */
-    public function builder(): Builder
-    {
-        return Country::query();
-    }
-}
-</code-snippet>
-
-## Usage in Controllers
-
-### Dependency Injection
-**ALWAYS inject Queries at the method level** - NOT in `__construct()`:
-
-✅ **CORRECT - Method-level injection:**
-```php
-public function create(CountryQuery $countryQuery): Response
-{
-    $countries = $countryQuery->builder()
-        ->orderBy('iso_code')
-        ->get()
-        ->map(fn (Country $country) => [
-            'id' => $country->id,
-            'iso_code' => $country->iso_code,
-            'name' => $country->name['en'] ?? $country->name['EN'] ?? $country->name[array_key_first($country->name)] ?? $country->iso_code,
-        ]);
-
-    return Inertia::render('org/create', [
-        'countries' => $countries,
-    ]);
-}
-```
-
-❌ **WRONG - Direct querying in controller:**
-```php
-public function create(): Response
-{
-    $countries = Country::query()  // ❌ Don't query directly in controller
-        ->orderBy('iso_code')
-        ->get();
-    
-    return Inertia::render('org/create', [
-        'countries' => $countries,
-    ]);
-}
-```
-
-❌ **WRONG - Constructor injection:**
-```php
-public function __construct(
-    private CountryQuery $countryQuery,  // ❌ Don't inject in constructor
-)
-{
-}
-
-public function create(): Response
-{
-    $countries = $this->countryQuery->builder()->get();  // ❌ Wrong pattern
-}
-```
-
-## Query Building
-
-### Basic Queries
-Start with a simple `builder()` method that returns the base query:
-
-```php
-public function builder(): Builder
-{
-    return Country::query();
-}
-```
-
-### Chaining in Controllers
-Call `builder()` and chain additional query methods in the controller:
-
-```php
-public function index(CountryQuery $countryQuery): Response
-{
-    $countries = $countryQuery->builder()
-        ->orderBy('iso_code')
-        ->where('active', true)
-        ->get();
-    
-    return Inertia::render('countries/index', [
-        'countries' => $countries,
-    ]);
-}
-```
-
-### Complex Query Logic
-If query logic becomes complex or reusable, add helper methods to the Query class:
-
-```php
-final class CountryQuery
-{
-    /**
-     * @return Builder<Country>
-     */
-    public function builder(): Builder
-    {
-        return Country::query();
-    }
-
-    /**
-     * @return Builder<Country>
-     */
-    public function active(): Builder
-    {
-        return $this->builder()->where('active', true);
-    }
-
-    /**
-     * @return Builder<Country>
-     */
-    public function orderedByIsoCode(): Builder
-    {
-        return $this->builder()->orderBy('iso_code');
-    }
-}
-```
-
-Then use in controller:
-```php
-public function index(CountryQuery $countryQuery): Response
-{
-    $countries = $countryQuery->active()
-        ->orderedByIsoCode()
-        ->get();
-    
-    return Inertia::render('countries/index', [
-        'countries' => $countries,
-    ]);
-}
-```
-
-## Type Hints
-
-### Return Types
-- **Always use explicit return type hints** for the `builder()` method
-- Use generic type hints: `Builder<Model>`
-- Example: `Builder<Country>`, `Builder<Organization>`
-
-### PHPDoc
-- Include PHPDoc blocks with return type annotations
-- Helps IDE autocomplete and static analysis
-
-## Testing
-
-### Query Tests
-Create tests for Query classes in `tests/Unit/Queries/`:
-
-<code-snippet name="Query Test Example" lang="php">
-<?php
-
-declare(strict_types=1);
-
-use App\Queries\CountryQuery;
-use App\Models\Country;
-
-beforeEach(function (): void {
-    $this->query = new CountryQuery;
-});
-
-test('returns country query builder', function (): void {
-    $builder = $this->query->builder();
-
-    expect($builder)->toBeInstanceOf(Builder::class);
-});
-
-test('builder returns countries', function (): void {
-    /** @var Country $country */
-    $country = Country::factory()->createQuietly();
-
-    $result = $this->query->builder()->first();
-
-    expect($result)
-        ->not->toBeNull()
-        ->id->toBe($country->id);
-});
-</code-snippet>
-
-## What NOT to Put in Queries
-
-❌ **Business Logic** - Belongs in Actions
-❌ **Write Operations** - Belongs in Actions
-❌ **Data Transformation** - Can be done in controllers or use Transformers
-❌ **Validation** - Belongs in Form Requests
-
-✅ **What Queries SHOULD Do:**
-- Return query builders
-- Provide reusable query methods
-- Encapsulate complex WHERE clauses
-- Handle eager loading relationships
-
-## Example: Wrong vs Right
-
-❌ **WRONG - Business logic in Query:**
-```php
-public function builder(): Builder
-{
-    return Country::query()
-        ->where('active', true)
-        ->get()  // ❌ Don't execute queries in builder()
-        ->map(fn ($country) => [  // ❌ Don't transform data in Query
-            'id' => $country->id,
-            'name' => $country->name['en'],
-        ]);
-}
-```
-
-✅ **CORRECT - Return builder, transform in controller:**
-```php
-// Query class
-public function builder(): Builder
-{
-    return Country::query();
-}
-
-// Controller
-public function create(CountryQuery $countryQuery): Response
-{
-    $countries = $countryQuery->builder()
-        ->orderBy('iso_code')
-        ->get()
-        ->map(fn (Country $country) => [
-            'id' => $country->id,
-            'iso_code' => $country->iso_code,
-            'name' => $country->name['en'] ?? $country->name['EN'] ?? $country->name[array_key_first($country->name)] ?? $country->iso_code,
-        ]);
-
-    return Inertia::render('org/create', [
-        'countries' => $countries,
-    ]);
-}
-```
-
-## Queries vs Actions
-
-### Use Queries For:
-- Reading data (SELECT operations)
-- Complex WHERE clauses
-- Reusable query scopes
-- Getting lists/collections
-
-### Use Actions For:
-- Creating records (INSERT)
-- Updating records (UPDATE)
-- Deleting records (DELETE)
-- Business logic operations
-
-## Integration with Actions
-
-Actions can also use Queries when they need to read data:
-
-```php
-final readonly class CreateOrganization
-{
-    public function __construct(
-        private CountryQuery $countryQuery,
-    ) {}
-
-    public function handle(CreateOrganizationData $data): Organization
-    {
-        // Use query to validate country exists
-        $countryExists = $this->countryQuery->builder()
-            ->where('id', $data->country_id)
-            ->exists();
-
-        if (! $countryExists) {
-            throw new InvalidArgumentException('Country does not exist');
-        }
-
-        $organization = Organization::query()->create([
-            'name' => $data->name,
-            'country_id' => $data->country_id,
-        ]);
-
-        return $organization->refresh();
-    }
-}
-```
-
-=== .ai/app.models rules ===
-
-# Eloquent Model Guidelines
-
-## Type Hinting
-
-### Property Annotations
-**ALWAYS add PHPDoc annotations for ALL properties** - database fields, casts, and relationships:
-
-#### Database Fields & Casts
-Use `@property` for writable database fields and `@property-read` for read-only fields (like timestamps, auto-incremented IDs):
-
-```php
-/**
- * @property-read int $id
- * @property string $name
- * @property string|null $vat_number
- * @property string|null $ssn
- * @property string|null $phone
- * @property OfficeType $type
- * @property-read Carbon $created_at
- * @property-read Carbon $updated_at
- */
-```
-
-#### Relationships
-Use `@property-read` for ALL relationships (relationships are always read-only):
-
-```php
-/**
- * @property-read Organization $organization
- * @property-read Address $address
- * @property-read Collection<int, Office> $offices
- */
-```
-
-### Relationship Method Return Types
-**ALWAYS add PHPDoc return type hints with PHPStan generics** for all relationship methods:
-
-<code-snippet name="BelongsTo Relationship" lang="php">
-/** @return BelongsTo<Organization, $this> */
-public function organization(): BelongsTo
-{
-    return $this->belongsTo(Organization::class);
-}
-</code-snippet>
-
-<code-snippet name="HasMany Relationship" lang="php">
-/** @return HasMany<Office, $this> */
-public function offices(): HasMany
-{
-    return $this->hasMany(Office::class);
-}
-</code-snippet>
-
-<code-snippet name="MorphTo Relationship" lang="php">
-/** @return MorphTo<Model, $this> */
-public function addressable(): MorphTo
-{
-    return $this->morphTo();
-}
-</code-snippet>
-
-<code-snippet name="MorphOne Relationship" lang="php">
-/** @return MorphOne<Address, $this> */
-public function address(): MorphOne
-{
-    return $this->morphOne(Address::class, 'addressable');
-}
-</code-snippet>
-
-<code-snippet name="BelongsToMany Relationship" lang="php">
-/** @return BelongsToMany<Role, $this> */
-public function roles(): BelongsToMany
-{
-    return $this->belongsToMany(Role::class);
-}
-</code-snippet>
-
-=== .ai/database.migrations rules ===
-
-# Database Migration Guidelines
-
-- **Column Order for CREATE TABLE**: ALWAYS use this exact order: `id()` first, then `timestamps()`, then all other columns
-- **Column Order for ALTER TABLE**: Do NOT use `after()` method - simply add columns without position specification (using `after()` breaks PostgreSQL compatibility)
-- **NEVER implement the `down()` method** - this application does not roll back migrations, always remove it
-- Use `php artisan migrate:fresh --seed` to reset the database
-- **NO default values in migrations** - default values are business logic, NOT database constraints
-- Implement defaults in Model's `$attributes` property, Model's `booted()` method, Action classes, or Data Objects
-- **ALWAYS use `foreignIdFor(Model::class)`** for foreign key columns
-- Use the second parameter to customize column name: `foreignIdFor(User::class, 'invited_by_id')->constrained('users')`
-- **NEVER add cascade constraints** - no `->onDelete('cascade')` or `->onUpdate('cascade')`
-- Handle deletions explicitly in the application layer using Actions (cascading can lead to unintended data loss)
-- When modifying a column, MUST include ALL attributes previously defined, otherwise they will be dropped
-
-<code-snippet name="Correct CREATE TABLE column order" lang="php">
-Schema::create('users', function (Blueprint $table) {
-    $table->id();
-    $table->timestamps();
-    $table->string('name');
-    $table->string('email')->unique();
-    $table->boolean('is_active');
-});
-</code-snippet>
-
-<code-snippet name="Correct ALTER TABLE migration without after()" lang="php">
-Schema::table('users', function (Blueprint $table) {
-    $table->string('phone')->nullable();
-    // ✅ CORRECT - no after() method for PostgreSQL compatibility
-});
-</code-snippet>
-
-<code-snippet name="Correct migration structure without down()" lang="php">
-return new class extends Migration
-{
-    public function up(): void
-    {
-        Schema::create('invitations', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('email');
-            $table->foreignIdFor(User::class, 'invited_by_id')->constrained('users');
-            $table->foreignIdFor(Role::class);
-            $table->timestamp('accepted_at')->nullable();
-        });
-    }
-};
-</code-snippet>
-
-<code-snippet name="CORRECT - Default in Model attributes" lang="php">
-class User extends Model
-{
-    protected $attributes = [
-        'is_active' => true, // ✅ Simple defaults belong here
-    ];
-}
-</code-snippet>
-
-<code-snippet name="CORRECT - Context-dependent default in Action" lang="php">
-class CreateUser
-{
-    public function handle(string $email, string $name, ?int $roleId = null): User
-    {
-        return User::query()->create([
-            'email' => $email,
-            'name' => $name,
-            'role_id' => $roleId ?? Role::query()->where('name', 'employee')->first()->id,
-            // ✅ Business logic belongs in Actions
-        ]);
-    }
-}
-</code-snippet>
-
-<code-snippet name="Correct foreign keys without cascade" lang="php">
-Schema::create('invitations', function (Blueprint $table) {
-    $table->id();
-    $table->timestamps();
-    $table->foreignIdFor(User::class, 'invited_by_id')->constrained('users');
-    // ✅ Explicit table name when column name differs
-    $table->foreignIdFor(Role::class);
-    // ✅ Auto-infers 'role_id' and 'roles' table
-    // ❌ NO ->onDelete('cascade') or ->onUpdate('cascade')
-});
-</code-snippet>
-
-<code-snippet name="Column modification preserving all attributes" lang="php">
-Schema::table('users', function (Blueprint $table) {
-    $table->string('email')->unique()->nullable()->change();
-    // ✅ MUST include ALL previous attributes or they will be lost
-});
-</code-snippet>
-
-=== .ai/general rules ===
-
-# General Guidelines
-
-- Don't include any superfluous PHP Annotations, except ones that start with `@` for typing variables.
-
-=== .ai/app.controllers rules ===
-
-# Controller Guidelines
-
-## Controller Responsibilities
-
-Controllers are **thin HTTP adapters** that:
-1. Validate requests (via Form Requests)
-2. Convert validated data to Data objects
-3. Call Actions to perform business logic
-4. Return responses (Inertia renders, redirects, JSON)
-
-Controllers should **NOT** contain business logic - that belongs in Actions.
-
-## Structure
-
-### Flat Hierarchy
-- **Controllers live directly in `app/Http/Controllers/`** - NO nested folders
-- Clear naming eliminates need for namespace nesting
-- Examples: `UserController`, `LocationController`, `OrganizationController`
-
-### Single vs Multi-Action Controllers
-
-**Single Action Controllers** - Use `__invoke()` for one specific action:
-```php
-final readonly class ActivateUserController
-{
-    public function __invoke(User $user, ActivateUserAction $action): RedirectResponse
-    {
-        $action->handle($user);
-        return redirect()->back();
-    }
-}
-```
-
-**Multi-Action Controllers** - Use named methods for related CRUD operations:
-```php
-final readonly class LocationController
-{
-    public function store(CreateLocationRequest $request): RedirectResponse { }
-    public function update(UpdateLocationRequest $request, Location $office): RedirectResponse { }
-    public function destroy(Location $office): RedirectResponse { }
-}
-```
-
-## Request Validation
-
-### Always Use Form Requests
-**ALWAYS create dedicated Form Request classes** - NEVER use inline validation:
-
-<code-snippet name="Form Request Example" lang="php">
-<?php
-
-declare(strict_types=1);
-
-namespace App\Http\Requests;
-
-use Illuminate\Foundation\Http\FormRequest;
-
-final class UpdateLocationRequest extends FormRequest
-{
-    public function authorize(): bool
-    {
-        return $this->user()->can('organizations.edit');
-    }
-
-    public function rules(): array
-    {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'integer', 'in:1,2,3,4,5,6,7,8'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'address' => ['required', 'array'],
-            'address.line1' => ['required', 'string', 'max:255'],
-            'address.line2' => ['nullable', 'string', 'max:255'],
-            'address.city' => ['required', 'string', 'max:255'],
-            'address.state' => ['nullable', 'string', 'max:255'],
-            'address.postal_code' => ['required', 'string', 'max:255'],
-            'address.country' => ['required', 'string', 'max:255'],
-        ];
-    }
-}
-</code-snippet>
-
-### Create Form Requests
-```bash
-php artisan make:request UpdateLocationRequest --no-interaction
-```
-
-## Controller Flow Pattern
-
-<code-snippet name="Complete Controller Example" lang="php">
-<?php
-
-declare(strict_types=1);
-
-namespace App\Http\Controllers;
-
-use App\Actions\Location\CreateLocation;
-use App\Actions\Location\DeleteLocation;
-use App\Actions\Location\UpdateLocation;
-use App\Data\PeopleDear\Location\CreateLocationData;
-use App\Data\PeopleDear\Location\UpdateLocationData;
-use App\Http\Requests\CreateLocationRequest;
-use App\Http\Requests\UpdateLocationRequest;
-use App\Models\Location;
-use App\Models\User;
-use Illuminate\Container\Attributes\CurrentUser;
-use Illuminate\Http\RedirectResponse;
-
-final class LocationController
-{
-    public function store(
-        CreateLocationRequest $request,
-        CreateLocation        $action,
-        #[CurrentUser] User $user
-    ): RedirectResponse
-    {
-        $data = CreateLocationData::from($request->validated());
-
-        $action->handle($data, $user);
-
-        return redirect()
-            ->route('admin.settings.organization.edit')
-            ->with('success', 'Location created successfully');
-    }
-
-    public function update(
-        UpdateLocationRequest $request,
-        Location              $office,
-        UpdateLocation        $action
-    ): RedirectResponse
-    {
-        $data = UpdateLocationData::from($request->validated());
-
-        $action->handle($data, $office);
-
-        return redirect()
-            ->route('admin.settings.organization.edit')
-            ->with('success', 'Location updated successfully');
-    }
-
-    public function destroy(
-        Location       $office,
-        DeleteLocation $action
-    ): RedirectResponse
-    {
-        $action->handle($office);
-
-        return redirect()
-            ->route('admin.settings.organization.edit')
-            ->with('success', 'Location deleted successfully');
-    }
-}
-</code-snippet>
-
-## Dependency Injection
-
-### Method-Level Injection
-**ALWAYS inject Actions at the method level** - NOT in `__construct()`:
-
-✅ **CORRECT - Method-level injection:**
-```php
-public function store(
-    CreateLocationRequest $request,
-    CreateLocation        $action,  // ✅ Injected here
-    #[CurrentUser] User $user
-): RedirectResponse
-{
-    $data = CreateLocationData::from($request->validated());
-    $action->handle($data, $user);
-    return redirect()->route('admin.settings.organization.edit');
-}
-```
-
-❌ **WRONG - Constructor injection:**
-```php
-public function __construct(
-    private CreateLocation $createLocation,  // ❌ Don't do this
-)
-{
-}
-
-public function store(CreateLocationRequest $request): RedirectResponse
-{
-    $this->createLocation->handle(...);  // ❌ Wrong pattern
-}
-```
-
-### Use Laravel 12 Contextual Attributes
-
-**Always use `#[CurrentUser]` instead of `Request::user()`:**
-
-<code-snippet name="CurrentUser Attribute" lang="php">
-public function store(
-    CreateLocationRequest $request,
-    #[CurrentUser] User $user  // ✅ Clean and explicit
-): RedirectResponse
-{
-    $data = CreateLocationData::from($request->validated());
-    $this->createLocation->handle($data, $user);
-    return redirect()->route('admin.settings.organization.edit');
-}
-</code-snippet>
-
-❌ **Don't inject Request just to get user:**
-```php
-public function store(
-    CreateLocationRequest $request,
-    Request             $httpRequest  // ❌ Unnecessary
-): RedirectResponse
-{
-    $user = $httpRequest->user();  // ❌ Verbose
-    // ...
-}
-```
-
-## Return Types
-
-- **Inertia Pages** - Return `Response` (from `Inertia::render()`)
-- **Redirects** - Return `RedirectResponse`
-- **JSON APIs** - Return `JsonResponse`
-- **Always use explicit return type hints**
-
-## What NOT to Put in Controllers
-
-❌ **Business Logic** - Belongs in Actions
-❌ **Database Queries** - Belongs in Actions/Queries
-❌ **Validation Logic** - Belongs in Form Requests
-❌ **Data Transformation** - Belongs in Actions/Data objects
-
-✅ **What Controllers SHOULD Do:**
-- Type-hint Form Requests
-- Create Data objects from validated data
-- Call Actions
-- Return HTTP responses
-
-## Example: Wrong vs Right
-
-❌ **WRONG - Business logic in controller:**
-```php
-public function update(UpdateLocationRequest $request, Location $office): RedirectResponse
-{
-    // ❌ Business logic in controller
-    $office->update([
-        'name' => $request->validated('name'),
-        'type' => $request->validated('type'),
-    ]);
-
-    // ❌ More business logic
-    if ($request->has('address')) {
-        $office->address->update($request->validated('address'));
-    }
-
-    return redirect()->back();
-}
-```
-
-✅ **CORRECT - Delegate to Action:**
-```php
-public function update(
-    UpdateLocationRequest $request,
-    Location              $office,
-    UpdateLocation        $action
-): RedirectResponse
-{
-    // ✅ Create Data object from validated data
-    $data = UpdateLocationData::from($request->validated());
-
-    // ✅ Delegate business logic to Action
-    $action->handle($data, $office);
-
-    // ✅ Return response
-    return redirect()
-        ->route('admin.settings.organization.edit')
-        ->with('success', 'Location updated');
-}
-```
+### Before Every Commit
+
+**ALWAYS run:**
+- `composer test:lint` to check code style
+- `composer test` to run the full test suite
 
 === foundation rules ===
 
 # Laravel Boost Guidelines
 
-The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to enhance the user's satisfaction building Laravel applications.
+The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
 
 ## Foundational Context
+
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.4.16
+- php - 8.4.17
+- filament/filament (FILAMENT) - v5
 - inertiajs/inertia-laravel (INERTIA) - v2
 - laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v12
+- laravel/octane (OCTANE) - v2
 - laravel/prompts (PROMPTS) - v0
 - laravel/wayfinder (WAYFINDER) - v0
+- livewire/livewire (LIVEWIRE) - v4
 - larastan/larastan (LARASTAN) - v3
 - laravel/mcp (MCP) - v0
 - laravel/pint (PINT) - v1
@@ -1565,56 +1606,74 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - eslint (ESLINT) - v9
 - prettier (PRETTIER) - v3
 
+## Skills Activation
+
+This project has domain-specific skills available. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
+
+- `wayfinder-development` — Activates whenever referencing backend routes in frontend components. Use when importing from @/actions or @/routes, calling Laravel routes from TypeScript, or working with Wayfinder route functions.
+- `pest-testing` — Tests applications using the Pest 4 PHP framework. Activates when writing tests, creating unit or feature tests, adding assertions, testing Livewire components, browser testing, debugging test failures, working with datasets or mocking; or when the user mentions test, spec, TDD, expects, assertion, coverage, or needs to verify functionality works.
+- `inertia-react-development` — Develops Inertia.js v2 React client-side applications. Activates when creating React pages, forms, or navigation; using &lt;Link&gt;, &lt;Form&gt;, useForm, or router; working with deferred props, prefetching, or polling; or when user mentions React with Inertia, React pages, React forms, or React navigation.
+- `tailwindcss-development` — Styles applications using Tailwind CSS v4 utilities. Activates when adding styles, restyling components, working with gradients, spacing, layout, flex, grid, responsive design, dark mode, colors, typography, or borders; or when the user mentions CSS, styling, classes, Tailwind, restyle, hero section, cards, buttons, or any visual/UI changes.
+
 ## Conventions
+
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
 
 ## Verification Scripts
-- Do not create verification scripts or tinker when tests cover that functionality and prove it works. Unit and feature tests are more important.
+
+- Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
 
 ## Application Structure & Architecture
+
 - Stick to existing directory structure; don't create new base folders without approval.
 - Do not change the application's dependencies without approval.
 
 ## Frontend Bundling
-- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
 
-## Replies
-- Be concise in your explanations - focus on what's important rather than explaining obvious details.
+- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `bun run build`, `bun run dev`, or `composer run dev`. Ask them.
 
 ## Documentation Files
+
 - You must only create documentation files if explicitly requested by the user.
+
+## Replies
+
+- Be concise in your explanations - focus on what's important rather than explaining obvious details.
 
 === boost rules ===
 
-## Laravel Boost
+# Laravel Boost
+
 - Laravel Boost is an MCP server that comes with powerful tools designed specifically for this application. Use them.
 
 ## Artisan
+
 - Use the `list-artisan-commands` tool when you need to call an Artisan command to double-check the available parameters.
 
 ## URLs
+
 - Whenever you share a project URL with the user, you should use the `get-absolute-url` tool to ensure you're using the correct scheme, domain/IP, and port.
 
 ## Tinker / Debugging
+
 - You should use the `tinker` tool when you need to execute PHP to debug code or query Eloquent models directly.
 - Use the `database-query` tool when you only need to read from the database.
 
 ## Reading Browser Logs With the `browser-logs` Tool
+
 - You can read browser logs, errors, and exceptions using the `browser-logs` tool from Boost.
 - Only recent browser logs will be useful - ignore old logs.
 
 ## Searching Documentation (Critically Important)
-- Boost comes with a powerful `search-docs` tool you should use before any other approaches when dealing with Laravel or Laravel ecosystem packages. This tool automatically passes a list of installed packages and their versions to the remote Boost API, so it returns only version-specific documentation for the user's circumstance. You should pass an array of packages to filter on if you know you need docs for particular packages.
-- The `search-docs` tool is perfect for all Laravel-related packages, including Laravel, Inertia, Livewire, Filament, Tailwind, Pest, Nova, Nightwatch, etc.
-- You must use this tool to search for Laravel ecosystem documentation before falling back to other approaches.
+
+- Boost comes with a powerful `search-docs` tool you should use before trying other approaches when working with Laravel or Laravel ecosystem packages. This tool automatically passes a list of installed packages and their versions to the remote Boost API, so it returns only version-specific documentation for the user's circumstance. You should pass an array of packages to filter on if you know you need docs for particular packages.
 - Search the documentation before making code changes to ensure we are taking the correct approach.
-- Use multiple, broad, simple, topic-based queries to start. For example: `['rate limiting', 'routing rate limiting', 'routing']`.
+- Use multiple, broad, simple, topic-based queries at once. For example: `['rate limiting', 'routing rate limiting', 'routing']`. The most relevant results will be returned first.
 - Do not add package names to queries; package information is already shared. For example, use `test resource table`, not `filament 4 test resource table`.
 
 ### Available Search Syntax
-- You can and should pass multiple queries at once. The most relevant results will be returned first.
 
 1. Simple Word Searches with auto-stemming - query=authentication - finds 'authenticate' and 'auth'.
 2. Multiple Words (AND Logic) - query=rate limit - finds knowledge containing both "rate" AND "limit".
@@ -1624,17 +1683,19 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 === php rules ===
 
-## PHP
+# PHP
 
 - Always use strict typing at the head of a `.php` file: `declare(strict_types=1);`.
-- Always use curly braces for control structures, even if it has one line.
+- Always use curly braces for control structures, even for single-line bodies.
 
-### Constructors
+## Constructors
+
 - Use PHP 8 constructor property promotion in `__construct()`.
     - <code-snippet>public function __construct(public GitHub $github) { }</code-snippet>
 - Do not allow empty `__construct()` methods with zero parameters unless the constructor is private.
 
-### Type Declarations
+## Type Declarations
+
 - Always use explicit return type declarations for methods and functions.
 - Use appropriate PHP type hints for method parameters.
 
@@ -1645,76 +1706,59 @@ protected function isAccessible(User $user, ?string $path = null): bool
 }
 </code-snippet>
 
+## Enums
+
+- That being said, keys in an Enum should follow existing application Enum conventions.
+
 ## Comments
-- Prefer PHPDoc blocks over inline comments. Never use comments within the code itself unless there is something very complex going on.
+
+- Prefer PHPDoc blocks over inline comments. Never use comments within the code itself unless the logic is exceptionally complex.
 
 ## PHPDoc Blocks
-- Add useful array shape type definitions for arrays when appropriate.
 
-## Enums
-- That being said, keys in an Enum should follow existing application Enum conventions.
+- Add useful array shape type definitions when appropriate.
 
 === herd rules ===
 
-## Laravel Herd
+# Laravel Herd
 
-- The application is served by Laravel Herd and will be available at: `https?://[kebab-case-project-dir].test`. Use the `get-absolute-url` tool to generate URLs for the user to ensure valid URLs.
+- The application is served by Laravel Herd and will be available at: `https?://[kebab-case-project-dir].test`. Use the `get-absolute-url` tool to generate valid URLs for the user.
 - You must not run any commands to make the site available via HTTP(S). It is always available through Laravel Herd.
 
 === tests rules ===
 
-## Test Enforcement
+# Test Enforcement
 
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
 
 === inertia-laravel/core rules ===
 
-## Inertia
+# Inertia
 
-- Inertia.js components should be placed in the `resources/js/Pages` directory unless specified differently in the JS bundler (`vite.config.js`).
-- Use `Inertia::render()` for server-side routing instead of traditional Blade views.
-- Use the `search-docs` tool for accurate guidance on all things Inertia.
-
-<code-snippet name="Inertia Render Example" lang="php">
-// routes/web.php example
-Route::get('/users', function () {
-    return Inertia::render('Users/Index', [
-        'users' => User::all()
-    ]);
-});
-</code-snippet>
+- Inertia creates fully client-side rendered SPAs without modern SPA complexity, leveraging existing server-side patterns.
+- Components live in `resources/js/Pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
+- ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
+- IMPORTANT: Activate `inertia-react-development` when working with Inertia client-side patterns.
 
 === inertia-laravel/v2 rules ===
 
-## Inertia v2
+# Inertia v2
 
-- Make use of all Inertia features from v1 and v2. Check the documentation before making any changes to ensure we are taking the correct approach.
-
-### Inertia v2 New Features
-- Deferred props.
-- Infinite scrolling using merging props and `WhenVisible`.
-- Lazy loading data on scroll.
-- Polling.
-- Prefetching.
-
-### Deferred Props & Empty States
-- When using deferred props on the frontend, you should add a nice empty state with pulsing/animated skeleton.
-
-### Inertia Form General Guidance
-- The recommended way to build forms when using Inertia is with the `<Form>` component - a useful example is below. Use the `search-docs` tool with a query of `form component` for guidance.
-- Forms can also be built using the `useForm` helper for more programmatic control, or to follow existing conventions. Use the `search-docs` tool with a query of `useForm helper` for guidance.
-- `resetOnError`, `resetOnSuccess`, and `setDefaultsOnSuccess` are available on the `<Form>` component. Use the `search-docs` tool with a query of `form component resetting` for guidance.
+- Use all Inertia features from v1 and v2. Check the documentation before making changes to ensure the correct approach.
+- New features: deferred props, infinite scrolling (merging props + `WhenVisible`), lazy loading on scroll, polling, prefetching.
+- When using deferred props, add an empty state with a pulsing or animated skeleton.
 
 === laravel/core rules ===
 
-## Do Things the Laravel Way
+# Do Things the Laravel Way
 
 - Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using the `list-artisan-commands` tool.
 - If you're creating a generic PHP class, use `php artisan make:class`.
 - Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
 
-### Database
+## Database
+
 - Always use proper Eloquent relationship methods with return type hints. Prefer relationship methods over raw queries or manual joins.
 - Use Eloquent models and relationships before suggesting raw database queries.
 - Avoid `DB::`; prefer `Model::query()`. Generate code that leverages Laravel's ORM capabilities rather than bypassing them.
@@ -1722,43 +1766,53 @@ Route::get('/users', function () {
 - Use Laravel's query builder for very complex database operations.
 
 ### Model Creation
+
 - When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `list-artisan-commands` to check the available options to `php artisan make:model`.
 
 ### APIs & Eloquent Resources
+
 - For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
 
-### Controllers & Validation
+## Controllers & Validation
+
 - Always create Form Request classes for validation rather than inline validation in controllers. Include both validation rules and custom error messages.
 - Check sibling Form Requests to see if the application uses array or string based validation rules.
 
-### Queues
-- Use queued jobs for time-consuming operations with the `ShouldQueue` interface.
+## Authentication & Authorization
 
-### Authentication & Authorization
 - Use Laravel's built-in authentication and authorization features (gates, policies, Sanctum, etc.).
 
-### URL Generation
+## URL Generation
+
 - When generating links to other pages, prefer named routes and the `route()` function.
 
-### Configuration
+## Queues
+
+- Use queued jobs for time-consuming operations with the `ShouldQueue` interface.
+
+## Configuration
+
 - Use environment variables only in configuration files - never use the `env()` function directly outside of config files. Always use `config('app.name')`, not `env('APP_NAME')`.
 
-### Testing
+## Testing
+
 - When creating models for tests, use the factories for the models. Check if the factory has custom states that can be used before manually setting up the model.
 - Faker: Use methods such as `$this->faker->word()` or `fake()->randomDigit()`. Follow existing conventions whether to use `$this->faker` or `fake()`.
 - When creating tests, make use of `php artisan make:test [options] {name}` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
 
-### Vite Error
-- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+## Vite Error
+
+- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `bun run build` or ask the user to run `bun run dev` or `composer run dev`.
 
 === laravel/v12 rules ===
 
-## Laravel 12
+# Laravel 12
 
-- Use the `search-docs` tool to get version-specific documentation.
+- CRITICAL: ALWAYS use `search-docs` tool for version-specific Laravel documentation and updated code examples.
 - Since Laravel 11, Laravel has a new streamlined file structure which this project uses.
 
-### Laravel 12 Structure
+## Laravel 12 Structure
+
 - In Laravel 12, middleware are no longer registered in `app/Http/Kernel.php`.
 - Middleware are configured declaratively in `bootstrap/app.php` using `Application::configure()->withMiddleware()`.
 - `bootstrap/app.php` is the file to register middleware, exceptions, and routing files.
@@ -1766,68 +1820,30 @@ Route::get('/users', function () {
 - The `app\Console\Kernel.php` file no longer exists; use `bootstrap/app.php` or `routes/console.php` for console configuration.
 - Console commands in `app/Console/Commands/` are automatically available and do not require manual registration.
 
-### Database
+## Database
+
 - When modifying a column, the migration must include all of the attributes that were previously defined on the column. Otherwise, they will be dropped and lost.
 - Laravel 12 allows limiting eagerly loaded records natively, without external packages: `$query->latest()->limit(10);`.
 
 ### Models
+
 - Casts can and likely should be set in a `casts()` method on a model rather than the `$casts` property. Follow existing conventions from other models.
 
 === wayfinder/core rules ===
 
-## Laravel Wayfinder
+# Laravel Wayfinder
 
-Wayfinder generates TypeScript functions and types for Laravel controllers and routes which you can import into your client-side code. It provides type safety and automatic synchronization between backend routes and frontend code.
+Wayfinder generates TypeScript functions for Laravel routes. Import from `@/actions/` (controllers) or `@/routes/` (named routes).
 
-### Development Guidelines
-- Always use the `search-docs` tool to check Wayfinder correct usage before implementing any features.
-- Always prefer named imports for tree-shaking (e.g., `import { show } from '@/actions/...'`).
-- Avoid default controller imports (prevents tree-shaking).
-- Run `php artisan wayfinder:generate` after route changes if Vite plugin isn't installed.
-
-### Feature Overview
-- Form Support: Use `.form()` with `--with-form` flag for HTML form attributes — `<form {...store.form()}>` → `action="/posts" method="post"`.
-- HTTP Methods: Call `.get()`, `.post()`, `.patch()`, `.put()`, `.delete()` for specific methods — `show.head(1)` → `{ url: "/posts/1", method: "head" }`.
-- Invokable Controllers: Import and invoke directly as functions. For example, `import StorePost from '@/actions/.../StorePostController'; StorePost()`.
-- Named Routes: Import from `@/routes/` for non-controller routes. For example, `import { show } from '@/routes/post'; show(1)` for route name `post.show`.
-- Parameter Binding: Detects route keys (e.g., `{post:slug}`) and accepts matching object properties — `show("my-post")` or `show({ slug: "my-post" })`.
-- Query Merging: Use `mergeQuery` to merge with `window.location.search`, set values to `null` to remove — `show(1, { mergeQuery: { page: 2, sort: null } })`.
-- Query Parameters: Pass `{ query: {...} }` in options to append params — `show(1, { query: { page: 1 } })` → `"/posts/1?page=1"`.
-- Route Objects: Functions return `{ url, method }` shaped objects — `show(1)` → `{ url: "/posts/1", method: "get" }`.
-- URL Extraction: Use `.url()` to get URL string — `show.url(1)` → `"/posts/1"`.
-
-### Example Usage
-
-<code-snippet name="Wayfinder Basic Usage" lang="typescript">
-    // Import controller methods (tree-shakable)...
-    import { show, store, update } from '@/actions/App/Http/Controllers/PostController'
-
-    // Get route object with URL and method...
-    show(1) // { url: "/posts/1", method: "get" }
-
-    // Get just the URL...
-    show.url(1) // "/posts/1"
-
-    // Use specific HTTP methods...
-    show.get(1) // { url: "/posts/1", method: "get" }
-    show.head(1) // { url: "/posts/1", method: "head" }
-
-    // Import named routes...
-    import { show as postShow } from '@/routes/post' // For route name 'post.show'
-    postShow(1) // { url: "/posts/1", method: "get" }
-</code-snippet>
-
-### Wayfinder + Inertia
-If your application uses the `<Form>` component from Inertia, you can use Wayfinder to generate form action and method automatically.
-<code-snippet name="Wayfinder Form Component (React)" lang="typescript">
-
-<Form {...store.form()}><input name="title" /></Form>
-
-</code-snippet>
+- IMPORTANT: Activate `wayfinder-development` skill whenever referencing backend routes in frontend components.
+- Invokable Controllers: `import StorePost from '@/actions/.../StorePostController'; StorePost()`.
+- Parameter Binding: Detects route keys (`{post:slug}`) — `show({ slug: "my-post" })`.
+- Query Merging: `show(1, { mergeQuery: { page: 2, sort: null } })` merges with current URL, `null` removes params.
+- Inertia: Use `.form()` with `<Form>` component or `form.submit(store())` with useForm.
 
 === pint/core rules ===
 
-## Laravel Pint Code Formatter
+# Laravel Pint Code Formatter
 
 - You must run `vendor/bin/pint --dirty` before finalizing changes to ensure your code matches the project's expected style.
 - Do not run `vendor/bin/pint --test`, simply run `vendor/bin/pint` to fix any formatting issues.
@@ -1835,313 +1851,24 @@ If your application uses the `<Form>` component from Inertia, you can use Wayfin
 === pest/core rules ===
 
 ## Pest
-### Testing
-- If you need to verify a feature is working, write or update a Unit / Feature test.
 
-### Pest Tests
-- All tests must be written using Pest. Use `php artisan make:test --pest {name}`.
-- You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files - these are core to the application.
-- Tests should test all of the happy paths, failure paths, and weird paths.
-- Tests live in the `tests/Feature` and `tests/Unit` directories.
-- Pest tests look and behave like this:
-<code-snippet name="Basic Pest Test Example" lang="php">
-it('is true', function () {
-    expect(true)->toBeTrue();
-});
-</code-snippet>
-
-### Running Tests
-- Run the minimal number of tests using an appropriate filter before finalizing code edits.
-- To run all tests: `php artisan test --compact`.
-- To run all tests in a file: `php artisan test --compact tests/Feature/ExampleTest.php`.
-- To filter on a particular test name: `php artisan test --compact --filter=testName` (recommended after making a change to a related file).
-- When the tests relating to your changes are passing, ask the user if they would like to run the entire test suite to ensure everything is still passing.
-
-### Pest Assertions
-- When asserting status codes on a response, use the specific method like `assertForbidden` and `assertNotFound` instead of using `assertStatus(403)` or similar, e.g.:
-<code-snippet name="Pest Example Asserting postJson Response" lang="php">
-it('returns all', function () {
-    $response = $this->postJson('/api/docs', []);
-
-    $response->assertSuccessful();
-});
-</code-snippet>
-
-### Mocking
-- Mocking can be very helpful when appropriate.
-- When mocking, you can use the `Pest\Laravel\mock` Pest function, but always import it via `use function Pest\Laravel\mock;` before using it. Alternatively, you can use `$this->mock()` if existing tests do.
-- You can also create partial mocks using the same import or self method.
-
-### Datasets
-- Use datasets in Pest to simplify tests that have a lot of duplicated data. This is often the case when testing validation rules, so consider this solution when writing tests for validation rules.
-
-<code-snippet name="Pest Dataset Example" lang="php">
-it('has emails', function (string $email) {
-    expect($email)->not->toBeEmpty();
-})->with([
-    'james' => 'james@laravel.com',
-    'taylor' => 'taylor@laravel.com',
-]);
-</code-snippet>
-
-=== pest/v4 rules ===
-
-## Pest 4
-
-- Pest 4 is a huge upgrade to Pest and offers: browser testing, smoke testing, visual regression testing, test sharding, and faster type coverage.
-- Browser testing is incredibly powerful and useful for this project.
-- Browser tests should live in `tests/Browser/`.
-- Use the `search-docs` tool for detailed guidance on utilizing these features.
-
-### Browser Testing
-- You can use Laravel features like `Event::fake()`, `assertAuthenticated()`, and model factories within Pest 4 browser tests, as well as `RefreshDatabase` (when needed) to ensure a clean state for each test.
-- Interact with the page (click, type, scroll, select, submit, drag-and-drop, touch gestures, etc.) when appropriate to complete the test.
-- If requested, test on multiple browsers (Chrome, Firefox, Safari).
-- If requested, test on different devices and viewports (like iPhone 14 Pro, tablets, or custom breakpoints).
-- Switch color schemes (light/dark mode) when appropriate.
-- Take screenshots or pause tests for debugging when appropriate.
-
-### Example Tests
-
-<code-snippet name="Pest Browser Test Example" lang="php">
-it('may reset the password', function () {
-    Notification::fake();
-
-    $this->actingAs(User::factory()->create());
-
-    $page = visit('/sign-in'); // Visit on a real browser...
-
-    $page->assertSee('Sign In')
-        ->assertNoJavascriptErrors() // or ->assertNoConsoleLogs()
-        ->click('Forgot Password?')
-        ->fill('email', 'nuno@laravel.com')
-        ->click('Send Reset Link')
-        ->assertSee('We have emailed your password reset link!')
-
-    Notification::assertSent(ResetPassword::class);
-});
-</code-snippet>
-
-<code-snippet name="Pest Smoke Testing Example" lang="php">
-$pages = visit(['/', '/about', '/contact']);
-
-$pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
-</code-snippet>
+- This project uses Pest for testing. Create tests: `php artisan make:test --pest {name}`.
+- Run tests: `php artisan test --compact` or filter: `php artisan test --compact --filter=testName`.
+- Do NOT delete tests without approval.
+- CRITICAL: ALWAYS use `search-docs` tool for version-specific Pest documentation and updated code examples.
+- IMPORTANT: Activate `pest-testing` every time you're working with a Pest or testing-related task.
 
 === inertia-react/core rules ===
 
-## Inertia + React
+# Inertia + React
 
-- Use `router.visit()` or `<Link>` for navigation instead of traditional links.
-
-<code-snippet name="Inertia Client Navigation" lang="react">
-
-import { Link } from '@inertiajs/react'
-<Link href="/">Home</Link>
-
-</code-snippet>
-
-=== inertia-react/v2/forms rules ===
-
-## Inertia v2 + React Forms
-
-<code-snippet name="`<Form>` Component Example" lang="react">
-
-import { Form } from '@inertiajs/react'
-
-export default () => (
-    <Form action="/users" method="post">
-        {({
-            errors,
-            hasErrors,
-            processing,
-            wasSuccessful,
-            recentlySuccessful,
-            clearErrors,
-            resetAndClearErrors,
-            defaults
-        }) => (
-        <>
-        <input type="text" name="name" />
-
-        {errors.name && <div>{errors.name}</div>}
-
-        <button type="submit" disabled={processing}>
-            {processing ? 'Creating...' : 'Create User'}
-        </button>
-
-        {wasSuccessful && <div>User created successfully!</div>}
-        </>
-    )}
-    </Form>
-)
-
-</code-snippet>
+- IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
 
 === tailwindcss/core rules ===
 
-## Tailwind CSS
+# Tailwind CSS
 
-- Use Tailwind CSS classes to style HTML; check and use existing Tailwind conventions within the project before writing your own.
-- Offer to extract repeated patterns into components that match the project's conventions (i.e. Blade, JSX, Vue, etc.).
-- Think through class placement, order, priority, and defaults. Remove redundant classes, add classes to parent or child carefully to limit repetition, and group elements logically.
-- You can use the `search-docs` tool to get exact examples from the official documentation when needed.
-
-### Spacing
-- When listing items, use gap utilities for spacing; don't use margins.
-
-<code-snippet name="Valid Flex Gap Spacing Example" lang="html">
-    <div class="flex gap-8">
-        <div>Superior</div>
-        <div>Michigan</div>
-        <div>Erie</div>
-    </div>
-</code-snippet>
-
-### Dark Mode
-- If existing pages and components support dark mode, new pages and components must support dark mode in a similar way, typically using `dark:`.
-
-=== tailwindcss/v4 rules ===
-
-## Tailwind CSS 4
-
-- Always use Tailwind CSS v4; do not use the deprecated utilities.
-- `corePlugins` is not supported in Tailwind v4.
-- In Tailwind v4, configuration is CSS-first using the `@theme` directive — no separate `tailwind.config.js` file is needed.
-
-<code-snippet name="Extending Theme in CSS" lang="css">
-@theme {
-  --color-brand: oklch(0.72 0.11 178);
-}
-</code-snippet>
-
-- In Tailwind v4, you import Tailwind using a regular CSS `@import` statement, not using the `@tailwind` directives used in v3:
-
-<code-snippet name="Tailwind v4 Import Tailwind Diff" lang="diff">
-   - @tailwind base;
-   - @tailwind components;
-   - @tailwind utilities;
-   + @import "tailwindcss";
-</code-snippet>
-
-### Replaced Utilities
-- Tailwind v4 removed deprecated utilities. Do not use the deprecated option; use the replacement.
-- Opacity values are still numeric.
-
-| Deprecated |	Replacement |
-|------------+--------------|
-| bg-opacity-* | bg-black/* |
-| text-opacity-* | text-black/* |
-| border-opacity-* | border-black/* |
-| divide-opacity-* | divide-black/* |
-| ring-opacity-* | ring-black/* |
-| placeholder-opacity-* | placeholder-black/* |
-| flex-shrink-* | shrink-* |
-| flex-grow-* | grow-* |
-| overflow-ellipsis | text-ellipsis |
-| decoration-slice | box-decoration-slice |
-| decoration-clone | box-decoration-clone |
-
-=== laravel/fortify rules ===
-
-## Laravel Fortify
-
-Fortify is a headless authentication backend that provides authentication routes and controllers for Laravel applications.
-
-**Before implementing any authentication features, use the `search-docs` tool to get the latest docs for that specific feature.**
-
-### Configuration & Setup
-- Check `config/fortify.php` to see what's enabled. Use `search-docs` for detailed information on specific features.
-- Enable features by adding them to the `'features' => []` array: `Features::registration()`, `Features::resetPasswords()`, etc.
-- To see the all Fortify registered routes, use the `list-routes` tool with the `only_vendor: true` and `action: "Fortify"` parameters.
-- Fortify includes view routes by default (login, register). Set `'views' => false` in the configuration file to disable them if you're handling views yourself.
-
-### Customization
-- Views can be customized in `FortifyServiceProvider`'s `boot()` method using `Fortify::loginView()`, `Fortify::registerView()`, etc.
-- Customize authentication logic with `Fortify::authenticateUsing()` for custom user retrieval / validation.
-- Actions in `app/Actions/Fortify/` handle business logic (user creation, password reset, etc.). They're fully customizable, so you can modify them to change feature behavior.
-
-## Available Features
-- `Features::registration()` for user registration.
-- `Features::emailVerification()` to verify new user emails.
-- `Features::twoFactorAuthentication()` for 2FA with QR codes and recovery codes.
-  - Add options: `['confirmPassword' => true, 'confirm' => true]` to require password confirmation and OTP confirmation before enabling 2FA.
-- `Features::updateProfileInformation()` to let users update their profile.
-- `Features::updatePasswords()` to let users change their passwords.
-- `Features::resetPasswords()` for password reset via email.
-
-=== saloonphp/laravel-plugin rules ===
-
-## SaloonPHP
-
-- SaloonPHP is a PHP library for building beautiful, maintainable API integrations and SDKs with a fluent, expressive API.
-- Uses a connector-based architecture where **Connectors** define the base URL and shared configuration, and **Requests** represent specific API endpoints.
-- **Version Support**: SaloonPHP v2 and v3 are both actively supported. Check `composer.json` to determine which version-specific documentation to reference.
-- Always use Artisan commands to generate SaloonPHP classes: `php artisan saloon:connector`, `php artisan saloon:request`, `php artisan saloon:response`, `php artisan saloon:plugin`, `php artisan saloon:auth`.
-- Documentation: `https://docs.saloon.dev`
-- **Before implementing features, use the `web-search` tool to get the latest docs. The docs listing is available in <available-docs>**
-
-### Key Concepts
-
-- **Connectors**: Extend `Saloon\Http\Connector`, define base URL via `resolveBaseUrl()`, use constructor property promotion for dependencies, override `defaultHeaders()` and `defaultAuth()`.
-- **Requests**: Extend `Saloon\Http\Request`, set `$method` using `Saloon\Enums\Method` enum, override `resolveEndpoint()`, `defaultQuery()`, `defaultHeaders()`, `defaultBody()`.
-- **Sending**: `$connector->send($request)` returns a response with methods like `json()`, `body()`, `status()`, `isSuccess()`, `dto()`, `dtoOrFail()`.
-- **Body Types**: Implement `HasBody` interface and use traits: `HasJsonBody`, `HasXmlBody`, `HasMultipartBody`, `HasFormBody`, `HasStringBody`, `HasStreamBody`.
-- **Authentication**: Use `TokenAuthenticator`, `BasicAuthenticator`, `QueryAuthenticator`, or implement `Saloon\Contracts\Authenticator`.
-- **Plugins**: Traits that add reusable functionality. Built-in: `AcceptsJson`, `AlwaysThrowOnErrors`, `HasTimeout`, `HasRetry`, `HasRateLimit`, `WithDebugData`, `DisablesSSLVerification`, `CastsToDto`.
-- **Middleware**: Use `middleware()->onRequest()` and `middleware()->onResponse()`, or implement `boot()` method.
-- **DTOs**: Implement `createDtoFromResponse()` in request classes, use `$response->dto()` or `$response->dtoOrFail()`.
-
-### Laravel Integration
-
-- **Artisan Commands**: `saloon:connector`, `saloon:request`, `saloon:response`, `saloon:plugin`, `saloon:auth`, `saloon:list`.
-- **Facade**: Use `Saloon\Laravel\Facades\Saloon` facade for mocking: `Saloon::fake([RequestClass::class => MockResponse::make(...)])`.
-- **Events**: `SendingSaloonRequest` and `SentSaloonRequest` events are emitted during request lifecycle.
-- **HTTP Client Sender**: Use `Saloon\Laravel\HttpSender` to integrate with Laravel's HTTP client (enables Telescope recording). Configure in `config/saloon.php`: `'default_sender' => \Saloon\Laravel\HttpSender::class`.
-- **File Structure**: Check `config/saloon.php` for `integrations_path` setting. Default is `app/Http/Integrations`. Store connectors/requests in `{integrations_path}/{ServiceName}/` directory.
-
-### Version Notes (v3)
-
-- Global retry system: Set `$tries`, `$retryInterval`, `$useExponentialBackoff` properties directly on connectors/requests.
-- Pagination is now a separate installable plugin (required for pagination features).
-- Enhanced PSR-7 support with new response methods.
-
-<available-docs>
-## Upgrade
-- [https://docs.saloon.dev/upgrade/whats-new-in-v3] Use these docs to understand what's new in SaloonPHP v3
-- [https://docs.saloon.dev/upgrade/upgrading-from-v2] Use these docs for upgrading from SaloonPHP v2 to v3
-
-## The Basics
-- [https://docs.saloon.dev/the-basics/installation] Use these docs for installation instructions, Composer setup, and initial configuration
-- [https://docs.saloon.dev/the-basics/connectors] Use these docs for creating connectors, setting base URLs, default headers, and shared configuration
-- [https://docs.saloon.dev/the-basics/requests] Use these docs for creating requests, defining endpoints, HTTP methods, query parameters, and request bodies
-- [https://docs.saloon.dev/the-basics/authentication] Use these docs for authentication methods including token, basic, OAuth2, and custom authenticators
-- [https://docs.saloon.dev/the-basics/request-body-data] Use these docs for sending body data in requests, including JSON, XML, and multipart form data
-- [https://docs.saloon.dev/the-basics/sending-requests] Use these docs for sending requests through connectors, handling responses, and request lifecycle
-- [https://docs.saloon.dev/the-basics/responses] Use these docs for handling responses, accessing response data, status codes, and headers
-- [https://docs.saloon.dev/the-basics/handling-failures] Use these docs for handling failed requests, error responses, and using AlwaysThrowOnErrors trait
-- [https://docs.saloon.dev/the-basics/debugging] Use these docs for debugging requests and responses, using the debug() method, and inspecting PSR-7 requests
-- [https://docs.saloon.dev/the-basics/testing] Use these docs for testing Saloon integrations, mocking requests, and writing assertions
-
-## Digging Deeper
-- [https://docs.saloon.dev/digging-deeper/data-transfer-objects] Use these docs for casting API responses into DTOs, creating DTOs from responses, implementing WithResponse interface, and using DTOs in requests
-- [https://docs.saloon.dev/digging-deeper/building-sdks] Use these docs for building SDKs with Saloon, creating resource classes, and organizing API integrations
-- [https://docs.saloon.dev/digging-deeper/solo-requests] Use these docs for creating standalone requests without connectors using SoloRequest class
-- [https://docs.saloon.dev/digging-deeper/retrying-requests] Use these docs for implementing retry logic with exponential backoff and custom retry strategies (v3 includes global retry system at connector level)
-- [https://docs.saloon.dev/digging-deeper/delay] Use these docs for adding delays between requests to prevent rate limiting and server overload
-- [https://docs.saloon.dev/digging-deeper/concurrency-and-pools] Use these docs for sending concurrent requests using pools, managing multiple API calls efficiently, and asynchronous request handling
-- [https://docs.saloon.dev/digging-deeper/oauth2-authentication] Use these docs for OAuth2 authentication flows including Authorization Code Grant, Client Credentials, and token refresh
-- [https://docs.saloon.dev/digging-deeper/middleware] Use these docs for creating and using middleware to modify requests and responses, request lifecycle hooks, and boot methods
-- [https://docs.saloon.dev/digging-deeper/psr-support] Use these docs for PSR-7 and PSR-17 support, accessing PSR requests and responses, and modifying PSR-7 requests
-
-## Installable Plugins
-- [https://docs.saloon.dev/installable-plugins/pagination] Use these docs for the Pagination plugin to handle paginated API responses with various pagination methods (required in v3, optional in v2)
-- [https://docs.saloon.dev/installable-plugins/laravel-integration] Use these docs for Laravel plugin features including Artisan commands, facade, events, and HTTP client sender
-- [https://docs.saloon.dev/installable-plugins/caching-responses] Use these docs for the Caching plugin to cache API responses and improve performance
-- [https://docs.saloon.dev/installable-plugins/handling-rate-limits] Use these docs for the Rate Limit Handler plugin to prevent and manage rate limits
-- [https://docs.saloon.dev/installable-plugins/sdk-generator] Use these docs for the Auto SDK Generator plugin to generate Saloon SDKs from OpenAPI files or Postman collections
-- [https://docs.saloon.dev/installable-plugins/lawman] Use these docs for the Lawman plugin, a PestPHP plugin for writing architecture tests for API integrations
-- [https://docs.saloon.dev/installable-plugins/xml-wrangler] Use these docs for the XML Wrangler plugin for modern XML reading and writing with dot notation and XPath queries
-- [https://docs.saloon.dev/installable-plugins/building-your-own-plugins] Use these docs for building custom plugins (traits), creating boot methods, and extending Saloon functionality
-</available-docs>
+- Always use existing Tailwind conventions; check project patterns before adding new ones.
+- IMPORTANT: Always use `search-docs` tool for version-specific Tailwind CSS documentation and updated code examples. Never rely on training data.
+- IMPORTANT: Activate `tailwindcss-development` every time you're working with a Tailwind CSS or styling-related task.
 </laravel-boost-guidelines>

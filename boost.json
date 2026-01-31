@@ -10,9 +10,6 @@
         "opencode",
         "phpstorm"
     ],
-    "guidelines": [
-        "laravel/fortify",
-        "saloonphp/laravel-plugin"
-    ],
+    "guidelines": true,
     "herd_mcp": true
 }

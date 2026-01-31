@@ -16,6 +16,9 @@ use function redirect;
 
 final class CrossDomainAuthController
 {
+    /**
+     * @throws Throwable
+     */
     public function __invoke(
         Request $request,
         ValidateCrossDomainToken $action

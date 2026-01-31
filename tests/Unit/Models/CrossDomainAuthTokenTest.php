@@ -73,8 +73,7 @@ test('prunable returns expired tokens', function (): void {
     /** @var CrossDomainAuthToken $expiredToken */
     $expiredToken = CrossDomainAuthToken::factory()->expired()->createQuietly();
 
-    /** @var CrossDomainAuthToken $validToken */
-    $validToken = CrossDomainAuthToken::factory()->createQuietly();
+    CrossDomainAuthToken::factory()->createQuietly();
 
     $prunable = (new CrossDomainAuthToken)->prunable()->get();
 
@@ -87,8 +86,7 @@ test('prunable returns used tokens', function (): void {
     /** @var CrossDomainAuthToken $usedToken */
     $usedToken = CrossDomainAuthToken::factory()->used()->createQuietly();
 
-    /** @var CrossDomainAuthToken $unusedToken */
-    $unusedToken = CrossDomainAuthToken::factory()->createQuietly();
+    CrossDomainAuthToken::factory()->createQuietly();
 
     $prunable = (new CrossDomainAuthToken)->prunable()->get();
 
@@ -98,16 +96,28 @@ test('prunable returns used tokens', function (): void {
 });
 
 test('prunable returns both expired and used tokens', function (): void {
-    /** @var CrossDomainAuthToken $expiredToken */
-    $expiredToken = CrossDomainAuthToken::factory()->expired()->createQuietly();
-
-    /** @var CrossDomainAuthToken $usedToken */
-    $usedToken = CrossDomainAuthToken::factory()->used()->createQuietly();
-
-    /** @var CrossDomainAuthToken $validToken */
-    $validToken = CrossDomainAuthToken::factory()->createQuietly();
+    CrossDomainAuthToken::factory()->expired()->createQuietly();
+    CrossDomainAuthToken::factory()->used()->createQuietly();
+    CrossDomainAuthToken::factory()->createQuietly();
 
     $prunable = (new CrossDomainAuthToken)->prunable()->get();
 
     expect($prunable)->toHaveCount(2);
+});
+
+test('to array', function (): void {
+    $token = CrossDomainAuthToken::factory()->createQuietly()->refresh();
+
+    expect(array_keys($token->toArray()))
+        ->toBe([
+            'id',
+            'created_at',
+            'updated_at',
+            'organization_id',
+            'user_id',
+            'nonce',
+            'intended',
+            'expires_at',
+            'used_at',
+        ]);
 });
